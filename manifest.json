@@ -1,7 +1,7 @@
 {
   "name": "Shiny Living Dex",
   "short_name": "LivingDex",
-  "start_url": ".",
+  "start_url": "/Shiny-living-dex",
   "display": "standalone",
   "background_color": "#111827",
   "theme_color": "#111827",
