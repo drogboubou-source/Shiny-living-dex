@@ -1,0 +1,32 @@
+{
+  "810": {
+    "caught": true,
+    "nickname": "Jack",
+    "encounters": 680,
+    "eggs": 140,
+    "date": "2025-10-08",
+    "context": "Stream Bruce",
+    "notes": "",
+    "ivs": { "hp": false, "atk": false, "def": false, "spa": false, "spd": false, "spe": false }
+  },
+  "813": {
+    "caught": true,
+    "nickname": "Footix",
+    "encounters": 169,
+    "eggs": 86,
+    "date": "2025-10-11",
+    "context": "Stream Aypierre",
+    "notes": "",
+    "ivs": { "hp": false, "atk": false, "def": false, "spa": false, "spd": false, "spe": false }
+  },
+  "816": {
+    "caught": false,
+    "nickname": "Pleurnicheur",
+    "encounters": 0,
+    "eggs": 10,
+    "date": "",
+    "context": "",
+    "notes": "",
+    "ivs": { "hp": false, "atk": false, "def": false, "spa": false, "spd": false, "spe": false }
+  }
+}
