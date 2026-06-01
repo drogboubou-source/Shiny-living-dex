@@ -1,31 +1,31 @@
 const CACHE_NAME = "shiny-living-dex-v1";
 
+// On utilise des chemins relatifs (./) pour éviter les bugs selon l'endroit où est hébergé le site
 const urlsToCache = [
-    "/",
-    "/Shiny-living-dex/index.html",
-    "/css/style.css",
-    "/js/app.js",
-    "/manifest.json"
+    "./",
+    "./index.html",
+    "./style.css",
+    "./app.js",
+    "./manifest.json"
 ];
 
+// Installation : Mise en cache
 self.addEventListener("install", event => {
-
     event.waitUntil(
-
         caches.open(CACHE_NAME)
-        .then(cache => cache.addAll(urlsToCache))
-
+        .then(cache => {
+            console.log("Mise en cache des fichiers capitaux");
+            return cache.addAll(urlsToCache);
+        })
+        .then(() => self.skipWaiting()) // Force le SW à s'activer immédiatement
     );
-
 });
 
+// fetch : Stratégie Réseau, puis Cache en cas de panne
 self.addEventListener("fetch", event => {
-
     event.respondWith(
-
-        caches.match(event.request)
-        .then(response => response || fetch(event.request))
-
+        fetch(event.request).catch(() => {
+            return caches.match(event.request);
+        })
     );
-
 });
