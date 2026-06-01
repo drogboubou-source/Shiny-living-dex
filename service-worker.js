@@ -2,7 +2,7 @@ const CACHE_NAME = "shiny-living-dex-v1";
 
 const urlsToCache = [
     "/",
-    "/index.html",
+    "/Shiny-living-dex/index.html",
     "/css/style.css",
     "/js/app.js",
     "/manifest.json"
