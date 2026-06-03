@@ -158,6 +158,8 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .card:hover{transform:translateY(-3px);border-color:rgba(255,255,255,.18);box-shadow:0 6px 20px rgba(0,0,0,.4)}
 .card.caught{background:#0c1f0a;border-color:#2d6620}
 .card.caught:hover{border-color:#4a9e30}
+.card.perfect{border-color:#f5c842;box-shadow:0 0 0 1px rgba(245,200,66,.55),0 0 14px rgba(245,200,66,.28)}
+.card.perfect:hover{border-color:#ffd95c;box-shadow:0 6px 20px rgba(0,0,0,.4),0 0 0 1px rgba(245,200,66,.7),0 0 18px rgba(245,200,66,.36)}
 .card img{width:64px;height:64px;image-rendering:pixelated;display:block}
 .card .num{font-family:var(--font-px);font-size:10px;color:var(--muted);margin-bottom:2px}
 .card .pname{font-size:11px;font-weight:500;line-height:1.25;color:var(--text);word-break:break-word;padding:0 4px}
@@ -168,11 +170,6 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 }
 .card.caught .status{background:rgba(90,184,48,.18);color:#7ed660}
 .card:not(.caught) .status{background:var(--surface2);color:var(--muted)}
-.shiny-badge{
-  position:absolute;top:5px;right:5px;
-  width:8px;height:8px;border-radius:50%;
-  background:#f5c842;box-shadow:0 0 6px #f5c842;
-}
 .empty{color:var(--muted);font-size:14px;padding:4rem 0;text-align:center;grid-column:1/-1}
 
 /* ── BUTTONS ── */
@@ -551,7 +548,7 @@ function renderStats() {
     <div class="stats-item"><span>Total de rencontres</span><strong>${stats.totalEncountersText}</strong></div>
     <div class="stats-item"><span>Moyenne d'oeufs parent</span><strong>${stats.avgEggsText}</strong></div>
     <div class="stats-item"><span>Total oeufs parent</span><strong>${stats.totalEggsText}</strong></div>
-    <div class="stats-item"><span>Shiny living dex complété à</span><strong>${stats.caughtPercentText}</strong></div>
+    <div class="stats-item"><span>Pourcentage total de Shiny captur&eacute;s</span><strong>${stats.caughtPercentText}</strong></div>
   `;
 }
 
@@ -647,18 +644,19 @@ function renderGrid() {
     count++;
 
     const card = document.createElement('div');
-    card.className = 'card' + (p.caught ? ' caught' : '');
+    card.className = 'card' + (p.caught ? ' caught' : '') + (p.perfect ? ' perfect' : '');
     card.onclick = () => openModal(id);
 
-    const badge   = p.caught  ? '<div class="shiny-badge"></div>' : '';
+    const spriteUrl = p.caught
+      ? `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/${id}.png`
+      : `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`;
     const statusTxt = p.caught
       ? (p.perfect ? '⬡ Parfait' : '✦ Shiny')
       : '—';
 
     card.innerHTML = `
-      ${badge}
       <div class="num">#${String(id).padStart(4,'0')}</div>
-      <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png"
+      <img src="${spriteUrl}"
            alt="${name}" loading="lazy" width="64" height="64">
       <div class="pname">${name}</div>
       <div class="status">${statusTxt}</div>`;
