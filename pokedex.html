@@ -170,6 +170,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 }
 .card.caught .status{background:rgba(90,184,48,.18);color:#7ed660}
 .card:not(.caught) .status{background:var(--surface2);color:var(--muted)}
+.card .status-perfect{color:#f5c842}
 .card-info{width:100%;margin-top:6px;padding:0 4px;display:flex;flex-direction:column;gap:2px;font-size:9px;line-height:1.2;color:var(--muted)}
 .card-info div{display:flex;justify-content:space-between;gap:4px;min-width:0}
 .card-info span:first-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -655,7 +656,7 @@ function renderGrid() {
       ? `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/${id}.png`
       : `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`;
     const statusTxt = p.caught
-      ? (p.perfect ? 'Parfait' : 'Shiny')
+      ? (p.perfect ? 'Shiny <span class="status-perfect">Parfait</span>' : 'Shiny')
       : '-';
     const cardInfo = [
       p.eggs ? ['Oeufs', p.eggs] : null,
