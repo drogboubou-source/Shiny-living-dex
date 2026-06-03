@@ -1,416 +1,119 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Shiny Living Dex</title>
   <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#0f0f1a">
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
-
-  <style>
-    :root {
-      --bg:        #0f0f1a;
-      --surface:   #1a1a2e;
-      --border:    rgba(255,255,255,0.08);
-      --gold:      #f5c518;
-      --gold-glow: #f5c51855;
-      --blue:      #3b82f6;
-      --red:       #ef4444;
-      --white:     #f0f0f0;
-      --muted:     #8888aa;
-      --font-px:   'Press Start 2P', monospace;
-      --font-ui:   'Nunito', sans-serif;
-    }
-
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-      background-color: var(--bg);
-      font-family: var(--font-ui);
-      color: var(--white);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      overflow-x: hidden;
-    }
-
-    /* ── BACKGROUND ── */
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background:
-        radial-gradient(ellipse 60% 40% at 20% 10%, #1a1060 0%, transparent 60%),
-        radial-gradient(ellipse 50% 35% at 80% 85%, #1a0510 0%, transparent 55%),
-        radial-gradient(ellipse 70% 50% at 50% 50%, #0a0a18 0%, transparent 80%);
-      z-index: 0;
-      pointer-events: none;
-    }
-
-    /* pokeball grid bg */
-    body::after {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background-image:
-        radial-gradient(circle, rgba(255,255,255,0.03) 1px, transparent 1px);
-      background-size: 40px 40px;
-      z-index: 0;
-      pointer-events: none;
-    }
-
-    /* ── HEADER ── */
-    header {
-      position: relative;
-      z-index: 1;
-      text-align: center;
-      padding: 3.5rem 1.5rem 2rem;
-    }
-
-    .logo-wrap {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 1rem;
-      margin-bottom: 0.75rem;
-    }
-
-    .pokeball-icon {
-      width: 48px;
-      height: 48px;
-      flex-shrink: 0;
-      animation: spin-slow 8s linear infinite;
-    }
-
-    @keyframes spin-slow {
-      from { transform: rotate(0deg); }
-      to   { transform: rotate(360deg); }
-    }
-
-    header h1 {
-      font-family: var(--font-px);
-      font-size: clamp(0.85rem, 2.5vw, 1.25rem);
-      line-height: 1.6;
-      background: linear-gradient(135deg, var(--gold) 0%, #fff 50%, var(--gold) 100%);
-      background-size: 200% auto;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      animation: shine 4s linear infinite;
-      letter-spacing: 0.05em;
-      text-shadow: none;
-    }
-
-    @keyframes shine {
-      to { background-position: 200% center; }
-    }
-
-    header p {
-      font-size: 0.95rem;
-      color: var(--muted);
-      margin-top: 0.5rem;
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      font-size: 0.78rem;
-    }
-
-    /* ── SPARKLES ── */
-    .sparkles {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      overflow: hidden;
-    }
-
-    .sparkle {
-      position: absolute;
-      width: 4px; height: 4px;
-      border-radius: 50%;
-      background: var(--gold);
-      opacity: 0;
-      animation: twinkle var(--dur, 3s) var(--delay, 0s) ease-in-out infinite;
-    }
-
-    @keyframes twinkle {
-      0%, 100% { opacity: 0; transform: scale(0); }
-      50%       { opacity: 1; transform: scale(1); }
-    }
-
-    /* ── CARDS GRID ── */
-    main {
-      position: relative;
-      z-index: 1;
-      display: flex;
-      gap: 2rem;
-      padding: 1.5rem 2rem 4rem;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-
-    /* ── CARD ── */
-    .card {
-      position: relative;
-      width: 280px;
-      border-radius: 20px;
-      overflow: hidden;
-      cursor: pointer;
-      text-decoration: none;
-      display: block;
-      transition: transform 0.35s cubic-bezier(.22,.68,0,1.3), box-shadow 0.35s ease;
-      border: 1.5px solid var(--border);
-      background: var(--surface);
-    }
-
-    .card:hover {
-      transform: translateY(-10px) scale(1.02);
-    }
-
-    /* holographic shimmer overlay */
-    .card::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(
-        135deg,
-        transparent 0%,
-        rgba(255,255,255,0.06) 40%,
-        transparent 50%,
-        rgba(255,255,255,0.03) 60%,
-        transparent 100%
-      );
-      background-size: 200% 200%;
-      opacity: 0;
-      transition: opacity 0.3s, background-position 0.5s;
-      z-index: 3;
-      pointer-events: none;
-    }
-
-    .card:hover::before {
-      opacity: 1;
-      background-position: 100% 100%;
-    }
-
-    /* card top color bar */
-    .card-header {
-      position: relative;
-      height: 160px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-    }
-
-    /* card-specific accent */
-    .card--pokedex .card-header  { background: linear-gradient(135deg, #1a2a6c 0%, #b21f1f 60%, #fdbb2d 100%); }
-    .card--stats  .card-header  { background: linear-gradient(135deg, #134e5e 0%, #1565c0 60%, #0a9396 100%); }
-
-    .card:hover { box-shadow: 0 20px 60px var(--card-glow, rgba(245,197,24,0.25)); }
-    .card--pokedex { --card-glow: rgba(178,31,31,0.35); }
-    .card--stats   { --card-glow: rgba(21,101,192,0.35); }
-
-    /* animated ring in card bg */
-    .card-ring {
-      position: absolute;
-      width: 200px; height: 200px;
-      border-radius: 50%;
-      border: 30px solid rgba(255,255,255,0.07);
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      transition: transform 0.6s ease;
-    }
-
-    .card:hover .card-ring {
-      transform: translate(-50%, -50%) scale(1.15) rotate(20deg);
-    }
-
-    /* icon inside card */
-    .card-icon {
-      font-size: 4rem;
-      position: relative;
-      z-index: 2;
-      filter: drop-shadow(0 4px 16px rgba(0,0,0,0.5));
-      transition: transform 0.4s cubic-bezier(.22,.68,0,1.6);
-    }
-
-    .card:hover .card-icon {
-      transform: scale(1.2) rotate(-5deg);
-    }
-
-    /* card bottom body */
-    .card-body {
-      padding: 1.4rem 1.5rem 1.6rem;
-      position: relative;
-    }
-
-    .card-body::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 1.5rem; right: 1.5rem;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent);
-    }
-
-    .card-title {
-      font-family: var(--font-px);
-      font-size: 0.8rem;
-      line-height: 1.5;
-      margin-bottom: 0.6rem;
-      letter-spacing: 0.04em;
-    }
-
-    .card--pokedex .card-title { color: #f87171; }
-    .card--stats   .card-title { color: #60a5fa; }
-
-    .card-desc {
-      font-size: 0.82rem;
-      color: var(--muted);
-      line-height: 1.55;
-      font-weight: 600;
-    }
-
-    /* badge type pill */
-    .card-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.35rem;
-      margin-top: 1rem;
-      padding: 0.3rem 0.75rem;
-      border-radius: 999px;
-      font-size: 0.7rem;
-      font-weight: 800;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .card--pokedex .card-badge { background: rgba(248,113,113,0.15); color: #f87171; border: 1px solid rgba(248,113,113,0.3); }
-    .card--stats   .card-badge { background: rgba(96,165,250,0.15); color: #60a5fa; border: 1px solid rgba(96,165,250,0.3); }
-
-    /* arrow */
-    .card-arrow {
-      position: absolute;
-      bottom: 1.4rem; right: 1.4rem;
-      width: 28px; height: 28px;
-      border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 0.9rem;
-      transition: transform 0.3s ease, opacity 0.3s;
-      opacity: 0;
-    }
-
-    .card--pokedex .card-arrow { background: rgba(248,113,113,0.2); }
-    .card--stats   .card-arrow { background: rgba(96,165,250,0.2); }
-
-    .card:hover .card-arrow {
-      opacity: 1;
-      transform: translateX(3px);
-    }
-
-    /* ── FOOTER ── */
-    footer {
-      position: relative;
-      z-index: 1;
-      text-align: center;
-      padding: 1.5rem;
-      font-size: 0.7rem;
-      color: #44445a;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-    }
-
-    /* ── RESPONSIVE ── */
-    @media (max-width: 640px) {
-      .card { width: 90vw; max-width: 320px; }
-      main { gap: 1.5rem; }
-    }
-  </style>
+  <meta name="theme-color" content="#101218">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700;800&family=Pixelify+Sans:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles/base.css">
+  <link rel="stylesheet" href="styles/app.css">
 </head>
 <body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">✦</div>
+        <div>
+          <h1>Shiny Living Dex</h1>
+          <p>Collection personnelle</p>
+        </div>
+      </div>
 
-<!-- Sparkles in header -->
-<header>
-  <div class="sparkles" id="sparkles"></div>
-  <div class="logo-wrap">
-    <!-- Pokéball SVG -->
-    <svg class="pokeball-icon" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="50" cy="50" r="48" fill="#1a1a2e" stroke="#f5c518" stroke-width="3"/>
-      <path d="M2 50 Q2 2 50 2 Q98 2 98 50 Z" fill="#ef4444" opacity="0.9"/>
-      <rect x="2" y="47" width="96" height="6" fill="#f5c518"/>
-      <circle cx="50" cy="50" r="14" fill="#1a1a2e" stroke="#f5c518" stroke-width="3"/>
-      <circle cx="50" cy="50" r="7" fill="white" opacity="0.9"/>
-    </svg>
-    <h1>✨ Shiny Living Dex</h1>
+      <nav class="region-list" id="regionList" aria-label="Régions"></nav>
+
+      <div class="sidebar-card">
+        <span class="sidebar-label">Sauvegarde</span>
+        <div class="sidebar-actions">
+          <button class="icon-btn" id="importButton" type="button" title="Importer">
+            <span aria-hidden="true">↥</span>
+            <span>Importer</span>
+          </button>
+          <button class="icon-btn" id="exportButton" type="button" title="Exporter">
+            <span aria-hidden="true">↧</span>
+            <span>Exporter</span>
+          </button>
+        </div>
+        <input id="importFile" type="file" accept="application/json,.json" hidden>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <button class="menu-btn" id="menuButton" type="button" aria-label="Afficher les régions">☰</button>
+        <div class="search-wrap">
+          <span aria-hidden="true">⌕</span>
+          <input id="searchInput" type="search" placeholder="Rechercher un Pokémon, un numéro, une région...">
+        </div>
+        <div class="top-actions" role="group" aria-label="Vues">
+          <button class="view-btn active" type="button" data-view="dex">Dex</button>
+          <button class="view-btn" type="button" data-view="stats">Stats</button>
+        </div>
+      </header>
+
+      <section class="hero-panel">
+        <div>
+          <p class="eyebrow" id="currentScope">Tous les Pokémon</p>
+          <h2 id="heroTitle">Ton Shiny Dex, sans friction.</h2>
+        </div>
+        <div class="hero-progress" aria-label="Progression globale">
+          <strong id="globalPercent">0%</strong>
+          <span id="globalCount">0 / 1025 capturés</span>
+          <div class="meter"><i id="globalBar"></i></div>
+        </div>
+      </section>
+
+      <section class="stats-row" id="summaryStats" aria-label="Résumé"></section>
+
+      <section class="toolbar" id="dexToolbar">
+        <div class="segmented" id="statusFilters" role="group" aria-label="Filtrer par statut">
+          <button class="active" type="button" data-filter="all">Tous</button>
+          <button type="button" data-filter="caught">Capturés</button>
+          <button type="button" data-filter="missing">Manquants</button>
+          <button type="button" data-filter="perfect">Parfaits</button>
+        </div>
+        <label class="select-label">
+          Tri
+          <select id="sortSelect">
+            <option value="number">Numéro</option>
+            <option value="name">Nom</option>
+            <option value="recent">Récents</option>
+            <option value="encounters">Rencontres</option>
+          </select>
+        </label>
+      </section>
+
+      <section class="content-view active" id="dexView">
+        <div class="grid" id="pokemonGrid"></div>
+      </section>
+
+      <section class="content-view" id="statsView">
+        <div class="stats-layout">
+          <div class="panel">
+            <h3>Progression par région</h3>
+            <div id="regionStats"></div>
+          </div>
+          <div class="panel">
+            <h3>Qualité de chasse</h3>
+            <div id="huntStats"></div>
+          </div>
+        </div>
+      </section>
+    </main>
   </div>
-  <p>Collectionnez et suivez tous vos Pokémon shiny</p>
-</header>
 
-<!-- Cards -->
-<main>
+  <div class="drawer-backdrop" id="drawerBackdrop"></div>
+  <aside class="detail-drawer" id="detailDrawer" aria-hidden="true">
+    <button class="drawer-close" id="drawerClose" type="button" aria-label="Fermer">×</button>
+    <div id="detailContent"></div>
+  </aside>
 
-  <!-- Pokédex -->
-  <a class="card card--pokedex" href="pokedex.html">
-    <div class="card-header">
-      <div class="card-ring"></div>
-      <span class="card-icon">📖</span>
-    </div>
-    <div class="card-body">
-      <div class="card-title">Pokédex</div>
-      <p class="card-desc">Explorez tous les Pokémon et gérez votre collection de shinies.</p>
-      <span class="card-badge">⚡ Collection</span>
-      <div class="card-arrow">→</div>
-    </div>
-  </a>
-
-  <!-- Statistiques -->
-  <a class="card card--stats" href="statistiques.html">
-    <div class="card-header">
-      <div class="card-ring"></div>
-      <span class="card-icon">📊</span>
-    </div>
-    <div class="card-body">
-      <div class="card-title">Statistiques</div>
-      <p class="card-desc">Suivez votre progression et analysez votre Shiny Living Dex.</p>
-      <span class="card-badge">📈 Progression</span>
-      <div class="card-arrow">→</div>
-    </div>
-  </a>
-
-</main>
-
-<footer>Shiny Living Dex &mdash; Pokémon &copy; Nintendo / Game Freak</footer>
-
-<script>
-  // Generate sparkles
-  const container = document.getElementById('sparkles');
-  for (let i = 0; i < 18; i++) {
-    const s = document.createElement('div');
-    s.className = 'sparkle';
-    s.style.cssText = `
-      left: ${Math.random() * 100}%;
-      top:  ${Math.random() * 100}%;
-      --dur:   ${2 + Math.random() * 3}s;
-      --delay: ${Math.random() * 4}s;
-      width:  ${2 + Math.random() * 4}px;
-      height: ${2 + Math.random() * 4}px;
-    `;
-    container.appendChild(s);
-  }
-
-  // Tilt effect on cards
-  document.querySelectorAll('.card').forEach(card => {
-    card.addEventListener('mousemove', e => {
-      const rect = card.getBoundingClientRect();
-      const x = (e.clientX - rect.left) / rect.width  - 0.5;
-      const y = (e.clientY - rect.top)  / rect.height - 0.5;
-      card.style.transform = `translateY(-10px) scale(1.02) rotateY(${x * 10}deg) rotateX(${-y * 8}deg)`;
-    });
-    card.addEventListener('mouseleave', () => {
-      card.style.transform = '';
-    });
-  });
-</script>
+  <script src="data/pokemon-data.js"></script>
+  <script src="src/storage.js"></script>
+  <script src="src/stats.js"></script>
+  <script src="src/app.js"></script>
 </body>
 </html>
