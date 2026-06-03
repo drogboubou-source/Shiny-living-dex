@@ -170,6 +170,10 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 }
 .card.caught .status{background:rgba(90,184,48,.18);color:#7ed660}
 .card:not(.caught) .status{background:var(--surface2);color:var(--muted)}
+.card-info{width:100%;margin-top:6px;padding:0 4px;display:flex;flex-direction:column;gap:2px;font-size:9px;line-height:1.2;color:var(--muted)}
+.card-info div{display:flex;justify-content:space-between;gap:4px;min-width:0}
+.card-info span:first-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.card-info strong{color:var(--text);font-weight:600;font-variant-numeric:tabular-nums;text-align:right}
 .empty{color:var(--muted);font-size:14px;padding:4rem 0;text-align:center;grid-column:1/-1}
 
 /* ── BUTTONS ── */
@@ -651,15 +655,23 @@ function renderGrid() {
       ? `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/${id}.png`
       : `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`;
     const statusTxt = p.caught
-      ? (p.perfect ? '⬡ Parfait' : '✦ Shiny')
-      : '—';
+      ? (p.perfect ? 'Parfait' : 'Shiny')
+      : '-';
+    const cardInfo = [
+      p.eggs ? ['Oeufs', p.eggs] : null,
+      p.encounters ? ['Rencontres', p.encounters] : null,
+      p.date ? ['Date', p.date] : null,
+    ].filter(Boolean).map(([label, value]) =>
+      `<div><span>${label}</span><strong>${value}</strong></div>`
+    ).join('');
 
     card.innerHTML = `
       <div class="num">#${String(id).padStart(4,'0')}</div>
       <img src="${spriteUrl}"
            alt="${name}" loading="lazy" width="64" height="64">
       <div class="pname">${name}</div>
-      <div class="status">${statusTxt}</div>`;
+      <div class="status">${statusTxt}</div>
+      ${cardInfo ? `<div class="card-info">${cardInfo}</div>` : ''}`;
     grid.appendChild(card);
   }
 
