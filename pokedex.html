@@ -406,35 +406,45 @@ const STORAGE_KEY = 'shiny_dex_v3';
    INIT — charge pokemon.json depuis GitHub Pages
 ══════════════════════════════════════ */
 function init() {
-  // Charge la progression locale
+  // Charge la progression locale depuis le localStorage
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (raw) progress = JSON.parse(raw);
   } catch(e) { progress = {}; }
 
-  // Tente de charger pokemon.json (même dossier = GitHub Pages)
+  // Affichage initial avec les données locales déjà disponibles
+  renderAll();
+}
+
+// Au chargement de la page, on tente de récupérer le fichier pokemon.json
+document.addEventListener('DOMContentLoaded', () => {
   fetch('pokemon.json')
-    .then(r => { if (!r.ok) throw new Error('not found'); return r.json(); })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error("Le fichier pokemon.json n'a pas pu être chargé automatiquement.");
+      }
+      return response.json();
+    })
     .then(data => {
-      // Indexe par numéro de pokédex
       if (Array.isArray(data)) {
+        pokedexData = {};
         data.forEach(p => {
           const id = p['N° pokédex'] || p['id'];
           if (id) pokedexData[id] = p;
         });
-      } else {
-        pokedexData = data;
+
+        // On fusionne avec la progression (appelle la fonction déjà existante dans ton code)
+        mergePokedexIntoProgress();
+
+        // On rafraîchit l'affichage de la grille
+        if (typeof renderGrid === 'function') renderGrid();
+        console.log("Données Pokémon chargées avec succès depuis le serveur !");
       }
-      // Fusionne les données du JSON dans la progression locale si pas déjà présentes
-      mergePokedexIntoProgress();
     })
-    .catch(() => {
-      // Pas de pokemon.json dispo, on travaille avec le localStorage seul
-    })
-    .finally(() => {
-      renderAll();
+    .catch(error => {
+      console.warn("Chargement auto désactivé ou impossible (normal en local sans serveur) :", error.message);
     });
-}
+});
 
 // Fusionne les champs du pokemon.json dans progress (sans écraser ce qui existe déjà)
 function mergePokedexIntoProgress() {
