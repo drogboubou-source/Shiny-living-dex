@@ -156,25 +156,27 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   display:flex;flex-direction:column;align-items:center;gap:0;
 }
 .card:hover{transform:translateY(-3px);border-color:rgba(255,255,255,.18);box-shadow:0 6px 20px rgba(0,0,0,.4)}
-.card.caught{background:#0c1f0a;border-color:#2d6620}
-.card.caught:hover{border-color:#4a9e30}
-.card.perfect{border-color:#f5c842;box-shadow:0 0 0 1px rgba(245,200,66,.55),0 0 14px rgba(245,200,66,.28)}
-.card.perfect:hover{border-color:#ffd95c;box-shadow:0 6px 20px rgba(0,0,0,.4),0 0 0 1px rgba(245,200,66,.7),0 0 18px rgba(245,200,66,.36)}
+.card.caught{background:#2a2108;border-color:#b88918}
+.card.caught:hover{border-color:#f5c842}
+.card.perfect{border-color:#c084fc;box-shadow:0 0 0 1px rgba(192,132,252,.62),0 0 14px rgba(192,132,252,.3)}
+.card.perfect:hover{border-color:#d8b4fe;box-shadow:0 6px 20px rgba(0,0,0,.4),0 0 0 1px rgba(192,132,252,.78),0 0 18px rgba(192,132,252,.42)}
 .card img{width:64px;height:64px;image-rendering:pixelated;display:block}
 .card .num{font-family:var(--font-px);font-size:10px;color:var(--muted);margin-bottom:2px}
 .card .pname{font-size:11px;font-weight:500;line-height:1.25;color:var(--text);word-break:break-word;padding:0 4px}
-.card.caught .pname{color:#7ed660}
+.card.caught .pname{color:#fff0b8}
 .card .status{
   margin-top:5px;font-size:10px;padding:2px 7px;border-radius:20px;
   font-weight:500;letter-spacing:.3px;
 }
-.card.caught .status{background:rgba(90,184,48,.18);color:#7ed660}
+.card.caught .status{background:rgba(0,0,0,.34);color:#fff7d6}
 .card:not(.caught) .status{background:var(--surface2);color:var(--muted)}
 .card .status-perfect{color:#f5c842}
 .card-info{width:100%;margin-top:6px;padding:0 4px;display:flex;flex-direction:column;gap:4px;font-size:9px;line-height:1.15;color:var(--muted)}
 .card-info div{display:flex;flex-direction:column;align-items:center;gap:1px;min-width:0}
 .card-info span:first-child{white-space:normal;text-align:center}
 .card-info strong{color:var(--text);font-weight:600;font-variant-numeric:tabular-nums;text-align:center}
+.card.caught .card-info{color:#d8c981}
+.card.caught .card-info strong{color:#fff7d6}
 .empty{color:var(--muted);font-size:14px;padding:4rem 0;text-align:center;grid-column:1/-1}
 
 /* ── BUTTONS ── */
