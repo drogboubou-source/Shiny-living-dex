@@ -449,7 +449,7 @@ const NAMES = {1:"Bulbizarre",2:"Herbizarre",3:"Florizarre",4:"Salamèche",5:"Re
 let pokedexData = {};
 // progress = données éditables locales (même structure que pokemon.json + ivs détaillés)
 let progress = {};
-let currentRegion = 0;
+let currentRegion = 'all';
 let currentPokemon = null;
 let sidebarOpen = false;
 const STORAGE_KEY = 'shiny_dex_v3';
@@ -594,9 +594,37 @@ function countCaught(r) {
   return c;
 }
 
+function getAllRegionStats() {
+  const start = REGIONS[0].start;
+  const end = REGIONS[REGIONS.length - 1].end;
+  let caught = 0;
+  for (let i = start; i <= end; i++) if (progress[i]?.caught) caught++;
+  return {
+    name: 'Toutes',
+    gen: '1 à 9',
+    start,
+    end,
+    color: '#f5c842',
+    caught,
+    total: end - start + 1
+  };
+}
+
 function renderSidebar() {
   const list = document.getElementById('genList');
-  list.innerHTML = REGIONS.map((r, i) => {
+  const all = getAllRegionStats();
+  const allPct = Math.round(all.caught / all.total * 100);
+  const allButton = `
+      <button class="gen-btn ${currentRegion === 'all' ? 'active' : ''}" onclick="switchRegion('all')">
+        <span class="gen-dot" style="background:${all.color}"></span>
+        <span>Toutes</span>
+        <span class="gen-progress">${all.caught}/${all.total}</span>
+      </button>
+      <div class="gen-bar-wrap">
+        <div class="gen-bar-fill" style="width:${allPct}%;background:${all.color}"></div>
+      </div>`;
+
+  list.innerHTML = allButton + REGIONS.map((r, i) => {
     const c     = countCaught(r);
     const total = r.end - r.start + 1;
     const pct   = Math.round(c / total * 100);
@@ -614,15 +642,16 @@ function renderSidebar() {
 }
 
 function renderRegion() {
-  const r      = REGIONS[currentRegion];
-  const caught = countCaught(r);
-  const total  = r.end - r.start + 1;
+  const isAll  = currentRegion === 'all';
+  const r      = isAll ? getAllRegionStats() : REGIONS[currentRegion];
+  const caught = isAll ? r.caught : countCaught(r);
+  const total  = isAll ? r.total : r.end - r.start + 1;
   const pct    = Math.round(caught / total * 100);
 
   document.getElementById('regionHeader').innerHTML = `
     <div>
       <div class="region-name" style="color:${r.color}">${r.name}</div>
-      <div class="region-meta">Génération ${r.gen} · #${r.start}–#${r.end}</div>
+      <div class="region-meta">${isAll ? 'Générations 1 à 9' : `Génération ${r.gen}`} · #${r.start}–#${r.end}</div>
     </div>
     <div class="progress-wrap">
       <div class="progress-track">
@@ -635,7 +664,7 @@ function renderRegion() {
 }
 
 function renderGrid() {
-  const r      = REGIONS[currentRegion];
+  const r      = currentRegion === 'all' ? getAllRegionStats() : REGIONS[currentRegion];
   const search = document.getElementById('searchInput').value.toLowerCase();
   const filter = document.getElementById('filterSelect').value;
   const grid   = document.getElementById('grid');
