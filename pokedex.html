@@ -170,7 +170,8 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 }
 .card.caught .status{background:rgba(0,0,0,.34);color:#fff7d6}
 .card:not(.caught) .status{background:var(--surface2);color:var(--muted)}
-.card .status-perfect{color:#f5c842}
+.card .status-shiny{color:#f5c842}
+.card .status-perfect{color:#d8b4fe}
 .card-info{width:100%;margin-top:6px;padding:0 4px;display:flex;flex-direction:column;gap:4px;font-size:9px;line-height:1.15;color:var(--muted)}
 .card-info div{display:flex;flex-direction:column;align-items:center;gap:1px;min-width:0}
 .card-info span:first-child{white-space:normal;text-align:center}
@@ -658,7 +659,9 @@ function renderGrid() {
       ? `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/${id}.png`
       : `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`;
     const statusTxt = p.caught
-      ? (p.perfect ? 'Shiny <span class="status-perfect">Parfait</span>' : 'Shiny')
+      ? (p.perfect
+        ? '<span class="status-shiny">Shiny</span> <span class="status-perfect">Parfait</span>'
+        : '<span class="status-shiny">Shiny</span>')
       : '-';
     const cardInfo = [
       p.eggs ? ['Oeufs parent parfait', p.eggs] : null,
@@ -670,9 +673,9 @@ function renderGrid() {
 
     card.innerHTML = `
       <div class="num">#${String(id).padStart(4,'0')}</div>
+      <div class="pname">${name}</div>
       <img src="${spriteUrl}"
            alt="${name}" loading="lazy" width="64" height="64">
-      <div class="pname">${name}</div>
       <div class="status">${statusTxt}</div>
       ${cardInfo ? `<div class="card-info">${cardInfo}</div>` : ''}`;
     grid.appendChild(card);
