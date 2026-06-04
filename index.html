@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Shiny Living Dex</title>
 <link rel="manifest" href="./manifest.json">
+<link rel="icon" href="./assets/icon-192.png">
+<link rel="apple-touch-icon" href="./assets/icon-192.png">
 <meta name="theme-color" content="#0f0f13">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -309,6 +311,9 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
     <button class="btn" onclick="exportJSON()">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
       Exporter JSON
+    </button>
+    <button class="btn" id="installButton" onclick="installApp()" style="display:none">
+      Installer
     </button>
   </div>
 </div>
@@ -1114,6 +1119,30 @@ function importJSON(e) {
   };
   reader.readAsText(file);
   e.target.value = '';
+}
+
+let deferredInstallPrompt = null;
+
+window.addEventListener('beforeinstallprompt', event => {
+  event.preventDefault();
+  deferredInstallPrompt = event;
+  const btn = document.getElementById('installButton');
+  if (btn) btn.style.display = 'inline-flex';
+});
+
+window.addEventListener('appinstalled', () => {
+  deferredInstallPrompt = null;
+  const btn = document.getElementById('installButton');
+  if (btn) btn.style.display = 'none';
+});
+
+async function installApp() {
+  if (!deferredInstallPrompt) return;
+  deferredInstallPrompt.prompt();
+  await deferredInstallPrompt.userChoice;
+  deferredInstallPrompt = null;
+  const btn = document.getElementById('installButton');
+  if (btn) btn.style.display = 'none';
 }
 
 /* ══ START ══ */
