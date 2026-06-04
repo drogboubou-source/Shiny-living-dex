@@ -348,7 +348,8 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
         <span>Trier</span>
         <select id="sortSelect" onchange="renderGrid()">
           <option value="number">Numéro</option>
-          <option value="date">Date</option>
+          <option value="date-desc">Date décroissante</option>
+          <option value="date-asc">Date croissante</option>
           <option value="type">Types</option>
           <option value="caught">Shinys trouvés</option>
           <option value="missing">Manquants</option>
@@ -502,10 +503,12 @@ function comparePokemonBySort(a, b, mode) {
   const pa = progress[a] || {};
   const pb = progress[b] || {};
 
-  if (mode === 'date') {
+  if (mode === 'date-desc' || mode === 'date-asc') {
     const da = pa.date || '';
     const db = pb.date || '';
-    if (da !== db) return db.localeCompare(da);
+    if (!da && db) return 1;
+    if (da && !db) return -1;
+    if (da !== db) return mode === 'date-asc' ? da.localeCompare(db) : db.localeCompare(da);
     return a - b;
   }
 
