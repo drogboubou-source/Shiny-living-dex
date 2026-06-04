@@ -206,10 +206,12 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   display:flex;flex-direction:column;align-items:center;gap:0;
 }
 .card:hover{transform:translateY(-3px);border-color:rgba(255,255,255,.18);box-shadow:0 6px 20px rgba(0,0,0,.4)}
-.card.caught{background:#2a2108;border-color:#b88918}
-.card.caught:hover{border-color:#f5c842}
+.card.caught{background:#2a2108;border-color:#b88918;box-shadow:0 0 0 1px rgba(245,200,66,.34)}
+.card.caught:hover{border-color:#f5c842;box-shadow:0 6px 20px rgba(0,0,0,.4),0 0 0 1px rgba(245,200,66,.5)}
 .card.perfect{border-color:#c084fc;box-shadow:0 0 0 1px rgba(192,132,252,.62),0 0 14px rgba(192,132,252,.3)}
 .card.perfect:hover{border-color:#d8b4fe;box-shadow:0 6px 20px rgba(0,0,0,.4),0 0 0 1px rgba(192,132,252,.78),0 0 18px rgba(192,132,252,.42)}
+.card.caught.perfect{border-color:#f5c842;box-shadow:0 0 0 1px rgba(245,200,66,.72),0 0 0 3px rgba(192,132,252,.82),0 0 18px rgba(192,132,252,.34)}
+.card.caught.perfect:hover{border-color:#ffe08a;box-shadow:0 6px 20px rgba(0,0,0,.4),0 0 0 1px rgba(245,200,66,.86),0 0 0 3px rgba(216,180,254,.92),0 0 22px rgba(192,132,252,.48)}
 .card img{width:64px;height:64px;image-rendering:pixelated;display:block}
 .card .num{font-family:var(--font-px);font-size:10px;color:var(--muted);margin-bottom:2px}
 .card .pname{font-size:11px;font-weight:500;line-height:1.25;color:var(--text);word-break:break-word;padding:0 4px}
