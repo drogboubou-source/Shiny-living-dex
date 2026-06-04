@@ -10,6 +10,7 @@
 <meta name="theme-color" content="#0f0f13">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="LivingDex">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;700&family=DM+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Pacifico&display=swap" rel="stylesheet">
 <style>
@@ -614,6 +615,7 @@ let progress = {};
 let currentRegion = 'all';
 let currentPokemon = null;
 let sidebarOpen = false;
+const SPRITE_FALLBACK = './icon-192.png';
 const STORAGE_KEY = 'shiny_dex_v4';
 const LEGACY_STORAGE_KEY = 'shiny_dex_v3';
 const REGION_STORAGE_KEY = 'shiny_dex_current_region';
@@ -971,7 +973,7 @@ function renderGrid() {
       <div class="pname">${name}</div>
       <div class="type-row">${typeBadges}</div>
       <img src="${spriteUrl}"
-             alt="${name}" loading="lazy" width="64" height="64">
+             alt="${name}" loading="lazy" width="64" height="64" onerror="this.onerror=null;this.src='${SPRITE_FALLBACK}'">
       <div class="status">${statusHtml}</div>`;
     grid.appendChild(card);
   });
@@ -1070,8 +1072,12 @@ function openModal(id) {
   const name = NAMES[id] || `#${id}`;
   const r    = REGIONS.find(r => id >= r.start && id <= r.end);
 
-  document.getElementById('mSprite').src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`;
-  document.getElementById('mSpriteShiny').src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/${id}.png`;
+  const normalSprite = document.getElementById('mSprite');
+  const shinySprite = document.getElementById('mSpriteShiny');
+  normalSprite.onerror = () => { normalSprite.onerror = null; normalSprite.src = SPRITE_FALLBACK; };
+  shinySprite.onerror = () => { shinySprite.onerror = null; shinySprite.src = SPRITE_FALLBACK; };
+  normalSprite.src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`;
+  shinySprite.src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/${id}.png`;
   document.getElementById('mNum').textContent = `#${String(id).padStart(4,'0')}`;
   document.getElementById('mName').textContent = name;
   document.getElementById('mRegion').innerHTML = `<span style="color:${r.color};font-family:'Pixelify Sans',monospace">${r.name} · Génération ${r.gen}</span>`;
