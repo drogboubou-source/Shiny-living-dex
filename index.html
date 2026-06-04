@@ -240,6 +240,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .card:not(.caught) .status{background:var(--surface2);color:var(--muted)}
 .card .status-shiny{color:#f5c842}
 .card .status-perfect{color:#d8b4fe}
+.card .status-pair{display:inline-flex;align-items:center;justify-content:center;gap:5px}
 .type-row{width:100%;min-height:19px;margin:2px 0 4px;display:flex;justify-content:center;gap:3px;flex-wrap:wrap;padding:0 2px;order:3}
 .type-pill{display:inline-grid;place-items:center;width:46px;height:12px;filter:drop-shadow(0 2px 5px rgba(0,0,0,.25))}
 .type-pill img{width:46px;height:12px;display:block;image-rendering:auto}
@@ -961,8 +962,9 @@ function renderGrid() {
       ? `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/${id}.png`
       : `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`;
     const typeBadges = renderTypeBadges(id);
-    const statusLabel = p.perfect ? '6IV' : (p.caught ? 'Shiny' : 'A chasser');
-    const statusClass = p.perfect ? 'status-perfect' : (p.caught ? 'status-shiny' : '');
+    const statusHtml = p.caught && p.perfect
+      ? '<span class="status-pair"><span class="status-shiny">Shiny</span><span class="status-perfect">Parfait</span></span>'
+      : (p.caught ? '<span class="status-shiny">Shiny</span>' : 'A chasser');
 
     card.innerHTML = `
       <div class="num">#${String(id).padStart(4,'0')}</div>
@@ -970,7 +972,7 @@ function renderGrid() {
       <div class="type-row">${typeBadges}</div>
       <img src="${spriteUrl}"
              alt="${name}" loading="lazy" width="64" height="64">
-      <div class="status ${statusClass}">${statusLabel}</div>`;
+      <div class="status">${statusHtml}</div>`;
     grid.appendChild(card);
   });
 
