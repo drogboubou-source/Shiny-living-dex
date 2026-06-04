@@ -559,9 +559,9 @@ function init() {
     const raw = localStorage.getItem(STORAGE_KEY);
     const legacyRaw = localStorage.getItem(LEGACY_STORAGE_KEY);
     if (raw) {
-      progress = sanitizeProgress(JSON.parse(raw));
+      progress = sanitizeProgress(JSON.parse(raw), { trustCaught: true });
     } else if (legacyRaw) {
-      progress = sanitizeProgress(JSON.parse(legacyRaw));
+      progress = sanitizeProgress(JSON.parse(legacyRaw), { trustCaught: false });
       localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
     }
   } catch(e) { progress = {}; }
@@ -585,13 +585,14 @@ function hasUserData(p) {
   );
 }
 
-function sanitizeProgress(data) {
+function sanitizeProgress(data, options = {}) {
+  const trustCaught = options.trustCaught !== false;
   const clean = {};
   Object.entries(data || {}).forEach(([id, p]) => {
     if (!p || typeof p !== 'object') return;
     const entry = { ...p };
     // Ancienne logique: pokemon.json pouvait mettre caught=true juste parce que le nom etait rempli.
-    if (entry.caught && !hasUserData(entry)) delete entry.caught;
+    if (!trustCaught && entry.caught && !hasUserData(entry)) delete entry.caught;
     const isEmpty = !entry.caught && !hasUserData(entry);
     if (!isEmpty) clean[id] = entry;
   });
