@@ -716,7 +716,7 @@ function getGlobalStats() {
   const totalEggs = entries.reduce((a,p) => a + (parseInt(p.eggs) || 0), 0);
   const avgEncounters = caught > 0 ? Math.round(totalEncounters / caught) : 0;
   const avgEggs = caught > 0 ? Math.round(totalEggs / caught) : 0;
-  const caughtPercent = Math.round((caught / 1025) * 1000) / 10;
+  const caughtPercent = caught / 1025 * 100;
   return {
     caught,
     perfect,
