@@ -1,31 +1,44 @@
-const CACHE_NAME = "shiny-living-dex-v1";
-
-// On utilise des chemins relatifs (./) pour éviter les bugs selon l'endroit où est hébergé le site
-const urlsToCache = [
-    "./",
-    "./index.html",
-    "./style.css",
-    "./app.js",
-    "./manifest.json"
+const CACHE_NAME = 'shiny-living-dex-v6';
+const APP_SHELL = [
+  './',
+  './index.html',
+  './pokedex.html',
+  './pokemon.json',
+  './manifest.json'
 ];
 
-// Installation : Mise en cache
-self.addEventListener("install", event => {
-    event.waitUntil(
-        caches.open(CACHE_NAME)
-        .then(cache => {
-            console.log("Mise en cache des fichiers capitaux");
-            return cache.addAll(urlsToCache);
-        })
-        .then(() => self.skipWaiting()) // Force le SW à s'activer immédiatement
-    );
+self.addEventListener('install', event => {
+  event.waitUntil(
+    caches.open(CACHE_NAME)
+      .then(cache => cache.addAll(APP_SHELL))
+      .then(() => self.skipWaiting())
+  );
 });
 
-// fetch : Stratégie Réseau, puis Cache en cas de panne
-self.addEventListener("fetch", event => {
+self.addEventListener('activate', event => {
+  event.waitUntil(
+    caches.keys()
+      .then(keys => Promise.all(keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key))))
+      .then(() => self.clients.claim())
+  );
+});
+
+self.addEventListener('fetch', event => {
+  if (event.request.mode === 'navigate') {
     event.respondWith(
-        fetch(event.request).catch(() => {
-            return caches.match(event.request);
-        })
+      fetch(event.request)
+        .catch(() => caches.match('./index.html'))
     );
+    return;
+  }
+
+  event.respondWith(
+    fetch(event.request)
+      .then(response => {
+        const copy = response.clone();
+        caches.open(CACHE_NAME).then(cache => cache.put(event.request, copy));
+        return response;
+      })
+      .catch(() => caches.match(event.request))
+  );
 });
