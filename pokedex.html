@@ -504,6 +504,7 @@ function comparePokemonBySort(a, b, mode) {
   const pb = progress[b] || {};
 
   if (mode === 'date-desc' || mode === 'date-asc') {
+    if (!!pa.caught !== !!pb.caught) return pa.caught ? -1 : 1;
     const da = pa.date || '';
     const db = pb.date || '';
     if (!da && db) return 1;
