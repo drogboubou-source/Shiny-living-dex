@@ -99,15 +99,17 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 /* toggle button */
 .sidebar-toggle{
   position:fixed;left:0;top:50%;transform:translateY(-50%);
-  width:20px;height:48px;background:var(--surface);
-  border:1px solid var(--border);border-left:none;
-  border-radius:0 var(--r) var(--r) 0;
+  width:28px;height:56px;background:linear-gradient(180deg,#242435,#171720);
+  border:1px solid rgba(255,255,255,.12);border-left:none;
+  border-radius:0 14px 14px 0;
   cursor:pointer;display:flex;align-items:center;justify-content:center;
-  z-index:101;transition:left .25s cubic-bezier(.4,0,.2,1);color:var(--muted);
+  z-index:101;transition:left .25s cubic-bezier(.4,0,.2,1),color .12s,box-shadow .12s;
+  color:var(--muted);box-shadow:0 10px 26px rgba(0,0,0,.34);
   font-size:11px;
 }
-.sidebar-toggle:hover{color:var(--text)}
+.sidebar-toggle:hover{color:var(--text);box-shadow:0 10px 28px rgba(0,0,0,.48),0 0 0 1px rgba(245,200,66,.18)}
 .sidebar-toggle.open{left:var(--sidebar-w)}
+.sidebar-toggle:focus-visible,.btn:focus-visible,.gen-btn:focus-visible,.card:focus-visible,.modal-close:focus-visible,.btn-save:focus-visible{outline:2px solid #f5c842;outline-offset:2px}
 @media (max-width: 720px){
   .topbar{gap:.6rem;padding:0 .75rem}
   .title-actions{gap:6px}
@@ -128,6 +130,20 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   .region-header.all-hero .all-hero-copy{padding:.75rem}
   .home-signature{right:.75rem;top:.6rem;font-size:12px}
   .region-map-mosaic{inset:-18px;opacity:.86;filter:saturate(1.12) contrast(1.04) brightness(1.18)}
+  .filters{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .filters input{grid-column:1/-1;width:100%}
+  .filters select,.sort-control{width:100%;min-width:0}
+  .sort-control select{width:100%}
+  .grid{grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:8px}
+  .card{min-height:144px}
+  .two-col{grid-template-columns:1fr}
+  .iv-grid{grid-template-columns:1fr 1fr}
+  .modal{padding:1.35rem;max-height:92vh}
+  .modal-hero{align-items:flex-start;gap:.85rem}
+  .sprite-pair{gap:6px}
+  .modal-sprite,.modal-sprite-shiny{width:74px;height:74px}
+  .modal-footer{position:sticky;bottom:-1.35rem;margin-left:-1.35rem;margin-right:-1.35rem;padding:1rem 1.35rem;background:linear-gradient(180deg,rgba(24,24,31,.72),var(--surface) 34%);border-top:1px solid var(--border)}
+  .btn-save{flex:1}
 }
 
 /* ── MAIN ── */
@@ -178,14 +194,14 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .filters input,.filters select{
   background:var(--surface);border:1px solid var(--border);
   border-radius:var(--r);color:var(--text);
-  font-family:var(--font);font-size:13px;padding:7px 12px;outline:none;
-  transition:border-color .15s;
+  font-family:var(--font);font-size:13px;padding:9px 12px;outline:none;
+  min-height:38px;transition:border-color .15s,background .15s,box-shadow .15s;
 }
-.filters input{width:200px}
-.filters input:focus,.filters select:focus{border-color:rgba(255,255,255,.2)}
+.filters input{width:min(320px,100%)}
+.filters input:focus,.filters select:focus{border-color:rgba(245,200,66,.42);box-shadow:0 0 0 3px rgba(245,200,66,.08)}
 .sort-control{
   display:flex;align-items:center;gap:7px;background:var(--surface);
-  border:1px solid var(--border);border-radius:var(--r);padding-left:10px;
+  border:1px solid var(--border);border-radius:var(--r);padding-left:10px;min-height:38px;
   color:var(--muted);font-size:12px;font-weight:700;
 }
 .sort-control select{
@@ -195,35 +211,36 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 /* ── GRID ── */
 .grid{
   display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(96px,1fr));
-  gap:8px;
+  grid-template-columns:repeat(auto-fill,minmax(112px,1fr));
+  gap:10px;
 }
 .card{
-  background:var(--surface);border:1px solid var(--border);
-  border-radius:var(--r);padding:8px 4px 7px;
+  background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.012)),var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--r);padding:9px 7px 8px;min-height:148px;
   text-align:center;cursor:pointer;position:relative;overflow:hidden;
   transition:transform .12s,border-color .15s,box-shadow .15s;
-  display:flex;flex-direction:column;align-items:center;gap:0;
+  display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:4px;
 }
 .card:hover{transform:translateY(-3px);border-color:rgba(255,255,255,.18);box-shadow:0 6px 20px rgba(0,0,0,.4)}
 .card.caught{background:#2a2108;border-color:#f5c842;box-shadow:0 0 0 1px rgba(245,200,66,.62),0 0 14px rgba(245,200,66,.24)}
 .card.caught:hover{border-color:#ffe08a;box-shadow:0 6px 20px rgba(0,0,0,.4),0 0 0 1px rgba(245,200,66,.78),0 0 18px rgba(245,200,66,.34)}
 .card.perfect{border-color:#c084fc;box-shadow:0 0 0 1px rgba(192,132,252,.62),0 0 14px rgba(192,132,252,.3)}
 .card.perfect:hover{border-color:#d8b4fe;box-shadow:0 6px 20px rgba(0,0,0,.4),0 0 0 1px rgba(192,132,252,.78),0 0 18px rgba(192,132,252,.42)}
-.card img{width:64px;height:64px;image-rendering:pixelated;display:block}
-.card .num{font-family:var(--font-px);font-size:10px;color:var(--muted);margin-bottom:2px}
-.card .pname{font-size:11px;font-weight:500;line-height:1.25;color:var(--text);word-break:break-word;padding:0 4px}
+.card img{width:64px;height:64px;image-rendering:pixelated;display:block;order:2;margin:1px 0 0}
+.card .num{font-family:var(--font-px);font-size:10px;color:var(--muted);margin-bottom:0;order:0}
+.card .pname{font-size:12px;font-weight:700;line-height:1.2;color:var(--text);word-break:break-word;padding:0 2px;min-height:29px;display:flex;align-items:center;justify-content:center;order:1}
 .card.caught .pname{color:#f5c842}
 .card.perfect .pname{color:#c084fc}
 .card .status{
-  margin-top:5px;font-size:10px;padding:2px 7px;border-radius:20px;
-  font-weight:500;letter-spacing:.3px;
+  margin-top:auto;font-size:10px;padding:3px 7px;border-radius:20px;
+  font-weight:700;letter-spacing:.3px;order:4;line-height:1;
 }
-.card.caught .status{background:rgba(0,0,0,.34);color:#fff7d6}
+.card.caught .status{background:rgba(0,0,0,.34);color:#fff7d6;border:1px solid rgba(245,200,66,.35)}
 .card:not(.caught) .status{background:var(--surface2);color:var(--muted)}
 .card .status-shiny{color:#f5c842}
 .card .status-perfect{color:#d8b4fe}
-.type-row{width:100%;min-height:19px;margin:6px 0 2px;display:flex;justify-content:center;gap:3px;flex-wrap:wrap;padding:0 2px}
+.type-row{width:100%;min-height:19px;margin:2px 0 4px;display:flex;justify-content:center;gap:3px;flex-wrap:wrap;padding:0 2px;order:3}
 .type-pill{display:inline-grid;place-items:center;width:46px;height:12px;filter:drop-shadow(0 2px 5px rgba(0,0,0,.25))}
 .type-pill img{width:46px;height:12px;display:block;image-rendering:auto}
 .empty{color:var(--muted);font-size:14px;padding:4rem 0;text-align:center;grid-column:1/-1}
@@ -929,19 +946,31 @@ function renderGrid() {
     const p    = progress[id] || {};
     const card = document.createElement('div');
     card.className = 'card' + (p.caught ? ' caught' : '') + (p.perfect ? ' perfect' : '');
+    card.setAttribute('role', 'button');
+    card.setAttribute('tabindex', '0');
+    card.setAttribute('aria-label', `${name}, #${String(id).padStart(4,'0')}${p.caught ? ', shiny capture' : ', manquant'}`);
     card.onclick = () => openModal(id);
+    card.onkeydown = e => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        openModal(id);
+      }
+    };
 
     const spriteUrl = p.caught
       ? `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/${id}.png`
       : `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`;
     const typeBadges = renderTypeBadges(id);
+    const statusLabel = p.perfect ? '6IV' : (p.caught ? 'Shiny' : 'A chasser');
+    const statusClass = p.perfect ? 'status-perfect' : (p.caught ? 'status-shiny' : '');
 
     card.innerHTML = `
       <div class="num">#${String(id).padStart(4,'0')}</div>
       <div class="pname">${name}</div>
       <div class="type-row">${typeBadges}</div>
       <img src="${spriteUrl}"
-             alt="${name}" loading="lazy" width="64" height="64">`;
+             alt="${name}" loading="lazy" width="64" height="64">
+      <div class="status ${statusClass}">${statusLabel}</div>`;
     grid.appendChild(card);
   });
 
