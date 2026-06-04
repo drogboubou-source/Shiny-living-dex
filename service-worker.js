@@ -1,10 +1,21 @@
-const CACHE_NAME = 'shiny-living-dex-v6';
+const CACHE_NAME = 'shiny-living-dex-v7';
 const APP_SHELL = [
   './',
   './index.html',
   './pokedex.html',
   './pokemon.json',
-  './manifest.json'
+  './manifest.json',
+  './icon-192.png',
+  './icon-512.png',
+  './assets/region-maps/kanto.jpg',
+  './assets/region-maps/johto.jpg',
+  './assets/region-maps/hoenn.jpg',
+  './assets/region-maps/sinnoh.jpg',
+  './assets/region-maps/unova.jpg',
+  './assets/region-maps/kalos.jpg',
+  './assets/region-maps/alola.jpg',
+  './assets/region-maps/galar.jpg',
+  './assets/region-maps/paldea.jpg'
 ];
 
 self.addEventListener('install', event => {
