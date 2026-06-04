@@ -655,8 +655,15 @@ function getGlobalStats() {
     avgEncountersText: avgEncounters.toLocaleString('fr-FR'),
     totalEggsText: totalEggs.toLocaleString('fr-FR'),
     avgEggsText: avgEggs.toLocaleString('fr-FR'),
-    caughtPercentText: `${caughtPercent.toLocaleString('fr-FR')}%`,
+    caughtPercentText: formatPercent(caughtPercent),
   };
+}
+
+function formatPercent(value) {
+  return (Number(value) || 0).toLocaleString('fr-FR', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  }) + '%';
 }
 
 function toggleStatsPopin() {
@@ -692,12 +699,13 @@ function getAllRegionStats() {
 function renderSidebar() {
   const list = document.getElementById('genList');
   const all = getAllRegionStats();
-  const allPct = Math.round(all.caught / all.total * 100);
+  const allPct = all.caught / all.total * 100;
+  const allPctText = formatPercent(allPct);
   const allButton = `
       <button class="gen-btn ${currentRegion === 'all' ? 'active' : ''}" onclick="switchRegion('all')">
         <span class="gen-dot" style="background:${all.color}"></span>
         <span>Toutes</span>
-        <span class="gen-progress">${all.caught}/${all.total}</span>
+        <span class="gen-progress">${all.caught}/${all.total} · ${allPctText}</span>
       </button>
       <div class="gen-bar-wrap">
         <div class="gen-bar-fill" style="width:${allPct}%;background:${all.color}"></div>
@@ -706,13 +714,14 @@ function renderSidebar() {
   list.innerHTML = allButton + REGIONS.map((r, i) => {
     const c     = countCaught(r);
     const total = r.end - r.start + 1;
-    const pct   = Math.round(c / total * 100);
+    const pct   = c / total * 100;
+    const pctText = formatPercent(pct);
     const active = i === currentRegion ? 'active' : '';
     return `
       <button class="gen-btn ${active}" onclick="switchRegion(${i})">
         <span class="gen-dot" style="background:${r.color}"></span>
         <span>${r.name}</span>
-        <span class="gen-progress">${c}/${total}</span>
+        <span class="gen-progress">${c}/${total} · ${pctText}</span>
       </button>
       <div class="gen-bar-wrap">
         <div class="gen-bar-fill" style="width:${pct}%;background:${r.color}"></div>
@@ -725,7 +734,8 @@ function renderRegion() {
   const r      = isAll ? getAllRegionStats() : REGIONS[currentRegion];
   const caught = isAll ? r.caught : countCaught(r);
   const total  = isAll ? r.total : r.end - r.start + 1;
-  const pct    = Math.round(caught / total * 100);
+  const pct    = caught / total * 100;
+  const pctText = formatPercent(pct);
 
   document.getElementById('regionHeader').innerHTML = `
     <div>
@@ -736,7 +746,7 @@ function renderRegion() {
       <div class="progress-track">
         <div class="progress-fill" style="width:${pct}%;background:${r.color}"></div>
       </div>
-      <div class="progress-label">${caught} / ${total} shinys capturés (${pct}%)</div>
+      <div class="progress-label">${caught} / ${total} shinys capturés (${pctText})</div>
     </div>`;
 
   renderGrid();
