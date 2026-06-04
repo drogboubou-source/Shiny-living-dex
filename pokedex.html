@@ -479,7 +479,8 @@ let progress = {};
 let currentRegion = 'all';
 let currentPokemon = null;
 let sidebarOpen = false;
-const STORAGE_KEY = 'shiny_dex_v3';
+const STORAGE_KEY = 'shiny_dex_v4';
+const LEGACY_STORAGE_KEY = 'shiny_dex_v3';
 
 /* ══════════════════════════════════════
    INIT — charge pokemon.json depuis GitHub Pages
@@ -488,11 +489,63 @@ function init() {
   // Charge la progression locale depuis le localStorage
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) progress = JSON.parse(raw);
+    const legacyRaw = localStorage.getItem(LEGACY_STORAGE_KEY);
+    if (raw) {
+      progress = sanitizeProgress(JSON.parse(raw));
+    } else if (legacyRaw) {
+      progress = sanitizeProgress(JSON.parse(legacyRaw));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+    }
   } catch(e) { progress = {}; }
 
   // Affichage initial avec les données locales déjà disponibles
   renderAll();
+}
+
+function hasUserData(p) {
+  if (!p) return false;
+  const ivs = p.ivs || {};
+  return !!(
+    p.perfect ||
+    p.nickname ||
+    p.encounters ||
+    p.eggs ||
+    p.date ||
+    p.context ||
+    p.youtube ||
+    ivs.hp || ivs.atk || ivs.def || ivs.spa || ivs.spd || ivs.spe
+  );
+}
+
+function sanitizeProgress(data) {
+  const clean = {};
+  Object.entries(data || {}).forEach(([id, p]) => {
+    if (!p || typeof p !== 'object') return;
+    const entry = { ...p };
+    // Ancienne logique: pokemon.json pouvait mettre caught=true juste parce que le nom etait rempli.
+    if (entry.caught && !hasUserData(entry)) delete entry.caught;
+    const isEmpty = !entry.caught && !hasUserData(entry);
+    if (!isEmpty) clean[id] = entry;
+  });
+  return clean;
+}
+
+function rowMeansCaught(p) {
+  const explicit = p['Capturé'] ?? p['Capture'] ?? p['Caught'] ?? p['captured'];
+  if (explicit !== undefined) {
+    const value = String(explicit).trim().toLowerCase();
+    return ['true', '1', 'oui', 'yes', '✓', 'x'].includes(value);
+  }
+  return !!(
+    p['Surnoms'] ||
+    p['Oeufs parent parfait'] ||
+    p['Nombre de rencontres'] ||
+    p['Date de capture'] ||
+    p['Lien YouTube'] ||
+    p['Contexte de capture'] ||
+    p['IV parfaits'] ||
+    p['Parfait']
+  );
 }
 
 // Au chargement de la page, on tente de récupérer le fichier pokemon.json
@@ -515,8 +568,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // On fusionne avec la progression (appelle la fonction déjà existante dans ton code)
         mergePokedexIntoProgress();
 
-        // On rafraîchit l'affichage de la grille
-        if (typeof renderGrid === 'function') renderGrid();
+        renderAll();
         console.log("Données Pokémon chargées avec succès depuis le serveur !");
       }
     })
@@ -538,8 +590,8 @@ function mergePokedexIntoProgress() {
     if (!existing.date       && p['Date de capture'])     existing.date       = p['Date de capture'];
     if (!existing.context    && p['Contexte de capture']) existing.context    = p['Contexte de capture'];
     if (!existing.youtube    && p['Lien YouTube'])        existing.youtube    = p['Lien YouTube'];
-    // Statuts
-    if (p['Noms'] && p['Noms'] !== '') existing.caught = true;
+    // Statuts: le nom seul ne signifie pas que le shiny est capturé.
+    if (rowMeansCaught(p)) existing.caught = true;
     if (p['Parfait'] === true || p['Parfait'] === 'true' || p['Parfait'] === '✓') existing.perfect = true;
     // IVs depuis la chaîne "PV/Atq/Déf/..." ou objet
     if (!existing.ivs && p['IV parfaits']) existing.ivs = parseIVs(p['IV parfaits']);
@@ -924,11 +976,12 @@ function exportJSON() {
     ].filter(Boolean).join(' / ');
 
     // N'inclut que les entrées non vides
-    if (!p.caught && !p.nickname && !p.encounters && !p.date) continue;
+    if (!p.caught && !p.perfect && !p.nickname && !p.encounters && !p.eggs && !p.date && !p.context && !p.youtube && !ivStr) continue;
 
     out.push({
       'N° pokédex':          id,
       'Noms':                NAMES[id] || '',
+      'Capturé':             p.caught ? 'oui' : '',
       'Surnoms':             p.nickname   || '',
       'Oeufs parent parfait': p.eggs      || '',
       'Nombre de rencontres': p.encounters || '',
@@ -963,7 +1016,7 @@ function importJSON(e) {
         mergePokedexIntoProgress();
       } else {
         // Format objet progress direct
-        progress = data;
+        progress = sanitizeProgress(data);
       }
       localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
       renderAll();
