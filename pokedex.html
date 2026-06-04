@@ -766,11 +766,6 @@ function renderGrid() {
     const spriteUrl = p.caught
       ? `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/${id}.png`
       : `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`;
-    const statusTxt = p.caught
-      ? (p.perfect
-        ? '<span class="status-shiny">Shiny</span> <span class="status-perfect">Parfait</span>'
-        : '<span class="status-shiny">Shiny</span>')
-      : '-';
     const typeBadges = renderTypeBadges(id);
 
     card.innerHTML = `
@@ -778,8 +773,7 @@ function renderGrid() {
       <div class="pname">${name}</div>
       <div class="type-row">${typeBadges}</div>
       <img src="${spriteUrl}"
-           alt="${name}" loading="lazy" width="64" height="64">
-      <div class="status">${statusTxt}</div>`;
+           alt="${name}" loading="lazy" width="64" height="64">`;
     grid.appendChild(card);
   }
 
