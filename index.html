@@ -124,6 +124,9 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   .topbar-btns .btn svg{margin:0}
   .stats-popin{left:.75rem;top:calc(var(--header-h) + 8px)}
   .region-header.map-hero{min-height:150px;padding:.9rem}
+  .region-header.all-hero{grid-template-columns:1fr;padding:.9rem}
+  .region-map-mosaic{gap:5px}
+  .region-map-thumb span{font-size:9px}
 }
 
 /* ── MAIN ── */
@@ -143,6 +146,18 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .region-header.map-hero > *{position:relative;z-index:1}
 .region-header.map-hero .region-name{color:#fff!important;text-shadow:0 2px 14px rgba(0,0,0,.65)}
 .region-header.map-hero .region-meta,.region-header.map-hero .progress-label{color:rgba(255,255,255,.82)}
+.region-header.all-hero{
+  display:grid;grid-template-columns:minmax(180px,1fr) minmax(220px,1.25fr);
+  align-items:stretch;gap:1rem;border:1px solid var(--border);border-radius:var(--r-lg);
+  padding:1rem;background:linear-gradient(135deg,rgba(245,200,66,.08),rgba(255,255,255,.025)),var(--surface);
+  box-shadow:0 14px 36px rgba(0,0,0,.22);
+}
+.region-header.all-hero .all-hero-copy{display:flex;flex-direction:column;justify-content:center;gap:.85rem;min-width:0}
+.region-header.all-hero .progress-wrap{width:100%;flex:none}
+.region-map-mosaic{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;min-width:0}
+.region-map-thumb{position:relative;aspect-ratio:16/9;overflow:hidden;border-radius:8px;background:var(--surface2);border:1px solid rgba(255,255,255,.09)}
+.region-map-thumb img{width:100%;height:100%;display:block;object-fit:cover}
+.region-map-thumb span{position:absolute;left:6px;bottom:5px;font-size:10px;font-weight:700;color:#fff;text-shadow:0 1px 6px #000}
 .region-name{font-family:var(--font-px);font-size:24px}
 .region-meta{font-size:12px;color:var(--muted);margin-top:3px}
 .progress-wrap{flex:1;min-width:140px}
@@ -834,11 +849,35 @@ function renderRegion() {
   const total  = isAll ? r.total : r.end - r.start + 1;
   const pct    = caught / total * 100;
   const pctText = formatPercent(pct);
-  const headerClass = isAll ? 'region-header' : 'region-header map-hero';
+  const headerClass = isAll ? 'region-header all-hero' : 'region-header map-hero';
   const mapStyle = !isAll && r.map ? `background-image:url('${r.map}')` : '';
 
   document.getElementById('regionHeader').className = headerClass;
   document.getElementById('regionHeader').setAttribute('style', mapStyle);
+  if (isAll) {
+    const mosaic = REGIONS.map(region => `
+      <div class="region-map-thumb">
+        <img src="${region.map}" alt="Carte de ${region.name}" loading="lazy">
+        <span>${region.name}</span>
+      </div>`).join('');
+    document.getElementById('regionHeader').innerHTML = `
+      <div class="all-hero-copy">
+        <div>
+          <div class="region-name" style="color:${r.color}">${r.name}</div>
+          <div class="region-meta">Générations 1 à 9 · #${r.start}–#${r.end}</div>
+        </div>
+        <div class="progress-wrap">
+          <div class="progress-track">
+            <div class="progress-fill" style="width:${pct}%;background:${r.color}"></div>
+          </div>
+          <div class="progress-label">${caught} / ${total} shinys capturés (${pctText})</div>
+        </div>
+      </div>
+      <div class="region-map-mosaic">${mosaic}</div>`;
+    renderGrid();
+    return;
+  }
+
   document.getElementById('regionHeader').innerHTML = `
     <div>
       <div class="region-name" style="color:${r.color}">${r.name}</div>
