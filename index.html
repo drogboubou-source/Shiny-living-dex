@@ -964,7 +964,7 @@ function renderGrid() {
     const typeBadges = renderTypeBadges(id);
     const statusHtml = p.caught && p.perfect
       ? '<span class="status-pair"><span class="status-shiny">Shiny</span><span class="status-perfect">Parfait</span></span>'
-      : (p.caught ? '<span class="status-shiny">Shiny</span>' : 'A chasser');
+      : (p.caught ? '<span class="status-shiny">Shiny</span>' : 'Manquant');
 
     card.innerHTML = `
       <div class="num">#${String(id).padStart(4,'0')}</div>
