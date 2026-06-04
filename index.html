@@ -455,7 +455,7 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
     </label>
     <label class="shiny-perfect">
       <input type="checkbox" id="fPerfect">
-      <span>⬡ Shiny parfait (6IV)</span>
+      <span>⬡ Shiny parfait</span>
     </label>
 
     <div class="form-row">
@@ -553,14 +553,8 @@ function renderTypeBadges(id) {
   }).join('');
 }
 
-const TYPE_ORDER = [
-  'normal','fire','water','electric','grass','ice','fighting','poison','ground',
-  'flying','psychic','bug','rock','ghost','dragon','dark','steel','fairy'
-];
-
-function typeRank(type) {
-  const index = TYPE_ORDER.indexOf(type);
-  return index === -1 ? TYPE_ORDER.length : index;
+function typeLabel(type) {
+  return TYPE_META[type]?.label || type || '';
 }
 
 function comparePokemonBySort(a, b, mode) {
@@ -568,11 +562,8 @@ function comparePokemonBySort(a, b, mode) {
   const pb = progress[b] || {};
 
   if (mode === 'date-desc' || mode === 'date-asc') {
-    if (!!pa.caught !== !!pb.caught) return pa.caught ? -1 : 1;
     const da = pa.date || '';
     const db = pb.date || '';
-    if (!da && db) return 1;
-    if (da && !db) return -1;
     if (da !== db) return mode === 'date-asc' ? da.localeCompare(db) : db.localeCompare(da);
     return a - b;
   }
@@ -580,9 +571,9 @@ function comparePokemonBySort(a, b, mode) {
   if (mode === 'type') {
     const ta = POKEMON_TYPES[a] || [];
     const tb = POKEMON_TYPES[b] || [];
-    const primary = typeRank(ta[0]) - typeRank(tb[0]);
+    const primary = typeLabel(ta[0]).localeCompare(typeLabel(tb[0]), 'fr', { sensitivity: 'base' });
     if (primary) return primary;
-    const secondary = typeRank(ta[1]) - typeRank(tb[1]);
+    const secondary = typeLabel(ta[1]).localeCompare(typeLabel(tb[1]), 'fr', { sensitivity: 'base' });
     if (secondary) return secondary;
     return a - b;
   }
@@ -603,6 +594,14 @@ function comparePokemonBySort(a, b, mode) {
   }
 
   return a - b;
+}
+
+function pokemonMatchesSortMode(p, mode) {
+  if (mode === 'caught') return !!p.caught;
+  if (mode === 'missing') return !p.caught;
+  if (mode === 'perfect') return !!p.perfect;
+  if (mode === 'date-desc' || mode === 'date-asc') return !!p.caught && !!p.date;
+  return true;
 }
 
 /* ══════════════════════════════════════
@@ -934,6 +933,7 @@ function renderGrid() {
     const name = NAMES[id] || `#${id}`;
     const p    = progress[id] || {};
     if (search && !name.toLowerCase().includes(search) && !String(id).includes(search)) continue;
+    if (!pokemonMatchesSortMode(p, sort)) continue;
     if (filter === 'caught'  && !p.caught)  continue;
     if (filter === 'missing' && p.caught)   continue;
     if (filter === 'perfect' && !p.perfect) continue;
