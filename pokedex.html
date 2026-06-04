@@ -141,6 +141,14 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 }
 .filters input{width:200px}
 .filters input:focus,.filters select:focus{border-color:rgba(255,255,255,.2)}
+.sort-control{
+  display:flex;align-items:center;gap:7px;background:var(--surface);
+  border:1px solid var(--border);border-radius:var(--r);padding-left:10px;
+  color:var(--muted);font-size:12px;font-weight:700;
+}
+.sort-control select{
+  border:0;background:transparent;padding-left:0;
+}
 
 /* ── GRID ── */
 .grid{
@@ -336,6 +344,17 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
         <option value="missing">Manquants</option>
         <option value="perfect">Shiny parfait</option>
       </select>
+      <label class="sort-control">
+        <span>Trier</span>
+        <select id="sortSelect" onchange="renderGrid()">
+          <option value="number">Numéro</option>
+          <option value="date">Date</option>
+          <option value="type">Types</option>
+          <option value="caught">Shinys trouvés</option>
+          <option value="missing">Manquants</option>
+          <option value="perfect">Shinys parfaits</option>
+        </select>
+      </label>
     </div>
     <div class="grid" id="grid"></div>
   </div>
@@ -467,6 +486,55 @@ function renderTypeBadges(id) {
     const meta = TYPE_META[type] || TYPE_META.normal;
     return '<span class="type-pill" title="Type ' + meta.label + '" aria-label="Type ' + meta.label + '"><img src="' + meta.src + '" alt=""></span>';
   }).join('');
+}
+
+const TYPE_ORDER = [
+  'normal','fire','water','electric','grass','ice','fighting','poison','ground',
+  'flying','psychic','bug','rock','ghost','dragon','dark','steel','fairy'
+];
+
+function typeRank(type) {
+  const index = TYPE_ORDER.indexOf(type);
+  return index === -1 ? TYPE_ORDER.length : index;
+}
+
+function comparePokemonBySort(a, b, mode) {
+  const pa = progress[a] || {};
+  const pb = progress[b] || {};
+
+  if (mode === 'date') {
+    const da = pa.date || '';
+    const db = pb.date || '';
+    if (da !== db) return db.localeCompare(da);
+    return a - b;
+  }
+
+  if (mode === 'type') {
+    const ta = POKEMON_TYPES[a] || [];
+    const tb = POKEMON_TYPES[b] || [];
+    const primary = typeRank(ta[0]) - typeRank(tb[0]);
+    if (primary) return primary;
+    const secondary = typeRank(ta[1]) - typeRank(tb[1]);
+    if (secondary) return secondary;
+    return a - b;
+  }
+
+  if (mode === 'caught') {
+    if (!!pa.caught !== !!pb.caught) return pa.caught ? -1 : 1;
+    return a - b;
+  }
+
+  if (mode === 'missing') {
+    if (!!pa.caught !== !!pb.caught) return pa.caught ? 1 : -1;
+    return a - b;
+  }
+
+  if (mode === 'perfect') {
+    if (!!pa.perfect !== !!pb.perfect) return pa.perfect ? -1 : 1;
+    return a - b;
+  }
+
+  return a - b;
 }
 
 /* ══════════════════════════════════════
@@ -756,9 +824,10 @@ function renderGrid() {
   const r      = currentRegion === 'all' ? getAllRegionStats() : REGIONS[currentRegion];
   const search = document.getElementById('searchInput').value.toLowerCase();
   const filter = document.getElementById('filterSelect').value;
+  const sort   = document.getElementById('sortSelect')?.value || 'number';
   const grid   = document.getElementById('grid');
   grid.innerHTML = '';
-  let count = 0;
+  const ids = [];
 
   for (let id = r.start; id <= r.end; id++) {
     const name = NAMES[id] || `#${id}`;
@@ -767,8 +836,14 @@ function renderGrid() {
     if (filter === 'caught'  && !p.caught)  continue;
     if (filter === 'missing' && p.caught)   continue;
     if (filter === 'perfect' && !p.perfect) continue;
-    count++;
+    ids.push(id);
+  }
 
+  ids.sort((a, b) => comparePokemonBySort(a, b, sort));
+
+  ids.forEach(id => {
+    const name = NAMES[id] || `#${id}`;
+    const p    = progress[id] || {};
     const card = document.createElement('div');
     card.className = 'card' + (p.caught ? ' caught' : '') + (p.perfect ? ' perfect' : '');
     card.onclick = () => openModal(id);
@@ -783,11 +858,11 @@ function renderGrid() {
       <div class="pname">${name}</div>
       <div class="type-row">${typeBadges}</div>
       <img src="${spriteUrl}"
-           alt="${name}" loading="lazy" width="64" height="64">`;
+             alt="${name}" loading="lazy" width="64" height="64">`;
     grid.appendChild(card);
-  }
+  });
 
-  if (count === 0) {
+  if (ids.length === 0) {
     grid.innerHTML = '<div class="empty">Aucun Pokémon trouvé.</div>';
   }
 }
