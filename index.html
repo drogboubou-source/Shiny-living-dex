@@ -575,6 +575,7 @@ let currentPokemon = null;
 let sidebarOpen = false;
 const STORAGE_KEY = 'shiny_dex_v4';
 const LEGACY_STORAGE_KEY = 'shiny_dex_v3';
+const REGION_STORAGE_KEY = 'shiny_dex_current_region';
 
 /* ══════════════════════════════════════
    INIT — charge pokemon.json depuis GitHub Pages
@@ -584,6 +585,8 @@ function init() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     const legacyRaw = localStorage.getItem(LEGACY_STORAGE_KEY);
+    const savedRegion = localStorage.getItem(REGION_STORAGE_KEY);
+    if (savedRegion === 'all' || REGIONS[parseInt(savedRegion)]) currentRegion = savedRegion === 'all' ? 'all' : parseInt(savedRegion);
     if (raw) {
       progress = sanitizeProgress(JSON.parse(raw), { trustCaught: true });
     } else if (legacyRaw) {
@@ -970,6 +973,7 @@ function initSidebarSwipe() {
 
 function switchRegion(i) {
   currentRegion = i;
+  localStorage.setItem(REGION_STORAGE_KEY, String(i));
   document.getElementById('searchInput').value = '';
   document.getElementById('filterSelect').value = 'all';
   renderSidebar();
