@@ -7,15 +7,15 @@ const APP_SHELL = [
   './manifest.json',
   './icon-192.png',
   './icon-512.png',
-  './assets/region-maps/kanto.jpg',
-  './assets/region-maps/johto.jpg',
-  './assets/region-maps/hoenn.jpg',
-  './assets/region-maps/sinnoh.jpg',
-  './assets/region-maps/unova.jpg',
-  './assets/region-maps/kalos.jpg',
-  './assets/region-maps/alola.jpg',
-  './assets/region-maps/galar.jpg',
-  './assets/region-maps/paldea.jpg'
+  './region-kanto.jpg',
+  './region-johto.jpg',
+  './region-hoenn.jpg',
+  './region-sinnoh.jpg',
+  './region-unova.jpg',
+  './region-kalos.jpg',
+  './region-alola.jpg',
+  './region-galar.jpg',
+  './region-paldea.jpg'
 ];
 
 self.addEventListener('install', event => {
