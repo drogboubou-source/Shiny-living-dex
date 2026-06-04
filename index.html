@@ -1229,6 +1229,7 @@ function importJSON(e) {
 }
 
 let deferredInstallPrompt = null;
+let installFallbackTimer = null;
 
 window.addEventListener('beforeinstallprompt', event => {
   event.preventDefault();
@@ -1244,7 +1245,10 @@ window.addEventListener('appinstalled', () => {
 });
 
 async function installApp() {
-  if (!deferredInstallPrompt) return;
+  if (!deferredInstallPrompt) {
+    alert("Si Chrome ne propose pas l'installation, ouvre le menu ⋮ puis choisis \"Installer l'application\" ou \"Ajouter à l'écran d'accueil\". L'app doit être ouverte depuis une URL HTTPS, pas depuis le fichier zip.");
+    return;
+  }
   deferredInstallPrompt.prompt();
   await deferredInstallPrompt.userChoice;
   deferredInstallPrompt = null;
@@ -1256,7 +1260,18 @@ async function installApp() {
 init();
 initSidebarSwipe();
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js').catch(() => {});
+  navigator.serviceWorker.register('./service-worker.js').then(registration => {
+    registration.update();
+    if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
+  }).catch(() => {});
+}
+installFallbackTimer = setTimeout(() => {
+  const btn = document.getElementById('installButton');
+  if (btn && !deferredInstallPrompt) btn.style.display = 'inline-flex';
+}, 1800);
+if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone) {
+  const btn = document.getElementById('installButton');
+  if (btn) btn.style.display = 'none';
 }
 </script>
 </body>

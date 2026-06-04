@@ -1,15 +1,16 @@
 {
   "name": "Shiny Living Dex",
   "short_name": "LivingDex",
-  "id": "./index.html",
+  "id": "./",
   "description": "Suivi personnel des Pokémon shiny capturés.",
-  "start_url": "./index.html",
+  "start_url": "./index.html?source=pwa",
   "scope": "./",
   "display": "standalone",
   "background_color": "#0f0f13",
   "theme_color": "#0f0f13",
   "orientation": "portrait",
   "categories": ["games", "utilities"],
+  "prefer_related_applications": false,
   "icons": [
     {
       "src": "./icon-192.png",
