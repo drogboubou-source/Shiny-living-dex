@@ -1,10 +1,10 @@
 {
   "name": "Shiny Living Dex",
   "short_name": "LivingDex",
-  "id": "./",
+  "id": "/Shiny-living-dex/",
   "description": "Suivi personnel des Pokémon shiny capturés.",
-  "start_url": "./index.html?source=pwa",
-  "scope": "./",
+  "start_url": "/Shiny-living-dex/index.html?source=pwa",
+  "scope": "/Shiny-living-dex/",
   "display": "standalone",
   "background_color": "#0f0f13",
   "theme_color": "#0f0f13",
@@ -13,28 +13,16 @@
   "prefer_related_applications": false,
   "icons": [
     {
-      "src": "./Assets/icon-192.png",
+      "src": "/Shiny-living-dex/Assets/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any"
+      "purpose": "any maskable"
     },
     {
-      "src": "./Assets/icon-512.png",
+      "src": "/Shiny-living-dex/Assets/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "./Assets/icon-maskable-192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "maskable"
-    },
-    {
-      "src": "./Assets/icon-maskable-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable"
+      "purpose": "any maskable"
     }
   ]
 }
