@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Shiny Living Dex</title>
-<link rel="manifest" href="./manifest.json?v=40">
+<link rel="manifest" href="./manifest.json?v=41">
 <link rel="icon" href="./Assets/icon-192.png">
 <link rel="apple-touch-icon" href="./Assets/icon-192.png">
 <meta name="theme-color" content="#0f0f13">
@@ -102,6 +102,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .stats-highlight strong{display:block;margin-top:4px;font-size:24px;line-height:1;font-variant-numeric:tabular-nums}
 .stats-highlight.shiny strong{color:#f5c842}
 .stats-highlight.perfect strong{color:#c084fc}
+.stats-highlight.missing strong{color:#b8b8c8}
 .stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .stats-item{display:flex;flex-direction:column;gap:4px;min-width:0;padding:10px;background:rgba(34,34,48,.76);border:1px solid var(--border);border-radius:var(--r);font-size:13px;color:var(--muted)}
 .stats-item strong{color:var(--text);font-size:15px;font-variant-numeric:tabular-nums}
@@ -192,6 +193,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   .stats-popin{left:.75rem;top:calc(var(--header-h) + 8px);width:calc(100vw - 1.5rem);padding:.9rem}
   .stats-popin-title{font-size:20px}
   .stats-highlight-grid,.stats-grid{grid-template-columns:1fr 1fr;gap:7px}
+  .stats-highlight-grid .stats-highlight:first-child{grid-column:1/-1}
   .stats-highlight{padding:10px}
   .stats-highlight strong{font-size:20px}
   .region-header.map-hero{min-height:150px;padding:.9rem}
@@ -905,13 +907,14 @@ function renderStats() {
     <div class="stats-highlight-grid">
       <div class="stats-highlight shiny"><span>Shiny Living dex</span><strong>${stats.caughtPercentText}</strong></div>
       <div class="stats-highlight perfect"><span>Shinys parfaits</span><strong>${stats.perfect}</strong></div>
+      <div class="stats-highlight missing"><span>Shinys manquants</span><strong>${stats.missing}</strong></div>
     </div>
     <div class="stats-grid">
-      <div class="stats-item"><span>Shinys captur&eacute;s</span><strong>${stats.caught}/1025</strong></div>
-      <div class="stats-item"><span>Total rencontres</span><strong>${stats.totalEncountersText}</strong></div>
       <div class="stats-item"><span>Moyenne rencontres</span><strong>${stats.avgEncountersText}</strong></div>
-      <div class="stats-item"><span>Total oeufs parent</span><strong>${stats.totalEggsText}</strong></div>
+      <div class="stats-item"><span>Total rencontres</span><strong>${stats.totalEncountersText}</strong></div>
       <div class="stats-item"><span>Moyenne oeufs parent</span><strong>${stats.avgEggsText}</strong></div>
+      <div class="stats-item"><span>Total oeufs parent</span><strong>${stats.totalEggsText}</strong></div>
+      <div class="stats-item"><span>Shinys captur&eacute;s</span><strong>${stats.caught}</strong></div>
     </div>
   `;
   const perfectSummary = document.getElementById('perfectSummary');
@@ -933,6 +936,7 @@ function getCurrentRegionPerfectCount() {
 function getGlobalStats() {
   const entries = Object.values(progress);
   const caught = entries.filter(p => p.caught).length;
+  const missing = Math.max(0, 1025 - caught);
   const perfect = entries.filter(p => p.perfect).length;
   const totalEncounters = entries.reduce((a,p) => a + (parseInt(p.encounters) || 0), 0);
   const totalEggs = entries.reduce((a,p) => a + (parseInt(p.eggs) || 0), 0);
@@ -941,6 +945,7 @@ function getGlobalStats() {
   const caughtPercent = caught / 1025 * 100;
   return {
     caught,
+    missing,
     perfect,
     totalEncountersText: totalEncounters.toLocaleString('fr-FR'),
     avgEncountersText: avgEncounters.toLocaleString('fr-FR'),
@@ -1578,7 +1583,7 @@ initModalSwipe();
 document.addEventListener('pointerdown', closeStatsOnOutsidePress, true);
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=40', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=41', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
