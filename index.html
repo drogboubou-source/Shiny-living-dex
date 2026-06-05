@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Shiny Living Dex</title>
-<link rel="manifest" href="./manifest.json?v=51">
+<link rel="manifest" href="./manifest.json?v=52">
 <link rel="icon" href="./Assets/icon-192.png">
 <link rel="apple-touch-icon" href="./Assets/icon-192.png">
 <meta name="theme-color" content="#0f0f13">
@@ -90,7 +90,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 }
 .stats-popin.open{display:block}
 .stats-popin-head{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:.9rem}
-.stats-popin-kicker{font-size:11px;color:#c084fc;font-weight:700;text-transform:uppercase;letter-spacing:.9px;margin-bottom:2px}
+.stats-popin-kicker{font-size:11px;color:#f5c842;font-weight:700;text-transform:uppercase;letter-spacing:.9px;margin-bottom:2px}
 .stats-popin-title{font-family:var(--font-px);font-size:22px;color:#fff}
 .stats-close{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:var(--muted);cursor:pointer;font-size:18px;line-height:1;padding:4px 8px;border-radius:8px}
 .stats-close:hover{color:var(--text);background:var(--surface2)}
@@ -103,9 +103,9 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 }
 .stats-highlight span,.stats-item span{display:block;color:var(--muted);font-size:12px;line-height:1.2}
 .stats-highlight strong{display:block;margin-top:4px;font-size:24px;line-height:1;font-variant-numeric:tabular-nums}
-.stats-highlight.shiny strong{color:#c084fc}
+.stats-highlight.shiny strong{color:#f5c842}
 .stats-highlight.perfect strong{color:#d4af37}
-.stats-highlight.caught strong,.stats-highlight.missing strong{color:#c084fc}
+.stats-highlight.caught strong,.stats-highlight.missing strong{color:#f5c842}
 .stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .stats-item{display:flex;flex-direction:column;gap:4px;min-width:0;padding:10px;background:rgba(34,34,48,.76);border:1px solid var(--border);border-radius:var(--r);font-size:13px;color:var(--muted)}
 .stats-item strong{color:var(--text);font-size:15px;font-variant-numeric:tabular-nums}
@@ -1098,7 +1098,7 @@ function getAllRegionStats() {
     gen: '1 à 9',
     start,
     end,
-    color: '#c084fc',
+    color: '#f5c842',
     caught,
     perfect,
     total: end - start + 1
@@ -1650,7 +1650,7 @@ initModalSwipe();
 initStatsButtonSwipe();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=51', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=52', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
