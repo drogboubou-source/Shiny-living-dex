@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Shiny Living Dex</title>
-<link rel="manifest" href="./manifest.json?v=33">
+<link rel="manifest" href="./manifest.json?v=34">
 <link rel="icon" href="./Assets/icon-192.png">
 <link rel="apple-touch-icon" href="./Assets/icon-192.png">
 <meta name="theme-color" content="#0f0f13">
@@ -156,7 +156,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   .region-header.all-hero{min-height:170px;padding:.9rem}
   .region-header.all-hero .all-hero-copy{padding:.75rem}
   .home-signature{right:.75rem;top:.6rem;font-size:12px}
-  .region-map-mosaic{inset:-18px;opacity:.86;filter:saturate(1.12) contrast(1.04) brightness(1.18)}
+  .region-map-mosaic{inset:0;opacity:.86;filter:saturate(1.12) contrast(1.04) brightness(1.18)}
   .filters{display:grid;grid-template-columns:1fr 1fr;gap:8px}
   .filters input{grid-column:1/-1;width:100%}
   .filters select,.sort-control{width:100%;min-width:0}
@@ -190,12 +190,13 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 /* region header */
 .region-header{display:flex;align-items:center;gap:1rem;margin-bottom:1.25rem;flex-wrap:wrap}
 .region-header.map-hero{
-  min-height:190px;align-items:flex-end;position:relative;overflow:hidden;
+  min-height:190px;align-items:flex-end;position:relative;overflow:hidden;isolation:isolate;
   border:1px solid var(--border);border-radius:var(--r-lg);padding:1.15rem;
-  background:var(--surface) center/cover no-repeat;box-shadow:0 14px 36px rgba(0,0,0,.28);
+  background-color:var(--surface);background-position:center;background-size:contain;background-repeat:no-repeat;
+  box-shadow:0 14px 36px rgba(0,0,0,.28),inset 0 0 0 1px rgba(255,255,255,.04);
 }
 .region-header.map-hero::before{
-  content:'';position:absolute;inset:0;
+  content:'';position:absolute;inset:0;border-radius:inherit;
   background:linear-gradient(180deg,rgba(15,15,19,.08),rgba(15,15,19,.84)),linear-gradient(90deg,rgba(15,15,19,.72),rgba(15,15,19,.12));
 }
 .region-header.map-hero > *{position:relative;z-index:1}
@@ -203,12 +204,12 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .region-header.map-hero .region-meta,.region-header.map-hero .progress-label{color:rgba(255,255,255,.82)}
 .region-header.all-hero{
   min-height:210px;display:flex;align-items:center;justify-content:center;text-align:center;
-  position:relative;overflow:hidden;border:1px solid var(--border);border-radius:var(--r-lg);
+  position:relative;overflow:hidden;isolation:isolate;border:1px solid var(--border);border-radius:var(--r-lg);
   padding:1.25rem;background:var(--surface);
-  box-shadow:0 14px 36px rgba(0,0,0,.22);
+  box-shadow:0 14px 36px rgba(0,0,0,.22),inset 0 0 0 1px rgba(255,255,255,.04);
 }
 .region-header.all-hero::before{
-  content:'';position:absolute;inset:0;z-index:1;
+  content:'';position:absolute;inset:0;z-index:1;border-radius:inherit;
   background:radial-gradient(circle at 50% 42%,rgba(15,15,19,.24),rgba(15,15,19,.42) 48%,rgba(15,15,19,.58)),linear-gradient(180deg,rgba(15,15,19,.06),rgba(15,15,19,.34));
 }
 .region-header.all-hero .all-hero-copy{position:relative;z-index:2;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:.85rem;min-width:0;width:min(560px,100%);padding:.9rem 1rem;border-radius:var(--r);background:rgba(15,15,19,.46);box-shadow:0 10px 28px rgba(0,0,0,.28);backdrop-filter:blur(2px)}
@@ -216,7 +217,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .region-header.all-hero .region-name{color:#fff!important;text-shadow:0 2px 14px rgba(0,0,0,.75)}
 .region-header.all-hero .region-meta,.region-header.all-hero .progress-label{color:rgba(255,255,255,.82)}
 .home-signature{position:absolute;right:1.1rem;top:.85rem;z-index:2;font-family:'Pacifico',cursive;font-size:14px;line-height:1;color:#fff7c7;text-shadow:0 2px 10px rgba(0,0,0,.72),0 0 18px rgba(245,200,66,.26);transform:rotate(-3deg);pointer-events:none}
-.region-map-mosaic{position:absolute;inset:-10px;z-index:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;opacity:.94;filter:saturate(1.16) contrast(1.05) brightness(1.28)}
+.region-map-mosaic{position:absolute;inset:0;z-index:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;opacity:.94;filter:saturate(1.16) contrast(1.05) brightness(1.28)}
 .region-map-thumb{position:relative;overflow:hidden;background:var(--surface2);border:0}
 .region-map-thumb img{width:100%;height:100%;display:block;object-fit:cover}
 .region-map-thumb span{display:none}
@@ -1446,7 +1447,7 @@ initPullToRefresh();
 document.addEventListener('pointerdown', closeStatsOnOutsidePress, true);
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=33', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=34', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
