@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Shiny Living Dex</title>
-<link rel="manifest" href="./manifest.json?v=39">
+<link rel="manifest" href="./manifest.json?v=40">
 <link rel="icon" href="./Assets/icon-192.png">
 <link rel="apple-touch-icon" href="./Assets/icon-192.png">
 <meta name="theme-color" content="#0f0f13">
@@ -49,11 +49,19 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .title-actions{display:flex;align-items:center;gap:8px;min-width:0}
 .topbar-stats{display:flex;gap:8px;min-width:0;flex-wrap:wrap}
 #statsButton{
-  min-height:36px;padding:7px 16px;
-  justify-content:center;align-self:center;
-  background:linear-gradient(180deg,rgba(42,42,58,.95),rgba(28,28,39,.95));
-  border-color:rgba(255,255,255,.12);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.05);
+  min-height:38px;padding:8px 15px;
+  justify-content:center;align-self:center;gap:8px;
+  color:#fff;
+  background:
+    linear-gradient(180deg,rgba(245,200,66,.16),rgba(192,132,252,.09)),
+    linear-gradient(180deg,rgba(42,42,58,.96),rgba(25,25,34,.96));
+  border-color:rgba(245,200,66,.22);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 8px 22px rgba(0,0,0,.18);
+}
+#statsButton svg{width:16px;height:16px;color:#f5c842;flex-shrink:0}
+#statsButton:hover,#statsButton[aria-expanded="true"]{
+  border-color:rgba(245,200,66,.42);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.1),0 0 0 1px rgba(245,200,66,.08),0 10px 26px rgba(0,0,0,.24);
 }
 .tstat{
   background:var(--surface2);border:1px solid var(--border);
@@ -64,19 +72,39 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .topbar-btns{display:flex;gap:6px;flex-shrink:0}
 .stats-popin{
   position:fixed;top:calc(var(--header-h) + 10px);left:1.25rem;
-  width:min(360px,calc(100vw - 2rem));padding:1rem;
-  background:var(--surface);border:1px solid var(--border);
-  border-radius:var(--r-lg);box-shadow:0 18px 48px rgba(0,0,0,.46);
-  z-index:180;display:none;
+  width:min(430px,calc(100vw - 2rem));padding:1rem;
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,0)),
+    rgba(24,24,31,.98);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:var(--r-lg);box-shadow:0 22px 60px rgba(0,0,0,.52);
+  z-index:180;display:none;overflow:hidden;
+}
+.stats-popin::before{
+  content:'';position:absolute;left:0;right:0;top:0;height:3px;
+  background:linear-gradient(90deg,#f5c842,#c084fc,#7ed660);
+  opacity:.9;
 }
 .stats-popin.open{display:block}
-.stats-popin-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:.85rem}
-.stats-popin-title{font-family:var(--font-px);font-size:18px;color:#fff}
-.stats-close{background:none;border:none;color:var(--muted);cursor:pointer;font-size:18px;line-height:1;padding:3px 6px;border-radius:6px}
+.stats-popin-head{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:.9rem}
+.stats-popin-kicker{font-size:11px;color:#f5c842;font-weight:700;text-transform:uppercase;letter-spacing:.9px;margin-bottom:2px}
+.stats-popin-title{font-family:var(--font-px);font-size:22px;color:#fff}
+.stats-close{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:var(--muted);cursor:pointer;font-size:18px;line-height:1;padding:4px 8px;border-radius:8px}
 .stats-close:hover{color:var(--text);background:var(--surface2)}
-.stats-grid{display:grid;grid-template-columns:1fr;gap:8px}
-.stats-item{display:flex;justify-content:space-between;gap:12px;padding:9px 10px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);font-size:13px;color:var(--muted)}
-.stats-item strong{color:var(--text);font-variant-numeric:tabular-nums}
+.stats-content{display:block}
+.stats-highlight-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.stats-highlight{
+  min-width:0;padding:12px;
+  background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.018));
+  border:1px solid rgba(255,255,255,.09);border-radius:var(--r);
+}
+.stats-highlight span,.stats-item span{display:block;color:var(--muted);font-size:12px;line-height:1.2}
+.stats-highlight strong{display:block;margin-top:4px;font-size:24px;line-height:1;font-variant-numeric:tabular-nums}
+.stats-highlight.shiny strong{color:#f5c842}
+.stats-highlight.perfect strong{color:#c084fc}
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.stats-item{display:flex;flex-direction:column;gap:4px;min-width:0;padding:10px;background:rgba(34,34,48,.76);border:1px solid var(--border);border-radius:var(--r);font-size:13px;color:var(--muted)}
+.stats-item strong{color:var(--text);font-size:15px;font-variant-numeric:tabular-nums}
 .pull-refresh{
   position:fixed;left:50%;top:calc(var(--header-h) + 10px);z-index:170;
   transform:translate(-50%,-18px);opacity:0;pointer-events:none;
@@ -150,7 +178,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   .topbar{grid-template-columns:minmax(0,1fr) auto;gap:.6rem;padding:0 .75rem}
   .title-actions{gap:6px}
   .topbar-stats{display:none}
-  #statsButton{min-height:34px;padding:7px 12px}
+  #statsButton{min-height:34px;padding:7px 11px}
   .sidebar{position:fixed;top:var(--header-h);bottom:0;left:0;z-index:150;width:var(--sidebar-w);transform:translateX(calc(-1 * var(--sidebar-w)));box-shadow:12px 0 34px rgba(0,0,0,.38);will-change:transform}
   .sidebar.open{width:var(--sidebar-w);transform:translateX(0)}
   .sidebar-toggle.open{left:var(--sidebar-w)}
@@ -161,7 +189,11 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   .btn{padding:6px 9px;font-size:12px}
   .topbar-btns .btn{font-size:0;gap:0}
   .topbar-btns .btn svg{margin:0}
-  .stats-popin{left:.75rem;top:calc(var(--header-h) + 8px)}
+  .stats-popin{left:.75rem;top:calc(var(--header-h) + 8px);width:calc(100vw - 1.5rem);padding:.9rem}
+  .stats-popin-title{font-size:20px}
+  .stats-highlight-grid,.stats-grid{grid-template-columns:1fr 1fr;gap:7px}
+  .stats-highlight{padding:10px}
+  .stats-highlight strong{font-size:20px}
   .region-header.map-hero{min-height:150px;padding:.9rem}
   .region-header.all-hero{min-height:170px;padding:.9rem}
   .region-header.all-hero .all-hero-copy{padding:.75rem}
@@ -437,16 +469,24 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   <div class="title-actions">
     <div class="logo">&#10022; <span class="logo-shiny">Shiny</span> <span class="logo-dex">Living Dex</span></div>
   </div>
-  <button class="btn" id="statsButton" onclick="toggleStatsPopin()">Statistiques</button>
+  <button class="btn" id="statsButton" onclick="toggleStatsPopin()" aria-expanded="false" aria-controls="statsPopin">
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M4 19V5M10 19v-8M16 19V8M22 19H2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+    <span>Statistiques</span>
+  </button>
   <div class="topbar-stats" id="statsBar"></div>
 </div>
 
 <div class="stats-popin" id="statsPopin" role="dialog" aria-labelledby="statsPopinTitle">
   <div class="stats-popin-head">
-    <div class="stats-popin-title" id="statsPopinTitle">Statistiques</div>
+    <div>
+      <div class="stats-popin-kicker">Suivi global</div>
+      <div class="stats-popin-title" id="statsPopinTitle">Statistiques</div>
+    </div>
     <button class="stats-close" onclick="closeStatsPopin()" aria-label="Fermer">&times;</button>
   </div>
-  <div class="stats-grid" id="statsPopinContent"></div>
+  <div class="stats-content" id="statsPopinContent"></div>
 </div>
 <div class="pull-refresh" id="pullRefresh" aria-hidden="true">Tire pour actualiser</div>
 
@@ -862,11 +902,17 @@ function renderStats() {
     <div class="tstat"><strong>${stats.avgEncountersText}</strong> Moy.</div>
   `;
   document.getElementById('statsPopinContent').innerHTML = `
-    <div class="stats-item"><span>Moyenne de rencontres</span><strong>${stats.avgEncountersText}</strong></div>
-    <div class="stats-item"><span>Total de rencontres</span><strong>${stats.totalEncountersText}</strong></div>
-    <div class="stats-item"><span>Moyenne d'oeufs parent</span><strong>${stats.avgEggsText}</strong></div>
-    <div class="stats-item"><span>Total oeufs parent</span><strong>${stats.totalEggsText}</strong></div>
-    <div class="stats-item"><span>Shiny Living dex compl&eacute;t&eacute; &agrave;</span><strong>${stats.caughtPercentText}</strong></div>
+    <div class="stats-highlight-grid">
+      <div class="stats-highlight shiny"><span>Shiny Living dex</span><strong>${stats.caughtPercentText}</strong></div>
+      <div class="stats-highlight perfect"><span>Shinys parfaits</span><strong>${stats.perfect}</strong></div>
+    </div>
+    <div class="stats-grid">
+      <div class="stats-item"><span>Shinys captur&eacute;s</span><strong>${stats.caught}/1025</strong></div>
+      <div class="stats-item"><span>Total rencontres</span><strong>${stats.totalEncountersText}</strong></div>
+      <div class="stats-item"><span>Moyenne rencontres</span><strong>${stats.avgEncountersText}</strong></div>
+      <div class="stats-item"><span>Total oeufs parent</span><strong>${stats.totalEggsText}</strong></div>
+      <div class="stats-item"><span>Moyenne oeufs parent</span><strong>${stats.avgEggsText}</strong></div>
+    </div>
   `;
   const perfectSummary = document.getElementById('perfectSummary');
   if (perfectSummary) {
@@ -912,11 +958,14 @@ function formatPercent(value) {
 }
 
 function toggleStatsPopin() {
-  document.getElementById('statsPopin').classList.toggle('open');
+  const popin = document.getElementById('statsPopin');
+  const isOpen = popin.classList.toggle('open');
+  document.getElementById('statsButton')?.setAttribute('aria-expanded', String(isOpen));
 }
 
 function closeStatsPopin() {
   document.getElementById('statsPopin').classList.remove('open');
+  document.getElementById('statsButton')?.setAttribute('aria-expanded', 'false');
 }
 
 let suppressStatsOutsideClick = false;
@@ -1529,7 +1578,7 @@ initModalSwipe();
 document.addEventListener('pointerdown', closeStatsOnOutsidePress, true);
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=39', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=40', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
