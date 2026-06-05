@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Shiny Living Dex</title>
-<link rel="manifest" href="./manifest.json?v=59">
+<link rel="manifest" href="./manifest.json?v=60">
 <link rel="icon" href="./Assets/icon-192.png">
 <link rel="apple-touch-icon" href="./Assets/icon-192.png">
 <meta name="theme-color" content="#0f0f13">
@@ -756,6 +756,7 @@ let sidebarOpen = false;
 const SPRITE_FALLBACK = './Assets/icon-192.png';
 const STORAGE_KEY = 'shiny_dex_v4';
 const LEGACY_STORAGE_KEY = 'shiny_dex_v3';
+const REGION_SESSION_KEY = 'shiny_dex_session_region';
 
 /* ══════════════════════════════════════
    INIT — charge pokemon.json depuis GitHub Pages
@@ -765,7 +766,8 @@ function init() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     const legacyRaw = localStorage.getItem(LEGACY_STORAGE_KEY);
-    currentRegion = 'all';
+    const sessionRegion = sessionStorage.getItem(REGION_SESSION_KEY);
+    currentRegion = sessionRegion === 'all' || REGIONS[parseInt(sessionRegion)] ? (sessionRegion === 'all' ? 'all' : parseInt(sessionRegion)) : 'all';
     if (raw) {
       progress = sanitizeProgress(JSON.parse(raw), { trustCaught: true });
     } else if (legacyRaw) {
@@ -1452,6 +1454,7 @@ function refreshApp() {
 
 function switchRegion(i) {
   currentRegion = i;
+  sessionStorage.setItem(REGION_SESSION_KEY, String(i));
   scrollMainToTop();
   document.getElementById('searchInput').value = '';
   const filterSelect = document.getElementById('filterSelect');
@@ -1657,7 +1660,7 @@ initStatsButtonSwipe();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=59', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=60', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
