@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Shiny Living Dex</title>
-<link rel="manifest" href="./manifest.json?v=16">
+<link rel="manifest" href="./manifest.json?v=17">
 <link rel="icon" href="./Assets/icon-192.png">
 <link rel="apple-touch-icon" href="./Assets/icon-192.png">
 <meta name="theme-color" content="#0f0f13">
@@ -225,34 +225,17 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.012)),var(--surface);
   border:1px solid var(--border);
   border-radius:var(--r);padding:9px 7px 8px;min-height:148px;
-  text-align:center;cursor:pointer;position:relative;overflow:hidden;isolation:isolate;
+  text-align:center;cursor:pointer;position:relative;overflow:hidden;
   transition:transform .12s,border-color .15s,box-shadow .15s;
   display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:4px;
 }
-.card::before{
-  content:'';position:absolute;inset:0;z-index:0;
-  background:
-    radial-gradient(circle at 50% 46%,rgba(255,255,255,.075),transparent 36%),
-    linear-gradient(180deg,rgba(255,255,255,.04),transparent 42%,rgba(0,0,0,.16));
-  pointer-events:none;
-}
-.card > *{position:relative;z-index:1}
 .card:hover{transform:translateY(-3px);border-color:rgba(255,255,255,.18);box-shadow:0 6px 20px rgba(0,0,0,.4)}
 .card.caught{background:#2a2108;border-color:#f5c842;box-shadow:0 0 0 1px rgba(245,200,66,.62),0 0 14px rgba(245,200,66,.24)}
 .card.caught:hover{border-color:#ffe08a;box-shadow:0 6px 20px rgba(0,0,0,.4),0 0 0 1px rgba(245,200,66,.78),0 0 18px rgba(245,200,66,.34)}
 .card.perfect{border-color:#c084fc;box-shadow:0 0 0 1px rgba(192,132,252,.62),0 0 14px rgba(192,132,252,.3)}
 .card.perfect:hover{border-color:#d8b4fe;box-shadow:0 6px 20px rgba(0,0,0,.4),0 0 0 1px rgba(192,132,252,.78),0 0 18px rgba(192,132,252,.42)}
 .card.family-complete{box-shadow:0 0 0 1px rgba(94,234,212,.5),0 0 18px rgba(94,234,212,.22)}
-.card.family-complete::before{
-  background:
-    radial-gradient(circle at 50% 42%,rgba(94,234,212,.16),transparent 38%),
-    linear-gradient(180deg,rgba(245,200,66,.07),transparent 44%,rgba(94,234,212,.08));
-}
-.sprite-stage{
-  width:72px;height:66px;order:2;margin:0;display:grid;place-items:center;
-  border-radius:10px;background:radial-gradient(circle at 50% 54%,rgba(255,255,255,.09),rgba(255,255,255,.02) 55%,transparent 70%);
-}
-.card img{width:64px;height:64px;image-rendering:pixelated;display:block}
+.card img{width:64px;height:64px;image-rendering:pixelated;display:block;order:2;margin:1px 0 0}
 .card .num{font-family:var(--font-px);font-size:10px;color:var(--muted);margin-bottom:0;order:0}
 .card .pname{font-size:12px;font-weight:700;line-height:1.2;color:var(--text);word-break:break-word;padding:0 2px;min-height:29px;display:flex;align-items:center;justify-content:center;order:1}
 .card.caught .pname{color:#f5c842}
@@ -386,7 +369,6 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   .sort-control select{width:100%}
   .grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
   .card{min-height:132px;padding:8px 4px 7px}
-  .sprite-stage{width:60px;height:56px}
   .card img{width:56px;height:56px}
   .card .pname{font-size:11px;min-height:27px;padding:0}
   .card .status{font-size:9px;padding:3px 6px}
@@ -1040,10 +1022,8 @@ function renderGrid() {
       <div class="num">#${String(id).padStart(4,'0')}</div>
       <div class="pname">${name}</div>
       <div class="type-row">${typeBadges}</div>
-      <div class="sprite-stage">
-        <img src="${spriteUrl}"
-               alt="${name}" loading="lazy" width="64" height="64" onerror="this.onerror=null;this.src='${SPRITE_FALLBACK}'">
-      </div>
+      <img src="${spriteUrl}"
+             alt="${name}" loading="lazy" width="64" height="64" onerror="this.onerror=null;this.src='${SPRITE_FALLBACK}'">
       <div class="status">${statusHtml}</div>`;
     grid.appendChild(card);
   });
@@ -1330,7 +1310,7 @@ async function installApp() {
 init();
 initSidebarSwipe();
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=16', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=17', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
