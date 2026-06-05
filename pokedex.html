@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Shiny Living Dex</title>
-<link rel="manifest" href="./manifest.json?v=21">
+<link rel="manifest" href="./manifest.json?v=22">
 <link rel="icon" href="./Assets/icon-192.png">
 <link rel="apple-touch-icon" href="./Assets/icon-192.png">
 <meta name="theme-color" content="#0f0f13">
@@ -38,13 +38,21 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .topbar{
   position:fixed;top:0;left:0;right:0;height:var(--header-h);
   background:var(--surface);border-bottom:1px solid var(--border);
-  display:flex;align-items:center;gap:1rem;padding:0 1.25rem;z-index:100;
+  display:grid;grid-template-columns:auto auto minmax(0,1fr);align-items:center;
+  gap:1rem;padding:0 1.25rem;z-index:100;
 }
 .logo{font-family:var(--font-px);font-size:20px;white-space:nowrap;letter-spacing:.5px;color:#fff}
 .logo-shiny{color:#f5c842}
 .logo-dex{color:#fff}
-.title-actions{display:flex;align-items:center;gap:8px;flex-shrink:0}
-.topbar-stats{display:flex;gap:8px;flex:1;flex-wrap:wrap}
+.title-actions{display:flex;align-items:center;gap:8px;min-width:0}
+.topbar-stats{display:flex;gap:8px;min-width:0;flex-wrap:wrap}
+#statsButton{
+  min-height:36px;padding:7px 16px;
+  justify-content:center;align-self:center;
+  background:linear-gradient(180deg,rgba(42,42,58,.95),rgba(28,28,39,.95));
+  border-color:rgba(255,255,255,.12);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.05);
+}
 .tstat{
   background:var(--surface2);border:1px solid var(--border);
   border-radius:var(--r);padding:4px 12px;font-size:12px;color:var(--muted);
@@ -115,9 +123,10 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .sidebar-toggle.open{left:var(--sidebar-w)}
 .sidebar-toggle:focus-visible,.btn:focus-visible,.gen-btn:focus-visible,.card:focus-visible,.modal-close:focus-visible,.btn-save:focus-visible{outline:2px solid #f5c842;outline-offset:2px}
 @media (max-width: 720px){
-  .topbar{gap:.6rem;padding:0 .75rem}
+  .topbar{grid-template-columns:minmax(0,1fr) auto;gap:.6rem;padding:0 .75rem}
   .title-actions{gap:6px}
   .topbar-stats{display:none}
+  #statsButton{min-height:34px;padding:7px 12px}
   .sidebar{position:fixed;top:var(--header-h);bottom:0;left:0;z-index:150;width:var(--sidebar-w);transform:translateX(calc(-1 * var(--sidebar-w)));box-shadow:12px 0 34px rgba(0,0,0,.38);will-change:transform}
   .sidebar.open{width:var(--sidebar-w);transform:translateX(0)}
   .sidebar-toggle.open{left:var(--sidebar-w)}
@@ -390,8 +399,8 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
 <div class="topbar">
   <div class="title-actions">
     <div class="logo">&#10022; <span class="logo-shiny">Shiny</span> <span class="logo-dex">Living Dex</span></div>
-    <button class="btn" id="statsButton" onclick="toggleStatsPopin()">Statistiques</button>
   </div>
+  <button class="btn" id="statsButton" onclick="toggleStatsPopin()">Statistiques</button>
   <div class="topbar-stats" id="statsBar"></div>
 </div>
 
@@ -1280,7 +1289,7 @@ function importJSON(e) {
 init();
 initSidebarSwipe();
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=21', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=22', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
