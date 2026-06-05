@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Shiny Living Dex</title>
-<link rel="manifest" href="./manifest.json?v=37">
+<link rel="manifest" href="./manifest.json?v=38">
 <link rel="icon" href="./Assets/icon-192.png">
 <link rel="apple-touch-icon" href="./Assets/icon-192.png">
 <meta name="theme-color" content="#0f0f13">
@@ -1259,6 +1259,65 @@ function initPullToRefresh() {
   }, { passive: true });
 }
 
+function getModalRange() {
+  return currentRegion === 'all' ? getAllRegionStats() : REGIONS[currentRegion];
+}
+
+function goToAdjacentModal(direction) {
+  if (!currentPokemon) return;
+  const range = getModalRange();
+  const nextId = currentPokemon + direction;
+  if (!range || nextId < range.start || nextId > range.end) return;
+  openModal(nextId);
+}
+
+function initModalSwipe() {
+  const modal = document.querySelector('#overlay .modal');
+  const overlay = document.getElementById('overlay');
+  if (!modal || !overlay) return;
+
+  let startX = 0;
+  let startY = 0;
+  let dragging = false;
+  let canSwipe = false;
+
+  modal.addEventListener('touchstart', e => {
+    if (!overlay.classList.contains('open') || !currentPokemon || e.touches.length !== 1) return;
+    if (e.target.closest('input, textarea, select, button, label')) return;
+    startX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
+    dragging = false;
+    canSwipe = true;
+  }, { passive: true });
+
+  modal.addEventListener('touchmove', e => {
+    if (!canSwipe || e.touches.length !== 1) return;
+    const dx = e.touches[0].clientX - startX;
+    const dy = e.touches[0].clientY - startY;
+    if (!dragging && Math.abs(dx) > 24 && Math.abs(dx) > Math.abs(dy) * 1.35) {
+      dragging = true;
+    }
+    if (dragging) e.preventDefault();
+  }, { passive: false });
+
+  modal.addEventListener('touchend', e => {
+    if (!canSwipe) return;
+    const endX = e.changedTouches[0]?.clientX || startX;
+    const endY = e.changedTouches[0]?.clientY || startY;
+    const dx = endX - startX;
+    const dy = endY - startY;
+    canSwipe = false;
+    dragging = false;
+    if (Math.abs(dx) < 72 || Math.abs(dx) < Math.abs(dy) * 1.35) return;
+    goToAdjacentModal(dx < 0 ? 1 : -1);
+  }, { passive: true });
+
+  modal.addEventListener('touchcancel', () => {
+    canSwipe = false;
+    dragging = false;
+  }, { passive: true });
+}
+
 function refreshApp() {
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.getRegistration().then(registration => {
@@ -1467,10 +1526,11 @@ function importJSON(e) {
 init();
 initSidebarSwipe();
 initPullToRefresh();
+initModalSwipe();
 document.addEventListener('pointerdown', closeStatsOnOutsidePress, true);
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=37', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=38', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
