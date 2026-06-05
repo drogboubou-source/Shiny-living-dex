@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Shiny Living Dex</title>
-<link rel="manifest" href="./manifest.json?v=28">
+<link rel="manifest" href="./manifest.json?v=29">
 <link rel="icon" href="./Assets/icon-192.png">
 <link rel="apple-touch-icon" href="./Assets/icon-192.png">
 <meta name="theme-color" content="#0f0f13">
@@ -31,6 +31,7 @@
 *{box-sizing:border-box;margin:0;padding:0}
 html{height:100%;overflow:hidden}
 body{background:var(--bg);color:var(--text);font-family:var(--font);height:100%;overflow:hidden}
+button,.btn,.card,.gen-btn{-webkit-tap-highlight-color:transparent}
 
 /* scanlines */
 body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.06) 2px,rgba(0,0,0,.06) 4px);pointer-events:none;z-index:9999}
@@ -891,11 +892,32 @@ function closeStatsPopin() {
   document.getElementById('statsPopin').classList.remove('open');
 }
 
-function closeStatsOnOutsideClick(e) {
+let suppressStatsOutsideClick = false;
+
+function shouldCloseStatsFromTarget(target) {
   const popin = document.getElementById('statsPopin');
   const button = document.getElementById('statsButton');
-  if (!popin?.classList.contains('open')) return;
-  if (popin.contains(e.target) || button?.contains(e.target)) return;
+  return !!popin?.classList.contains('open') && !popin.contains(target) && !button?.contains(target);
+}
+
+function closeStatsOnOutsidePress(e) {
+  if (!shouldCloseStatsFromTarget(e.target)) return;
+  e.preventDefault();
+  e.stopPropagation();
+  e.stopImmediatePropagation();
+  suppressStatsOutsideClick = true;
+  closeStatsPopin();
+}
+
+function closeStatsOnOutsideClick(e) {
+  if (suppressStatsOutsideClick) {
+    e.preventDefault();
+    e.stopPropagation();
+    e.stopImmediatePropagation();
+    suppressStatsOutsideClick = false;
+    return;
+  }
+  if (!shouldCloseStatsFromTarget(e.target)) return;
   e.preventDefault();
   e.stopPropagation();
   e.stopImmediatePropagation();
@@ -1395,9 +1417,10 @@ function importJSON(e) {
 init();
 initSidebarSwipe();
 initPullToRefresh();
+document.addEventListener('pointerdown', closeStatsOnOutsidePress, true);
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=28', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=29', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
