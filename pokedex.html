@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Shiny Living Dex</title>
-<link rel="manifest" href="./manifest.json?v=22">
+<link rel="manifest" href="./manifest.json?v=23">
 <link rel="icon" href="./Assets/icon-192.png">
 <link rel="apple-touch-icon" href="./Assets/icon-192.png">
 <meta name="theme-color" content="#0f0f13">
@@ -133,7 +133,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   .sidebar-backdrop{position:fixed;top:var(--header-h);left:0;right:0;bottom:0;background:rgba(0,0,0,.42);z-index:140;display:none}
   .sidebar-backdrop.open{display:block}
   .layout{display:block}
-  .main{height:calc(100vh - var(--header-h));padding:1rem}
+  .main{height:calc(100vh - var(--header-h));padding:1rem 1rem 4rem}
   .btn{padding:6px 9px;font-size:12px}
   .topbar-btns .btn{font-size:0;gap:0}
   .topbar-btns .btn svg{margin:0}
@@ -166,7 +166,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 }
 
 /* ── MAIN ── */
-.main{flex:1;overflow-y:auto;padding:1.5rem}
+.main{flex:1;overflow-y:auto;padding:1.5rem 1.5rem 4rem;scroll-padding-top:1.5rem}
 
 /* region header */
 .region-header{display:flex;align-items:center;gap:1rem;margin-bottom:1.25rem;flex-wrap:wrap}
@@ -377,7 +377,7 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
 ::-webkit-scrollbar-thumb{background:var(--surface2);border-radius:3px}
 
 @media (max-width: 720px){
-  .main{height:calc(100vh - var(--header-h));padding:1rem}
+  .main{height:calc(100vh - var(--header-h));padding:1rem 1rem 4rem}
   .filters{display:grid;grid-template-columns:1fr 1fr;gap:8px}
   .filters input{grid-column:1/-1;width:100%}
   .filters select,.sort-control,.perfect-summary{width:100%;min-width:0}
@@ -1112,12 +1112,19 @@ function initSidebarSwipe() {
 function switchRegion(i) {
   currentRegion = i;
   localStorage.setItem(REGION_STORAGE_KEY, String(i));
+  scrollMainToTop();
   document.getElementById('searchInput').value = '';
   const filterSelect = document.getElementById('filterSelect');
   if (filterSelect) filterSelect.value = 'all';
   renderSidebar();
   renderRegion();
   if (window.innerWidth <= 720) setSidebar(false);
+  requestAnimationFrame(scrollMainToTop);
+}
+
+function scrollMainToTop() {
+  const main = document.getElementById('mainContent');
+  if (main) main.scrollTo({ top: 0, left: 0, behavior: 'auto' });
 }
 
 /* ══════════════════════════════════════
@@ -1289,7 +1296,7 @@ function importJSON(e) {
 init();
 initSidebarSwipe();
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=22', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=23', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
