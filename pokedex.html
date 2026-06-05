@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Shiny Living Dex</title>
-<link rel="manifest" href="./manifest.json?v=24">
+<link rel="manifest" href="./manifest.json?v=25">
 <link rel="icon" href="./Assets/icon-192.png">
 <link rel="apple-touch-icon" href="./Assets/icon-192.png">
 <meta name="theme-color" content="#0f0f13">
@@ -836,7 +836,7 @@ function renderStats() {
     <div class="stats-item"><span>Total de rencontres</span><strong>${stats.totalEncountersText}</strong></div>
     <div class="stats-item"><span>Moyenne d'oeufs parent</span><strong>${stats.avgEggsText}</strong></div>
     <div class="stats-item"><span>Total oeufs parent</span><strong>${stats.totalEggsText}</strong></div>
-    <div class="stats-item"><span>Pourcentage total de Shiny captur&eacute;s</span><strong>${stats.caughtPercentText}</strong></div>
+    <div class="stats-item"><span>Shiny Living dex compl&eacute;t&eacute; &agrave;</span><strong>${stats.caughtPercentText}</strong></div>
   `;
   const perfectSummary = document.getElementById('perfectSummary');
   if (perfectSummary) {
@@ -1314,7 +1314,7 @@ function importJSON(e) {
 init();
 initSidebarSwipe();
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=24', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=25', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
