@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Shiny Living Dex</title>
-<link rel="manifest" href="./manifest.json?v=25">
+<link rel="manifest" href="./manifest.json?v=26">
 <link rel="icon" href="./Assets/icon-192.png">
 <link rel="apple-touch-icon" href="./Assets/icon-192.png">
 <meta name="theme-color" content="#0f0f13">
@@ -76,6 +76,17 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .stats-grid{display:grid;grid-template-columns:1fr;gap:8px}
 .stats-item{display:flex;justify-content:space-between;gap:12px;padding:9px 10px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);font-size:13px;color:var(--muted)}
 .stats-item strong{color:var(--text);font-variant-numeric:tabular-nums}
+.pull-refresh{
+  position:fixed;left:50%;top:calc(var(--header-h) + 10px);z-index:170;
+  transform:translate(-50%,-18px);opacity:0;pointer-events:none;
+  min-height:34px;padding:7px 14px;border-radius:999px;
+  background:rgba(24,24,31,.96);border:1px solid rgba(255,255,255,.12);
+  color:var(--text);font-size:12px;font-weight:700;
+  box-shadow:0 14px 34px rgba(0,0,0,.34);
+  transition:opacity .12s,transform .12s;
+}
+.pull-refresh.visible{opacity:1;transform:translate(-50%,0)}
+.pull-refresh.ready{border-color:rgba(245,200,66,.44);color:#f5c842}
 
 /* ── LAYOUT ── */
 .layout{display:flex;margin-top:var(--header-h);height:calc(100dvh - var(--header-h));min-height:0}
@@ -418,6 +429,7 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   </div>
   <div class="stats-grid" id="statsPopinContent"></div>
 </div>
+<div class="pull-refresh" id="pullRefresh" aria-hidden="true">Tire pour actualiser</div>
 
 <!-- SIDEBAR TOGGLE -->
 <button class="sidebar-toggle" id="sidebarToggle" onclick="toggleSidebar()" title="Générations" aria-label="Ouvrir/fermer le menu">&#9654;</button>
@@ -1117,6 +1129,64 @@ function initSidebarSwipe() {
   }, { passive: true });
 }
 
+function initPullToRefresh() {
+  const main = document.getElementById('mainContent');
+  const indicator = document.getElementById('pullRefresh');
+  if (!main || !indicator) return;
+
+  let startY = 0;
+  let pulling = false;
+  let distance = 0;
+  const threshold = 76;
+
+  main.addEventListener('touchstart', e => {
+    if (main.scrollTop > 0 || e.touches.length !== 1) return;
+    startY = e.touches[0].clientY;
+    pulling = true;
+    distance = 0;
+  }, { passive: true });
+
+  main.addEventListener('touchmove', e => {
+    if (!pulling || e.touches.length !== 1) return;
+    distance = e.touches[0].clientY - startY;
+    if (distance <= 0 || main.scrollTop > 0) {
+      indicator.classList.remove('visible', 'ready');
+      return;
+    }
+    e.preventDefault();
+    const offset = Math.min(distance * .42, 58);
+    indicator.style.transform = `translate(-50%,${offset}px)`;
+    indicator.textContent = distance >= threshold ? 'Relâche pour actualiser' : 'Tire pour actualiser';
+    indicator.classList.toggle('ready', distance >= threshold);
+    indicator.classList.add('visible');
+  }, { passive: false });
+
+  main.addEventListener('touchend', () => {
+    if (!pulling) return;
+    pulling = false;
+    const shouldRefresh = distance >= threshold;
+    distance = 0;
+    if (shouldRefresh) {
+      indicator.textContent = 'Actualisation...';
+      indicator.classList.add('visible', 'ready');
+      refreshApp();
+      return;
+    }
+    indicator.classList.remove('visible', 'ready');
+    indicator.style.transform = '';
+  }, { passive: true });
+}
+
+function refreshApp() {
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistration().then(registration => {
+      if (registration) return registration.update();
+    }).finally(() => window.location.reload());
+    return;
+  }
+  window.location.reload();
+}
+
 function switchRegion(i) {
   currentRegion = i;
   localStorage.setItem(REGION_STORAGE_KEY, String(i));
@@ -1313,8 +1383,9 @@ function importJSON(e) {
 /* ══ START ══ */
 init();
 initSidebarSwipe();
+initPullToRefresh();
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=25', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=26', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
