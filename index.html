@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Shiny Living Dex</title>
-<link rel="manifest" href="./manifest.json?v=34">
+<link rel="manifest" href="./manifest.json?v=35">
 <link rel="icon" href="./Assets/icon-192.png">
 <link rel="apple-touch-icon" href="./Assets/icon-192.png">
 <meta name="theme-color" content="#0f0f13">
@@ -156,7 +156,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   .region-header.all-hero{min-height:170px;padding:.9rem}
   .region-header.all-hero .all-hero-copy{padding:.75rem}
   .home-signature{right:.75rem;top:.6rem;font-size:12px}
-  .region-map-mosaic{inset:0;opacity:.86;filter:saturate(1.12) contrast(1.04) brightness(1.18)}
+  .region-map-mosaic{inset:6px;opacity:.9;filter:saturate(1.12) contrast(1.04) brightness(1.18)}
   .filters{display:grid;grid-template-columns:1fr 1fr;gap:8px}
   .filters input{grid-column:1/-1;width:100%}
   .filters select,.sort-control{width:100%;min-width:0}
@@ -192,14 +192,19 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .region-header.map-hero{
   min-height:190px;align-items:flex-end;position:relative;overflow:hidden;isolation:isolate;
   border:1px solid var(--border);border-radius:var(--r-lg);padding:1.15rem;
-  background-color:var(--surface);background-position:center;background-size:contain;background-repeat:no-repeat;
+  background:linear-gradient(180deg,#20202a,#15151c);
   box-shadow:0 14px 36px rgba(0,0,0,.28),inset 0 0 0 1px rgba(255,255,255,.04);
 }
 .region-header.map-hero::before{
-  content:'';position:absolute;inset:0;border-radius:inherit;
+  content:'';position:absolute;inset:7px;border-radius:calc(var(--r-lg) - 5px);z-index:1;
   background:linear-gradient(180deg,rgba(15,15,19,.08),rgba(15,15,19,.84)),linear-gradient(90deg,rgba(15,15,19,.72),rgba(15,15,19,.12));
 }
-.region-header.map-hero > *{position:relative;z-index:1}
+.region-header.map-hero::after{
+  content:'';position:absolute;inset:7px;border-radius:calc(var(--r-lg) - 5px);z-index:0;
+  background-image:var(--region-map);background-position:center;background-size:cover;background-repeat:no-repeat;
+  filter:saturate(1.08) contrast(1.03);
+}
+.region-header.map-hero > *{position:relative;z-index:2}
 .region-header.map-hero .region-name{color:#fff!important;text-shadow:0 2px 14px rgba(0,0,0,.65)}
 .region-header.map-hero .region-meta,.region-header.map-hero .progress-label{color:rgba(255,255,255,.82)}
 .region-header.all-hero{
@@ -217,7 +222,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .region-header.all-hero .region-name{color:#fff!important;text-shadow:0 2px 14px rgba(0,0,0,.75)}
 .region-header.all-hero .region-meta,.region-header.all-hero .progress-label{color:rgba(255,255,255,.82)}
 .home-signature{position:absolute;right:1.1rem;top:.85rem;z-index:2;font-family:'Pacifico',cursive;font-size:14px;line-height:1;color:#fff7c7;text-shadow:0 2px 10px rgba(0,0,0,.72),0 0 18px rgba(245,200,66,.26);transform:rotate(-3deg);pointer-events:none}
-.region-map-mosaic{position:absolute;inset:0;z-index:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;opacity:.94;filter:saturate(1.16) contrast(1.05) brightness(1.28)}
+.region-map-mosaic{position:absolute;inset:7px;z-index:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:2px;opacity:.94;filter:saturate(1.16) contrast(1.05) brightness(1.28);border-radius:calc(var(--r-lg) - 5px);overflow:hidden}
 .region-map-thumb{position:relative;overflow:hidden;background:var(--surface2);border:0}
 .region-map-thumb img{width:100%;height:100%;display:block;object-fit:cover}
 .region-map-thumb span{display:none}
@@ -1013,7 +1018,7 @@ function renderRegion() {
   const pct    = caught / total * 100;
   const pctText = formatPercent(pct);
   const headerClass = isAll ? 'region-header all-hero' : 'region-header map-hero';
-  const mapStyle = !isAll && r.map ? `background-image:url('${r.map}')` : '';
+  const mapStyle = !isAll && r.map ? `--region-map:url('${r.map}')` : '';
 
   document.getElementById('regionHeader').className = headerClass;
   document.getElementById('regionHeader').setAttribute('style', mapStyle);
@@ -1447,7 +1452,7 @@ initPullToRefresh();
 document.addEventListener('pointerdown', closeStatsOnOutsidePress, true);
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=34', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=35', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
