@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Shiny Living Dex</title>
-<link rel="manifest" href="./manifest.json?v=43">
+<link rel="manifest" href="./manifest.json?v=44">
 <link rel="icon" href="./Assets/icon-192.png">
 <link rel="apple-touch-icon" href="./Assets/icon-192.png">
 <meta name="theme-color" content="#0f0f13">
@@ -43,7 +43,8 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   display:grid;grid-template-columns:auto auto minmax(0,1fr);align-items:center;
   gap:1rem;padding:0 1.25rem;z-index:100;
 }
-.logo{font-family:var(--font-px);font-size:20px;white-space:nowrap;letter-spacing:.5px;color:#fff}
+.logo{font-family:var(--font-px);font-size:20px;white-space:nowrap;letter-spacing:.5px;color:#fff;background:none;border:0;cursor:pointer;text-align:left;padding:4px 0}
+.logo:hover .logo-dex{color:#f5c842}
 .logo-shiny{color:#f5c842}
 .logo-dex{color:#fff}
 .title-actions{display:flex;align-items:center;gap:8px;min-width:0}
@@ -102,8 +103,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .stats-highlight strong{display:block;margin-top:4px;font-size:24px;line-height:1;font-variant-numeric:tabular-nums}
 .stats-highlight.shiny strong{color:#f5c842}
 .stats-highlight.perfect strong{color:#c084fc}
-.stats-highlight.caught strong{color:#7ed660}
-.stats-highlight.missing strong{color:#b8b8c8}
+.stats-highlight.caught strong,.stats-highlight.missing strong{color:#f5c842}
 .stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .stats-item{display:flex;flex-direction:column;gap:4px;min-width:0;padding:10px;background:rgba(34,34,48,.76);border:1px solid var(--border);border-radius:var(--r);font-size:13px;color:var(--muted)}
 .stats-item strong{color:var(--text);font-size:15px;font-variant-numeric:tabular-nums}
@@ -469,13 +469,13 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
 <!-- TOPBAR -->
 <div class="topbar">
   <div class="title-actions">
-    <div class="logo">&#10022; <span class="logo-shiny">Shiny</span> <span class="logo-dex">Living Dex</span></div>
+    <button class="logo" onclick="switchRegion('all')" aria-label="Afficher toutes les régions">&#10022; <span class="logo-shiny">Shiny</span> <span class="logo-dex">Living Dex</span></button>
   </div>
   <button class="btn" id="statsButton" onclick="toggleStatsPopin()" aria-expanded="false" aria-controls="statsPopin">
     <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
       <path d="M4 19V5M10 19v-8M16 19V8M22 19H2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
     </svg>
-    <span>Statistiques</span>
+    <span id="statsButtonLabel">Statistiques</span>
   </button>
   <div class="topbar-stats" id="statsBar"></div>
 </div>
@@ -962,15 +962,61 @@ function formatPercent(value) {
   }) + '%';
 }
 
-function toggleStatsPopin() {
+let suppressStatsButtonClick = false;
+
+function setStatsPopinOpen(isOpen) {
   const popin = document.getElementById('statsPopin');
-  const isOpen = popin.classList.toggle('open');
-  document.getElementById('statsButton')?.setAttribute('aria-expanded', String(isOpen));
+  const button = document.getElementById('statsButton');
+  const label = document.getElementById('statsButtonLabel');
+  popin.classList.toggle('open', isOpen);
+  button?.setAttribute('aria-expanded', String(isOpen));
+  if (label) label.textContent = isOpen ? 'Stats' : 'Statistiques';
+}
+
+function toggleStatsPopin() {
+  if (suppressStatsButtonClick) {
+    suppressStatsButtonClick = false;
+    return;
+  }
+  const popin = document.getElementById('statsPopin');
+  setStatsPopinOpen(!popin.classList.contains('open'));
 }
 
 function closeStatsPopin() {
-  document.getElementById('statsPopin').classList.remove('open');
-  document.getElementById('statsButton')?.setAttribute('aria-expanded', 'false');
+  setStatsPopinOpen(false);
+}
+
+function initStatsButtonSwipe() {
+  const button = document.getElementById('statsButton');
+  if (!button) return;
+
+  let startX = 0;
+  let startY = 0;
+  let canSwipe = false;
+
+  button.addEventListener('touchstart', e => {
+    if (e.touches.length !== 1) return;
+    startX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
+    canSwipe = true;
+  }, { passive: true });
+
+  button.addEventListener('touchend', e => {
+    if (!canSwipe) return;
+    canSwipe = false;
+    const endX = e.changedTouches[0]?.clientX || startX;
+    const endY = e.changedTouches[0]?.clientY || startY;
+    const dx = endX - startX;
+    const dy = endY - startY;
+    if (dy > 36 && Math.abs(dy) > Math.abs(dx) * 1.25) {
+      suppressStatsButtonClick = true;
+      setStatsPopinOpen(true);
+    }
+  }, { passive: true });
+
+  button.addEventListener('touchcancel', () => {
+    canSwipe = false;
+  }, { passive: true });
 }
 
 let suppressStatsOutsideClick = false;
@@ -1580,9 +1626,10 @@ init();
 initSidebarSwipe();
 initPullToRefresh();
 initModalSwipe();
+initStatsButtonSwipe();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=43', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=44', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
