@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Shiny Living Dex</title>
-<link rel="manifest" href="./manifest.json?v=20">
+<link rel="manifest" href="./manifest.json?v=21">
 <link rel="icon" href="./Assets/icon-192.png">
 <link rel="apple-touch-icon" href="./Assets/icon-192.png">
 <meta name="theme-color" content="#0f0f13">
@@ -84,7 +84,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .sidebar-backdrop{display:none}
 .sidebar-inner{width:var(--sidebar-w);padding:1rem .75rem;overflow-y:auto;height:100%}
 .sidebar-title{font-family:var(--font-px);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:.75rem;padding:0 .25rem}
-.sidebar-actions{display:grid;gap:8px;margin-bottom:1rem;padding:0 .25rem}
+.sidebar-actions{display:grid;gap:8px;margin-top:1rem;padding:0 .25rem}
 .sidebar-actions .btn{width:100%;justify-content:flex-start;padding:8px 10px;font-size:13px}
 .gen-btn{
   width:100%;display:flex;align-items:center;gap:10px;
@@ -393,11 +393,6 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
     <button class="btn" id="statsButton" onclick="toggleStatsPopin()">Statistiques</button>
   </div>
   <div class="topbar-stats" id="statsBar"></div>
-  <div class="topbar-btns">
-    <button class="btn" id="installButton" onclick="installApp()" style="display:none">
-      Installer
-    </button>
-  </div>
 </div>
 
 <div class="stats-popin" id="statsPopin" role="dialog" aria-labelledby="statsPopinTitle">
@@ -419,6 +414,8 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   <!-- SIDEBAR -->
   <div class="sidebar" id="sidebar">
     <div class="sidebar-inner">
+      <div class="sidebar-title">Générations</div>
+      <div id="genList"></div>
       <div class="sidebar-actions">
         <label class="btn" title="Importer pokemon.json">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
@@ -430,8 +427,6 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
           Exporter JSON
         </button>
       </div>
-      <div class="sidebar-title">Générations</div>
-      <div id="genList"></div>
     </div>
   </div>
 
@@ -1281,50 +1276,14 @@ function importJSON(e) {
   e.target.value = '';
 }
 
-let deferredInstallPrompt = null;
-let installFallbackTimer = null;
-
-window.addEventListener('beforeinstallprompt', event => {
-  event.preventDefault();
-  deferredInstallPrompt = event;
-  const btn = document.getElementById('installButton');
-  if (btn) btn.style.display = 'inline-flex';
-});
-
-window.addEventListener('appinstalled', () => {
-  deferredInstallPrompt = null;
-  const btn = document.getElementById('installButton');
-  if (btn) btn.style.display = 'none';
-});
-
-async function installApp() {
-  if (!deferredInstallPrompt) {
-    alert("Si Chrome ne propose pas l'installation, ouvre le menu ⋮ puis choisis \"Installer l'application\" ou \"Ajouter à l'écran d'accueil\". L'app doit être ouverte depuis une URL HTTPS, pas depuis le fichier zip.");
-    return;
-  }
-  deferredInstallPrompt.prompt();
-  await deferredInstallPrompt.userChoice;
-  deferredInstallPrompt = null;
-  const btn = document.getElementById('installButton');
-  if (btn) btn.style.display = 'none';
-}
-
 /* ══ START ══ */
 init();
 initSidebarSwipe();
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=20', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=21', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
-}
-installFallbackTimer = setTimeout(() => {
-  const btn = document.getElementById('installButton');
-  if (btn && !deferredInstallPrompt) btn.style.display = 'inline-flex';
-}, 1800);
-if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone) {
-  const btn = document.getElementById('installButton');
-  if (btn) btn.style.display = 'none';
 }
 </script>
 </body>
