@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Shiny Living Dex</title>
-<link rel="manifest" href="./manifest.json?v=36">
+<link rel="manifest" href="./manifest.json?v=37">
 <link rel="icon" href="./Assets/icon-192.png">
 <link rel="apple-touch-icon" href="./Assets/icon-192.png">
 <meta name="theme-color" content="#0f0f13">
@@ -188,19 +188,6 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   .modal-footer{position:sticky;bottom:-1.35rem;margin-left:-1.35rem;margin-right:-1.35rem;padding:1rem 1.35rem;background:linear-gradient(180deg,rgba(24,24,31,.72),var(--surface) 34%);border-top:1px solid var(--border)}
   .btn-save{flex:1}
 }
-.android-nav{
-  position:fixed;left:0;right:0;bottom:0;z-index:130;
-  height:calc(24px + env(safe-area-inset-bottom));
-  padding-bottom:env(safe-area-inset-bottom);
-  display:flex;align-items:center;justify-content:center;gap:44px;
-  background:linear-gradient(180deg,rgba(15,15,19,0),rgba(15,15,19,.72));
-  pointer-events:none;opacity:.42;
-}
-.android-nav span{display:grid;place-items:center;width:22px;height:18px;color:rgba(232,232,240,.72)}
-.android-nav .back{font-size:18px;line-height:1}
-.android-nav .home{width:13px;height:13px;border:2px solid currentColor;border-radius:50%}
-.android-nav .recent{width:13px;height:13px;border:2px solid currentColor;border-radius:3px}
-@media (min-width: 721px){.android-nav{display:none}}
 
 /* ── MAIN ── */
 .main{
@@ -513,12 +500,6 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
     <div class="scroll-end" aria-hidden="true"></div>
   </div>
 </div>
-<div class="android-nav" aria-hidden="true">
-  <span class="recent"></span>
-  <span class="home"></span>
-  <span class="back">‹</span>
-</div>
-
 <!-- MODAL -->
 <div class="overlay" id="overlay" onclick="overlayClick(event)">
   <div class="modal">
@@ -1489,7 +1470,7 @@ initPullToRefresh();
 document.addEventListener('pointerdown', closeStatsOnOutsidePress, true);
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=36', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=37', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
