@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Shiny Living Dex</title>
-<link rel="manifest" href="./manifest.json?v=46">
+<link rel="manifest" href="./manifest.json?v=47">
 <link rel="icon" href="./Assets/icon-192.png">
 <link rel="apple-touch-icon" href="./Assets/icon-192.png">
 <meta name="theme-color" content="#0f0f13">
@@ -46,7 +46,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .logo{font-family:var(--font-px);font-size:20px;line-height:1;white-space:nowrap;letter-spacing:.5px;color:#fff;background:none;border:0;cursor:pointer;text-align:left;padding:0;display:inline-flex;align-items:center;gap:9px;min-width:0;height:38px}
 .logo-icon{width:30px;height:30px;border-radius:8px;object-fit:cover;box-shadow:0 0 0 1px rgba(255,255,255,.12),0 6px 14px rgba(0,0,0,.22)}
 .logo-text{display:inline-flex;align-items:center;line-height:1;transform:translateY(-1px)}
-.logo:hover .logo-dex{color:#f5c842}
+.logo:hover .logo-dex,.logo:focus-visible .logo-dex{color:#fff}
 .logo-shiny{color:#f5c842}
 .logo-dex{color:#fff}
 .title-actions{display:flex;align-items:center;gap:8px;min-width:0;height:100%}
@@ -303,9 +303,10 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   display:flex;align-items:center;justify-content:center;gap:7px;
   min-height:38px;padding:9px 12px;border-radius:var(--r);
   background:rgba(192,132,252,.08);border:1px solid rgba(192,132,252,.32);
-  color:#c084fc;font-family:var(--font);font-size:13px;font-weight:800;white-space:nowrap;
+  color:#c084fc;font-family:var(--font);font-size:13px;font-weight:800;white-space:nowrap;cursor:pointer;
 }
 .perfect-summary strong{font-family:var(--font);font-size:14px;color:#d8b4fe}
+.perfect-summary:hover{background:rgba(192,132,252,.13);border-color:rgba(192,132,252,.5)}
 
 /* ── GRID ── */
 .grid{
@@ -487,7 +488,7 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
 <div class="stats-popin" id="statsPopin" role="dialog" aria-labelledby="statsPopinTitle">
   <div class="stats-popin-head">
     <div>
-      <div class="stats-popin-kicker">Suivi global</div>
+      <div class="stats-popin-kicker" id="statsScopeLabel">Toutes les régions</div>
       <div class="stats-popin-title" id="statsPopinTitle">Statistiques</div>
     </div>
     <button class="stats-close" onclick="closeStatsPopin()" aria-label="Fermer">&times;</button>
@@ -528,7 +529,7 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
     <div class="region-header" id="regionHeader"></div>
     <div class="filters">
       <input type="text" id="searchInput" placeholder="🔍  Rechercher..." oninput="renderGrid()">
-      <div class="perfect-summary" id="perfectSummary"></div>
+      <button class="perfect-summary" id="perfectSummary" type="button" onclick="showPerfectOnly()"></button>
       <label class="sort-control">
         <span>Trier</span>
         <select id="sortSelect" onchange="renderGrid()">
@@ -900,9 +901,11 @@ function renderAll() {
 }
 
 function renderStats() {
-  const stats = getGlobalStats();
+  const stats = getCurrentStats();
+  const scopeLabel = document.getElementById('statsScopeLabel');
+  if (scopeLabel) scopeLabel.textContent = currentRegion === 'all' ? 'Toutes les régions' : `${stats.regionName} · Génération ${stats.gen}`;
   document.getElementById('statsBar').innerHTML = `
-    <div class="tstat"><strong style="color:#7ed660">${stats.caught}/1025</strong> Shinys</div>
+    <div class="tstat"><strong style="color:#7ed660">${stats.caught}/${stats.total}</strong> Shinys</div>
     <div class="tstat"><strong style="color:#c084fc">${stats.perfect}</strong> Parfaits</div>
     <div class="tstat"><strong>${stats.totalEncountersText}</strong> Rencontres</div>
     <div class="tstat"><strong>${stats.avgEncountersText}</strong> Moy.</div>
@@ -937,17 +940,25 @@ function getCurrentRegionPerfectCount() {
   return perfect;
 }
 
-function getGlobalStats() {
-  const entries = Object.values(progress);
+function getCurrentStats() {
+  const r = currentRegion === 'all' ? getAllRegionStats() : REGIONS[currentRegion];
+  const total = r.end - r.start + 1;
+  const entries = [];
+  for (let id = r.start; id <= r.end; id++) {
+    if (progress[id]) entries.push(progress[id]);
+  }
   const caught = entries.filter(p => p.caught).length;
-  const missing = Math.max(0, 1025 - caught);
+  const missing = Math.max(0, total - caught);
   const perfect = entries.filter(p => p.perfect).length;
   const totalEncounters = entries.reduce((a,p) => a + (parseInt(p.encounters) || 0), 0);
   const totalEggs = entries.reduce((a,p) => a + (parseInt(p.eggs) || 0), 0);
   const avgEncounters = caught > 0 ? Math.round(totalEncounters / caught) : 0;
   const avgEggs = caught > 0 ? Math.round(totalEggs / caught) : 0;
-  const caughtPercent = caught / 1025 * 100;
+  const caughtPercent = total > 0 ? caught / total * 100 : 0;
   return {
+    regionName: r.name,
+    gen: r.gen,
+    total,
     caught,
     missing,
     perfect,
@@ -957,6 +968,12 @@ function getGlobalStats() {
     avgEggsText: avgEggs.toLocaleString('fr-FR'),
     caughtPercentText: formatPercent(caughtPercent),
   };
+}
+
+function showPerfectOnly() {
+  const filterSelect = document.getElementById('filterSelect');
+  if (filterSelect) filterSelect.value = 'perfect';
+  renderGrid();
 }
 
 function formatPercent(value) {
@@ -1633,7 +1650,7 @@ initModalSwipe();
 initStatsButtonSwipe();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=46', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=47', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
