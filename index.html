@@ -342,13 +342,13 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   min-height:38px;transition:border-color .15s,background .15s,box-shadow .15s;
 }
 .filters input{width:100%;min-width:0}
-.filters input:focus,.filters select:focus{border-color:rgba(125,211,252,.36);box-shadow:0 0 0 3px rgba(125,211,252,.07)}
+.filters input:focus,.filters select:focus{border-color:var(--border);box-shadow:none}
 .sort-control{
   display:flex;align-items:center;gap:7px;background:var(--surface);
   border:1px solid var(--border);border-radius:var(--r);padding-left:12px;min-height:38px;height:38px;
   color:var(--muted);font-size:12px;font-weight:700;
 }
-.sort-control:focus-within{border-color:rgba(125,211,252,.36);box-shadow:0 0 0 3px rgba(125,211,252,.07)}
+.sort-control:focus-within{border-color:var(--border);box-shadow:none}
 .sort-control select{
   border:0;background:transparent;padding:0 10px 0 0;min-height:0;height:auto;
 }
@@ -563,7 +563,8 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
 .hunt-count{font-family:var(--font);font-size:22px;font-weight:800;line-height:1;color:#fff;text-shadow:0 2px 12px rgba(0,0,0,.45);margin-bottom:.9rem;font-variant-numeric:tabular-nums}
 .hunt-actions{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:8px}
 .hunt-actions .btn,.hunt-found{justify-content:center;min-height:38px}
-.hunt-found{width:100%;background:rgba(192,132,252,.13);border-color:rgba(192,132,252,.34);color:#fff}
+.hunt-found{width:100%;background:rgba(125,211,252,.13);border-color:rgba(125,211,252,.38);color:#dff6ff}
+.hunt-found:hover{background:rgba(125,211,252,.18);border-color:rgba(125,211,252,.52);color:#fff}
 .modal.hunt-mode .modal-form-fields,.modal.hunt-mode .btn-save{display:none}
 .modal.hunt-mode .modal-footer{margin-top:1rem}
 .two-col{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px;min-width:0}
@@ -2073,7 +2074,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=96', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=97', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
