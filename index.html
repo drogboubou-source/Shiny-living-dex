@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Shiny Living Dex</title>
-<link rel="manifest" href="./manifest.json?v=64">
+<link rel="manifest" href="./manifest.json?v=65">
 <link rel="icon" href="./Assets/icon-192.png">
 <link rel="apple-touch-icon" href="./Assets/icon-192.png">
 <meta name="theme-color" content="#0f0f13">
@@ -15,15 +15,15 @@
 <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
 <style>
 @font-face{
-  font-family:'Pokemon GB';
-  src:url('./Assets/fonts/pokemon_gbPKMN.woff2') format('woff2');
+  font-family:'Pokemon Classic';
+  src:url('./Assets/fonts/pokemon-classic.ttf') format('truetype');
   font-weight:400;
   font-style:normal;
   font-display:swap;
 }
 @font-face{
-  font-family:'Pokemon DS';
-  src:url('./Assets/fonts/pokemon_dppt-dppt.woff2') format('woff2');
+  font-family:'Pokemon 3DS';
+  src:url('./Assets/fonts/pokemon_x_and_y.woff2') format('woff2');
   font-weight:400;
   font-style:normal;
   font-display:swap;
@@ -35,8 +35,8 @@
   --border:   rgba(255,255,255,0.07);
   --text:     #e8e8f0;
   --muted:    #777788;
-  --font-title:'Pokemon GB', 'Pixelify Sans', monospace;
-  --font:     'Pokemon DS', 'DM Sans', sans-serif;
+  --font-title:'Pokemon Classic', 'Pokemon GB', 'Pixelify Sans', monospace;
+  --font:     'Pokemon 3DS', 'Pokemon DS', 'DM Sans', sans-serif;
   --r:        10px;
   --r-lg:     16px;
   --sidebar-w: 220px;
@@ -1703,7 +1703,7 @@ initStatsButtonSwipe();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=64', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=65', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
