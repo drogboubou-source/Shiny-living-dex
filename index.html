@@ -85,15 +85,16 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   justify-content:center;align-self:center;gap:8px;
   color:#fff;
   background:
-    linear-gradient(180deg,rgba(212,175,55,.16),rgba(192,132,252,.09)),
-    linear-gradient(180deg,rgba(42,42,58,.96),rgba(25,25,34,.96));
-  border-color:rgba(212,175,55,.22);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 8px 22px rgba(0,0,0,.18);
+    linear-gradient(135deg,rgba(192,132,252,.22),rgba(212,175,55,.17) 52%,rgba(126,214,96,.1)),
+    linear-gradient(180deg,rgba(44,44,61,.98),rgba(22,22,31,.98));
+  border-color:rgba(255,255,255,.14);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.14),0 10px 24px rgba(0,0,0,.26),0 0 0 1px rgba(212,175,55,.06);
 }
 #statsButton svg{width:16px;height:16px;color:#d4af37;flex-shrink:0}
+#statsButtonLabel{font-family:var(--font-logo);font-size:10px;line-height:1;letter-spacing:0;color:#fff}
 #statsButton:hover,#statsButton[aria-expanded="true"]{
-  border-color:rgba(212,175,55,.42);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.1),0 0 0 1px rgba(212,175,55,.08),0 10px 26px rgba(0,0,0,.24);
+  border-color:rgba(212,175,55,.46);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.16),0 0 0 1px rgba(212,175,55,.13),0 12px 30px rgba(0,0,0,.34);
 }
 .tstat{
   background:var(--surface2);border:1px solid var(--border);
@@ -106,29 +107,31 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   position:fixed;top:calc(var(--header-h) + 10px);left:1.25rem;
   width:min(430px,calc(100vw - 2rem));padding:1rem;
   background:
-    linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,0)),
+    linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.015)),
+    linear-gradient(135deg,rgba(192,132,252,.1),rgba(212,175,55,.055) 48%,rgba(126,214,96,.045)),
     #171720;
-  border:1px solid rgba(255,255,255,.12);
-  border-radius:var(--r-lg);box-shadow:0 24px 70px rgba(0,0,0,.68);
+  border:1px solid rgba(255,255,255,.16);
+  border-radius:var(--r-lg);box-shadow:0 24px 70px rgba(0,0,0,.68),inset 0 1px 0 rgba(255,255,255,.08);
   z-index:180;display:none;overflow:hidden;
 }
 .stats-popin::before{
   content:'';position:absolute;left:0;right:0;top:0;height:3px;
-  background:linear-gradient(90deg,#c084fc,#d4af37,#7ed660);
-  opacity:.9;
+  background:linear-gradient(90deg,#c084fc,#d4af37,#7ed660,#7dd3fc);
+  opacity:1;
 }
 .stats-popin.open{display:block}
 .stats-popin-head{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:.9rem}
-.stats-popin-kicker{font-size:11px;color:#7dd3fc;font-weight:700;text-transform:uppercase;letter-spacing:.9px;margin-bottom:2px}
-.stats-popin-title{font-family:var(--font);font-size:22px;color:#fff}
-.stats-close{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:var(--muted);cursor:pointer;font-size:18px;line-height:1;padding:4px 8px;border-radius:8px}
-.stats-close:hover{color:var(--text);background:var(--surface2)}
+.stats-popin-kicker{font-family:var(--font-logo);font-size:10px;color:#7dd3fc;font-weight:400;text-transform:none;letter-spacing:0;line-height:1.45;margin-bottom:6px;text-shadow:0 2px 12px rgba(0,0,0,.5)}
+.stats-popin-title{font-family:var(--font-logo);font-size:13px;line-height:1.3;letter-spacing:0;color:#fff;text-shadow:0 2px 14px rgba(0,0,0,.62)}
+.stats-close{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:var(--muted);cursor:pointer;font-size:18px;line-height:1;padding:4px 8px;border-radius:8px;box-shadow:inset 0 1px 0 rgba(255,255,255,.08)}
+.stats-close:hover{color:var(--text);background:rgba(255,255,255,.1);border-color:rgba(212,175,55,.28)}
 .stats-content{display:block}
 .stats-highlight-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
 .stats-highlight{
   min-width:0;padding:12px;
-  background:linear-gradient(180deg,rgba(255,255,255,.065),rgba(255,255,255,.025)),#20202b;
-  border:1px solid rgba(255,255,255,.09);border-radius:var(--r);
+  background:linear-gradient(180deg,rgba(255,255,255,.085),rgba(255,255,255,.025)),#20202b;
+  border:1px solid rgba(255,255,255,.12);border-radius:var(--r);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
 }
 .stats-highlight span,.stats-item span{display:block;color:var(--muted);font-size:12px;line-height:1.2}
 .stats-highlight strong{display:block;margin-top:4px;font-size:24px;line-height:1;font-variant-numeric:tabular-nums}
@@ -136,7 +139,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .stats-highlight.perfect strong{color:#d4af37}
 .stats-highlight.caught strong,.stats-highlight.missing strong{color:#c084fc}
 .stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.stats-item{display:flex;flex-direction:column;gap:4px;min-width:0;padding:10px;background:#20202b;border:1px solid var(--border);border-radius:var(--r);font-size:13px;color:var(--muted)}
+.stats-item{display:flex;flex-direction:column;gap:4px;min-width:0;padding:10px;background:rgba(32,32,43,.92);border:1px solid rgba(255,255,255,.1);border-radius:var(--r);font-size:13px;color:var(--muted);box-shadow:inset 0 1px 0 rgba(255,255,255,.045)}
 .stats-item strong{color:var(--text);font-size:15px;font-variant-numeric:tabular-nums}
 .pull-refresh{
   position:fixed;left:50%;top:calc(var(--header-h) + 10px);z-index:170;
@@ -226,7 +229,8 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   .topbar-btns .btn{font-size:0;gap:0}
   .topbar-btns .btn svg{margin:0}
   .stats-popin{left:.75rem;top:calc(var(--header-h) + 8px);width:calc(100vw - 1.5rem);padding:.9rem}
-  .stats-popin-title{font-size:20px}
+  .stats-popin-title{font-size:11px}
+  .stats-popin-kicker{font-size:9px}
   .stats-highlight-grid,.stats-grid{grid-template-columns:1fr 1fr;gap:7px}
   .stats-highlight{padding:10px}
   .stats-highlight strong{font-size:20px}
@@ -235,6 +239,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   .region-header.all-hero .all-hero-copy{padding:.75rem}
   .home-signature{right:.75rem;top:.6rem;font-size:12px}
   .region-map-mosaic{inset:6px;opacity:.9;filter:saturate(1.12) contrast(1.04) brightness(1.18)}
+  .region-name{font-size:11px}
   .filters{display:grid;grid-template-columns:1fr 1fr;gap:8px}
   .filters input{grid-column:1/-1;width:100%}
   .filters select,.sort-control{width:100%;min-width:0}
@@ -304,7 +309,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .region-map-thumb{position:relative;overflow:hidden;background:var(--surface2);border:0}
 .region-map-thumb img{width:100%;height:100%;display:block;object-fit:cover}
 .region-map-thumb span{display:none}
-.region-name{font-family:var(--font-logo);font-size:18px;line-height:1.35;letter-spacing:0}
+.region-name{font-family:var(--font-logo);font-size:13px;line-height:1.35;letter-spacing:0}
 .region-meta{font-size:12px;color:var(--muted);margin-top:3px}
 .progress-wrap{flex:1;min-width:140px}
 .progress-track{height:5px;background:var(--surface2);border-radius:3px;overflow:hidden;margin-bottom:4px}
@@ -1603,7 +1608,7 @@ function openModal(id, options = {}) {
   shinySprite.src = getPokemonSpriteUrl(id, true);
   document.getElementById('mNum').textContent = `#${String(id).padStart(4,'0')}`;
   document.getElementById('mName').textContent = name;
-  document.getElementById('mRegion').innerHTML = `<span style="color:${r.color};font-family:var(--font)">${r.name} · Génération ${r.gen}</span>`;
+  document.getElementById('mRegion').innerHTML = `<span style="color:${r.color};font-family:var(--font-logo);font-size:10px;line-height:1.45">${r.name} · Génération ${r.gen}</span>`;
 
   document.getElementById('fCaught').checked   = !!p.caught;
   document.getElementById('fPerfect').checked  = !!p.perfect;
@@ -1768,7 +1773,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=73', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=74', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
