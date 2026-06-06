@@ -399,6 +399,17 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   text-align:center;cursor:pointer;position:relative;overflow:hidden;
   display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:4px;
 }
+.card.gen-tracked::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;width:3px;
+  background:linear-gradient(180deg,var(--card-gen-color,#7dd3fc),rgba(255,255,255,.04));
+  opacity:.58;pointer-events:none;
+}
+.card.gen-tracked::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(90deg,var(--card-gen-color,#7dd3fc),transparent 32%);
+  opacity:.045;pointer-events:none;
+}
+.card > *{position:relative;z-index:1}
 .card.caught{border-color:#c084fc;box-shadow:0 0 0 1px rgba(192,132,252,.48),0 0 12px rgba(192,132,252,.18)}
 .card.perfect{border-color:#d4af37;box-shadow:0 0 0 1px rgba(212,175,55,.55),0 0 12px rgba(212,175,55,.24)}
 .card img{width:64px;height:64px;image-rendering:pixelated;display:block;order:2;margin:1px 0 0}
@@ -1464,15 +1475,17 @@ function renderGrid() {
     const name = NAMES[id] || `#${id}`;
     const p    = progress[id] || {};
     const isHuntingCard = !p.caught && (counterMode || p.hunting || p.huntCount);
+    const cardRegion = showGenerationDividers ? getRegionByPokemonId(id) : null;
     if (showGenerationDividers) {
-      const region = getRegionByPokemonId(id);
+      const region = cardRegion;
       if (region && region.gen !== lastDividerGen) {
         grid.appendChild(createGenerationDivider(region));
         lastDividerGen = region.gen;
       }
     }
     const card = document.createElement('div');
-    card.className = 'card' + (p.caught ? ' caught' : '') + (p.perfect ? ' perfect' : '') + (isHuntingCard ? ' hunting' : '');
+    card.className = 'card' + (cardRegion ? ' gen-tracked' : '') + (p.caught ? ' caught' : '') + (p.perfect ? ' perfect' : '') + (isHuntingCard ? ' hunting' : '');
+    if (cardRegion) card.style.setProperty('--card-gen-color', cardRegion.color);
     card.setAttribute('role', 'button');
     card.setAttribute('tabindex', '0');
     card.setAttribute('aria-label', `${name}, #${String(id).padStart(4,'0')}${p.caught ? ', shiny capture' : (isHuntingCard ? ', en cours' : ', manquant')}`);
@@ -2005,7 +2018,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=86', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=87', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
