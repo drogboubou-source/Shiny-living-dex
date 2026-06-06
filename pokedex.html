@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Shiny Living Dex</title>
-<link rel="manifest" href="./manifest.json?v=69">
+<link rel="manifest" href="./manifest.json?v=70">
 <link rel="icon" href="./Assets/icon-192.png">
 <link rel="apple-touch-icon" href="./Assets/icon-192.png">
 <meta name="theme-color" content="#0f0f13">
@@ -15,8 +15,15 @@
 <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
 <style>
 @font-face{
-  font-family:'Retro Pixel Gen1 v69';
-  src:url('./Assets/fonts/retro-pixel-gen1-v69.ttf') format('truetype');
+  font-family:'Logo Retro Pixel v70';
+  src:url('./Assets/fonts/logo-retro-pixel-v70.ttf') format('truetype');
+  font-weight:400;
+  font-style:normal;
+  font-display:block;
+}
+@font-face{
+  font-family:'Region GameBoy v70';
+  src:url('./Assets/fonts/region-gameboy-v70.ttf') format('truetype');
   font-weight:400;
   font-style:normal;
   font-display:block;
@@ -42,7 +49,8 @@
   --border:   rgba(255,255,255,0.07);
   --text:     #e8e8f0;
   --muted:    #777788;
-  --font-title:'Retro Pixel Gen1 v69', 'Pokemon Classic', monospace;
+  --font-logo:'Logo Retro Pixel v70', 'Pokemon Classic', monospace;
+  --font-region:'Region GameBoy v70', 'Pokemon Classic', monospace;
   --font:     'Pokemon 3DS', sans-serif;
   --r:        10px;
   --r-lg:     16px;
@@ -64,7 +72,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   display:grid;grid-template-columns:auto auto minmax(0,1fr);align-items:center;
   gap:1rem;padding:0 1.25rem;z-index:100;
 }
-.logo{font-family:var(--font-title);font-size:20px;line-height:1;white-space:nowrap;letter-spacing:.5px;color:#fff;background:none;border:0;cursor:pointer;text-align:left;padding:0;display:inline-flex;align-items:center;gap:9px;min-width:0;height:38px}
+.logo{font-family:var(--font-logo);font-size:20px;line-height:1;white-space:nowrap;letter-spacing:.5px;color:#fff;background:none;border:0;cursor:pointer;text-align:left;padding:0;display:inline-flex;align-items:center;gap:9px;min-width:0;height:38px}
 .logo-icon{width:30px;height:30px;border-radius:8px;object-fit:cover;box-shadow:0 0 0 1px rgba(255,255,255,.12),0 6px 14px rgba(0,0,0,.22)}
 .logo-text{display:inline-flex;align-items:center;line-height:1;transform:translateY(-1px)}
 .logo:hover .logo-dex,.logo:focus-visible .logo-dex{color:#fff}
@@ -296,7 +304,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .region-map-thumb{position:relative;overflow:hidden;background:var(--surface2);border:0}
 .region-map-thumb img{width:100%;height:100%;display:block;object-fit:cover}
 .region-map-thumb span{display:none}
-.region-name{font-family:var(--font-title);font-size:24px}
+.region-name{font-family:var(--font-region);font-size:24px}
 .region-meta{font-size:12px;color:var(--muted);margin-top:3px}
 .progress-wrap{flex:1;min-width:140px}
 .progress-track{height:5px;background:var(--surface2);border-radius:3px;overflow:hidden;margin-bottom:4px}
@@ -1710,7 +1718,7 @@ initStatsButtonSwipe();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=69', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=70', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
