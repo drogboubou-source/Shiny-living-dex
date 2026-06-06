@@ -244,8 +244,8 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   .region-map-mosaic{inset:6px;opacity:.9;filter:saturate(1.12) contrast(1.04) brightness(1.18)}
   .region-name{font-size:11px}
   .filters{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-  .filters input{grid-column:1/-1;width:100%}
-  .filters select,.sort-control,.counter-button{width:100%;min-width:0}
+  .filters input{width:100%;min-width:0}
+  .filters select,.sort-control,.counter-button,.perfect-summary{width:100%;min-width:0}
   .sort-control select{width:100%}
   .grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
   .card{min-height:132px;padding:8px 4px 7px}
@@ -320,26 +320,26 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .progress-label{font-size:12px;color:var(--muted)}
 
 /* filters */
-.filters{display:flex;gap:8px;margin-bottom:1.25rem;flex-wrap:wrap;align-items:center}
+.filters{display:grid;grid-template-columns:minmax(180px,260px) minmax(150px,190px) auto auto;gap:8px;margin-bottom:1.25rem;align-items:center}
 .filters input,.filters select{
   background:var(--surface);border:1px solid var(--border);
   border-radius:var(--r);color:var(--text);
   font-family:var(--font);font-size:13px;padding:9px 12px;outline:none;
   min-height:38px;transition:border-color .15s,background .15s,box-shadow .15s;
 }
-.filters input{width:min(320px,100%)}
+.filters input{width:100%;min-width:0}
 .filters input:focus,.filters select:focus{border-color:rgba(192,132,252,.42);box-shadow:0 0 0 3px rgba(192,132,252,.08)}
 .sort-control{
   display:flex;align-items:center;gap:7px;background:var(--surface);
-  border:1px solid var(--border);border-radius:var(--r);padding-left:10px;min-height:38px;
+  border:1px solid var(--border);border-radius:var(--r);padding-left:12px;min-height:38px;height:38px;
   color:var(--muted);font-size:12px;font-weight:700;
 }
 .sort-control select{
-  border:0;background:transparent;padding-left:0;
+  border:0;background:transparent;padding:0 10px 0 0;min-height:0;height:auto;
 }
 .perfect-summary,.counter-button{
   display:flex;align-items:center;justify-content:center;gap:7px;
-  min-height:38px;padding:9px 12px;border-radius:var(--r);
+  min-height:38px;height:38px;padding:9px 12px;border-radius:var(--r);
   background:rgba(212,175,55,.08);border:1px solid rgba(212,175,55,.32);
   color:#d4af37;font-family:var(--font);font-size:13px;font-weight:800;white-space:nowrap;cursor:pointer;
 }
@@ -507,7 +507,7 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
 @media (max-width: 720px){
   .main{height:calc(100dvh - var(--header-h));padding:1rem 1rem calc(5.5rem + env(safe-area-inset-bottom))}
   .filters{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-  .filters input{grid-column:1/-1;width:100%}
+  .filters input{width:100%}
   .filters select,.sort-control,.perfect-summary,.counter-button{width:100%;min-width:0}
   .sort-control select{width:100%}
   .grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
@@ -583,8 +583,6 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
     <div class="region-header" id="regionHeader"></div>
     <div class="filters">
       <input type="text" id="searchInput" placeholder="🔍  Rechercher..." oninput="renderGrid()">
-      <button class="counter-button" id="counterButton" type="button" onclick="toggleCounterMode()"><strong>Compteur</strong></button>
-      <button class="perfect-summary" id="perfectSummary" type="button" onclick="toggleSpriteMode()"></button>
       <label class="sort-control">
         <span>Trier</span>
         <select id="sortSelect" onchange="renderGrid()">
@@ -597,6 +595,8 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
           <option value="perfect">Shinys parfaits</option>
         </select>
       </label>
+      <button class="counter-button" id="counterButton" type="button" onclick="toggleCounterMode()"><strong>Compteur</strong></button>
+      <button class="perfect-summary" id="perfectSummary" type="button" onclick="toggleSpriteMode()"></button>
     </div>
     <div class="grid" id="grid"></div>
     <div class="scroll-end" aria-hidden="true"></div>
@@ -1912,7 +1912,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=77', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=78', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
