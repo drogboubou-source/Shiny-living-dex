@@ -59,7 +59,7 @@
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{height:100%;overflow:hidden}
-body{background:var(--bg);color:var(--text);font-family:var(--font);height:100%;overflow:hidden}
+body{background:var(--bg);color:var(--text);font-family:var(--font);height:100%;overflow:hidden;-webkit-text-size-adjust:100%;text-size-adjust:100%}
 button,.btn,.card,.gen-btn{-webkit-tap-highlight-color:transparent}
 
 /* scanlines */
@@ -227,7 +227,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   .sidebar-backdrop{position:fixed;top:var(--header-h);left:0;right:0;bottom:0;background:rgba(0,0,0,.42);z-index:140;display:none}
   .sidebar-backdrop.open{display:block}
   .layout{display:block}
-  .main{height:calc(100dvh - var(--header-h));padding:1rem 1rem calc(5.5rem + env(safe-area-inset-bottom))}
+  .main{height:calc(100vh - var(--header-h));height:calc(100dvh - var(--header-h));padding:1rem 1rem calc(5.5rem + env(safe-area-inset-bottom))}
   .btn{padding:6px 9px;font-size:12px}
   .topbar-btns .btn{font-size:0;gap:0}
   .topbar-btns .btn svg{margin:0}
@@ -505,7 +505,7 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
 ::-webkit-scrollbar-thumb{background:var(--surface2);border-radius:3px}
 
 @media (max-width: 720px){
-  .main{height:calc(100dvh - var(--header-h));padding:1rem 1rem calc(5.5rem + env(safe-area-inset-bottom))}
+  .main{height:calc(100vh - var(--header-h));height:calc(100dvh - var(--header-h));padding:1rem 1rem calc(5.5rem + env(safe-area-inset-bottom))}
   .filters{display:grid;grid-template-columns:1fr 1fr;gap:8px}
   .filters input{width:100%}
   .filters select,.sort-control,.perfect-summary,.counter-button{width:100%;min-width:0}
@@ -573,6 +573,10 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
         <button class="btn" onclick="exportJSON()">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
           Exporter JSON
+        </button>
+        <button class="btn" onclick="shareAppLink()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 10.6l6.8-4.2M8.6 13.4l6.8 4.2"/></svg>
+          Partager
         </button>
       </div>
     </div>
@@ -1868,6 +1872,34 @@ function exportJSON() {
   a.click();
 }
 
+async function shareAppLink() {
+  const url = new URL('./', location.href).href;
+  const data = {
+    title: 'Shiny Living Dex',
+    text: 'Voici mon Shiny Living Dex',
+    url
+  };
+  try {
+    if (navigator.share) {
+      await navigator.share(data);
+    } else if (navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(url);
+      alert('Lien copié dans le presse-papiers.');
+    } else {
+      prompt('Copie ce lien pour le partager :', url);
+    }
+  } catch (err) {
+    if (err?.name !== 'AbortError') {
+      try {
+        await navigator.clipboard?.writeText(url);
+        alert('Lien copié dans le presse-papiers.');
+      } catch (_) {
+        prompt('Copie ce lien pour le partager :', url);
+      }
+    }
+  }
+}
+
 function importJSON(e) {
   const file = e.target.files[0];
   if (!file) return;
@@ -1912,7 +1944,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=79', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=80', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
