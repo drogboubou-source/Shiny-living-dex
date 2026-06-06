@@ -201,7 +201,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   border:1px solid rgba(255,255,255,.12);border-left:none;
   border-radius:0 8px 8px 0;
   cursor:pointer;display:flex;align-items:center;justify-content:center;
-  z-index:101;transition:left .25s cubic-bezier(.4,0,.2,1),color .12s,box-shadow .12s;
+  z-index:101;transition:color .12s,box-shadow .12s;
   color:var(--muted);box-shadow:0 10px 26px rgba(0,0,0,.34);
   font-size:7px;
 }
@@ -783,6 +783,7 @@ let currentRegion = 'all';
 let currentPokemon = null;
 let sidebarOpen = false;
 let spriteMode = 'pixel';
+let restoringHistory = false;
 const SPRITE_FALLBACK = './Assets/icon-192.png';
 const STORAGE_KEY = 'shiny_dex_v4';
 const LEGACY_STORAGE_KEY = 'shiny_dex_v3';
@@ -932,6 +933,46 @@ function renderAll() {
   renderStats();
   renderSidebar();
   renderRegion();
+}
+
+function getAppHistoryState(extra = {}) {
+  return {
+    app: 'shiny-living-dex',
+    region: currentRegion,
+    pokemon: currentPokemon,
+    ...extra
+  };
+}
+
+function updateAppHistory(mode = 'replace') {
+  if (!history.replaceState || restoringHistory) return;
+  const state = getAppHistoryState();
+  const action = mode === 'push' && history.pushState ? 'pushState' : 'replaceState';
+  history[action](state, '', location.href);
+}
+
+function applyAppHistoryState(state) {
+  if (!state || state.app !== 'shiny-living-dex') return;
+  restoringHistory = true;
+  currentRegion = state.region === 'all' || REGIONS[parseInt(state.region)] ? (state.region === 'all' ? 'all' : parseInt(state.region)) : 'all';
+  sessionStorage.setItem(REGION_SESSION_KEY, String(currentRegion));
+  renderSidebar();
+  renderStats();
+  renderRegion();
+  setSidebar(false);
+  if (state.pokemon) {
+    openModal(state.pokemon, { skipHistory: true });
+  } else {
+    closeModal({ skipHistory: true });
+  }
+  restoringHistory = false;
+}
+
+function initAppHistory() {
+  updateAppHistory('replace');
+  window.addEventListener('popstate', event => {
+    applyAppHistoryState(event.state);
+  });
 }
 
 function renderStats() {
@@ -1511,7 +1552,12 @@ function refreshApp() {
 }
 
 function switchRegion(i) {
+  if (i === currentRegion && !currentPokemon) {
+    if (window.innerWidth <= 720) setSidebar(false);
+    return;
+  }
   currentRegion = i;
+  currentPokemon = null;
   sessionStorage.setItem(REGION_SESSION_KEY, String(i));
   scrollMainToTop();
   document.getElementById('searchInput').value = '';
@@ -1521,6 +1567,7 @@ function switchRegion(i) {
   renderStats();
   renderRegion();
   if (window.innerWidth <= 720) setSidebar(false);
+  updateAppHistory('push');
   requestAnimationFrame(() => {
     scrollMainToTop();
     requestAnimationFrame(scrollMainToTop);
@@ -1542,7 +1589,7 @@ function scrollMainToTop() {
 /* ══════════════════════════════════════
    MODAL
 ══════════════════════════════════════ */
-function openModal(id) {
+function openModal(id, options = {}) {
   currentPokemon = id;
   const p    = progress[id] || {};
   const name = NAMES[id] || `#${id}`;
@@ -1583,6 +1630,7 @@ function openModal(id) {
   const modal = document.querySelector('#overlay .modal');
   if (modal) modal.scrollTop = 0;
   document.getElementById('overlay').classList.add('open');
+  if (!options.skipHistory) updateAppHistory('push');
   requestAnimationFrame(() => {
     if (modal) modal.scrollTop = 0;
   });
@@ -1591,11 +1639,12 @@ function openModal(id) {
 function overlayClick(e) {
   if (e.target === document.getElementById('overlay')) closeModal();
 }
-function closeModal() {
+function closeModal(options = {}) {
   const modal = document.querySelector('#overlay .modal');
   document.getElementById('overlay').classList.remove('open');
   if (modal) modal.scrollTop = 0;
   currentPokemon = null;
+  if (!options.skipHistory) updateAppHistory('push');
 }
 
 function saveModal() {
@@ -1715,10 +1764,11 @@ initSidebarSwipe();
 initPullToRefresh();
 initModalSwipe();
 initStatsButtonSwipe();
+initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=72', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=73', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
