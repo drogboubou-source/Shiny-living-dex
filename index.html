@@ -374,7 +374,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .counter-button strong{color:inherit;font-size:13px;font-weight:800}
 .counter-icon{
   display:grid;place-items:center;width:20px;height:20px;border-radius:7px;flex:0 0 auto;
-  background:linear-gradient(180deg,rgba(125,211,252,.2),rgba(192,132,252,.12));
+  background:linear-gradient(180deg,rgba(125,211,252,.2),rgba(125,211,252,.07));
   border:1px solid rgba(255,255,255,.12);color:#dff6ff;font-size:12px;line-height:1;
   box-shadow:inset 0 1px 0 rgba(255,255,255,.12);
 }
@@ -385,10 +385,26 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   background:rgba(212,175,55,.08);
   border-color:rgba(212,175,55,.32);
 }
-.counter-button:hover{transform:translateY(-1px);border-color:rgba(192,132,252,.34);background:linear-gradient(180deg,rgba(192,132,252,.13),rgba(125,211,252,.045)),#1d1b29}
+.counter-button:hover{
+  transform:none;
+  background:linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.022)),#1b1b25;
+  border-color:rgba(255,255,255,.13);
+}
+.counter-button.active:hover{
+  background:linear-gradient(180deg,rgba(125,211,252,.18),rgba(125,211,252,.055)),#1b2430;
+  border-color:rgba(125,211,252,.52);
+}
 .counter-button:focus,.perfect-summary:focus{outline:none}
 .counter-button:focus-visible,.perfect-summary:focus-visible{outline:none;box-shadow:inherit}
 .counter-button:active,.perfect-summary:active{transform:none}
+.counter-button:active{
+  background:linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.022)),#1b1b25;
+  border-color:rgba(255,255,255,.13);
+}
+.counter-button.active:active{
+  background:linear-gradient(180deg,rgba(125,211,252,.18),rgba(125,211,252,.055)),#1b2430;
+  border-color:rgba(125,211,252,.52);
+}
 .perfect-summary:active{
   background:rgba(212,175,55,.08);
   border-color:rgba(212,175,55,.32);
@@ -673,7 +689,7 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
           <option value="perfect">Shinys parfaits</option>
         </select>
       </label>
-      <button class="counter-button" id="counterButton" type="button" onclick="toggleCounterMode()"></button>
+      <button class="counter-button" id="counterButton" type="button" onclick="toggleCounterMode()" onpointerup="this.blur()" ontouchend="this.blur()"></button>
       <button class="perfect-summary" id="perfectSummary" type="button" onclick="toggleSpriteMode()" onpointerup="this.blur()" ontouchend="this.blur()"></button>
     </div>
     <div class="grid" id="grid"></div>
@@ -1219,11 +1235,11 @@ function updateCounterButton() {
           <path d="M17 15v5M14.5 17.5h5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
         </svg>
       </span>
-      <strong>Compteur</strong>
+      <strong>Shasse au Shiny</strong>
     </span>`;
   button.classList.toggle('active', counterMode);
   button.setAttribute('aria-pressed', String(counterMode));
-  button.setAttribute('aria-label', `${counterMode ? 'Masquer' : 'Afficher'} le compteur`);
+  button.setAttribute('aria-label', `${counterMode ? 'Masquer' : 'Afficher'} la shasse au Shiny`);
 }
 
 function toggleCounterMode() {
@@ -2056,7 +2072,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=94', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=95', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
