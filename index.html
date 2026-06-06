@@ -13,6 +13,13 @@
 <meta name="apple-mobile-web-app-title" content="LivingDex">
 <style>
 @font-face{
+  font-family:'Pokemon GB Local';
+  src:url('./Assets/fonts/pokemon-gb.ttf') format('truetype');
+  font-weight:400;
+  font-style:normal;
+  font-display:block;
+}
+@font-face{
   font-family:'Press Start 2P';
   src:url('./Assets/fonts/press-start-2p.ttf') format('truetype');
   font-weight:400;
@@ -54,7 +61,7 @@
   --border:   rgba(255,255,255,0.07);
   --text:     #e8e8f0;
   --muted:    #777788;
-  --font-logo:'Press Start 2P', monospace;
+  --font-logo:'Pokemon GB Local', 'Press Start 2P', monospace;
   --font-region:'Region GameBoy v70', 'Pokemon Classic', monospace;
   --font:     'Pokemon 3DS', sans-serif;
   --r:        10px;
@@ -1949,7 +1956,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=81', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=82', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
