@@ -1,8 +1,0 @@
-[{
-      "relation": ["delegate_permission/common.handle_all_urls"],
-      "target": {
-        "namespace": "android_app",
-        "package_name": "io.github.drogboubou_source.twa",
-        "sha256_cert_fingerprints": ["37:28:5B:BD:FF:65:97:F9:8B:7D:F2:83:83:40:5E:E2:5C:5F:97:74:FA:32:64:26:96:2D:15:5B:05:7D:AA:1D"]
-      }
-    }]
