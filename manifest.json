@@ -3,7 +3,7 @@
   "short_name": "LivingDex",
   "id": "/Shiny-living-dex/",
   "description": "Suivi personnel des Pokémon shiny capturés.",
-  "start_url": "/Shiny-living-dex/index.html?source=pwa",
+  "start_url": "/Shiny-living-dex/",
   "scope": "/Shiny-living-dex/",
   "display": "fullscreen",
   "display_override": ["fullscreen", "standalone"],
