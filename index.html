@@ -245,7 +245,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   .region-name{font-size:11px}
   .filters{display:grid;grid-template-columns:1fr 1fr;gap:8px}
   .filters input{grid-column:1/-1;width:100%}
-  .filters select,.sort-control{width:100%;min-width:0}
+  .filters select,.sort-control,.counter-button{width:100%;min-width:0}
   .sort-control select{width:100%}
   .grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
   .card{min-height:132px;padding:8px 4px 7px}
@@ -267,7 +267,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 
 /* ── MAIN ── */
 .main{
-  flex:1;min-height:0;overflow-y:auto;
+  flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;scrollbar-gutter:stable;
   padding:1.5rem 1.5rem calc(5.5rem + env(safe-area-inset-bottom));
   scroll-padding-top:1.5rem;overscroll-behavior:contain;
   -webkit-overflow-scrolling:touch;
@@ -337,14 +337,18 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .sort-control select{
   border:0;background:transparent;padding-left:0;
 }
-.perfect-summary{
+.perfect-summary,.counter-button{
   display:flex;align-items:center;justify-content:center;gap:7px;
   min-height:38px;padding:9px 12px;border-radius:var(--r);
   background:rgba(212,175,55,.08);border:1px solid rgba(212,175,55,.32);
   color:#d4af37;font-family:var(--font);font-size:13px;font-weight:800;white-space:nowrap;cursor:pointer;
 }
-.perfect-summary strong{font-family:var(--font);font-size:14px;color:#f7d774}
+.counter-button{background:rgba(125,211,252,.08);border-color:rgba(125,211,252,.28);color:#7dd3fc}
+.counter-button.active{background:rgba(125,211,252,.16);border-color:rgba(125,211,252,.5);color:#dff6ff;box-shadow:0 0 0 1px rgba(125,211,252,.08),0 8px 18px rgba(0,0,0,.18)}
+.perfect-summary strong,.counter-button strong{font-family:var(--font);font-size:14px;color:#f7d774}
+.counter-button strong{color:#dff6ff}
 .perfect-summary:hover{background:rgba(212,175,55,.13);border-color:rgba(212,175,55,.5)}
+.counter-button:hover{background:rgba(125,211,252,.13);border-color:rgba(125,211,252,.44)}
 
 /* ── GRID ── */
 .grid{
@@ -504,7 +508,7 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   .main{height:calc(100dvh - var(--header-h));padding:1rem 1rem calc(5.5rem + env(safe-area-inset-bottom))}
   .filters{display:grid;grid-template-columns:1fr 1fr;gap:8px}
   .filters input{grid-column:1/-1;width:100%}
-  .filters select,.sort-control,.perfect-summary{width:100%;min-width:0}
+  .filters select,.sort-control,.perfect-summary,.counter-button{width:100%;min-width:0}
   .sort-control select{width:100%}
   .grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
   .card{min-height:132px;padding:8px 4px 7px}
@@ -579,6 +583,7 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
     <div class="region-header" id="regionHeader"></div>
     <div class="filters">
       <input type="text" id="searchInput" placeholder="🔍  Rechercher..." oninput="renderGrid()">
+      <button class="counter-button" id="counterButton" type="button" onclick="toggleCounterMode()"><strong>Compteur</strong></button>
       <button class="perfect-summary" id="perfectSummary" type="button" onclick="toggleSpriteMode()"></button>
       <label class="sort-control">
         <span>Trier</span>
@@ -588,7 +593,6 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
           <option value="date-asc">Date croissante</option>
           <option value="type">Types</option>
           <option value="caught">Shinys trouvés</option>
-          <option value="hunting">En cours</option>
           <option value="missing">Manquants</option>
           <option value="perfect">Shinys parfaits</option>
         </select>
@@ -777,13 +781,6 @@ function comparePokemonBySort(a, b, mode) {
     return a - b;
   }
 
-  if (mode === 'hunting') {
-    const ca = parseInt(pa.huntCount) || 0;
-    const cb = parseInt(pb.huntCount) || 0;
-    if (ca !== cb) return cb - ca;
-    return a - b;
-  }
-
   if (mode === 'missing') {
     if (!!pa.caught !== !!pb.caught) return pa.caught ? 1 : -1;
     return a - b;
@@ -799,7 +796,6 @@ function comparePokemonBySort(a, b, mode) {
 
 function pokemonMatchesSortMode(p, mode) {
   if (mode === 'caught') return !!p.caught;
-  if (mode === 'hunting') return !p.caught;
   if (mode === 'missing') return !p.caught;
   if (mode === 'perfect') return !!p.caught && !!p.perfect;
   if (mode === 'date-desc' || mode === 'date-asc') return !!p.caught && !!p.date;
@@ -826,6 +822,7 @@ let currentRegion = 'all';
 let currentPokemon = null;
 let sidebarOpen = false;
 let spriteMode = 'pixel';
+let counterMode = false;
 let restoringHistory = false;
 const SPRITE_FALLBACK = './Assets/icon-192.png';
 const STORAGE_KEY = 'shiny_dex_v4';
@@ -1055,6 +1052,7 @@ function renderStats() {
   `;
   const perfectSummary = document.getElementById('perfectSummary');
   if (perfectSummary) updateSpriteToggle();
+  updateCounterButton();
 }
 
 function getCurrentRegionPerfectCount() {
@@ -1129,6 +1127,19 @@ function updateSpriteToggle() {
     ? '<strong>3D</strong> activé'
     : '<strong>2D</strong> pixel';
   button.setAttribute('aria-label', isHomeSpriteMode() ? 'Afficher les sprites pixel' : 'Afficher les sprites 3D');
+}
+
+function updateCounterButton() {
+  const button = document.getElementById('counterButton');
+  if (!button) return;
+  button.classList.toggle('active', counterMode);
+  button.setAttribute('aria-pressed', String(counterMode));
+}
+
+function toggleCounterMode() {
+  counterMode = !counterMode;
+  updateCounterButton();
+  renderGrid();
 }
 
 function formatPercent(value) {
@@ -1361,7 +1372,7 @@ function renderGrid() {
   const search = document.getElementById('searchInput').value.toLowerCase();
   const filter = document.getElementById('filterSelect')?.value || 'all';
   const sort   = document.getElementById('sortSelect')?.value || 'number';
-  const isHuntingView = sort === 'hunting';
+  const isHuntingView = counterMode;
   const grid   = document.getElementById('grid');
   grid.innerHTML = '';
   const ids = [];
@@ -1370,6 +1381,7 @@ function renderGrid() {
     const name = NAMES[id] || `#${id}`;
     const p    = progress[id] || {};
     if (search && !name.toLowerCase().includes(search) && !String(id).includes(search)) continue;
+    if (counterMode && p.caught) continue;
     if (!pokemonMatchesSortMode(p, sort)) continue;
     if (filter === 'caught'  && !p.caught)  continue;
     if (filter === 'missing' && p.caught)   continue;
@@ -1377,16 +1389,28 @@ function renderGrid() {
     ids.push(id);
   }
 
-  ids.sort((a, b) => comparePokemonBySort(a, b, sort));
+  ids.sort((a, b) => {
+    if (!counterMode) return comparePokemonBySort(a, b, sort);
+    const pa = progress[a] || {};
+    const pb = progress[b] || {};
+    const ha = !!pa.hunting || !!pa.huntCount;
+    const hb = !!pb.hunting || !!pb.huntCount;
+    if (ha !== hb) return ha ? -1 : 1;
+    const ca = parseInt(pa.huntCount) || 0;
+    const cb = parseInt(pb.huntCount) || 0;
+    if (ca !== cb) return cb - ca;
+    return a - b;
+  });
 
   ids.forEach(id => {
     const name = NAMES[id] || `#${id}`;
     const p    = progress[id] || {};
+    const isHuntingCard = !p.caught && (counterMode || p.hunting || p.huntCount);
     const card = document.createElement('div');
-    card.className = 'card' + (p.caught ? ' caught' : '') + (p.perfect ? ' perfect' : '') + (isHuntingView && !p.caught ? ' hunting' : '');
+    card.className = 'card' + (p.caught ? ' caught' : '') + (p.perfect ? ' perfect' : '') + (isHuntingCard ? ' hunting' : '');
     card.setAttribute('role', 'button');
     card.setAttribute('tabindex', '0');
-    card.setAttribute('aria-label', `${name}, #${String(id).padStart(4,'0')}${p.caught ? ', shiny capture' : (isHuntingView ? ', en cours' : ', manquant')}`);
+    card.setAttribute('aria-label', `${name}, #${String(id).padStart(4,'0')}${p.caught ? ', shiny capture' : (isHuntingCard ? ', en cours' : ', manquant')}`);
     card.onclick = () => openModal(id);
     card.onkeydown = e => {
       if (e.key === 'Enter' || e.key === ' ') {
@@ -1398,7 +1422,7 @@ function renderGrid() {
     const useShinySprite = !!p.caught;
     const spriteUrl = getPokemonSpriteUrl(id, useShinySprite);
     const typeBadges = renderTypeBadges(id);
-    const statusHtml = isHuntingView && !p.caught
+    const statusHtml = isHuntingCard
       ? '<span>En cours</span>'
       : p.caught && p.perfect
       ? '<span class="status-pair"><span class="status-shiny">Shiny</span><span class="status-perfect">Parfait</span></span>'
@@ -1641,7 +1665,7 @@ function scrollMainToTop() {
 }
 
 function isHuntingMode() {
-  return document.getElementById('sortSelect')?.value === 'hunting';
+  return counterMode;
 }
 
 function saveProgressEntry(id, entry) {
@@ -1681,6 +1705,7 @@ function resetHuntCounter() {
   const entry = getCurrentHuntEntry();
   if (!entry) return;
   entry.huntCount = 0;
+  entry.hunting = false;
   saveProgressEntry(currentPokemon, entry);
   renderHuntCounter();
   renderGrid();
@@ -1744,8 +1769,6 @@ function openModal(id, options = {}) {
   modal?.classList.toggle('hunt-mode', huntMode);
   document.getElementById('huntPanel')?.classList.toggle('open', huntMode);
   if (huntMode) {
-    const entry = getCurrentHuntEntry();
-    saveProgressEntry(id, entry);
     renderHuntCounter();
   }
   if (modal) modal.scrollTop = 0;
@@ -1889,7 +1912,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=76', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=77', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
