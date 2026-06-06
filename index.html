@@ -260,6 +260,8 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   .filters select,.sort-control,.counter-button,.perfect-summary{width:100%;min-width:0}
   .sort-control select{width:100%}
   .grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+  .generation-divider{min-height:24px;margin:4px 0 -2px;font-size:9px;gap:7px;padding:1px 2px}
+  .generation-divider strong{font-size:8px}
   .card{min-height:132px;padding:8px 4px 7px}
   .card img{width:56px;height:56px}
   .card .pname{font-size:11px;min-height:27px;padding:0}
@@ -368,6 +370,27 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   grid-template-columns:repeat(auto-fill,minmax(112px,1fr));
   gap:10px;
 }
+.generation-divider{
+  grid-column:1/-1;
+  display:flex;align-items:center;gap:9px;
+  min-height:28px;margin:6px 0 -1px;padding:2px 4px;
+  color:var(--muted);font-size:11px;line-height:1.25;
+}
+.generation-divider::before{
+  content:'';width:7px;height:7px;border-radius:50%;
+  background:var(--gen-color,#7dd3fc);
+  box-shadow:0 0 10px rgba(125,211,252,.28);
+  flex:0 0 auto;
+}
+.generation-divider::after{
+  content:'';height:1px;flex:1;
+  background:linear-gradient(90deg,var(--gen-color,#7dd3fc),transparent);
+  opacity:.34;
+}
+.generation-divider strong{
+  font-family:var(--font-logo);font-size:10px;font-weight:400;letter-spacing:0;color:var(--gen-color,#7dd3fc);
+}
+.generation-divider span{opacity:.82;font-variant-numeric:tabular-nums}
 .scroll-end{height:1px}
 .card{
   background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.012)),var(--surface);
@@ -523,6 +546,8 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   .filters select,.sort-control,.perfect-summary,.counter-button{width:100%;min-width:0}
   .sort-control select{width:100%}
   .grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+  .generation-divider{min-height:24px;margin:4px 0 -2px;font-size:9px;gap:7px;padding:1px 2px}
+  .generation-divider strong{font-size:8px}
   .card{min-height:132px;padding:8px 4px 7px}
   .card img{width:56px;height:56px}
   .card .pname{font-size:11px;min-height:27px;padding:0}
@@ -1383,6 +1408,20 @@ function renderRegion() {
   renderGrid();
 }
 
+function getRegionByPokemonId(id) {
+  return REGIONS.find(region => id >= region.start && id <= region.end);
+}
+
+function createGenerationDivider(region) {
+  const divider = document.createElement('div');
+  divider.className = 'generation-divider';
+  divider.style.setProperty('--gen-color', region.color);
+  divider.innerHTML = `
+    <strong>${region.name}</strong>
+    <span>Génération ${region.gen} · #${region.start}-${region.end}</span>`;
+  return divider;
+}
+
 function renderGrid() {
   const r      = currentRegion === 'all' ? getAllRegionStats() : REGIONS[currentRegion];
   const search = document.getElementById('searchInput').value.toLowerCase();
@@ -1418,10 +1457,20 @@ function renderGrid() {
     return a - b;
   });
 
+  let lastDividerGen = null;
+  const showGenerationDividers = currentRegion === 'all' && sort === 'number' && !counterMode;
+
   ids.forEach(id => {
     const name = NAMES[id] || `#${id}`;
     const p    = progress[id] || {};
     const isHuntingCard = !p.caught && (counterMode || p.hunting || p.huntCount);
+    if (showGenerationDividers) {
+      const region = getRegionByPokemonId(id);
+      if (region && region.gen !== lastDividerGen) {
+        grid.appendChild(createGenerationDivider(region));
+        lastDividerGen = region.gen;
+      }
+    }
     const card = document.createElement('div');
     card.className = 'card' + (p.caught ? ' caught' : '') + (p.perfect ? ' perfect' : '') + (isHuntingCard ? ' hunting' : '');
     card.setAttribute('role', 'button');
@@ -1956,7 +2005,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=85', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=86', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
