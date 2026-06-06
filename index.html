@@ -359,7 +359,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 }
 .counter-button{
   position:relative;overflow:hidden;
-  justify-content:space-between;
+  justify-content:center;
   background:linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.022)),#1b1b25;
   border-color:rgba(255,255,255,.13);color:#eceaf6;
   box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 7px 16px rgba(0,0,0,.14);
@@ -373,18 +373,14 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .perfect-summary strong,.counter-button strong{font-family:var(--font);font-size:14px;color:#f7d774}
 .counter-button strong{color:inherit;font-size:13px;font-weight:800}
 .counter-icon{
-  display:grid;place-items:center;width:18px;height:18px;border-radius:6px;flex:0 0 auto;
-  background:linear-gradient(180deg,rgba(125,211,252,.22),rgba(192,132,252,.11));
+  display:grid;place-items:center;width:20px;height:20px;border-radius:7px;flex:0 0 auto;
+  background:linear-gradient(180deg,rgba(125,211,252,.2),rgba(192,132,252,.12));
   border:1px solid rgba(255,255,255,.12);color:#dff6ff;font-size:12px;line-height:1;
   box-shadow:inset 0 1px 0 rgba(255,255,255,.12);
 }
+.counter-icon svg{width:13px;height:13px;display:block}
 .counter-label{display:inline-flex;align-items:center;gap:7px;min-width:0}
-.counter-count{
-  display:grid;place-items:center;min-width:22px;height:20px;padding:0 6px;border-radius:999px;
-  background:rgba(0,0,0,.28);border:1px solid rgba(255,255,255,.12);
-  color:#f6f2ff;font-size:11px;font-weight:900;font-variant-numeric:tabular-nums;
-}
-.counter-button.active .counter-count{background:rgba(192,132,252,.2);border-color:rgba(192,132,252,.34);color:#fff}
+.counter-button.active .counter-icon{background:linear-gradient(180deg,rgba(192,132,252,.34),rgba(125,211,252,.16));border-color:rgba(192,132,252,.34);color:#fff}
 .perfect-summary:hover{background:rgba(212,175,55,.13);border-color:rgba(212,175,55,.5)}
 .counter-button:hover{transform:translateY(-1px);border-color:rgba(192,132,252,.34);background:linear-gradient(180deg,rgba(192,132,252,.13),rgba(125,211,252,.045)),#1d1b29}
 
@@ -1203,18 +1199,19 @@ function updateSpriteToggle() {
 function updateCounterButton() {
   const button = document.getElementById('counterButton');
   if (!button) return;
-  const r = currentRegion === 'all' ? getAllRegionStats() : REGIONS[currentRegion];
-  let activeHunts = 0;
-  for (let id = r.start; id <= r.end; id++) {
-    const p = progress[id] || {};
-    if (!p.caught && (p.hunting || p.huntCount)) activeHunts++;
-  }
   button.innerHTML = `
-    <span class="counter-label"><span class="counter-icon">+</span><strong>Compteur</strong></span>
-    <span class="counter-count">${activeHunts}</span>`;
+    <span class="counter-label">
+      <span class="counter-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none">
+          <path d="M8 7h8M8 12h8M8 17h5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <path d="M17 15v5M14.5 17.5h5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </span>
+      <strong>Compteur</strong>
+    </span>`;
   button.classList.toggle('active', counterMode);
   button.setAttribute('aria-pressed', String(counterMode));
-  button.setAttribute('aria-label', `${counterMode ? 'Masquer' : 'Afficher'} le compteur, ${activeHunts} en cours`);
+  button.setAttribute('aria-label', `${counterMode ? 'Masquer' : 'Afficher'} le compteur`);
 }
 
 function toggleCounterMode() {
@@ -2046,7 +2043,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=91', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=92', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
