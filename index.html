@@ -381,11 +381,19 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .counter-icon svg{width:13px;height:13px;display:block}
 .counter-label{display:inline-flex;align-items:center;gap:7px;min-width:0}
 .counter-button.active .counter-icon{background:linear-gradient(180deg,rgba(125,211,252,.32),rgba(125,211,252,.13));border-color:rgba(125,211,252,.42);color:#fff}
-.perfect-summary:hover{background:rgba(212,175,55,.13);border-color:rgba(212,175,55,.5)}
+.perfect-summary:hover{
+  background:rgba(212,175,55,.08);
+  border-color:rgba(212,175,55,.32);
+}
 .counter-button:hover{transform:translateY(-1px);border-color:rgba(192,132,252,.34);background:linear-gradient(180deg,rgba(192,132,252,.13),rgba(125,211,252,.045)),#1d1b29}
 .counter-button:focus,.perfect-summary:focus{outline:none}
 .counter-button:focus-visible,.perfect-summary:focus-visible{outline:none;box-shadow:inherit}
 .counter-button:active,.perfect-summary:active{transform:none}
+.perfect-summary:active{
+  background:rgba(212,175,55,.08);
+  border-color:rgba(212,175,55,.32);
+  box-shadow:none;
+}
 
 /* ── GRID ── */
 .grid{
@@ -666,7 +674,7 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
         </select>
       </label>
       <button class="counter-button" id="counterButton" type="button" onclick="toggleCounterMode()"></button>
-      <button class="perfect-summary" id="perfectSummary" type="button" onclick="toggleSpriteMode()"></button>
+      <button class="perfect-summary" id="perfectSummary" type="button" onclick="toggleSpriteMode()" onpointerup="this.blur()" ontouchend="this.blur()"></button>
     </div>
     <div class="grid" id="grid"></div>
     <div class="scroll-end" aria-hidden="true"></div>
@@ -2048,7 +2056,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=93', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=94', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
