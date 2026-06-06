@@ -366,9 +366,9 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   transition:transform .12s,border-color .15s,background .15s,box-shadow .15s,color .15s;
 }
 .counter-button.active{
-  background:linear-gradient(180deg,rgba(192,132,252,.18),rgba(125,211,252,.07)),#1d1b29;
-  border-color:rgba(192,132,252,.42);color:#fff;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.09),0 9px 20px rgba(0,0,0,.2),0 0 0 1px rgba(192,132,252,.1);
+  background:linear-gradient(180deg,rgba(125,211,252,.18),rgba(125,211,252,.055)),#1b2430;
+  border-color:rgba(125,211,252,.52);color:#dff6ff;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.09),0 9px 20px rgba(0,0,0,.2),0 0 0 1px rgba(125,211,252,.14);
 }
 .perfect-summary strong,.counter-button strong{font-family:var(--font);font-size:14px;color:#f7d774}
 .counter-button strong{color:inherit;font-size:13px;font-weight:800}
@@ -380,9 +380,12 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 }
 .counter-icon svg{width:13px;height:13px;display:block}
 .counter-label{display:inline-flex;align-items:center;gap:7px;min-width:0}
-.counter-button.active .counter-icon{background:linear-gradient(180deg,rgba(192,132,252,.34),rgba(125,211,252,.16));border-color:rgba(192,132,252,.34);color:#fff}
+.counter-button.active .counter-icon{background:linear-gradient(180deg,rgba(125,211,252,.32),rgba(125,211,252,.13));border-color:rgba(125,211,252,.42);color:#fff}
 .perfect-summary:hover{background:rgba(212,175,55,.13);border-color:rgba(212,175,55,.5)}
 .counter-button:hover{transform:translateY(-1px);border-color:rgba(192,132,252,.34);background:linear-gradient(180deg,rgba(192,132,252,.13),rgba(125,211,252,.045)),#1d1b29}
+.counter-button:focus,.perfect-summary:focus{outline:none}
+.counter-button:focus-visible,.perfect-summary:focus-visible{outline:none;box-shadow:inherit}
+.counter-button:active,.perfect-summary:active{transform:none}
 
 /* ── GRID ── */
 .grid{
@@ -1185,6 +1188,7 @@ function toggleSpriteMode() {
   updateSpriteToggle();
   renderGrid();
   if (currentPokemon) openModal(currentPokemon);
+  document.getElementById('perfectSummary')?.blur();
 }
 
 function updateSpriteToggle() {
@@ -1218,6 +1222,7 @@ function toggleCounterMode() {
   counterMode = !counterMode;
   updateCounterButton();
   renderGrid();
+  document.getElementById('counterButton')?.blur();
 }
 
 function formatPercent(value) {
@@ -2043,7 +2048,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=92', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=93', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
