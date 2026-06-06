@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Shiny Living Dex</title>
-<link rel="manifest" href="./manifest.json?v=63">
+<link rel="manifest" href="./manifest.json?v=64">
 <link rel="icon" href="./Assets/icon-192.png">
 <link rel="apple-touch-icon" href="./Assets/icon-192.png">
 <meta name="theme-color" content="#0f0f13">
@@ -12,8 +12,22 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="LivingDex">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;700&family=DM+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Pacifico&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
 <style>
+@font-face{
+  font-family:'Pokemon GB';
+  src:url('./Assets/fonts/pokemon_gbPKMN.woff2') format('woff2');
+  font-weight:400;
+  font-style:normal;
+  font-display:swap;
+}
+@font-face{
+  font-family:'Pokemon DS';
+  src:url('./Assets/fonts/pokemon_dppt-dppt.woff2') format('woff2');
+  font-weight:400;
+  font-style:normal;
+  font-display:swap;
+}
 :root {
   --bg:       #0f0f13;
   --surface:  #18181f;
@@ -21,8 +35,8 @@
   --border:   rgba(255,255,255,0.07);
   --text:     #e8e8f0;
   --muted:    #777788;
-  --font-px:  'Pixelify Sans', monospace;
-  --font:     'DM Sans', sans-serif;
+  --font-title:'Pokemon GB', 'Pixelify Sans', monospace;
+  --font:     'Pokemon DS', 'DM Sans', sans-serif;
   --r:        10px;
   --r-lg:     16px;
   --sidebar-w: 220px;
@@ -43,7 +57,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   display:grid;grid-template-columns:auto auto minmax(0,1fr);align-items:center;
   gap:1rem;padding:0 1.25rem;z-index:100;
 }
-.logo{font-family:var(--font-px);font-size:20px;line-height:1;white-space:nowrap;letter-spacing:.5px;color:#fff;background:none;border:0;cursor:pointer;text-align:left;padding:0;display:inline-flex;align-items:center;gap:9px;min-width:0;height:38px}
+.logo{font-family:var(--font-title);font-size:20px;line-height:1;white-space:nowrap;letter-spacing:.5px;color:#fff;background:none;border:0;cursor:pointer;text-align:left;padding:0;display:inline-flex;align-items:center;gap:9px;min-width:0;height:38px}
 .logo-icon{width:30px;height:30px;border-radius:8px;object-fit:cover;box-shadow:0 0 0 1px rgba(255,255,255,.12),0 6px 14px rgba(0,0,0,.22)}
 .logo-text{display:inline-flex;align-items:center;line-height:1;transform:translateY(-1px)}
 .logo:hover .logo-dex,.logo:focus-visible .logo-dex{color:#fff}
@@ -91,7 +105,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .stats-popin.open{display:block}
 .stats-popin-head{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:.9rem}
 .stats-popin-kicker{font-size:11px;color:#7dd3fc;font-weight:700;text-transform:uppercase;letter-spacing:.9px;margin-bottom:2px}
-.stats-popin-title{font-family:var(--font-px);font-size:22px;color:#fff}
+.stats-popin-title{font-family:var(--font);font-size:22px;color:#fff}
 .stats-close{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:var(--muted);cursor:pointer;font-size:18px;line-height:1;padding:4px 8px;border-radius:8px}
 .stats-close:hover{color:var(--text);background:var(--surface2)}
 .stats-content{display:block}
@@ -136,7 +150,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .sidebar.dragging{transition:none}
 .sidebar-backdrop{display:none}
 .sidebar-inner{width:var(--sidebar-w);padding:1rem .75rem;overflow-y:auto;height:100%}
-.sidebar-title{font-family:var(--font-px);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:.75rem;padding:0 .25rem}
+.sidebar-title{font-family:var(--font);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:.75rem;padding:0 .25rem}
 .sidebar-actions{display:grid;gap:8px;margin-top:1rem;padding:0 .25rem}
 .sidebar-actions .btn{width:100%;justify-content:flex-start;padding:8px 10px;font-size:13px}
 .gen-item{
@@ -275,7 +289,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .region-map-thumb{position:relative;overflow:hidden;background:var(--surface2);border:0}
 .region-map-thumb img{width:100%;height:100%;display:block;object-fit:cover}
 .region-map-thumb span{display:none}
-.region-name{font-family:var(--font-px);font-size:24px}
+.region-name{font-family:var(--font-title);font-size:24px}
 .region-meta{font-size:12px;color:var(--muted);margin-top:3px}
 .progress-wrap{flex:1;min-width:140px}
 .progress-track{height:5px;background:var(--surface2);border-radius:3px;overflow:hidden;margin-bottom:4px}
@@ -326,7 +340,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .card.caught{border-color:#c084fc;box-shadow:0 0 0 1px rgba(192,132,252,.48),0 0 12px rgba(192,132,252,.18)}
 .card.perfect{border-color:#d4af37;box-shadow:0 0 0 1px rgba(212,175,55,.55),0 0 12px rgba(212,175,55,.24)}
 .card img{width:64px;height:64px;image-rendering:pixelated;display:block;order:2;margin:1px 0 0}
-.card .num{font-family:var(--font-px);font-size:10px;color:var(--muted);margin-bottom:0;order:0}
+.card .num{font-family:var(--font);font-size:10px;color:var(--muted);margin-bottom:0;order:0}
 .card .pname{font-size:12px;font-weight:700;line-height:1.2;color:var(--text);word-break:break-word;padding:0 2px;min-height:29px;display:flex;align-items:center;justify-content:center;order:1}
 .card.caught .pname{color:#c084fc}
 .card.perfect .pname{color:#d4af37}
@@ -389,8 +403,8 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 }
 .sprite-pair{display:flex;gap:8px}
 .sprite-label{font-size:10px;color:var(--muted);text-align:center;margin-top:3px}
-.modal-num{font-family:var(--font-px);font-size:12px;color:var(--muted)}
-.modal-name{font-family:var(--font-px);font-size:22px;color:#fff;overflow-wrap:anywhere}
+.modal-num{font-family:var(--font);font-size:12px;color:var(--muted)}
+.modal-name{font-family:var(--font);font-size:22px;color:#fff;overflow-wrap:anywhere}
 .modal-region{font-size:12px;margin-top:4px}
 .caught-toggle{
   display:flex;align-items:center;gap:10px;
@@ -1527,7 +1541,7 @@ function openModal(id) {
   shinySprite.src = getPokemonSpriteUrl(id, true);
   document.getElementById('mNum').textContent = `#${String(id).padStart(4,'0')}`;
   document.getElementById('mName').textContent = name;
-  document.getElementById('mRegion').innerHTML = `<span style="color:${r.color};font-family:'Pixelify Sans',monospace">${r.name} · Génération ${r.gen}</span>`;
+  document.getElementById('mRegion').innerHTML = `<span style="color:${r.color};font-family:var(--font)">${r.name} · Génération ${r.gen}</span>`;
 
   document.getElementById('fCaught').checked   = !!p.caught;
   document.getElementById('fPerfect').checked  = !!p.perfect;
@@ -1689,7 +1703,7 @@ initStatsButtonSwipe();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=63', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=64', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
