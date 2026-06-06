@@ -471,7 +471,7 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
 .hunt-panel{display:none;margin:1.1rem 0 0;padding:1rem;border:1px solid rgba(125,211,252,.22);border-radius:var(--r);background:linear-gradient(180deg,rgba(125,211,252,.08),rgba(125,211,252,.02)),var(--surface2);text-align:center}
 .hunt-panel.open{display:block}
 .hunt-label{font-family:var(--font-logo);font-size:11px;line-height:1.35;color:#7dd3fc;margin-bottom:.75rem}
-.hunt-count{font-family:var(--font-logo);font-size:28px;line-height:1;color:#fff;text-shadow:0 2px 16px rgba(0,0,0,.55);margin-bottom:.9rem}
+.hunt-count{font-family:var(--font);font-size:22px;font-weight:800;line-height:1;color:#fff;text-shadow:0 2px 12px rgba(0,0,0,.45);margin-bottom:.9rem;font-variant-numeric:tabular-nums}
 .hunt-actions{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:8px}
 .hunt-actions .btn,.hunt-found{justify-content:center;min-height:38px}
 .hunt-found{width:100%;background:rgba(192,132,252,.13);border-color:rgba(192,132,252,.34);color:#fff}
@@ -1912,7 +1912,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=78', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=79', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
