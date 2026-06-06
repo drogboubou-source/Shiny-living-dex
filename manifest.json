@@ -6,7 +6,7 @@
   "start_url": "/Shiny-living-dex/index.html?source=pwa",
   "scope": "/Shiny-living-dex/",
   "display": "standalone",
-  "display_override": ["fullscreen", "standalone"],
+  "display_override": ["standalone"],
   "background_color": "#0f0f13",
   "theme_color": "#0f0f13",
   "orientation": "portrait",
