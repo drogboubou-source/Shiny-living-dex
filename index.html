@@ -182,24 +182,30 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .sidebar.open{width:var(--sidebar-w)}
 .sidebar.dragging{transition:none}
 .sidebar-backdrop{display:none}
-.sidebar-inner{width:var(--sidebar-w);padding:1rem .75rem;overflow-y:auto;height:100%}
-.sidebar-title{font-family:var(--font-logo);font-size:10px;line-height:1.35;color:#fff;text-transform:none;letter-spacing:0;margin-bottom:.35rem;padding:0 .25rem}
-.sidebar-subtitle{font-size:11px;color:var(--muted);padding:0 .25rem;margin-bottom:1rem}
-.sidebar-section{margin-bottom:1rem}
+.sidebar-inner{width:var(--sidebar-w);padding:.9rem .7rem 1rem;overflow-y:auto;height:100%;scrollbar-width:thin}
+.sidebar-head{
+  margin:0 0 .95rem;padding:.75rem .7rem;
+  background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.018)),#1b1b25;
+  border:1px solid rgba(255,255,255,.09);border-radius:var(--r);
+}
+.sidebar-title{font-family:var(--font-logo);font-size:10px;line-height:1.35;color:#fff;text-transform:none;letter-spacing:0;margin-bottom:.35rem}
+.sidebar-subtitle{font-size:11px;color:var(--muted);margin:0}
+.sidebar-section{margin-bottom:.95rem}
 .sidebar-section-label{
   display:flex;align-items:center;gap:8px;
-  margin:0 .25rem .55rem;color:var(--muted);
+  margin:0 .25rem .5rem;color:var(--muted);
   font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;
 }
 .sidebar-section-label::after{content:'';height:1px;flex:1;background:rgba(255,255,255,.075)}
-.sidebar-actions{display:grid;gap:8px;margin-top:1rem;padding:.75rem .25rem 0;border-top:1px solid rgba(255,255,255,.075)}
-.sidebar-actions .btn{width:100%;justify-content:flex-start;padding:8px 10px;font-size:13px}
+.sidebar-actions{display:grid;gap:7px;margin-top:.85rem;padding:.75rem .25rem 0;border-top:1px solid rgba(255,255,255,.075)}
+.sidebar-actions .btn{width:100%;justify-content:flex-start;padding:8px 10px;font-size:12px;background:rgba(255,255,255,.035)}
+.sidebar-actions .btn svg{width:17px;height:17px}
 .gen-item{
-  padding:3px 0 7px;margin-bottom:6px;
+  padding:4px 0 7px;margin-bottom:5px;
   border-bottom:1px solid rgba(255,255,255,.065);
 }
 .gen-item.active{
-  background:linear-gradient(90deg,rgba(255,255,255,.04),transparent);
+  background:linear-gradient(90deg,rgba(255,255,255,.055),rgba(255,255,255,.012));
   border-radius:var(--r);
   border-bottom-color:rgba(212,175,55,.16);
 }
@@ -215,19 +221,23 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .gen-item.all-progress .gen-perfect-row{margin:-2px 4px 0}
 .gen-btn{
   width:100%;display:flex;align-items:center;gap:10px;
-  padding:8px 10px;border-radius:var(--r);border:none;
+  padding:7px 8px;border-radius:var(--r);border:none;
   background:transparent;color:var(--muted);font-family:var(--font);font-size:13px;
   cursor:pointer;text-align:left;transition:background .12s,color .12s;
   margin-bottom:2px;
 }
-.gen-btn:hover{background:var(--surface2);color:var(--text)}
-.gen-btn.active{background:var(--surface2);color:var(--text)}
+.gen-btn:hover{background:rgba(255,255,255,.045);color:var(--text)}
+.gen-btn.active{background:rgba(255,255,255,.06);color:var(--text)}
 .gen-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.gen-name{font-weight:800}
-.gen-progress{font-size:11px;margin-left:auto;opacity:.86;font-variant-numeric:tabular-nums}
-.gen-bar-wrap{height:3px;background:var(--surface2);border-radius:2px;margin:4px 10px 8px;overflow:hidden}
+.gen-main{display:flex;flex-direction:column;gap:2px;min-width:0;flex:1}
+.gen-name-row{display:flex;align-items:center;gap:6px;min-width:0}
+.gen-name{font-weight:800;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.gen-badge{font-size:9px;color:var(--muted);padding:1px 4px;border:1px solid rgba(255,255,255,.1);border-radius:999px;background:rgba(255,255,255,.035)}
+.gen-range{font-size:10px;color:var(--muted);opacity:.76;font-variant-numeric:tabular-nums}
+.gen-progress{font-size:11px;margin-left:auto;opacity:.9;font-variant-numeric:tabular-nums;color:var(--text)}
+.gen-bar-wrap{height:3px;background:rgba(255,255,255,.075);border-radius:2px;margin:3px 8px 7px;overflow:hidden}
 .gen-bar-fill{height:100%;border-radius:2px;transition:width .4s}
-.gen-perfect-row{display:flex;align-items:center;justify-content:flex-end;margin:-3px 10px 0;color:#d4af37;font-size:10px;font-weight:800;font-variant-numeric:tabular-nums}
+.gen-perfect-row{display:flex;align-items:center;justify-content:flex-end;margin:-3px 8px 0;color:rgba(247,215,116,.86);font-size:10px;font-weight:800;font-variant-numeric:tabular-nums}
 
 /* toggle button */
 .sidebar-toggle{
@@ -252,6 +262,11 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   #statsButton{min-height:34px;padding:7px 11px}
   .sidebar{position:fixed;top:var(--header-h);bottom:0;left:0;z-index:150;width:var(--sidebar-w);transform:translateX(calc(-1 * var(--sidebar-w)));box-shadow:12px 0 34px rgba(0,0,0,.38);will-change:transform}
   .sidebar.open{width:var(--sidebar-w);transform:translateX(0)}
+  .sidebar-inner{padding:.85rem .65rem 1rem}
+  .sidebar-head{padding:.7rem .65rem;margin-bottom:.85rem}
+  .gen-btn{padding:7px 7px;gap:8px}
+  .gen-progress{font-size:10px}
+  .gen-range{font-size:9px}
   .sidebar-toggle.open{left:var(--sidebar-w)}
   .sidebar-backdrop{position:fixed;top:var(--header-h);left:0;right:0;bottom:0;background:rgba(0,0,0,.42);z-index:140;display:none}
   .sidebar-backdrop.open{display:block}
@@ -671,10 +686,13 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   <!-- SIDEBAR -->
   <div class="sidebar" id="sidebar">
     <div class="sidebar-inner">
-      <div class="sidebar-title">Générations</div>
-      <div class="sidebar-subtitle">Progression par région</div>
+      <div class="sidebar-head">
+        <div class="sidebar-title">Générations</div>
+        <div class="sidebar-subtitle">Progression par région</div>
+      </div>
       <div id="genList"></div>
       <div class="sidebar-actions">
+        <div class="sidebar-section-label">Données</div>
         <label class="btn" title="Importer pokemon.json">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
           Importer JSON
@@ -1407,7 +1425,13 @@ function renderSidebar() {
     <div class="gen-item all-progress ${currentRegion === 'all' ? 'active' : ''}">
       <button class="gen-btn ${currentRegion === 'all' ? 'active' : ''}" onclick="switchRegion('all')">
         <span class="gen-dot" style="background:${all.color}"></span>
-        <span class="gen-name" style="color:${all.color}">Toutes</span>
+        <span class="gen-main">
+          <span class="gen-name-row">
+            <span class="gen-name" style="color:${all.color}">Toutes</span>
+            <span class="gen-badge">G1-9</span>
+          </span>
+          <span class="gen-range">#${all.start}-${all.end}</span>
+        </span>
         <span class="gen-progress">${all.caught}/${all.total} · ${allPctText}</span>
       </button>
       <div class="gen-bar-wrap">
@@ -1429,7 +1453,13 @@ function renderSidebar() {
       <div class="gen-item ${active}">
       <button class="gen-btn ${active}" onclick="switchRegion(${i})">
         <span class="gen-dot" style="background:${r.color}"></span>
-        <span class="gen-name" style="color:${r.color}">${r.name}</span>
+        <span class="gen-main">
+          <span class="gen-name-row">
+            <span class="gen-name" style="color:${r.color}">${r.name}</span>
+            <span class="gen-badge">G${r.gen}</span>
+          </span>
+          <span class="gen-range">#${r.start}-${r.end}</span>
+        </span>
         <span class="gen-progress">${c}/${total} · ${pctText}</span>
       </button>
       <div class="gen-bar-wrap">
@@ -2102,7 +2132,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=98', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=99', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
