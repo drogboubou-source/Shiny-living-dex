@@ -237,7 +237,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .gen-progress{font-size:11px;margin-left:auto;opacity:.9;font-variant-numeric:tabular-nums;color:var(--text)}
 .gen-bar-wrap{height:3px;background:rgba(255,255,255,.075);border-radius:2px;margin:3px 8px 7px;overflow:hidden}
 .gen-bar-fill{height:100%;border-radius:2px;transition:width .4s}
-.gen-perfect-row{display:flex;align-items:center;justify-content:flex-end;margin:-3px 8px 0;color:rgba(247,215,116,.86);font-size:10px;font-weight:800;font-variant-numeric:tabular-nums}
+.gen-perfect-row{display:flex;align-items:center;justify-content:flex-end;margin:-3px 8px 0;color:#d4af37;font-size:10px;font-weight:800;font-variant-numeric:tabular-nums}
 
 /* toggle button */
 .sidebar-toggle{
@@ -2132,7 +2132,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=99', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=100', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
