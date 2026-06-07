@@ -85,7 +85,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
     rgba(20,20,28,.96);
   border-bottom:1px solid rgba(255,255,255,.09);
   box-shadow:0 10px 26px rgba(0,0,0,.28),inset 0 -1px 0 rgba(255,255,255,.025);
-  display:grid;grid-template-columns:minmax(0,1fr) 54px;align-items:center;
+  display:grid;grid-template-columns:minmax(0,1fr) 72px;align-items:center;
   gap:.7rem;padding:0 1rem 0 1.25rem;z-index:100;
 }
 .topbar::after{
@@ -110,12 +110,12 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .logo-dex{color:#fff}
 .title-actions{display:flex;align-items:center;gap:8px;min-width:0;height:100%}
 .header-hunt-sprite{
-  position:relative;width:54px;height:54px;display:grid;place-items:center;justify-self:end;overflow:visible;
+  position:relative;width:72px;height:54px;display:flex;align-items:center;justify-content:flex-end;justify-self:end;overflow:visible;
   background:transparent;border:0;box-shadow:none;pointer-events:none;
 }
 .header-hunt-sprite::before{
   content:'';position:absolute;left:50%;bottom:7px;width:34px;height:8px;border-radius:50%;
-  transform:translateX(-50%);
+  transform:translateX(-10%);
   background:radial-gradient(ellipse at center,rgba(125,211,252,.22),rgba(125,211,252,.08) 48%,transparent 72%);
   opacity:0;transition:opacity .15s ease;
 }
@@ -124,6 +124,13 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   transform:translateY(1px);
   filter:drop-shadow(0 7px 10px rgba(0,0,0,.4)) drop-shadow(0 0 10px rgba(125,211,252,.15));
 }
+.header-hunt-sprite .header-hunt-img.previous{
+  width:34px;height:34px;margin-right:-13px;opacity:.86;z-index:0;
+  transform:translateY(6px);
+  filter:drop-shadow(0 5px 8px rgba(0,0,0,.36)) drop-shadow(0 0 8px rgba(212,175,55,.18));
+}
+.header-hunt-sprite .header-hunt-img.current{z-index:1}
+.header-hunt-sprite .header-hunt-img.shiny{filter:drop-shadow(0 7px 10px rgba(0,0,0,.4)) drop-shadow(0 0 10px rgba(212,175,55,.24))}
 .header-hunt-sprite:not(.empty)::before{opacity:1}
 .header-hunt-sprite.empty img{display:none}
 .topbar-stats{display:none}
@@ -290,14 +297,15 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .sidebar-toggle.open{left:var(--sidebar-w)}
 .sidebar-toggle:focus-visible,.btn:focus-visible,.gen-btn:focus-visible,.card:focus-visible,.modal-close:focus-visible,.btn-save:focus-visible{outline:2px solid #c084fc;outline-offset:2px}
 @media (max-width: 720px){
-  .topbar{grid-template-columns:minmax(0,1fr) 48px;gap:.45rem;padding:0 .55rem 0 .7rem}
+  .topbar{grid-template-columns:minmax(0,1fr) 66px;gap:.4rem;padding:0 .45rem 0 .7rem}
   .title-actions{gap:6px}
   .logo{height:42px;font-size:10.5px;gap:7px;padding:5px 8px 5px 6px;border-radius:12px}
   .logo-icon{width:30px;height:30px;border-radius:8px}
   .logo-subline{font-size:8px}
-  .header-hunt-sprite{width:48px;height:48px}
-  .header-hunt-sprite::before{bottom:6px;width:30px;height:7px}
+  .header-hunt-sprite{width:66px;height:48px}
+  .header-hunt-sprite::before{bottom:6px;width:30px;height:7px;transform:translateX(-8%)}
   .header-hunt-sprite img{width:48px;height:48px;transform:translateY(1px)}
+  .header-hunt-sprite .header-hunt-img.previous{width:31px;height:31px;margin-right:-12px;transform:translateY(6px)}
   .topbar-stats{display:none}
   #statsButton{min-height:34px;padding:7px 11px}
   .sidebar{position:fixed;top:var(--header-h);bottom:0;left:0;z-index:150;width:var(--sidebar-w);transform:translateX(calc(-1 * var(--sidebar-w)));box-shadow:12px 0 34px rgba(0,0,0,.38);will-change:transform}
@@ -1075,6 +1083,8 @@ const LEGACY_STORAGE_KEY = 'shiny_dex_v3';
 const REGION_SESSION_KEY = 'shiny_dex_session_region';
 const SPRITE_MODE_KEY = 'shiny_dex_sprite_mode';
 const COUNTER_MODE_KEY = 'shiny_dex_counter_mode';
+const HUNT_ORDER_KEY = 'shiny_dex_hunt_order';
+const HUNT_CAPTURED_KEY = 'shiny_dex_hunt_captured';
 const POKEMON_CRY_BASE = 'https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/latest';
 let activePokemonCry = null;
 
@@ -1273,32 +1283,62 @@ function initAppHistory() {
   });
 }
 
-function getFirstActiveHuntId() {
-  const ids = Object.keys(progress)
+function readStoredIdList(key) {
+  try {
+    const value = JSON.parse(localStorage.getItem(key) || '[]');
+    return Array.isArray(value) ? value.map(Number).filter(Number.isFinite) : [];
+  } catch (_) {
+    return [];
+  }
+}
+
+function writeStoredIdList(key, ids) {
+  localStorage.setItem(key, JSON.stringify([...new Set(ids.map(Number).filter(Number.isFinite))]));
+}
+
+function getActiveHuntIds() {
+  const active = Object.keys(progress)
     .map(Number)
     .filter(id => {
       const p = progress[id] || {};
       return !p.caught && (parseInt(p.huntCount) || 0) > 0;
-    })
-    .sort((a, b) => a - b);
-  return ids[0] || null;
+    });
+  const activeSet = new Set(active);
+  const ordered = readStoredIdList(HUNT_ORDER_KEY).filter(id => activeSet.has(id));
+  const missing = active.filter(id => !ordered.includes(id)).sort((a, b) => a - b);
+  return [...ordered, ...missing];
+}
+
+function getHeaderHuntSprites() {
+  const activeIds = getActiveHuntIds();
+  const captured = readStoredIdList(HUNT_CAPTURED_KEY).filter(id => progress[id]?.caught);
+  const currentId = activeIds[0] || captured[captured.length - 1] || null;
+  const previousId = captured.filter(id => id !== currentId).slice(-1)[0] || null;
+  const currentShiny = !!currentId && !!progress[currentId]?.caught && !activeIds.includes(currentId);
+  return { previousId, currentId, currentShiny };
 }
 
 function updateHeaderHuntSprite() {
   const holder = document.getElementById('headerHuntSprite');
   if (!holder) return;
-  const id = getFirstActiveHuntId();
-  if (!id) {
+  const { previousId, currentId, currentShiny } = getHeaderHuntSprites();
+  if (!previousId && !currentId) {
     holder.classList.add('empty');
     holder.innerHTML = '';
     return;
   }
-  const name = NAMES[id] || `#${id}`;
+  const previousHtml = previousId ? `
+    <img class="header-hunt-img previous shiny"
+         src="${getPokemonSpriteUrl(previousId, true, 'home')}"
+         alt="${NAMES[previousId] || `#${previousId}`}" width="34" height="34" loading="lazy"
+         onerror="handleSpriteError(this, ${previousId}, true)">` : '';
+  const currentHtml = currentId ? `
+    <img class="header-hunt-img current ${currentShiny ? 'shiny' : 'normal'}"
+         src="${getPokemonSpriteUrl(currentId, currentShiny, 'home')}"
+         alt="${NAMES[currentId] || `#${currentId}`}" width="52" height="52" loading="lazy"
+         onerror="handleSpriteError(this, ${currentId}, ${currentShiny})">` : '';
   holder.classList.remove('empty');
-  holder.innerHTML = `
-    <img src="${getPokemonSpriteUrl(id, false, 'home')}"
-         alt="${name}" width="46" height="46" loading="lazy"
-         onerror="handleSpriteError(this, ${id}, false)">`;
+  holder.innerHTML = `${previousHtml}${currentHtml}`;
 }
 
 function renderStats() {
@@ -2065,6 +2105,26 @@ function saveProgressEntry(id, entry) {
   updateHeaderHuntSprite();
 }
 
+function registerHuntStart(id) {
+  const order = readStoredIdList(HUNT_ORDER_KEY).filter(storedId => {
+    const p = progress[storedId] || {};
+    return !p.caught && (parseInt(p.huntCount) || 0) > 0;
+  });
+  if (!order.includes(id)) order.push(id);
+  writeStoredIdList(HUNT_ORDER_KEY, order);
+}
+
+function unregisterHunt(id) {
+  writeStoredIdList(HUNT_ORDER_KEY, readStoredIdList(HUNT_ORDER_KEY).filter(storedId => storedId !== id));
+}
+
+function registerHuntCapture(id) {
+  unregisterHunt(id);
+  const captured = readStoredIdList(HUNT_CAPTURED_KEY).filter(storedId => storedId !== id && progress[storedId]?.caught);
+  captured.push(id);
+  localStorage.setItem(HUNT_CAPTURED_KEY, JSON.stringify(captured.slice(-2)));
+}
+
 function getCurrentHuntEntry() {
   if (!currentPokemon) return null;
   const existing = progress[currentPokemon] || {};
@@ -2084,7 +2144,13 @@ function renderHuntCounter() {
 function adjustHuntCounter(delta) {
   const entry = getCurrentHuntEntry();
   if (!entry) return;
+  const previousCount = parseInt(entry.huntCount) || 0;
   entry.huntCount = Math.max(0, (parseInt(entry.huntCount) || 0) + delta);
+  if (previousCount === 0 && entry.huntCount > 0) registerHuntStart(currentPokemon);
+  if (entry.huntCount === 0) {
+    entry.hunting = false;
+    unregisterHunt(currentPokemon);
+  }
   saveProgressEntry(currentPokemon, entry);
   renderHuntCounter();
   renderGrid();
@@ -2095,6 +2161,7 @@ function resetHuntCounter() {
   if (!entry) return;
   entry.huntCount = 0;
   entry.hunting = false;
+  unregisterHunt(currentPokemon);
   saveProgressEntry(currentPokemon, entry);
   renderHuntCounter();
   renderGrid();
@@ -2107,6 +2174,7 @@ function markHuntFound() {
   entry.hunting = false;
   entry.encounters = parseInt(entry.huntCount) || parseInt(entry.encounters) || 0;
   entry.huntCount = 0;
+  registerHuntCapture(currentPokemon);
   saveProgressEntry(currentPokemon, entry);
   closeModal();
   renderAll();
@@ -2330,7 +2398,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=120', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=121', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
