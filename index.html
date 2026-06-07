@@ -1274,6 +1274,7 @@ function hasPokemonAnimatedSprite(id) {
 }
 
 function getPokemonModalSpriteUrl(id, shiny = false) {
+  if (isHomeSpriteMode()) return getPokemonSpriteUrl(id, shiny, 'home');
   return hasPokemonAnimatedSprite(id) ? getPokemonAnimatedSpriteUrl(id, shiny) : getPokemonSpriteUrl(id, shiny);
 }
 
@@ -2195,7 +2196,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=106', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=107', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
