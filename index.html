@@ -289,6 +289,10 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   .region-stat{padding:6px 4px}
   .region-stat strong{font-size:12px}
   .region-stat span{font-size:7px;letter-spacing:0}
+  .region-detail-row{grid-template-columns:repeat(2,minmax(0,1fr));gap:5px}
+  .region-detail-chip{min-height:34px;padding:6px}
+  .region-detail-chip strong{font-size:11px}
+  .region-detail-chip span{font-size:7px}
   .home-signature{right:.75rem;top:.6rem;font-size:12px}
   .region-map-mosaic{inset:6px;opacity:.9;filter:saturate(1.12) contrast(1.04) brightness(1.18)}
   .region-name{font-size:11px}
@@ -358,7 +362,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .region-header.all-hero .progress-wrap{width:100%;flex:none}
 .region-header.all-hero .region-name{text-shadow:0 2px 14px rgba(0,0,0,.75)}
 .region-header.all-hero .region-meta,.region-header.all-hero .progress-label{color:rgba(255,255,255,.82)}
-.region-info-block{display:flex;flex-direction:column;gap:8px;min-width:min(100%,280px)}
+.region-info-block{display:flex;flex-direction:column;gap:8px;min-width:min(100%,300px);width:min(100%,360px)}
 .region-stat-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;width:100%}
 .region-stat{
   min-width:0;padding:7px 6px;border-radius:var(--r);
@@ -376,6 +380,28 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 }
 .region-stat.perfect strong{color:#d4af37}
 .region-stat.missing strong{color:rgba(255,255,255,.74)}
+.region-detail-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;width:100%}
+.region-detail-chip{
+  position:relative;min-width:0;min-height:38px;padding:7px 6px;border-radius:var(--r);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;
+  background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.018)),rgba(15,15,19,.36);
+  border:1px solid rgba(255,255,255,.085);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.045);
+}
+.region-detail-chip::before{
+  content:'';position:absolute;left:0;top:7px;bottom:7px;width:2px;border-radius:2px;
+  background:var(--region-accent,#7dd3fc);opacity:.8;
+}
+.region-detail-chip strong{
+  display:block;max-width:100%;font-family:var(--font);font-size:12px;font-weight:900;line-height:1.1;
+  color:#fff;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.region-detail-chip span{
+  display:block;max-width:100%;margin-top:3px;font-size:8px;font-weight:800;line-height:1;
+  color:rgba(255,255,255,.64);text-transform:uppercase;letter-spacing:.12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.region-detail-chip.eggs strong{color:#7ed660}
+.region-detail-chip.encounters strong{color:#7dd3fc}
 .home-signature{position:absolute;right:1.1rem;top:.85rem;z-index:2;font-family:'Pacifico',cursive;font-size:14px;line-height:1;color:#fff7c7;text-shadow:0 2px 10px rgba(0,0,0,.72),0 0 18px rgba(192,132,252,.26);transform:rotate(-3deg);pointer-events:none}
 .region-map-mosaic{position:absolute;inset:7px;z-index:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:2px;opacity:.94;filter:saturate(1.16) contrast(1.05) brightness(1.28);border-radius:calc(var(--r-lg) - 5px);overflow:hidden}
 .region-map-thumb{position:relative;overflow:hidden;background:var(--surface2);border:0}
@@ -1238,6 +1264,29 @@ function renderStats() {
   updateCounterButton();
 }
 
+function renderRegionStatsPanel(stats, color) {
+  const pct = Math.max(0, Math.min(100, stats.caughtPercent || 0));
+  return `
+    <div class="region-stat-row">
+      <div class="region-stat"><strong>${stats.caught}</strong><span>Pris</span></div>
+      <div class="region-stat missing"><strong>${stats.missing}</strong><span>Restants</span></div>
+      <div class="region-stat perfect"><strong>${stats.perfect}</strong><span>Parfaits</span></div>
+      <div class="region-stat"><strong>${stats.caughtPercentText}</strong><span>Avancée</span></div>
+    </div>
+    <div class="region-detail-row" style="--region-accent:${color}">
+      <div class="region-detail-chip encounters"><strong>${stats.totalEncountersText}</strong><span>Rencontres</span></div>
+      <div class="region-detail-chip encounters"><strong>${stats.avgEncountersText}</strong><span>Moyenne</span></div>
+      <div class="region-detail-chip eggs"><strong>${stats.totalEggsText}</strong><span>Oeufs</span></div>
+      <div class="region-detail-chip eggs"><strong>${stats.avgEggsText}</strong><span>Moy. oeufs</span></div>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-track">
+        <div class="progress-fill" style="width:${pct}%;background:${color}"></div>
+      </div>
+      <div class="progress-label"><span>${stats.caught} / ${stats.total}</span><span>${stats.caughtPercentText}</span></div>
+    </div>`;
+}
+
 function getCurrentRegionPerfectCount() {
   const r = currentRegion === 'all' ? getAllRegionStats() : REGIONS[currentRegion];
   let perfect = 0;
@@ -1273,6 +1322,7 @@ function getCurrentStats() {
     avgEncountersText: avgEncounters.toLocaleString('fr-FR'),
     totalEggsText: totalEggs.toLocaleString('fr-FR'),
     avgEggsText: avgEggs.toLocaleString('fr-FR'),
+    caughtPercent,
     caughtPercentText: formatPercent(caughtPercent),
   };
 }
@@ -1571,14 +1621,10 @@ function renderSidebar() {
 function renderRegion() {
   const isAll  = currentRegion === 'all';
   const r      = isAll ? getAllRegionStats() : REGIONS[currentRegion];
-  const caught = isAll ? r.caught : countCaught(r);
-  const total  = isAll ? r.total : r.end - r.start + 1;
-  const perfect = isAll ? r.perfect : countPerfect(r);
-  const missing = Math.max(0, total - caught);
-  const pct    = caught / total * 100;
-  const pctText = formatPercent(pct);
+  const stats = getCurrentStats();
+  const statsPanel = renderRegionStatsPanel(stats, r.color);
   const headerClass = isAll ? 'region-header all-hero' : 'region-header map-hero';
-  const mapStyle = !isAll && r.map ? `--region-map:url('${r.map}')` : '';
+  const mapStyle = `--region-accent:${r.color};${!isAll && r.map ? `--region-map:url('${r.map}')` : ''}`;
 
   document.getElementById('regionHeader').className = headerClass;
   document.getElementById('regionHeader').setAttribute('style', mapStyle);
@@ -1593,18 +1639,7 @@ function renderRegion() {
         <div class="region-info-block">
           <div class="region-name" style="color:${r.color}">${r.name}</div>
           <div class="region-meta">Générations 1 à 9 · #${r.start}–#${r.end}</div>
-          <div class="region-stat-row">
-            <div class="region-stat"><strong>${caught}</strong><span>Pris</span></div>
-            <div class="region-stat missing"><strong>${missing}</strong><span>Restants</span></div>
-            <div class="region-stat perfect"><strong>${perfect}</strong><span>Parfaits</span></div>
-            <div class="region-stat"><strong>${pctText}</strong><span>Avancée</span></div>
-          </div>
-          <div class="progress-wrap">
-            <div class="progress-track">
-              <div class="progress-fill" style="width:${pct}%;background:${r.color}"></div>
-            </div>
-            <div class="progress-label"><span>${caught} / ${total}</span><span>${pctText}</span></div>
-          </div>
+          ${statsPanel}
         </div>
       </div>
       <div class="home-signature">Merci thieu</div>
@@ -1619,18 +1654,7 @@ function renderRegion() {
         <div class="region-name" style="color:${r.color}">${r.name}</div>
         <div class="region-meta">Génération ${r.gen} · #${r.start}–#${r.end}</div>
       </div>
-      <div class="region-stat-row">
-        <div class="region-stat"><strong>${caught}</strong><span>Pris</span></div>
-        <div class="region-stat missing"><strong>${missing}</strong><span>Restants</span></div>
-        <div class="region-stat perfect"><strong>${perfect}</strong><span>Parfaits</span></div>
-        <div class="region-stat"><strong>${pctText}</strong><span>Avancée</span></div>
-      </div>
-      <div class="progress-wrap">
-        <div class="progress-track">
-          <div class="progress-fill" style="width:${pct}%;background:${r.color}"></div>
-        </div>
-        <div class="progress-label"><span>${caught} / ${total}</span><span>${pctText}</span></div>
-      </div>
+      ${statsPanel}
     </div>`;
 
   renderGrid();
@@ -2235,7 +2259,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=109', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=110', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
