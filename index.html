@@ -719,6 +719,12 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
 .hunt-found:hover{background:rgba(125,211,252,.18);border-color:rgba(125,211,252,.52);color:#fff}
 .modal.hunt-mode .modal-form-fields,.modal.hunt-mode .btn-save{display:none}
 .modal.hunt-mode .modal-footer{margin-top:1rem}
+.btn-counter-modal{
+  background:linear-gradient(180deg,rgba(125,211,252,.12),rgba(125,211,252,.035)),rgba(27,36,48,.94);
+  border-color:rgba(125,211,252,.34);color:#dff6ff;
+}
+.btn-counter-modal:hover{background:linear-gradient(180deg,rgba(125,211,252,.16),rgba(125,211,252,.05)),rgba(27,36,48,.98);border-color:rgba(125,211,252,.48)}
+.modal.hunt-mode .btn-counter-modal{background:linear-gradient(180deg,rgba(125,211,252,.22),rgba(125,211,252,.07)),#1b2430;border-color:rgba(125,211,252,.58);color:#fff}
 .two-col{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px;min-width:0}
 .two-col .form-row{display:flex;flex-direction:column}
 .two-col .form-row label{min-height:28px;display:flex;align-items:flex-end}
@@ -944,6 +950,7 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
 
     <div class="modal-footer">
       <button class="btn" onclick="closeModal()">Annuler</button>
+      <button class="btn btn-counter-modal" id="modalCounterBtn" type="button" onclick="toggleModalCounter()">Compteur</button>
       <button class="btn-save" id="saveBtn" onclick="saveModal()">✦ Sauvegarder</button>
     </div>
   </div>
@@ -1330,12 +1337,12 @@ function updateHeaderHuntSprite() {
   const previousHtml = previousId ? `
     <img class="header-hunt-img previous shiny"
          src="${getPokemonSpriteUrl(previousId, true, 'home')}"
-         alt="${NAMES[previousId] || `#${previousId}`}" width="34" height="34" loading="lazy"
+         alt="${NAMES[previousId] || `#${previousId}`}" width="34" height="34" decoding="async"
          onerror="handleSpriteError(this, ${previousId}, true)">` : '';
   const currentHtml = currentId ? `
     <img class="header-hunt-img current ${currentShiny ? 'shiny' : 'normal'}"
          src="${getPokemonSpriteUrl(currentId, currentShiny, 'home')}"
-         alt="${NAMES[currentId] || `#${currentId}`}" width="52" height="52" loading="lazy"
+         alt="${NAMES[currentId] || `#${currentId}`}" width="52" height="52" decoding="async"
          onerror="handleSpriteError(this, ${currentId}, ${currentShiny})">` : '';
   holder.classList.remove('empty');
   holder.innerHTML = `${previousHtml}${currentHtml}`;
@@ -1459,6 +1466,14 @@ function hasPokemonAnimatedSprite(id) {
 function getPokemonModalSpriteUrl(id, shiny = false) {
   if (isHomeSpriteMode()) return getPokemonSpriteUrl(id, shiny, 'home');
   return hasPokemonAnimatedSprite(id) ? getPokemonAnimatedSpriteUrl(id, shiny) : getPokemonSpriteUrl(id, shiny);
+}
+
+function settleModalSpriteAnimation(img, id, shiny = false) {
+  if (isHomeSpriteMode() || !hasPokemonAnimatedSprite(id)) return;
+  window.setTimeout(() => {
+    if (!currentPokemon || currentPokemon !== id || isHomeSpriteMode()) return;
+    img.src = getPokemonSpriteUrl(id, shiny, 'pixel');
+  }, 1650);
 }
 
 function playPokemonCry(id) {
@@ -2116,6 +2131,23 @@ function isHuntingMode() {
   return counterMode;
 }
 
+function setModalCounterMode(enabled) {
+  enabled = !!enabled && !!currentPokemon && !progress[currentPokemon]?.caught;
+  const modal = document.querySelector('#overlay .modal');
+  modal?.classList.toggle('hunt-mode', enabled);
+  document.getElementById('huntPanel')?.classList.toggle('open', enabled);
+  const button = document.getElementById('modalCounterBtn');
+  if (button) button.textContent = enabled ? 'Formulaire' : 'Compteur';
+  if (enabled) renderHuntCounter();
+}
+
+function toggleModalCounter() {
+  const modal = document.querySelector('#overlay .modal');
+  const enabled = !modal?.classList.contains('hunt-mode');
+  setModalCounterMode(enabled);
+  document.getElementById('modalCounterBtn')?.blur();
+}
+
 function saveProgressEntry(id, entry) {
   const hasIvs = entry.ivs && Object.values(entry.ivs).some(Boolean);
   const isEmpty = !entry.caught && !entry.perfect && !entry.hunting && !entry.huntCount && !entry.nickname && !entry.encounters && !entry.eggs && !entry.date && !entry.context && !entry.youtube && !hasIvs;
@@ -2216,6 +2248,8 @@ function openModal(id, options = {}) {
   shinySprite.onerror = () => handleSpriteError(shinySprite, id, true);
   normalSprite.src = getPokemonModalSpriteUrl(id, false);
   shinySprite.src = getPokemonModalSpriteUrl(id, true);
+  settleModalSpriteAnimation(normalSprite, id, false);
+  settleModalSpriteAnimation(shinySprite, id, true);
   document.getElementById('mNum').textContent = `#${String(id).padStart(4,'0')}`;
   document.getElementById('mName').textContent = name;
   document.getElementById('mRegion').innerHTML = `<span style="color:${r.color};font-family:var(--font-logo);font-size:10px;line-height:1.45">${r.name} · Génération ${r.gen}</span>`;
@@ -2243,11 +2277,7 @@ function openModal(id, options = {}) {
   btn.style.color        = r.color;
 
   const modal = document.querySelector('#overlay .modal');
-  modal?.classList.toggle('hunt-mode', huntMode);
-  document.getElementById('huntPanel')?.classList.toggle('open', huntMode);
-  if (huntMode) {
-    renderHuntCounter();
-  }
+  setModalCounterMode(huntMode);
   if (modal) modal.scrollTop = 0;
   document.getElementById('overlay').classList.add('open');
   playPokemonCry(id);
@@ -2418,7 +2448,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=123', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=124', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
