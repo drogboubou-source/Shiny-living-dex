@@ -283,12 +283,12 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   .stats-highlight strong{font-size:20px}
   .region-header.map-hero{min-height:150px;padding:.9rem}
   .region-header.all-hero{min-height:170px;padding:.9rem}
-  .region-header.all-hero .all-hero-copy{padding:.75rem}
+  .region-header.all-hero .all-hero-copy{width:100%;padding:0}
   .region-info-block{width:100%}
   .region-stat-row{grid-template-columns:repeat(4,minmax(0,1fr));gap:4px}
-  .region-stat{padding:6px 4px}
+  .region-stat{padding:6px 3px}
   .region-stat strong{font-size:12px}
-  .region-stat span{font-size:7px;letter-spacing:0}
+  .region-stat span{font-size:6.5px;letter-spacing:0}
   .region-detail-row{grid-template-columns:repeat(2,minmax(0,1fr));gap:5px}
   .region-detail-chip{min-height:34px;padding:6px}
   .region-detail-chip strong{font-size:11px}
@@ -349,20 +349,20 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .region-header.map-hero .region-name{text-shadow:0 2px 14px rgba(0,0,0,.65)}
 .region-header.map-hero .region-meta,.region-header.map-hero .progress-label{color:rgba(255,255,255,.82)}
 .region-header.all-hero{
-  min-height:210px;display:flex;align-items:center;justify-content:center;text-align:center;
+  min-height:210px;display:flex;align-items:flex-end;justify-content:flex-start;text-align:left;
   position:relative;overflow:hidden;isolation:isolate;border:1px solid var(--border);border-radius:var(--r-lg);
   padding:1.25rem;background:var(--surface);
   box-shadow:0 14px 36px rgba(0,0,0,.22),inset 0 0 0 1px rgba(255,255,255,.04);
 }
 .region-header.all-hero::before{
-  content:'';position:absolute;inset:0;z-index:1;border-radius:inherit;
-  background:radial-gradient(circle at 50% 42%,rgba(15,15,19,.24),rgba(15,15,19,.42) 48%,rgba(15,15,19,.58)),linear-gradient(180deg,rgba(15,15,19,.06),rgba(15,15,19,.34));
+  content:'';position:absolute;inset:7px;z-index:1;border-radius:calc(var(--r-lg) - 5px);
+  background:linear-gradient(180deg,rgba(15,15,19,.08),rgba(15,15,19,.84)),linear-gradient(90deg,rgba(15,15,19,.72),rgba(15,15,19,.12));
 }
-.region-header.all-hero .all-hero-copy{position:relative;z-index:2;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:.85rem;min-width:0;width:min(560px,100%);padding:.9rem 1rem;border-radius:var(--r);background:rgba(15,15,19,.46);box-shadow:0 10px 28px rgba(0,0,0,.28);backdrop-filter:blur(2px)}
+.region-header.all-hero .all-hero-copy{position:relative;z-index:2;display:flex;flex-direction:column;justify-content:flex-end;align-items:flex-start;gap:.85rem;min-width:0;width:min(390px,100%);padding:0;background:transparent;box-shadow:none;backdrop-filter:none}
 .region-header.all-hero .progress-wrap{width:100%;flex:none}
 .region-header.all-hero .region-name{text-shadow:0 2px 14px rgba(0,0,0,.75)}
 .region-header.all-hero .region-meta,.region-header.all-hero .progress-label{color:rgba(255,255,255,.82)}
-.region-info-block{display:flex;flex-direction:column;gap:8px;min-width:min(100%,300px);width:min(100%,360px)}
+.region-info-block{display:flex;flex-direction:column;gap:8px;min-width:min(100%,300px);width:min(100%,390px)}
 .region-stat-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;width:100%}
 .region-stat{
   min-width:0;padding:7px 6px;border-radius:var(--r);
@@ -376,7 +376,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 }
 .region-stat span{
   display:block;margin-top:3px;color:rgba(255,255,255,.68);
-  font-size:8px;font-weight:800;text-transform:uppercase;letter-spacing:.15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  font-size:7px;font-weight:800;text-transform:uppercase;letter-spacing:0;white-space:nowrap;overflow:hidden;text-overflow:clip;
 }
 .region-stat.perfect strong,.region-stat.missing strong{color:#c084fc}
 .region-detail-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;width:100%}
@@ -2257,7 +2257,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=111', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=112', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
