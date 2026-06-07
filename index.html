@@ -390,6 +390,12 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   background:rgba(212,175,55,.08);border:1px solid rgba(212,175,55,.32);
   color:#d4af37;font-family:var(--font);font-size:13px;font-weight:800;white-space:nowrap;cursor:pointer;
 }
+.perfect-summary{
+  background:linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.022)),#1b1b25;
+  border-color:rgba(255,255,255,.13);color:#eceaf6;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 7px 16px rgba(0,0,0,.14);
+  justify-content:center;overflow:hidden;
+}
 .counter-button{
   position:relative;overflow:hidden;
   justify-content:center;
@@ -404,7 +410,22 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   box-shadow:inset 0 1px 0 rgba(255,255,255,.09),0 9px 20px rgba(0,0,0,.2),0 0 0 1px rgba(125,211,252,.14);
 }
 .perfect-summary strong,.counter-button strong{font-family:var(--font);font-size:14px;color:#f7d774}
+.perfect-summary strong{color:inherit;font-size:13px;font-weight:800}
 .counter-button strong{color:inherit;font-size:13px;font-weight:800}
+.sprite-toggle-label{display:inline-flex;align-items:center;gap:7px;min-width:0}
+.sprite-toggle-icon{
+  display:grid;place-items:center;width:20px;height:20px;border-radius:7px;flex:0 0 auto;
+  background:linear-gradient(180deg,rgba(212,175,55,.18),rgba(212,175,55,.06));
+  border:1px solid rgba(255,255,255,.12);color:#f7d774;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.12);
+}
+.sprite-toggle-icon svg{width:13px;height:13px;display:block}
+.sprite-toggle-mode{
+  display:grid;place-items:center;min-width:28px;height:20px;padding:0 6px;border-radius:999px;
+  background:rgba(212,175,55,.12);border:1px solid rgba(212,175,55,.28);
+  color:#f7d774;font-size:11px;font-weight:900;line-height:1;
+}
+.sprite-toggle-text{color:var(--muted);font-size:12px;font-weight:800}
 .counter-icon{
   display:grid;place-items:center;width:20px;height:20px;border-radius:7px;flex:0 0 auto;
   background:linear-gradient(180deg,rgba(125,211,252,.2),rgba(125,211,252,.07));
@@ -415,7 +436,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .counter-label{display:inline-flex;align-items:center;gap:7px;min-width:0}
 .counter-button.active .counter-icon{background:linear-gradient(180deg,rgba(125,211,252,.32),rgba(125,211,252,.13));border-color:rgba(125,211,252,.42);color:#fff}
 .perfect-summary:hover{
-  background:rgba(212,175,55,.08);
+  background:linear-gradient(180deg,rgba(212,175,55,.105),rgba(255,255,255,.022)),#1d1b24;
   border-color:rgba(212,175,55,.32);
 }
 .counter-button:hover{
@@ -439,9 +460,9 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   border-color:rgba(125,211,252,.52);
 }
 .perfect-summary:active{
-  background:rgba(212,175,55,.08);
-  border-color:rgba(212,175,55,.32);
-  box-shadow:none;
+  background:linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.022)),#1b1b25;
+  border-color:rgba(255,255,255,.13);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 7px 16px rgba(0,0,0,.14);
 }
 
 /* ── GRID ── */
@@ -1289,10 +1310,28 @@ function toggleSpriteMode() {
 function updateSpriteToggle() {
   const button = document.getElementById('perfectSummary');
   if (!button) return;
+  const homeMode = isHomeSpriteMode();
   button.innerHTML = isHomeSpriteMode()
-    ? '<strong>3D</strong> activé'
-    : '<strong>2D</strong> pixel';
-  button.setAttribute('aria-label', isHomeSpriteMode() ? 'Afficher les sprites pixel' : 'Afficher les sprites 3D');
+    ? `<span class="sprite-toggle-label">
+        <span class="sprite-toggle-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M5 7.5l7-4 7 4-7 4-7-4z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+            <path d="M5 7.5v8.8l7 4 7-4V7.5" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+            <path d="M12 11.5v8.8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </span>
+        <span class="sprite-toggle-mode">3D</span>
+      </span>`
+    : `<span class="sprite-toggle-label">
+        <span class="sprite-toggle-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M5 6h14v12H5z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+            <path d="M9 10h2v2H9zM13 10h2v2h-2zM11 15h2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </span>
+        <span class="sprite-toggle-mode">2D</span>
+      </span>`;
+  button.setAttribute('aria-label', homeMode ? 'Afficher les sprites pixel' : 'Afficher les sprites 3D');
 }
 
 function updateCounterButton() {
@@ -2165,7 +2204,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=101', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=102', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
