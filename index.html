@@ -378,7 +378,8 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   display:block;margin-top:3px;color:rgba(255,255,255,.68);
   font-size:7px;font-weight:800;text-transform:uppercase;letter-spacing:0;white-space:nowrap;overflow:hidden;text-overflow:clip;
 }
-.region-stat.perfect strong,.region-stat.missing strong{color:#c084fc}
+.region-stat.missing strong{color:#c084fc}
+.region-stat.perfect strong{color:#d4af37}
 .region-detail-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;width:100%}
 .region-detail-chip{
   position:relative;min-width:0;min-height:38px;padding:7px 6px;border-radius:var(--r);
@@ -2257,7 +2258,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=112', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=113', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
