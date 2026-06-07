@@ -1752,7 +1752,6 @@ function renderRegion() {
           ${statsPanel}
         </div>
       </div>
-      <div class="home-signature">Merci thieu</div>
       <div class="region-map-mosaic">${mosaic}</div>`;
     renderGrid();
     return;
@@ -2419,7 +2418,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=122', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=123', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
