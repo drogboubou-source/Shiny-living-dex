@@ -509,13 +509,6 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 }
 .card > *{position:relative;z-index:1}
 .card img{width:64px;height:64px;image-rendering:pixelated;display:block;order:2;margin:1px 0 0}
-.card.interacting img{animation:pokemon-card-react .28s cubic-bezier(.2,.9,.28,1.25)}
-@keyframes pokemon-card-react{
-  0%{transform:translateY(0) scale(1)}
-  42%{transform:translateY(-7px) scale(1.12)}
-  72%{transform:translateY(1px) scale(.98)}
-  100%{transform:translateY(0) scale(1)}
-}
 .card.caught{border-color:#c084fc;box-shadow:0 0 0 1px rgba(192,132,252,.48),0 0 12px rgba(192,132,252,.18)}
 .card.perfect{border-color:#d4af37;box-shadow:0 0 0 1px rgba(212,175,55,.55),0 0 12px rgba(212,175,55,.24)}
 .card .num{font-family:var(--font);font-size:10px;color:var(--muted);margin-bottom:0;order:0}
@@ -581,6 +574,13 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   width:88px;height:88px;image-rendering:pixelated;
   background:var(--surface2);border-radius:var(--r);flex-shrink:0;
   position:relative;
+}
+.modal-sprite.sprite-react,.modal-sprite-shiny.sprite-react{animation:modal-sprite-react .46s cubic-bezier(.2,.9,.28,1.15)}
+@keyframes modal-sprite-react{
+  0%{transform:translateY(0) scale(.98)}
+  36%{transform:translateY(-6px) scale(1.08)}
+  68%{transform:translateY(1px) scale(.99)}
+  100%{transform:translateY(0) scale(1)}
 }
 .sprite-pair{display:flex;gap:8px}
 .sprite-label{font-size:10px;color:var(--muted);text-align:center;margin-top:3px}
@@ -1268,6 +1268,11 @@ function getPokemonSpriteUrl(id, shiny = false, mode = spriteMode) {
   return `${base}/${shiny ? 'shiny/' : ''}${id}.png`;
 }
 
+function getPokemonAnimatedSpriteUrl(id, shiny = false) {
+  const base = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated';
+  return `${base}/${shiny ? 'shiny/' : ''}${id}.gif`;
+}
+
 function playPokemonCry(id) {
   try {
     if (activePokemonCry) {
@@ -1282,14 +1287,7 @@ function playPokemonCry(id) {
 }
 
 function activatePokemonCard(card, id) {
-  playPokemonCry(id);
-  if (card) {
-    card.classList.remove('interacting');
-    void card.offsetWidth;
-    card.classList.add('interacting');
-    setTimeout(() => card.classList.remove('interacting'), 320);
-  }
-  setTimeout(() => openModal(id), 90);
+  openModal(id);
 }
 
 function handleSpriteError(img, id, shiny = false) {
@@ -1986,10 +1984,12 @@ function openModal(id, options = {}) {
 
   const normalSprite = document.getElementById('mSprite');
   const shinySprite = document.getElementById('mSpriteShiny');
+  normalSprite.classList.remove('sprite-react');
+  shinySprite.classList.remove('sprite-react');
   normalSprite.onerror = () => handleSpriteError(normalSprite, id, false);
   shinySprite.onerror = () => handleSpriteError(shinySprite, id, true);
-  normalSprite.src = getPokemonSpriteUrl(id, false);
-  shinySprite.src = getPokemonSpriteUrl(id, true);
+  normalSprite.src = getPokemonAnimatedSpriteUrl(id, false);
+  shinySprite.src = getPokemonAnimatedSpriteUrl(id, true);
   document.getElementById('mNum').textContent = `#${String(id).padStart(4,'0')}`;
   document.getElementById('mName').textContent = name;
   document.getElementById('mRegion').innerHTML = `<span style="color:${r.color};font-family:var(--font-logo);font-size:10px;line-height:1.45">${r.name} · Génération ${r.gen}</span>`;
@@ -2024,6 +2024,15 @@ function openModal(id, options = {}) {
   }
   if (modal) modal.scrollTop = 0;
   document.getElementById('overlay').classList.add('open');
+  playPokemonCry(id);
+  requestAnimationFrame(() => {
+    normalSprite.classList.add('sprite-react');
+    shinySprite.classList.add('sprite-react');
+  });
+  setTimeout(() => {
+    normalSprite.classList.remove('sprite-react');
+    shinySprite.classList.remove('sprite-react');
+  }, 520);
   if (!options.skipHistory) updateAppHistory('push');
   requestAnimationFrame(() => {
     if (modal) modal.scrollTop = 0;
@@ -2191,7 +2200,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=103', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=104', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
