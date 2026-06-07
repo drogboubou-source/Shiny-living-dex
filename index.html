@@ -285,10 +285,10 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   .region-header.all-hero{min-height:170px;padding:.9rem}
   .region-header.all-hero .all-hero-copy{padding:.75rem}
   .region-info-block{width:100%}
-  .region-stat-row{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
-  .region-stat{padding:6px 7px}
+  .region-stat-row{grid-template-columns:repeat(4,minmax(0,1fr));gap:4px}
+  .region-stat{padding:6px 4px}
   .region-stat strong{font-size:12px}
-  .region-stat span{font-size:8px}
+  .region-stat span{font-size:7px;letter-spacing:0}
   .home-signature{right:.75rem;top:.6rem;font-size:12px}
   .region-map-mosaic{inset:6px;opacity:.9;filter:saturate(1.12) contrast(1.04) brightness(1.18)}
   .region-name{font-size:11px}
@@ -358,20 +358,21 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .region-header.all-hero .progress-wrap{width:100%;flex:none}
 .region-header.all-hero .region-name{text-shadow:0 2px 14px rgba(0,0,0,.75)}
 .region-header.all-hero .region-meta,.region-header.all-hero .progress-label{color:rgba(255,255,255,.82)}
-.region-info-block{display:flex;flex-direction:column;gap:8px;min-width:min(100%,260px)}
+.region-info-block{display:flex;flex-direction:column;gap:8px;min-width:min(100%,280px)}
 .region-stat-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;width:100%}
 .region-stat{
-  min-width:0;padding:7px 8px;border-radius:var(--r);
+  min-width:0;padding:7px 6px;border-radius:var(--r);
   background:rgba(15,15,19,.48);border:1px solid rgba(255,255,255,.09);
   box-shadow:inset 0 1px 0 rgba(255,255,255,.045);
+  text-align:center;overflow:hidden;
 }
 .region-stat strong{
   display:block;color:#fff;font-size:13px;line-height:1.1;font-weight:900;
-  font-variant-numeric:tabular-nums;white-space:nowrap;
+  font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
 }
 .region-stat span{
   display:block;margin-top:3px;color:rgba(255,255,255,.68);
-  font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.45px;white-space:nowrap;
+  font-size:8px;font-weight:800;text-transform:uppercase;letter-spacing:.15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
 }
 .region-stat.perfect strong{color:#d4af37}
 .region-stat.missing strong{color:rgba(255,255,255,.74)}
@@ -1593,8 +1594,8 @@ function renderRegion() {
           <div class="region-name" style="color:${r.color}">${r.name}</div>
           <div class="region-meta">Générations 1 à 9 · #${r.start}–#${r.end}</div>
           <div class="region-stat-row">
-            <div class="region-stat"><strong>${caught}</strong><span>Capturés</span></div>
-            <div class="region-stat missing"><strong>${missing}</strong><span>Manquants</span></div>
+            <div class="region-stat"><strong>${caught}</strong><span>Pris</span></div>
+            <div class="region-stat missing"><strong>${missing}</strong><span>Restants</span></div>
             <div class="region-stat perfect"><strong>${perfect}</strong><span>Parfaits</span></div>
             <div class="region-stat"><strong>${pctText}</strong><span>Avancée</span></div>
           </div>
@@ -1619,8 +1620,8 @@ function renderRegion() {
         <div class="region-meta">Génération ${r.gen} · #${r.start}–#${r.end}</div>
       </div>
       <div class="region-stat-row">
-        <div class="region-stat"><strong>${caught}</strong><span>Capturés</span></div>
-        <div class="region-stat missing"><strong>${missing}</strong><span>Manquants</span></div>
+        <div class="region-stat"><strong>${caught}</strong><span>Pris</span></div>
+        <div class="region-stat missing"><strong>${missing}</strong><span>Restants</span></div>
         <div class="region-stat perfect"><strong>${perfect}</strong><span>Parfaits</span></div>
         <div class="region-stat"><strong>${pctText}</strong><span>Avancée</span></div>
       </div>
@@ -2234,7 +2235,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=108', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=109', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
