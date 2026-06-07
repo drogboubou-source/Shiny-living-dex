@@ -486,6 +486,13 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 }
 .card > *{position:relative;z-index:1}
 .card img{width:64px;height:64px;image-rendering:pixelated;display:block;order:2;margin:1px 0 0}
+.card.interacting img{animation:pokemon-card-react .28s cubic-bezier(.2,.9,.28,1.25)}
+@keyframes pokemon-card-react{
+  0%{transform:translateY(0) scale(1)}
+  42%{transform:translateY(-7px) scale(1.12)}
+  72%{transform:translateY(1px) scale(.98)}
+  100%{transform:translateY(0) scale(1)}
+}
 .card.caught{border-color:#c084fc;box-shadow:0 0 0 1px rgba(192,132,252,.48),0 0 12px rgba(192,132,252,.18)}
 .card.perfect{border-color:#d4af37;box-shadow:0 0 0 1px rgba(212,175,55,.55),0 0 12px rgba(212,175,55,.24)}
 .card .num{font-family:var(--font);font-size:10px;color:var(--muted);margin-bottom:0;order:0}
@@ -961,6 +968,8 @@ const STORAGE_KEY = 'shiny_dex_v4';
 const LEGACY_STORAGE_KEY = 'shiny_dex_v3';
 const REGION_SESSION_KEY = 'shiny_dex_session_region';
 const SPRITE_MODE_KEY = 'shiny_dex_sprite_mode';
+const POKEMON_CRY_BASE = 'https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/latest';
+let activePokemonCry = null;
 
 /* ══════════════════════════════════════
    INIT — charge pokemon.json depuis GitHub Pages
@@ -1234,6 +1243,30 @@ function getPokemonSpriteUrl(id, shiny = false, mode = spriteMode) {
   const base = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon';
   if (mode === 'home') return `${base}/other/home/${shiny ? 'shiny/' : ''}${id}.png`;
   return `${base}/${shiny ? 'shiny/' : ''}${id}.png`;
+}
+
+function playPokemonCry(id) {
+  try {
+    if (activePokemonCry) {
+      activePokemonCry.pause();
+      activePokemonCry.currentTime = 0;
+    }
+    const cry = new Audio(`${POKEMON_CRY_BASE}/${id}.ogg`);
+    cry.volume = 0.38;
+    activePokemonCry = cry;
+    cry.play().catch(() => {});
+  } catch (_) {}
+}
+
+function activatePokemonCard(card, id) {
+  playPokemonCry(id);
+  if (card) {
+    card.classList.remove('interacting');
+    void card.offsetWidth;
+    card.classList.add('interacting');
+    setTimeout(() => card.classList.remove('interacting'), 320);
+  }
+  setTimeout(() => openModal(id), 90);
 }
 
 function handleSpriteError(img, id, shiny = false) {
@@ -1603,11 +1636,11 @@ function renderGrid() {
     card.setAttribute('role', 'button');
     card.setAttribute('tabindex', '0');
     card.setAttribute('aria-label', `${name}, #${String(id).padStart(4,'0')}${p.caught ? ', shiny capture' : (isHuntingCard ? ', en cours' : ', manquant')}`);
-    card.onclick = () => openModal(id);
+    card.onclick = () => activatePokemonCard(card, id);
     card.onkeydown = e => {
       if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
-        openModal(id);
+        activatePokemonCard(card, id);
       }
     };
 
@@ -2132,7 +2165,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=100', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=101', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
