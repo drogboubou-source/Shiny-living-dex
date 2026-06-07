@@ -104,7 +104,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .logo-stack{display:flex;flex-direction:column;gap:5px;min-width:0}
 .logo-text{display:inline-flex;align-items:center;line-height:1;transform:translateY(-1px)}
 .logo-subline{font-family:var(--font);font-size:9px;line-height:1;color:rgba(255,255,255,.56);letter-spacing:0;font-weight:800}
-.logo:hover,.logo:focus-visible{border-color:rgba(192,132,252,.28);background:linear-gradient(180deg,rgba(192,132,252,.09),rgba(255,255,255,.018)),rgba(18,18,25,.7)}
+.logo:hover,.logo:focus-visible{border-color:rgba(255,255,255,.105);background:linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.018)),rgba(15,15,21,.56)}
 .logo:hover .logo-dex,.logo:focus-visible .logo-dex{color:#fff}
 .logo-shiny{color:#c084fc}
 .logo-dex{color:#fff}
@@ -772,11 +772,11 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
 <!-- TOPBAR -->
 <div class="topbar">
   <div class="title-actions">
-    <button class="logo" onclick="switchRegion('all')" aria-label="Afficher toutes les régions">
+    <button class="logo" onclick="goHomeFromLogo()" aria-label="Retour à l'accueil">
       <img class="logo-icon" src="./Assets/icon-192.png" alt="" width="32" height="32">
       <span class="logo-stack">
         <span class="logo-text"><span class="logo-shiny">Shiny</span>&nbsp;<span class="logo-dex">Living Dex</span></span>
-        <span class="logo-subline">Suivi local</span>
+        <span class="logo-subline">Merci Thieu</span>
       </span>
     </button>
   </div>
@@ -2080,6 +2080,27 @@ function switchRegion(i) {
   });
 }
 
+function goHomeFromLogo() {
+  currentRegion = 'all';
+  currentPokemon = null;
+  sessionStorage.setItem(REGION_SESSION_KEY, 'all');
+  document.getElementById('searchInput').value = '';
+  const filterSelect = document.getElementById('filterSelect');
+  if (filterSelect) filterSelect.value = 'all';
+  const sortSelect = document.getElementById('sortSelect');
+  if (sortSelect) sortSelect.value = 'number';
+  closeModal({ skipHistory: true });
+  renderSidebar();
+  renderStats();
+  renderRegion();
+  setSidebar(false);
+  updateAppHistory('push');
+  requestAnimationFrame(() => {
+    scrollMainToTop();
+    requestAnimationFrame(scrollMainToTop);
+  });
+}
+
 function scrollMainToTop() {
   const main = document.getElementById('mainContent');
   if (main) {
@@ -2398,7 +2419,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=121', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=122', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
