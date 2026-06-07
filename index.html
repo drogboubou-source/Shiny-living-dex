@@ -1269,6 +1269,14 @@ function getPokemonAnimatedSpriteUrl(id, shiny = false) {
   return `${base}/${shiny ? 'shiny/' : ''}${id}.gif`;
 }
 
+function hasPokemonAnimatedSprite(id) {
+  return id >= 1 && id <= 649;
+}
+
+function getPokemonModalSpriteUrl(id, shiny = false) {
+  return hasPokemonAnimatedSprite(id) ? getPokemonAnimatedSpriteUrl(id, shiny) : getPokemonSpriteUrl(id, shiny);
+}
+
 function playPokemonCry(id) {
   try {
     if (activePokemonCry) {
@@ -1288,8 +1296,8 @@ function activatePokemonCard(card, id) {
 
 function handleSpriteError(img, id, shiny = false) {
   const fallback = isHomeSpriteMode()
-    ? (shiny ? getPokemonSpriteUrl(id, false, 'home') : getPokemonSpriteUrl(id, false, 'pixel'))
-    : (shiny ? getPokemonSpriteUrl(id, false, 'pixel') : SPRITE_FALLBACK);
+    ? getPokemonSpriteUrl(id, shiny, 'home')
+    : getPokemonSpriteUrl(id, shiny, 'pixel');
   img.onerror = () => { img.onerror = null; img.src = SPRITE_FALLBACK; };
   img.src = fallback;
 }
@@ -1983,8 +1991,8 @@ function openModal(id, options = {}) {
   const shinySprite = document.getElementById('mSpriteShiny');
   normalSprite.onerror = () => handleSpriteError(normalSprite, id, false);
   shinySprite.onerror = () => handleSpriteError(shinySprite, id, true);
-  normalSprite.src = getPokemonAnimatedSpriteUrl(id, false);
-  shinySprite.src = getPokemonAnimatedSpriteUrl(id, true);
+  normalSprite.src = getPokemonModalSpriteUrl(id, false);
+  shinySprite.src = getPokemonModalSpriteUrl(id, true);
   document.getElementById('mNum').textContent = `#${String(id).padStart(4,'0')}`;
   document.getElementById('mName').textContent = name;
   document.getElementById('mRegion').innerHTML = `<span style="color:${r.color};font-family:var(--font-logo);font-size:10px;line-height:1.45">${r.name} · Génération ${r.gen}</span>`;
@@ -2187,7 +2195,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=105', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=106', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
