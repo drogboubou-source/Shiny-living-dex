@@ -87,68 +87,49 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .launch-splash{
   position:fixed;inset:0;z-index:10000;display:grid;place-items:center;
   background:
-    radial-gradient(circle at 50% 38%,rgba(192,132,252,.18),transparent 30%),
-    radial-gradient(circle at 48% 56%,rgba(212,175,55,.1),transparent 28%),
-    radial-gradient(circle at 70% 22%,rgba(125,211,252,.08),transparent 28%),
+    radial-gradient(circle at 50% 42%,rgba(255,255,255,.08),transparent 24%),
+    radial-gradient(circle at 50% 44%,rgba(192,132,252,.08),transparent 34%),
     linear-gradient(180deg,#111118,#09090d);
   transition:opacity .42s ease,visibility .42s ease;
 }
 .skip-launch-splash .launch-splash{display:none}
 .launch-splash.hidden{opacity:0;visibility:hidden;pointer-events:none}
 .launch-mark{
-  position:relative;display:flex;flex-direction:column;align-items:center;gap:16px;
-  transform:translateY(6px);animation:launchRise .95s cubic-bezier(.2,.85,.25,1) both;
+  position:relative;display:flex;flex-direction:column;align-items:center;
+  animation:launchRise .82s cubic-bezier(.2,.85,.25,1) both;
 }
 .launch-mark::before{
-  content:'';position:absolute;top:32px;left:50%;width:138px;height:138px;border-radius:50%;
+  content:'';position:absolute;top:50%;left:50%;width:112px;height:112px;border-radius:28px;
   transform:translate(-50%,-50%);
-  background:conic-gradient(from 220deg,rgba(192,132,252,.15),rgba(212,175,55,.26),rgba(125,211,252,.18),rgba(192,132,252,.15));
-  filter:blur(16px);opacity:.9;animation:launchGlow 1.45s ease-in-out both;
+  background:rgba(255,255,255,.045);
+  border:1px solid rgba(255,255,255,.1);
+  box-shadow:0 18px 46px rgba(0,0,0,.45),0 0 28px rgba(192,132,252,.12);
+  opacity:.9;animation:launchGlow .82s ease-out both;
 }
 .launch-logo{
   position:relative;width:86px;height:86px;border-radius:22px;object-fit:cover;
-  box-shadow:0 0 0 1px rgba(255,255,255,.18),0 18px 42px rgba(0,0,0,.48),0 0 34px rgba(192,132,252,.2);
-  animation:launchLogo .95s cubic-bezier(.2,.85,.25,1) both;
-}
-.launch-title{
-  position:relative;font-family:var(--font-logo);font-size:14px;line-height:1.35;text-align:center;color:#fff;
-  text-shadow:0 4px 18px rgba(0,0,0,.65);
-}
-.launch-title .launch-shiny{color:#c084fc}
-.launch-title .launch-dex{color:#fff}
-.launch-line{
-  position:relative;width:138px;height:2px;border-radius:999px;overflow:hidden;
-  background:rgba(255,255,255,.08);box-shadow:0 0 18px rgba(125,211,252,.12);
-}
-.launch-line::after{
-  content:'';position:absolute;inset:0;
-  background:linear-gradient(90deg,transparent,#c084fc,#d4af37,#7dd3fc,transparent);
-  transform:translateX(-100%);animation:launchLine 1.05s .1s ease-out both;
+  box-shadow:0 0 0 1px rgba(255,255,255,.18),0 18px 42px rgba(0,0,0,.48);
+  animation:launchLogo .82s cubic-bezier(.2,.85,.25,1) both;
 }
 @keyframes launchRise{
-  from{opacity:0;transform:translateY(16px) scale(.96)}
-  to{opacity:1;transform:translateY(0) scale(1)}
+  from{opacity:0;transform:scale(.94)}
+  to{opacity:1;transform:scale(1)}
 }
 @keyframes launchLogo{
-  0%{transform:scale(.84);filter:saturate(.8) brightness(.85)}
-  62%{transform:scale(1.06);filter:saturate(1.15) brightness(1.08)}
+  0%{transform:scale(.9);filter:brightness(.9)}
+  62%{transform:scale(1.04);filter:brightness(1.06)}
   100%{transform:scale(1);filter:saturate(1) brightness(1)}
 }
 @keyframes launchGlow{
-  0%{opacity:0;transform:translate(-50%,-50%) scale(.72)}
+  0%{opacity:0;transform:translate(-50%,-50%) scale(.86)}
   100%{opacity:.9;transform:translate(-50%,-50%) scale(1)}
-}
-@keyframes launchLine{
-  from{transform:translateX(-100%)}
-  to{transform:translateX(100%)}
 }
 @media (max-width: 720px){
   .launch-logo{width:78px;height:78px;border-radius:20px}
-  .launch-title{font-size:12px}
-  .launch-line{width:124px}
+  .launch-mark::before{width:102px;height:102px;border-radius:25px}
 }
 @media (prefers-reduced-motion: reduce){
-  .launch-mark,.launch-logo,.launch-mark::before,.launch-line::after{animation:none}
+  .launch-mark,.launch-logo,.launch-mark::before{animation:none}
   .launch-splash{transition:opacity .18s ease,visibility .18s ease}
 }
 
@@ -908,6 +889,22 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
 .hunt-panel.open{display:block}
 .hunt-label{font-family:var(--font-logo);font-size:11px;line-height:1.35;color:#7dd3fc;margin-bottom:.75rem}
 .hunt-count{font-family:var(--font);font-size:22px;font-weight:800;line-height:1;color:#fff;text-shadow:0 2px 12px rgba(0,0,0,.45);margin-bottom:.9rem;font-variant-numeric:tabular-nums}
+.hunt-odds{
+  margin:0 0 .9rem;padding:9px;border-radius:var(--r);
+  background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.014)),rgba(17,17,24,.5);
+  border:1px solid rgba(255,255,255,.095);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.045);
+}
+.hunt-odds-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:7px}
+.hunt-odds-label{font-size:10px;font-weight:900;color:rgba(255,255,255,.66);text-align:left;line-height:1.25}
+.hunt-odds-chance{font-size:12px;font-weight:900;color:#7dd3fc;font-variant-numeric:tabular-nums;white-space:nowrap}
+.hunt-odds-track{height:6px;border-radius:999px;overflow:hidden;background:rgba(255,255,255,.08)}
+.hunt-odds-fill{
+  width:0;height:100%;border-radius:999px;
+  background:linear-gradient(90deg,#7dd3fc,#c084fc,#d4af37);
+  box-shadow:0 0 12px rgba(125,211,252,.22);
+  transition:width .24s ease;
+}
 .hunt-actions{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:8px}
 .hunt-actions .btn,.hunt-found{justify-content:center;min-height:38px}
 .hunt-found{width:100%;background:rgba(125,211,252,.13);border-color:rgba(125,211,252,.38);color:#dff6ff}
@@ -1038,8 +1035,6 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
 <div class="launch-splash" id="launchSplash" aria-hidden="true">
   <div class="launch-mark">
     <img class="launch-logo" src="./Assets/icon-192.png" alt="">
-    <div class="launch-title"><span class="launch-shiny">Shiny</span> <span class="launch-dex">Living Dex</span></div>
-    <div class="launch-line"></div>
   </div>
 </div>
 
@@ -1229,6 +1224,15 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
     <div class="hunt-panel" id="huntPanel">
       <div class="hunt-label">Rencontres en cours</div>
       <div class="hunt-count" id="huntCount">0</div>
+      <div class="hunt-odds" aria-live="polite">
+        <div class="hunt-odds-top">
+          <span class="hunt-odds-label" id="huntOddsLabel">Taux 1/512</span>
+          <strong class="hunt-odds-chance" id="huntOddsChance">0%</strong>
+        </div>
+        <div class="hunt-odds-track">
+          <div class="hunt-odds-fill" id="huntOddsFill"></div>
+        </div>
+      </div>
       <div class="hunt-actions">
         <button class="btn" type="button" onclick="adjustHuntCounter(-1)">-1</button>
         <button class="btn" type="button" onclick="adjustHuntCounter(1)">+1</button>
@@ -1463,6 +1467,31 @@ function getPokemonDisplayName(id) {
 
 function getPokemonBaseId(id) {
   return getRegionalFormById(id)?.baseId || id;
+}
+
+const LEGENDARY_ODDS_BASE_IDS = new Set([
+  144,145,146,150,151,
+  243,244,245,249,250,251,
+  377,378,379,380,381,382,383,384,385,386,
+  480,481,482,483,484,485,486,487,488,491,492,493,494,
+  638,639,640,641,642,643,644,645,646,647,648,649,
+  716,717,718,719,720,721,
+  772,773,785,786,787,788,789,790,791,792,800,801,802,807,808,809,
+  888,889,890,891,892,893,894,895,896,897,898,905,
+  1001,1002,1003,1004,1007,1008,1009,1010,1024,1025
+]);
+
+function getHuntOddsMeta(id) {
+  const baseId = getPokemonBaseId(id);
+  if (LEGENDARY_ODDS_BASE_IDS.has(baseId)) {
+    return { odds: 1365, label: 'Légendaire · 1/1365' };
+  }
+  return { odds: 512, label: 'Masuda · 1/512' };
+}
+
+function getCumulativeShinyChance(count, odds) {
+  const safeCount = Math.max(0, parseInt(count) || 0);
+  return (1 - Math.pow(1 - (1 / odds), safeCount)) * 100;
 }
 
 const POKEBALLS = [
@@ -2735,7 +2764,19 @@ function renderHuntCounter() {
   const counter = document.getElementById('huntCount');
   if (!counter || !currentPokemon) return;
   const count = parseInt(progress[currentPokemon]?.huntCount) || 0;
+  const oddsMeta = getHuntOddsMeta(currentPokemon);
+  const chance = getCumulativeShinyChance(count, oddsMeta.odds);
+  const chanceText = chance.toLocaleString('fr-FR', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  }) + '%';
   counter.textContent = count.toLocaleString('fr-FR');
+  const oddsLabel = document.getElementById('huntOddsLabel');
+  const oddsChance = document.getElementById('huntOddsChance');
+  const oddsFill = document.getElementById('huntOddsFill');
+  if (oddsLabel) oddsLabel.textContent = oddsMeta.label;
+  if (oddsChance) oddsChance.textContent = chanceText;
+  if (oddsFill) oddsFill.style.width = `${Math.min(100, chance)}%`;
 }
 
 function adjustHuntCounter(delta) {
@@ -3008,7 +3049,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=134', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=135', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
