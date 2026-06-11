@@ -735,6 +735,7 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
 .capture-details{
   display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:10px;min-width:0;
 }
+.capture-details.single{grid-template-columns:1fr}
 .capture-control{
   display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:9px;
   min-width:0;padding:8px;border-radius:var(--r);
@@ -937,22 +938,6 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
       <span>⬡ Shiny parfait</span>
     </label>
 
-    <div class="capture-details">
-      <div class="capture-control">
-        <span class="ball-preview"><img id="fPokeballPreview" src="" alt=""></span>
-        <span class="capture-select-stack">
-          <span class="capture-kicker">Pokéball</span>
-          <select id="fPokeball" onchange="updatePokeballPreview()"></select>
-        </span>
-      </div>
-      <div class="capture-control nature">
-        <span class="capture-select-stack">
-          <span class="capture-kicker">Nature</span>
-          <select id="fNature"></select>
-        </span>
-      </div>
-    </div>
-
     <div class="form-row">
       <label>Surnom</label>
       <input type="text" id="fNickname" placeholder="Aucun surnom">
@@ -981,6 +966,15 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
     </div>
 
     <hr class="div">
+    <div class="capture-details single">
+      <div class="capture-control nature">
+        <span class="capture-select-stack">
+          <span class="capture-kicker">Nature</span>
+          <select id="fNature"></select>
+        </span>
+      </div>
+    </div>
+
     <div class="form-row">
       <label>IVs parfaits</label>
       <div class="iv-grid">
@@ -990,6 +984,16 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
         <label class="iv-item"><input type="checkbox" id="ivSpa"> Atq Spé</label>
         <label class="iv-item"><input type="checkbox" id="ivSpd"> Déf Spé</label>
         <label class="iv-item"><input type="checkbox" id="ivSpe"> Vitesse</label>
+      </div>
+    </div>
+
+    <div class="capture-details single">
+      <div class="capture-control">
+        <span class="ball-preview"><img id="fPokeballPreview" src="" alt=""></span>
+        <span class="capture-select-stack">
+          <span class="capture-kicker">Pokéball</span>
+          <select id="fPokeball" onchange="updatePokeballPreview()"></select>
+        </span>
       </div>
     </div>
     </div>
@@ -2028,7 +2032,7 @@ function initSidebarSwipe() {
     if (document.getElementById('overlay')?.classList.contains('open')) return;
     const x = e.touches[0].clientX;
     const y = e.touches[0].clientY;
-    canDrag = sidebarOpen || x <= 22;
+    canDrag = true;
     if (!canDrag) return;
     startX = x;
     startY = y;
@@ -2567,7 +2571,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=127', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=128', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
