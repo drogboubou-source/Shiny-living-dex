@@ -93,6 +93,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
     linear-gradient(180deg,#111118,#09090d);
   transition:opacity .42s ease,visibility .42s ease;
 }
+.skip-launch-splash .launch-splash{display:none}
 .launch-splash.hidden{opacity:0;visibility:hidden;pointer-events:none}
 .launch-mark{
   position:relative;display:flex;flex-direction:column;align-items:center;gap:16px;
@@ -767,6 +768,25 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .card.hunting{border-color:#7dd3fc;box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 0 0 1px rgba(125,211,252,.38),0 10px 22px rgba(0,0,0,.23),0 0 15px rgba(125,211,252,.14)}
 .card.hunting .pname{color:#7dd3fc}
 .card.hunting .status{background:rgba(125,211,252,.1);color:#dff6ff;border:1px solid rgba(125,211,252,.3)}
+.card.form-original{border-color:rgba(255,255,255,.18)}
+.card.form-card{
+  border-color:rgba(125,211,252,.42);
+  background:
+    linear-gradient(180deg,rgba(125,211,252,.08),rgba(255,255,255,.016)),
+    radial-gradient(circle at 50% 48%,rgba(125,211,252,.06),transparent 42%),
+    rgba(23,23,31,.96);
+}
+.card.form-card .pname{color:#dff6ff}
+.card.form-card .status{background:rgba(125,211,252,.1);color:#dff6ff;border-color:rgba(125,211,252,.3)}
+.form-tag{
+  position:absolute;top:7px;right:7px;z-index:2;
+  font-size:8px;font-weight:900;line-height:1;padding:3px 5px;border-radius:999px;
+  color:#dff6ff;background:rgba(125,211,252,.12);border:1px solid rgba(125,211,252,.28);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08);
+}
+.form-origin{
+  display:block;margin-top:3px;font-size:8px;line-height:1.15;color:rgba(255,255,255,.58);font-weight:800;
+}
 .card .status-shiny{color:#c084fc}
 .card .status-perfect{color:#d4af37}
 .card .status-pair{display:inline-flex;align-items:center;justify-content:center;gap:5px}
@@ -994,6 +1014,19 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   .region-detail-chip span{font-size:6.5px}
 }
 </style>
+<script>
+(() => {
+  const nav = performance.getEntriesByType?.('navigation')?.[0];
+  const isReload = nav?.type === 'reload' || performance.navigation?.type === 1;
+  try {
+    if (isReload || sessionStorage.getItem('shiny_dex_launch_splash_seen') === 'true') {
+      document.documentElement.classList.add('skip-launch-splash');
+    }
+  } catch (_) {
+    if (isReload) document.documentElement.classList.add('skip-launch-splash');
+  }
+})();
+</script>
 </head>
 <body>
 
@@ -1082,6 +1115,7 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
           <option value="caught">Shinys trouvés</option>
           <option value="missing">Manquants</option>
           <option value="perfect">Shinys parfaits</option>
+          <option value="forms">Formes régionales</option>
         </select>
       </label>
       <button class="counter-button" id="counterButton" type="button" onclick="toggleCounterMode()" onpointerup="this.blur()" ontouchend="this.blur()"></button>
@@ -1256,7 +1290,11 @@ const TYPE_META = {
 };
 
 function renderTypeBadges(id) {
-  return (POKEMON_TYPES[id] || []).map(type => {
+  return renderTypeBadgesForTypes(POKEMON_TYPES[id] || []);
+}
+
+function renderTypeBadgesForTypes(types) {
+  return (types || []).map(type => {
     const meta = TYPE_META[type] || TYPE_META.normal;
     return '<span class="type-pill" title="Type ' + meta.label + '" aria-label="Type ' + meta.label + '"><img src="' + meta.src + '" alt=""></span>';
   }).join('');
@@ -1346,6 +1384,66 @@ const HUNT_CAPTURED_KEY = 'shiny_dex_hunt_captured';
 const POKEMON_CRY_BASE = 'https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/latest';
 const ITEM_SPRITE_BASE = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items';
 let activePokemonCry = null;
+
+const REGIONAL_FORMS = [
+  {baseId:19, formId:10091, region:'Alola', label:'Rattata d’Alola', types:['dark','normal']},
+  {baseId:20, formId:10092, region:'Alola', label:'Rattatac d’Alola', types:['dark','normal']},
+  {baseId:26, formId:10100, region:'Alola', label:'Raichu d’Alola', types:['electric','psychic']},
+  {baseId:27, formId:10101, region:'Alola', label:'Sabelette d’Alola', types:['ice','steel']},
+  {baseId:28, formId:10102, region:'Alola', label:'Sablaireau d’Alola', types:['ice','steel']},
+  {baseId:37, formId:10103, region:'Alola', label:'Goupix d’Alola', types:['ice']},
+  {baseId:38, formId:10104, region:'Alola', label:'Feunard d’Alola', types:['ice','fairy']},
+  {baseId:50, formId:10105, region:'Alola', label:'Taupiqueur d’Alola', types:['ground','steel']},
+  {baseId:51, formId:10106, region:'Alola', label:'Triopikeur d’Alola', types:['ground','steel']},
+  {baseId:52, formId:10107, region:'Alola', label:'Miaouss d’Alola', types:['dark']},
+  {baseId:53, formId:10108, region:'Alola', label:'Persian d’Alola', types:['dark']},
+  {baseId:74, formId:10109, region:'Alola', label:'Racaillou d’Alola', types:['rock','electric']},
+  {baseId:75, formId:10110, region:'Alola', label:'Gravalanch d’Alola', types:['rock','electric']},
+  {baseId:76, formId:10111, region:'Alola', label:'Grolem d’Alola', types:['rock','electric']},
+  {baseId:88, formId:10112, region:'Alola', label:'Tadmorv d’Alola', types:['poison','dark']},
+  {baseId:89, formId:10113, region:'Alola', label:'Grotadmorv d’Alola', types:['poison','dark']},
+  {baseId:103, formId:10114, region:'Alola', label:'Noadkoko d’Alola', types:['grass','dragon']},
+  {baseId:105, formId:10115, region:'Alola', label:'Ossatueur d’Alola', types:['fire','ghost']},
+  {baseId:52, formId:10161, region:'Galar', label:'Miaouss de Galar', types:['steel']},
+  {baseId:77, formId:10162, region:'Galar', label:'Ponyta de Galar', types:['psychic']},
+  {baseId:78, formId:10163, region:'Galar', label:'Galopa de Galar', types:['psychic','fairy']},
+  {baseId:79, formId:10164, region:'Galar', label:'Ramoloss de Galar', types:['psychic']},
+  {baseId:80, formId:10165, region:'Galar', label:'Flagadoss de Galar', types:['poison','psychic']},
+  {baseId:83, formId:10166, region:'Galar', label:'Canarticho de Galar', types:['fighting']},
+  {baseId:110, formId:10167, region:'Galar', label:'Smogogo de Galar', types:['poison','fairy']},
+  {baseId:122, formId:10168, region:'Galar', label:'M. Mime de Galar', types:['ice','psychic']},
+  {baseId:144, formId:10169, region:'Galar', label:'Artikodin de Galar', types:['psychic','flying']},
+  {baseId:145, formId:10170, region:'Galar', label:'Électhor de Galar', types:['fighting','flying']},
+  {baseId:146, formId:10171, region:'Galar', label:'Sulfura de Galar', types:['dark','flying']},
+  {baseId:199, formId:10172, region:'Galar', label:'Roigada de Galar', types:['poison','psychic']},
+  {baseId:222, formId:10173, region:'Galar', label:'Corayon de Galar', types:['ghost']},
+  {baseId:263, formId:10174, region:'Galar', label:'Zigzaton de Galar', types:['dark','normal']},
+  {baseId:264, formId:10175, region:'Galar', label:'Linéon de Galar', types:['dark','normal']},
+  {baseId:554, formId:10176, region:'Galar', label:'Darumarond de Galar', types:['ice']},
+  {baseId:555, formId:10177, region:'Galar', label:'Darumacho de Galar', types:['ice']},
+  {baseId:562, formId:10179, region:'Galar', label:'Tutafeh de Galar', types:['ground','ghost']},
+  {baseId:618, formId:10180, region:'Galar', label:'Limonde de Galar', types:['ground','steel']},
+  {baseId:58, formId:10229, region:'Hisui', label:'Caninos de Hisui', types:['fire','rock']},
+  {baseId:59, formId:10230, region:'Hisui', label:'Arcanin de Hisui', types:['fire','rock']},
+  {baseId:100, formId:10231, region:'Hisui', label:'Voltorbe de Hisui', types:['electric','grass']},
+  {baseId:101, formId:10232, region:'Hisui', label:'Électrode de Hisui', types:['electric','grass']},
+  {baseId:157, formId:10233, region:'Hisui', label:'Typhlosion de Hisui', types:['fire','ghost']},
+  {baseId:211, formId:10234, region:'Hisui', label:'Qwilfish de Hisui', types:['dark','poison']},
+  {baseId:215, formId:10235, region:'Hisui', label:'Farfuret de Hisui', types:['fighting','poison']},
+  {baseId:503, formId:10236, region:'Hisui', label:'Clamiral de Hisui', types:['water','dark']},
+  {baseId:549, formId:10237, region:'Hisui', label:'Fragilady de Hisui', types:['grass','fighting']},
+  {baseId:570, formId:10238, region:'Hisui', label:'Zorua de Hisui', types:['normal','ghost']},
+  {baseId:571, formId:10239, region:'Hisui', label:'Zoroark de Hisui', types:['normal','ghost']},
+  {baseId:628, formId:10240, region:'Hisui', label:'Gueriaigle de Hisui', types:['psychic','flying']},
+  {baseId:705, formId:10241, region:'Hisui', label:'Colimucus de Hisui', types:['steel','dragon']},
+  {baseId:706, formId:10242, region:'Hisui', label:'Muplodocus de Hisui', types:['steel','dragon']},
+  {baseId:713, formId:10243, region:'Hisui', label:'Séracrawl de Hisui', types:['ice','rock']},
+  {baseId:724, formId:10244, region:'Hisui', label:'Archéduc de Hisui', types:['grass','fighting']},
+  {baseId:128, formId:10250, region:'Paldea', label:'Tauros de Paldea', types:['fighting']},
+  {baseId:128, formId:10251, region:'Paldea', label:'Tauros de Paldea Flamboyante', types:['fighting','fire']},
+  {baseId:128, formId:10252, region:'Paldea', label:'Tauros de Paldea Aquatique', types:['fighting','water']},
+  {baseId:194, formId:10253, region:'Paldea', label:'Axoloto de Paldea', types:['poison','ground']}
+];
 
 const POKEBALLS = [
   ['poke-ball','Poké Ball'],['great-ball','Super Ball'],['ultra-ball','Hyper Ball'],['master-ball','Master Ball'],
@@ -1532,6 +1630,7 @@ function renderAll() {
 function hideLaunchSplash() {
   const splash = document.getElementById('launchSplash');
   if (!splash || splash.classList.contains('hidden')) return;
+  try { sessionStorage.setItem('shiny_dex_launch_splash_seen', 'true'); } catch (_) {}
   splash.classList.add('hidden');
   setTimeout(() => splash.remove(), 520);
 }
@@ -2117,6 +2216,93 @@ function createGenerationDivider(region) {
   return divider;
 }
 
+function matchesRegionalSearch(form, search) {
+  if (!search) return true;
+  const baseName = (NAMES[form.baseId] || '').toLowerCase();
+  return baseName.includes(search)
+    || form.label.toLowerCase().includes(search)
+    || form.region.toLowerCase().includes(search)
+    || String(form.baseId).includes(search);
+}
+
+function getRegionalFormsForScope(range, search) {
+  const forms = REGIONAL_FORMS
+    .filter(form => form.baseId >= range.start && form.baseId <= range.end)
+    .filter(form => matchesRegionalSearch(form, search))
+    .sort((a, b) => a.baseId - b.baseId || a.region.localeCompare(b.region, 'fr') || a.label.localeCompare(b.label, 'fr'));
+
+  const groups = [];
+  forms.forEach(form => {
+    let group = groups.find(item => item.baseId === form.baseId);
+    if (!group) {
+      group = { baseId: form.baseId, forms: [] };
+      groups.push(group);
+    }
+    group.forms.push(form);
+  });
+  return groups;
+}
+
+function createRegionalOriginalCard(id) {
+  const name = NAMES[id] || `#${id}`;
+  const card = document.createElement('div');
+  card.className = 'card form-original';
+  card.setAttribute('role', 'button');
+  card.setAttribute('tabindex', '0');
+  card.setAttribute('aria-label', `${name}, forme originale`);
+  card.onclick = () => activatePokemonCard(card, id);
+  card.onkeydown = e => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      activatePokemonCard(card, id);
+    }
+  };
+  card.innerHTML = `
+    <div class="form-tag">Base</div>
+    <div class="num">#${String(id).padStart(4,'0')}</div>
+    <div class="pname">${name}<span class="form-origin">Forme originale</span></div>
+    <div class="type-row">${renderTypeBadges(id)}</div>
+    <img src="${getPokemonSpriteUrl(id, false)}"
+         alt="${name}" loading="lazy" width="64" height="64" onerror="handleSpriteError(this, ${id}, false)">
+    <div class="status">Originale</div>`;
+  return card;
+}
+
+function createRegionalFormCard(form) {
+  const card = document.createElement('div');
+  card.className = 'card form-card';
+  card.setAttribute('role', 'button');
+  card.setAttribute('tabindex', '0');
+  card.setAttribute('aria-label', `${form.label}, forme de ${form.region}`);
+  card.onclick = () => activatePokemonCard(card, form.baseId);
+  card.onkeydown = e => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      activatePokemonCard(card, form.baseId);
+    }
+  };
+  card.innerHTML = `
+    <div class="form-tag">${form.region}</div>
+    <div class="num">#${String(form.baseId).padStart(4,'0')}</div>
+    <div class="pname">${form.label}<span class="form-origin">Base : ${NAMES[form.baseId] || `#${form.baseId}`}</span></div>
+    <div class="type-row">${renderTypeBadgesForTypes(form.types)}</div>
+    <img src="${getPokemonSpriteUrl(form.formId, false, isHomeSpriteMode() ? 'home' : 'pixel')}"
+         alt="${form.label}" loading="lazy" width="64" height="64" onerror="handleSpriteError(this, ${form.formId}, false)">
+    <div class="status">Forme ${form.region}</div>`;
+  return card;
+}
+
+function renderRegionalFormsGrid(range, search, grid) {
+  const groups = getRegionalFormsForScope(range, search);
+  groups.forEach(group => {
+    grid.appendChild(createRegionalOriginalCard(group.baseId));
+    group.forms.forEach(form => grid.appendChild(createRegionalFormCard(form)));
+  });
+  if (!groups.length) {
+    grid.innerHTML = '<div class="empty">Aucune forme régionale trouvée.</div>';
+  }
+}
+
 function renderGrid() {
   const r      = currentRegion === 'all' ? getAllRegionStats() : REGIONS[currentRegion];
   const search = document.getElementById('searchInput').value.toLowerCase();
@@ -2126,6 +2312,11 @@ function renderGrid() {
   const grid   = document.getElementById('grid');
   grid.innerHTML = '';
   const ids = [];
+
+  if (!counterMode && sort === 'forms') {
+    renderRegionalFormsGrid(r, search, grid);
+    return;
+  }
 
   for (let id = r.start; id <= r.end; id++) {
     const name = NAMES[id] || `#${id}`;
@@ -2775,7 +2966,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=132', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=133', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
