@@ -778,6 +778,11 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 }
 .card.form-card .pname{color:#dff6ff}
 .card.form-card .status{background:rgba(125,211,252,.1);color:#dff6ff;border-color:rgba(125,211,252,.3)}
+.card.form-card.caught .pname{color:#c084fc}
+.card.form-card.perfect .pname{color:#d4af37}
+.card.form-card.caught .status{background:rgba(192,132,252,.105);color:#fff7d6;border-color:rgba(192,132,252,.36)}
+.card.form-card.hunting .pname{color:#7dd3fc}
+.card.form-card.hunting .status{background:rgba(125,211,252,.1);color:#dff6ff;border-color:rgba(125,211,252,.3)}
 .form-tag{
   position:absolute;top:7px;right:7px;z-index:2;
   font-size:8px;font-weight:900;line-height:1;padding:3px 5px;border-radius:999px;
@@ -785,7 +790,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   box-shadow:inset 0 1px 0 rgba(255,255,255,.08);
 }
 .form-origin{
-  display:block;margin-top:3px;font-size:8px;line-height:1.15;color:rgba(255,255,255,.58);font-weight:800;
+  display:none;
 }
 .card .status-shiny{color:#c084fc}
 .card .status-perfect{color:#d4af37}
@@ -1445,6 +1450,21 @@ const REGIONAL_FORMS = [
   {baseId:194, formId:10253, region:'Paldea', label:'Axoloto de Paldea', types:['poison','ground']}
 ];
 
+const REGIONAL_FORM_BY_ID = Object.fromEntries(REGIONAL_FORMS.map(form => [form.formId, form]));
+
+function getRegionalFormById(id) {
+  return REGIONAL_FORM_BY_ID[Number(id)] || null;
+}
+
+function getPokemonDisplayName(id) {
+  const form = getRegionalFormById(id);
+  return form?.label || NAMES[id] || `#${id}`;
+}
+
+function getPokemonBaseId(id) {
+  return getRegionalFormById(id)?.baseId || id;
+}
+
 const POKEBALLS = [
   ['poke-ball','Poké Ball'],['great-ball','Super Ball'],['ultra-ball','Hyper Ball'],['master-ball','Master Ball'],
   ['premier-ball','Honor Ball'],['luxury-ball','Luxe Ball'],['heal-ball','Soin Ball'],['net-ball','Filet Ball'],
@@ -1722,12 +1742,12 @@ function updateHeaderHuntSprite() {
   const previousHtml = previousId ? `
     <img class="header-hunt-img previous shiny"
          src="${getPokemonSpriteUrl(previousId, true, 'home')}"
-         alt="${NAMES[previousId] || `#${previousId}`}" width="34" height="34" decoding="async"
+         alt="${getPokemonDisplayName(previousId)}" width="34" height="34" decoding="async"
          onerror="handleSpriteError(this, ${previousId}, true)">` : '';
   const currentHtml = currentId ? `
     <img class="header-hunt-img current ${currentShiny ? 'shiny' : 'normal'}"
          src="${getPokemonSpriteUrl(currentId, currentShiny, 'home')}"
-         alt="${NAMES[currentId] || `#${currentId}`}" width="52" height="52" decoding="async"
+         alt="${getPokemonDisplayName(currentId)}" width="52" height="52" decoding="async"
          onerror="handleSpriteError(this, ${currentId}, ${currentShiny})">` : '';
   holder.classList.remove('empty');
   holder.innerHTML = `${previousHtml}${currentHtml}`;
@@ -2243,10 +2263,21 @@ function getRegionalFormsForScope(range, search) {
   return groups;
 }
 
+function getCardStatusHtml(p, isHuntingCard = false) {
+  if (isHuntingCard) return '<span>En cours</span>';
+  if (p.caught && p.perfect) {
+    return '<span class="status-pair"><span class="status-shiny">Shiny</span><span class="status-perfect">Parfait</span></span>';
+  }
+  return p.caught ? '<span class="status-shiny">Shiny</span>' : 'Manquant';
+}
+
 function createRegionalOriginalCard(id) {
   const name = NAMES[id] || `#${id}`;
+  const p = progress[id] || {};
+  const isHuntingCard = !p.caught && (p.hunting || p.huntCount);
+  const statusHtml = getCardStatusHtml(p, isHuntingCard);
   const card = document.createElement('div');
-  card.className = 'card form-original';
+  card.className = 'card form-original' + (p.caught ? ' caught' : '') + (p.perfect ? ' perfect' : '') + (isHuntingCard ? ' hunting' : '');
   card.setAttribute('role', 'button');
   card.setAttribute('tabindex', '0');
   card.setAttribute('aria-label', `${name}, forme originale`);
@@ -2260,35 +2291,38 @@ function createRegionalOriginalCard(id) {
   card.innerHTML = `
     <div class="form-tag">Base</div>
     <div class="num">#${String(id).padStart(4,'0')}</div>
-    <div class="pname">${name}<span class="form-origin">Forme originale</span></div>
+    <div class="pname">${name}</div>
     <div class="type-row">${renderTypeBadges(id)}</div>
-    <img src="${getPokemonSpriteUrl(id, false)}"
-         alt="${name}" loading="lazy" width="64" height="64" onerror="handleSpriteError(this, ${id}, false)">
-    <div class="status">Originale</div>`;
+    <img src="${getPokemonSpriteUrl(id, !!p.caught)}"
+         alt="${name}" loading="lazy" width="64" height="64" onerror="handleSpriteError(this, ${id}, ${!!p.caught})">
+    <div class="status">${statusHtml}</div>`;
   return card;
 }
 
 function createRegionalFormCard(form) {
+  const p = progress[form.formId] || {};
+  const isHuntingCard = !p.caught && (p.hunting || p.huntCount);
+  const statusHtml = getCardStatusHtml(p, isHuntingCard);
   const card = document.createElement('div');
-  card.className = 'card form-card';
+  card.className = 'card form-card' + (p.caught ? ' caught' : '') + (p.perfect ? ' perfect' : '') + (isHuntingCard ? ' hunting' : '');
   card.setAttribute('role', 'button');
   card.setAttribute('tabindex', '0');
   card.setAttribute('aria-label', `${form.label}, forme de ${form.region}`);
-  card.onclick = () => activatePokemonCard(card, form.baseId);
+  card.onclick = () => activatePokemonCard(card, form.formId);
   card.onkeydown = e => {
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
-      activatePokemonCard(card, form.baseId);
+      activatePokemonCard(card, form.formId);
     }
   };
   card.innerHTML = `
     <div class="form-tag">${form.region}</div>
     <div class="num">#${String(form.baseId).padStart(4,'0')}</div>
-    <div class="pname">${form.label}<span class="form-origin">Base : ${NAMES[form.baseId] || `#${form.baseId}`}</span></div>
+    <div class="pname">${form.label}</div>
     <div class="type-row">${renderTypeBadgesForTypes(form.types)}</div>
-    <img src="${getPokemonSpriteUrl(form.formId, false, isHomeSpriteMode() ? 'home' : 'pixel')}"
-         alt="${form.label}" loading="lazy" width="64" height="64" onerror="handleSpriteError(this, ${form.formId}, false)">
-    <div class="status">Forme ${form.region}</div>`;
+    <img src="${getPokemonSpriteUrl(form.formId, !!p.caught, isHomeSpriteMode() ? 'home' : 'pixel')}"
+         alt="${form.label}" loading="lazy" width="64" height="64" onerror="handleSpriteError(this, ${form.formId}, ${!!p.caught})">
+    <div class="status">${statusHtml}</div>`;
   return card;
 }
 
@@ -2749,9 +2783,11 @@ function markHuntFound() {
 function openModal(id, options = {}) {
   currentPokemon = id;
   initModalChoiceLists();
+  const form = getRegionalFormById(id);
+  const baseId = form?.baseId || id;
   const p    = progress[id] || {};
-  const name = NAMES[id] || `#${id}`;
-  const r    = REGIONS.find(r => id >= r.start && id <= r.end);
+  const name = getPokemonDisplayName(id);
+  const r    = REGIONS.find(r => baseId >= r.start && baseId <= r.end) || getAllRegionStats();
   const huntMode = isHuntingMode() && !p.caught;
 
   const normalSprite = document.getElementById('mSprite');
@@ -2760,9 +2796,9 @@ function openModal(id, options = {}) {
   shinySprite.onerror = () => handleSpriteError(shinySprite, id, true);
   normalSprite.src = getPokemonModalSpriteUrl(id, false);
   shinySprite.src = getPokemonModalSpriteUrl(id, true);
-  document.getElementById('mNum').textContent = `#${String(id).padStart(4,'0')}`;
+  document.getElementById('mNum').textContent = form ? `#${String(baseId).padStart(4,'0')} · Forme ${form.region}` : `#${String(id).padStart(4,'0')}`;
   document.getElementById('mName').textContent = name;
-  document.getElementById('mRegion').innerHTML = `<span style="color:${r.color};font-family:var(--font-logo);font-size:10px;line-height:1.45">${r.name} · Génération ${r.gen}</span>`;
+  document.getElementById('mRegion').innerHTML = `<span style="color:${r.color};font-family:var(--font-logo);font-size:10px;line-height:1.45">${r.name} · Génération ${r.gen}${form ? ` · ${form.region}` : ''}</span>`;
   document.getElementById('fPokeball').value = p.pokeball || '';
   document.getElementById('fNature').value = p.nature || '';
   updatePokeballPreview();
@@ -2794,7 +2830,7 @@ function openModal(id, options = {}) {
   setModalCounterMode(huntMode);
   if (modal) modal.scrollTop = 0;
   document.getElementById('overlay').classList.add('open');
-  playPokemonCry(id);
+  playPokemonCry(baseId);
   if (!options.skipHistory) updateAppHistory('push');
   requestAnimationFrame(() => {
     if (modal) modal.scrollTop = 0;
@@ -2854,7 +2890,11 @@ function saveModal() {
 ══════════════════════════════════════ */
 function exportJSON() {
   const out = [];
-  for (let id = 1; id <= 1025; id++) {
+  const exportIds = [
+    ...Array.from({ length: 1025 }, (_, index) => index + 1),
+    ...REGIONAL_FORMS.map(form => form.formId)
+  ];
+  for (const id of exportIds) {
     const p    = progress[id] || {};
     const ivs  = p.ivs || {};
     const ivStr = [
@@ -2871,7 +2911,9 @@ function exportJSON() {
 
     out.push({
       'N° pokédex':          id,
-      'Noms':                NAMES[id] || '',
+      'Noms':                getPokemonDisplayName(id),
+      'Forme de base':       getRegionalFormById(id)?.baseId || '',
+      'Région forme':        getRegionalFormById(id)?.region || '',
       'Capturé':             p.caught ? 'oui' : '',
       'Surnoms':             p.nickname   || '',
       'Oeufs parent parfait': p.eggs      || '',
@@ -2966,7 +3008,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=133', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=134', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
