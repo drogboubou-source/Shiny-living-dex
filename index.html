@@ -377,9 +377,9 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   .iv-grid{grid-template-columns:1fr 1fr}
   .modal{padding:1.35rem;max-height:92vh}
   .modal-hero{display:grid;grid-template-columns:1fr;justify-items:center;text-align:center;gap:.85rem}
-  .modal-visual{grid-template-columns:52px auto 52px;gap:9px}
-  .modal-nav-card{width:52px;min-height:74px}
-  .modal-nav-card img{width:32px;height:32px}
+  .modal-visual{grid-template-columns:48px auto 48px;gap:12px}
+  .modal-nav-card{width:48px;min-height:70px}
+  .modal-nav-card img{width:30px;height:30px}
   .modal-nav-card span{font-size:7px}
   .sprite-pair{gap:6px}
   .modal-sprite,.modal-sprite-shiny{width:74px;height:74px}
@@ -867,9 +867,9 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .modal-hero{display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem;min-width:0}
 .modal-hero > div{min-width:0}
 .modal-details{flex:1;text-align:center}
-.modal-visual{display:grid;grid-template-columns:60px auto 60px;align-items:center;gap:14px;flex:0 0 auto}
+.modal-visual{display:grid;grid-template-columns:54px auto 54px;align-items:center;gap:18px;flex:0 0 auto}
 .modal-nav-card{
-  min-width:0;width:60px;min-height:82px;padding:6px 5px;border-radius:12px;
+  min-width:0;width:54px;min-height:78px;padding:5px 4px;border-radius:12px;
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
   background:
     linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.016)),
@@ -879,8 +879,8 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   box-shadow:inset 0 1px 0 rgba(255,255,255,.065),0 8px 18px rgba(0,0,0,.18);
 }
 .modal-nav-card[disabled]{opacity:.28;cursor:default}
-.modal-nav-card img{width:38px;height:38px;object-fit:contain;image-rendering:auto;filter:drop-shadow(0 5px 7px rgba(0,0,0,.34))}
-.modal-nav-card span{max-width:100%;font-size:8px;line-height:1.1;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.modal-nav-card img{width:34px;height:34px;object-fit:contain;image-rendering:auto;filter:drop-shadow(0 5px 7px rgba(0,0,0,.34))}
+.modal-nav-card span{max-width:100%;font-size:7.5px;line-height:1.1;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .modal-sprite{
   width:88px;height:88px;image-rendering:pixelated;
   background:radial-gradient(circle at 50% 42%,rgba(255,255,255,.08),rgba(255,255,255,.02) 54%,rgba(0,0,0,.16)),var(--surface2);
@@ -1070,9 +1070,9 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   .type-row{gap:3px;margin:1px 0 3px;padding:0}
   .type-pill,.type-pill img{width:40px;height:10px}
   .modal-hero{display:grid;grid-template-columns:1fr;justify-items:center;text-align:center;gap:.85rem}
-  .modal-visual{grid-template-columns:52px auto 52px;gap:9px}
-  .modal-nav-card{width:52px;min-height:74px}
-  .modal-nav-card img{width:32px;height:32px}
+  .modal-visual{grid-template-columns:48px auto 48px;gap:12px}
+  .modal-nav-card{width:48px;min-height:70px}
+  .modal-nav-card img{width:30px;height:30px}
   .modal-nav-card span{font-size:7px}
   .modal-hero .sprite-pair{justify-content:center}
   .capture-details{grid-template-columns:1fr}
@@ -2963,9 +2963,9 @@ function openModal(id, options = {}) {
   shinySprite.onerror = () => handleSpriteError(shinySprite, id, true);
   normalSprite.src = getPokemonModalSpriteUrl(id, false);
   shinySprite.src = getPokemonModalSpriteUrl(id, true);
-  document.getElementById('mNum').textContent = form ? `#${String(baseId).padStart(4,'0')} · Forme ${form.region}` : `#${String(id).padStart(4,'0')}`;
+  document.getElementById('mNum').textContent = `#${String(baseId).padStart(4,'0')}`;
   document.getElementById('mName').textContent = name;
-  document.getElementById('mRegion').innerHTML = `<span style="color:${r.color};font-family:var(--font-logo);font-size:10px;line-height:1.45">${r.name} · Génération ${r.gen}${form ? ` · ${form.region}` : ''}</span>`;
+  document.getElementById('mRegion').innerHTML = `<span style="color:${r.color};font-family:var(--font-logo);font-size:10px;line-height:1.45">${r.name} · Génération ${r.gen}</span>`;
   updateModalNavigation(id);
   document.getElementById('fPokeball').value = p.pokeball || '';
   document.getElementById('fNature').value = p.nature || '';
@@ -3176,7 +3176,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=151', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=152', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
