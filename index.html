@@ -754,6 +754,18 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .card.form-card.caught .status{background:rgba(192,132,252,.105);color:#fff7d6;border-color:rgba(192,132,252,.36)}
 .card.form-card.hunting .pname{color:#7dd3fc}
 .card.form-card.hunting .status{background:rgba(125,211,252,.1);color:#dff6ff;border-color:rgba(125,211,252,.3)}
+.card.unavailable{
+  --card-accent:rgba(148,148,164,.54);
+  --card-glow:rgba(148,148,164,.08);
+  --card-sheen:rgba(255,255,255,.025);
+  --card-border:linear-gradient(145deg,rgba(180,180,196,.28),rgba(255,255,255,.045) 36%,rgba(130,130,146,.18) 70%,rgba(255,255,255,.035));
+  filter:grayscale(.86) saturate(.55);
+  opacity:.62;
+}
+.card.unavailable:hover{transform:none;box-shadow:inset 0 1px 0 rgba(255,255,255,.06),inset 0 -1px 0 rgba(0,0,0,.34),0 8px 16px rgba(0,0,0,.18)}
+.card.unavailable .pname{color:rgba(232,232,240,.62)}
+.card.unavailable img{opacity:.64}
+.card.unavailable .status{background:rgba(255,255,255,.035);color:rgba(232,232,240,.52);border-color:rgba(255,255,255,.07)}
 .form-tag{
   position:absolute;top:8px;right:8px;z-index:2;
   font-size:8px;font-weight:900;line-height:1;padding:3px 5px;border-radius:999px;
@@ -1453,6 +1465,26 @@ const LEGENDARY_ODDS_BASE_IDS = new Set([
   1001,1002,1003,1004,1007,1008,1009,1010,1014,1015,1016,1017,1020,1021,1022,1023,1024,1025
 ]);
 
+const UNAVAILABLE_POKEMON_IDS = new Set([
+  494,647,648,720,721,
+  789,790,801,802,
+  888,889,890,891,892,893,896,897,898,901,905,
+  999,1000,1001,1002,1003,1004,1007,1008,1009,1010,1014,1015,1016,1017,1020,1021,1022,1023,1024,1025,
+  10169,10170,10171
+]);
+
+function isUnavailablePokemon(id) {
+  return UNAVAILABLE_POKEMON_IDS.has(Number(id));
+}
+
+function getAvailableIdsInRange(range) {
+  const ids = [];
+  for (let id = range.start; id <= range.end; id++) {
+    if (!isUnavailablePokemon(id)) ids.push(id);
+  }
+  return ids;
+}
+
 function getHuntOddsMeta(id) {
   const baseId = getPokemonBaseId(id);
   if (LEGENDARY_ODDS_BASE_IDS.has(baseId)) {
@@ -1819,9 +1851,10 @@ function getCurrentRegionPerfectCount() {
 
 function getCurrentStats() {
   const r = currentRegion === 'all' ? getAllRegionStats() : REGIONS[currentRegion];
-  const total = r.end - r.start + 1;
+  const availableIds = getAvailableIdsInRange(r);
+  const total = availableIds.length;
   const entries = [];
-  for (let id = r.start; id <= r.end; id++) {
+  for (const id of availableIds) {
     if (progress[id]) entries.push(progress[id]);
   }
   const caught = entries.filter(p => p.caught).length;
@@ -2076,13 +2109,13 @@ function closeStatsOnOutsideClick(e) {
 
 function countCaught(r) {
   let c = 0;
-  for (let i = r.start; i <= r.end; i++) if (progress[i]?.caught) c++;
+  for (let i = r.start; i <= r.end; i++) if (!isUnavailablePokemon(i) && progress[i]?.caught) c++;
   return c;
 }
 
 function countPerfect(r) {
   let c = 0;
-  for (let i = r.start; i <= r.end; i++) if (progress[i]?.perfect) c++;
+  for (let i = r.start; i <= r.end; i++) if (!isUnavailablePokemon(i) && progress[i]?.perfect) c++;
   return c;
 }
 
@@ -2091,7 +2124,10 @@ function getAllRegionStats() {
   const end = REGIONS[REGIONS.length - 1].end;
   let caught = 0;
   let perfect = 0;
+  let total = 0;
   for (let i = start; i <= end; i++) {
+    if (isUnavailablePokemon(i)) continue;
+    total++;
     if (progress[i]?.caught) caught++;
     if (progress[i]?.perfect) perfect++;
   }
@@ -2103,7 +2139,7 @@ function getAllRegionStats() {
     color: '#38bdf8',
     caught,
     perfect,
-    total: end - start + 1
+    total
   };
 }
 
@@ -2135,7 +2171,7 @@ function renderSidebar() {
 
   const regionButtons = REGIONS.map((r, i) => {
     const c     = countCaught(r);
-    const total = r.end - r.start + 1;
+    const total = getAvailableIdsInRange(r).length;
     const pct   = c / total * 100;
     const pctText = formatPercent(pct);
     const perfect = countPerfect(r);
@@ -2294,17 +2330,18 @@ function createRegionalOriginalCard(id) {
 function createRegionalFormCard(form) {
   const p = progress[form.formId] || {};
   const isHuntingCard = !p.caught && (p.hunting || p.huntCount);
-  const statusHtml = getCardStatusHtml(p, isHuntingCard);
+  const unavailable = isUnavailablePokemon(form.formId);
+  const statusHtml = unavailable ? 'Indisponible' : getCardStatusHtml(p, isHuntingCard);
   const card = document.createElement('div');
-  card.className = 'card form-card' + (p.caught ? ' caught' : '') + (p.perfect ? ' perfect' : '') + (isHuntingCard ? ' hunting' : '');
+  card.className = 'card form-card' + (p.caught && !unavailable ? ' caught' : '') + (p.perfect && !unavailable ? ' perfect' : '') + (isHuntingCard && !unavailable ? ' hunting' : '') + (unavailable ? ' unavailable' : '');
   card.setAttribute('role', 'button');
   card.setAttribute('tabindex', '0');
   card.setAttribute('aria-label', `${form.label}, forme de ${form.region}`);
-  card.onclick = () => activatePokemonCard(card, form.formId);
+  card.onclick = () => { if (!unavailable) activatePokemonCard(card, form.formId); };
   card.onkeydown = e => {
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
-      activatePokemonCard(card, form.formId);
+      if (!unavailable) activatePokemonCard(card, form.formId);
     }
   };
   card.innerHTML = `
@@ -2347,9 +2384,11 @@ function renderGrid() {
   for (let id = r.start; id <= r.end; id++) {
     const name = NAMES[id] || `#${id}`;
     const p    = progress[id] || {};
+    const unavailable = isUnavailablePokemon(id);
     if (search && !name.toLowerCase().includes(search) && !String(id).includes(search)) continue;
     if (counterMode && (p.caught || (parseInt(p.huntCount) || 0) < 1)) continue;
     if (sort === 'legendary' && !LEGENDARY_ODDS_BASE_IDS.has(id)) continue;
+    if (unavailable && ['caught','missing','perfect','date-desc','date-asc'].includes(sort)) continue;
     if (!pokemonMatchesSortMode(p, sort)) continue;
     if (filter === 'caught'  && !p.caught)  continue;
     if (filter === 'missing' && p.caught)   continue;
@@ -2376,7 +2415,8 @@ function renderGrid() {
   ids.forEach(id => {
     const name = NAMES[id] || `#${id}`;
     const p    = progress[id] || {};
-    const isHuntingCard = !p.caught && (counterMode || p.hunting || p.huntCount);
+    const unavailable = isUnavailablePokemon(id);
+    const isHuntingCard = !unavailable && !p.caught && (counterMode || p.hunting || p.huntCount);
     const cardRegion = showGenerationDividers ? getRegionByPokemonId(id) : null;
     if (showGenerationDividers) {
       const region = cardRegion;
@@ -2386,26 +2426,22 @@ function renderGrid() {
       }
     }
     const card = document.createElement('div');
-    card.className = 'card' + (p.caught ? ' caught' : '') + (p.perfect ? ' perfect' : '') + (isHuntingCard ? ' hunting' : '');
+    card.className = 'card' + (p.caught && !unavailable ? ' caught' : '') + (p.perfect && !unavailable ? ' perfect' : '') + (isHuntingCard ? ' hunting' : '') + (unavailable ? ' unavailable' : '');
     card.setAttribute('role', 'button');
     card.setAttribute('tabindex', '0');
     card.setAttribute('aria-label', `${name}, #${String(id).padStart(4,'0')}${p.caught ? ', shiny capture' : (isHuntingCard ? ', en cours' : ', manquant')}`);
-    card.onclick = () => activatePokemonCard(card, id);
+    card.onclick = () => { if (!unavailable) activatePokemonCard(card, id); };
     card.onkeydown = e => {
       if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
-        activatePokemonCard(card, id);
+        if (!unavailable) activatePokemonCard(card, id);
       }
     };
 
     const useShinySprite = !!p.caught;
     const spriteUrl = getPokemonSpriteUrl(id, useShinySprite);
     const typeBadges = renderTypeBadges(id);
-    const statusHtml = isHuntingCard
-      ? '<span>En cours</span>'
-      : p.caught && p.perfect
-      ? '<span class="status-pair"><span class="status-shiny">Shiny</span><span class="status-perfect">Parfait</span></span>'
-      : (p.caught ? '<span class="status-shiny">Shiny</span>' : 'Manquant');
+    const statusHtml = unavailable ? 'Indisponible' : getCardStatusHtml(p, isHuntingCard);
 
     card.innerHTML = `
       <div class="num">#${String(id).padStart(4,'0')}</div>
@@ -2786,6 +2822,7 @@ function markHuntFound() {
    MODAL
 ══════════════════════════════════════ */
 function openModal(id, options = {}) {
+  if (isUnavailablePokemon(id)) return;
   currentPokemon = id;
   initModalChoiceLists();
   const form = getRegionalFormById(id);
@@ -3013,7 +3050,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=141', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=142', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
