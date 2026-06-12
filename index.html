@@ -363,8 +363,10 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   .generation-divider{min-height:26px;margin:4px 0 -2px;font-size:9px;gap:7px;padding:3px 7px 3px 8px;top:0}
   .generation-divider strong{font-size:8px}
   .card{min-height:132px;padding:8px 4px 7px}
-  .card img{width:56px;height:56px}
+  .card > img{width:56px;height:56px}
+  .card.sprite-home > img{width:62px;height:52px;margin:1px 0 0}
   .card .pname{font-size:11px;min-height:27px;padding:0}
+  .card .num{font-size:8px;padding:3px 6px 2px;margin-left:2px}
   .card .status{font-size:7px;padding:3px 6px}
   .card .status-pair{gap:4px}
   .type-row{gap:3px;margin:1px 0 3px;padding:0}
@@ -697,7 +699,11 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
     0 12px 24px rgba(0,0,0,.26),
     0 0 16px var(--card-glow);
 }
-.card img{width:64px;height:64px;image-rendering:pixelated;display:block;order:2;margin:0;filter:drop-shadow(0 6px 8px rgba(0,0,0,.34))}
+.card > img{width:64px;height:64px;image-rendering:pixelated;display:block;order:2;margin:0;object-fit:contain;filter:drop-shadow(0 6px 8px rgba(0,0,0,.34))}
+.card.sprite-home > img{
+  width:70px;height:58px;image-rendering:auto;object-fit:contain;
+  margin:1px 0 0;filter:drop-shadow(0 7px 9px rgba(0,0,0,.36));
+}
 .card.caught{
   --card-accent:#c084fc;--card-glow:rgba(192,132,252,.18);--card-sheen:rgba(192,132,252,.055);
   --card-border:linear-gradient(145deg,rgba(192,132,252,.84),rgba(255,255,255,.08) 34%,rgba(192,132,252,.42) 66%,rgba(255,255,255,.07));
@@ -711,9 +717,14 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   box-shadow:inset 0 1px 0 rgba(255,255,255,.08),inset 0 0 0 1px rgba(212,175,55,.18),0 0 0 1px rgba(212,175,55,.55),0 0 14px rgba(212,175,55,.28),0 10px 20px rgba(0,0,0,.22);
 }
 .card .num{
-  align-self:flex-start;font-family:var(--font);font-size:10px;color:rgba(232,232,240,.56);margin:0 0 -1px 1px;order:0;
-  background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(0,0,0,.08)),rgba(0,0,0,.18);
-  border:1px solid rgba(255,255,255,.065);border-radius:999px;padding:2px 7px;line-height:1;
+  align-self:flex-start;font-family:var(--font);font-size:9px;color:rgba(232,232,240,.7);margin:0 0 -1px 1px;order:0;
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.018)),
+    linear-gradient(90deg,var(--card-accent),transparent 72%),
+    rgba(0,0,0,.22);
+  border:1px solid rgba(255,255,255,.09);border-radius:999px;padding:3px 7px 2px;line-height:1;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.075),0 3px 7px rgba(0,0,0,.18);
+  font-variant-numeric:tabular-nums;
 }
 .card .pname{font-size:12px;font-weight:800;line-height:1.18;color:var(--text);word-break:break-word;padding:0 2px;min-height:28px;display:flex;align-items:center;justify-content:center;order:1}
 .card.caught .pname{color:#c084fc}
@@ -761,7 +772,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 }
 .card.unavailable:hover{transform:none;box-shadow:inset 0 1px 0 rgba(255,255,255,.06),inset 0 -1px 0 rgba(0,0,0,.34),0 8px 16px rgba(0,0,0,.18)}
 .card.unavailable .pname{color:rgba(232,232,240,.62)}
-.card.unavailable img{opacity:.64}
+.card.unavailable > img{opacity:.64}
 .card.unavailable .status{background:rgba(255,255,255,.035);color:rgba(232,232,240,.52);border-color:rgba(255,255,255,.07)}
 .form-tag{
   position:absolute;top:8px;right:8px;z-index:2;
@@ -996,8 +1007,10 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   .generation-divider{min-height:26px;margin:4px 0 -2px;font-size:9px;gap:7px;padding:3px 7px 3px 8px;top:0}
   .generation-divider strong{font-size:8px}
   .card{min-height:132px;padding:8px 4px 7px}
-  .card img{width:56px;height:56px}
+  .card > img{width:56px;height:56px}
+  .card.sprite-home > img{width:62px;height:52px;margin:1px 0 0}
   .card .pname{font-size:11px;min-height:27px;padding:0}
+  .card .num{font-size:8px;padding:3px 6px 2px;margin-left:2px}
   .card .status{font-size:7px;padding:3px 6px}
   .card .status-pair{gap:4px}
   .type-row{gap:3px;margin:1px 0 3px;padding:0}
@@ -2301,7 +2314,7 @@ function createRegionalOriginalCard(id) {
   const isHuntingCard = !p.caught && (p.hunting || p.huntCount);
   const statusHtml = getCardStatusHtml(p, isHuntingCard);
   const card = document.createElement('div');
-  card.className = 'card form-original' + (p.caught ? ' caught' : '') + (p.perfect ? ' perfect' : '') + (isHuntingCard ? ' hunting' : '');
+  card.className = 'card form-original' + (isHomeSpriteMode() ? ' sprite-home' : '') + (p.caught ? ' caught' : '') + (p.perfect ? ' perfect' : '') + (isHuntingCard ? ' hunting' : '');
   card.setAttribute('role', 'button');
   card.setAttribute('tabindex', '0');
   card.setAttribute('aria-label', `${name}, forme originale`);
@@ -2329,7 +2342,7 @@ function createRegionalFormCard(form) {
   const unavailable = isUnavailablePokemon(form.formId);
   const statusHtml = unavailable ? 'Indisponible' : getCardStatusHtml(p, isHuntingCard);
   const card = document.createElement('div');
-  card.className = 'card form-card' + (p.caught && !unavailable ? ' caught' : '') + (p.perfect && !unavailable ? ' perfect' : '') + (isHuntingCard && !unavailable ? ' hunting' : '') + (unavailable ? ' unavailable' : '');
+  card.className = 'card form-card' + (isHomeSpriteMode() ? ' sprite-home' : '') + (p.caught && !unavailable ? ' caught' : '') + (p.perfect && !unavailable ? ' perfect' : '') + (isHuntingCard && !unavailable ? ' hunting' : '') + (unavailable ? ' unavailable' : '');
   card.setAttribute('role', 'button');
   card.setAttribute('tabindex', '0');
   card.setAttribute('aria-label', `${form.label}, forme de ${form.region}`);
@@ -2422,7 +2435,7 @@ function renderGrid() {
       }
     }
     const card = document.createElement('div');
-    card.className = 'card' + (p.caught && !unavailable ? ' caught' : '') + (p.perfect && !unavailable ? ' perfect' : '') + (isHuntingCard ? ' hunting' : '') + (unavailable ? ' unavailable' : '');
+    card.className = 'card' + (isHomeSpriteMode() ? ' sprite-home' : '') + (p.caught && !unavailable ? ' caught' : '') + (p.perfect && !unavailable ? ' perfect' : '') + (isHuntingCard ? ' hunting' : '') + (unavailable ? ' unavailable' : '');
     card.setAttribute('role', 'button');
     card.setAttribute('tabindex', '0');
     card.setAttribute('aria-label', `${name}, #${String(id).padStart(4,'0')}${p.caught ? ', shiny capture' : (isHuntingCard ? ', en cours' : ', manquant')}`);
@@ -3046,7 +3059,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=144', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=145', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
