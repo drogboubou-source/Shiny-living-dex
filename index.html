@@ -633,44 +633,36 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   padding:12px;
   border-radius:16px;
   background:
-    radial-gradient(circle at 12% 7%,rgba(212,175,55,.18),transparent 24%),
-    radial-gradient(circle at 91% 13%,rgba(125,211,252,.16),transparent 28%),
-    radial-gradient(circle at 50% 110%,rgba(192,132,252,.13),transparent 38%),
-    linear-gradient(180deg,rgba(255,255,255,.085),rgba(255,255,255,.022) 34%,rgba(0,0,0,.08)),
-    linear-gradient(145deg,#22222d 0%,#171721 48%,#0e0e15 100%);
-  border:1px solid rgba(255,255,255,.14);
+    radial-gradient(circle at 50% -12%,rgba(255,255,255,.09),transparent 34%),
+    linear-gradient(180deg,rgba(255,255,255,.065),rgba(255,255,255,.018) 38%,rgba(0,0,0,.1)),
+    linear-gradient(145deg,#20202a 0%,#181821 50%,#101017 100%);
+  border:1px solid rgba(255,255,255,.12);
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.09),
-    inset 0 0 0 1px rgba(255,255,255,.026),
-    inset 0 -22px 42px rgba(0,0,0,.18),
-    0 14px 34px rgba(0,0,0,.26);
+    inset 0 1px 0 rgba(255,255,255,.075),
+    inset 0 0 0 1px rgba(255,255,255,.022),
+    inset 0 -18px 36px rgba(0,0,0,.18),
+    0 12px 30px rgba(0,0,0,.24);
   overflow:visible;
   isolation:isolate;
 }
 .grid::before{
   content:'';position:absolute;inset:0;z-index:0;pointer-events:none;
   background:
-    radial-gradient(circle at 20% 18%,transparent 0 37px,rgba(255,255,255,.09) 38px 39px,transparent 40px),
-    radial-gradient(circle at 20% 18%,transparent 0 9px,rgba(255,255,255,.075) 10px 11px,transparent 12px),
-    linear-gradient(90deg,transparent 0 calc(20% - 39px),rgba(255,255,255,.052) calc(20% - 38px) calc(20% + 38px),transparent calc(20% + 39px)),
-    radial-gradient(circle at 82% 78%,transparent 0 54px,rgba(125,211,252,.072) 55px 56px,transparent 57px),
-    radial-gradient(circle at 82% 78%,transparent 0 13px,rgba(125,211,252,.052) 14px 15px,transparent 16px),
-    linear-gradient(90deg,transparent 0 calc(82% - 56px),rgba(125,211,252,.036) calc(82% - 55px) calc(82% + 55px),transparent calc(82% + 56px)),
-    radial-gradient(circle at 74% 25%,transparent 0 25px,rgba(212,175,55,.062) 26px 27px,transparent 28px),
-    repeating-linear-gradient(30deg,rgba(255,255,255,.018) 0 1px,transparent 1px 18px),
-    repeating-linear-gradient(150deg,rgba(255,255,255,.012) 0 1px,transparent 1px 24px);
-  mask-image:linear-gradient(180deg,rgba(0,0,0,.84),rgba(0,0,0,.3));
+    radial-gradient(circle at 18% 22%,rgba(255,255,255,.042),transparent 22%),
+    radial-gradient(circle at 82% 74%,rgba(192,132,252,.038),transparent 26%),
+    repeating-linear-gradient(135deg,rgba(255,255,255,.024) 0 1px,transparent 1px 13px),
+    repeating-linear-gradient(45deg,rgba(0,0,0,.16) 0 1px,transparent 1px 16px);
+  mask-image:linear-gradient(180deg,rgba(0,0,0,.72),rgba(0,0,0,.28));
   clip-path:inset(0 round 16px);
-  opacity:.82;
+  opacity:.62;
 }
 .grid::after{
   content:'';position:absolute;inset:1px;z-index:0;pointer-events:none;border-radius:15px;
   background:
-    linear-gradient(90deg,transparent,rgba(255,255,255,.07),transparent) 0 0/100% 1px no-repeat,
-    linear-gradient(180deg,rgba(255,255,255,.025),transparent 34%,rgba(0,0,0,.2)),
-    repeating-linear-gradient(90deg,transparent 0 64px,rgba(255,255,255,.018) 64px 65px,transparent 65px 128px),
-    repeating-linear-gradient(0deg,transparent 0 64px,rgba(255,255,255,.012) 64px 65px,transparent 65px 128px);
-  opacity:.78;
+    linear-gradient(90deg,transparent,rgba(255,255,255,.055),transparent) 0 0/100% 1px no-repeat,
+    radial-gradient(ellipse at center,transparent 48%,rgba(0,0,0,.2) 100%),
+    linear-gradient(180deg,rgba(255,255,255,.018),transparent 40%,rgba(0,0,0,.16));
+  opacity:.8;
 }
 .grid > *{position:relative;z-index:1}
 .generation-divider{
@@ -3207,7 +3199,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=157', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=158', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
