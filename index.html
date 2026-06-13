@@ -633,27 +633,37 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   padding:12px;
   border-radius:16px;
   background:
-    linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.012)),
-    radial-gradient(circle at 18% 0%,rgba(212,175,55,.055),transparent 34%),
-    radial-gradient(circle at 88% 18%,rgba(125,211,252,.05),transparent 32%),
-    linear-gradient(135deg,rgba(192,132,252,.04),transparent 32%,rgba(125,211,252,.032) 72%,transparent),
-    rgba(18,18,25,.72);
-  border:1px solid rgba(255,255,255,.075);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.045),0 10px 26px rgba(0,0,0,.18);
+    linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.014)),
+    radial-gradient(circle at 18% -4%,rgba(212,175,55,.085),transparent 30%),
+    radial-gradient(circle at 88% 8%,rgba(125,211,252,.07),transparent 34%),
+    radial-gradient(circle at 50% 105%,rgba(192,132,252,.055),transparent 38%),
+    linear-gradient(145deg,rgba(28,28,38,.92),rgba(13,13,19,.82));
+  border:1px solid rgba(255,255,255,.095);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.06),
+    inset 0 0 0 1px rgba(255,255,255,.018),
+    0 12px 30px rgba(0,0,0,.22);
   overflow:visible;
   isolation:isolate;
 }
 .grid::before{
   content:'';position:absolute;inset:0;z-index:0;pointer-events:none;
   background:
-    linear-gradient(135deg,rgba(255,255,255,.024) 25%,transparent 25%) 0 0/22px 22px,
-    linear-gradient(225deg,rgba(255,255,255,.018) 25%,transparent 25%) 0 0/22px 22px,
-    linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(255,255,255,.014) 1px,transparent 1px);
-  background-size:22px 22px,22px 22px,32px 32px,32px 32px;
-  mask-image:linear-gradient(180deg,rgba(0,0,0,.72),rgba(0,0,0,.24));
+    radial-gradient(circle at 18% 34%,transparent 0 32px,rgba(255,255,255,.055) 33px 34px,transparent 35px),
+    radial-gradient(circle at 18% 34%,transparent 0 8px,rgba(255,255,255,.05) 9px 10px,transparent 11px),
+    linear-gradient(90deg,transparent 0 calc(18% - 34px),rgba(255,255,255,.045) calc(18% - 33px) calc(18% + 33px),transparent calc(18% + 34px)),
+    radial-gradient(circle at 82% 70%,transparent 0 44px,rgba(125,211,252,.04) 45px 46px,transparent 47px),
+    repeating-linear-gradient(135deg,rgba(255,255,255,.018) 0 1px,transparent 1px 12px);
+  mask-image:linear-gradient(180deg,rgba(0,0,0,.74),rgba(0,0,0,.28));
   clip-path:inset(0 round 16px);
-  opacity:.5;
+  opacity:.62;
+}
+.grid::after{
+  content:'';position:absolute;inset:1px;z-index:0;pointer-events:none;border-radius:15px;
+  background:
+    linear-gradient(90deg,transparent,rgba(255,255,255,.05),transparent) 0 0/100% 1px no-repeat,
+    linear-gradient(180deg,transparent 72%,rgba(0,0,0,.16));
+  opacity:.75;
 }
 .grid > *{position:relative;z-index:1}
 .generation-divider{
@@ -3190,7 +3200,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=153', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=154', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
