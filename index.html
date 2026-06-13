@@ -633,9 +633,9 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   padding:12px;
   border-radius:16px;
   background:
-    repeating-linear-gradient(135deg,rgba(255,255,255,.024) 0 1px,transparent 1px 13px),
-    repeating-linear-gradient(45deg,rgba(0,0,0,.15) 0 1px,transparent 1px 16px),
-    #181821;
+    radial-gradient(circle at 50% 0%,rgba(255,255,255,.09),transparent 34%),
+    linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.06)),
+    #20202a;
   border:1px solid rgba(255,255,255,.12);
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,.075),
@@ -647,10 +647,12 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .grid::before{
   content:'';position:absolute;inset:0;z-index:0;pointer-events:none;
   background:
-    linear-gradient(135deg,transparent 0 44%,rgba(255,255,255,.026) 44% 45%,transparent 45% 100%) 0 0/46px 46px,
-    linear-gradient(45deg,transparent 0 46%,rgba(192,132,252,.024) 46% 47%,transparent 47% 100%) 0 0/52px 52px;
+    radial-gradient(circle at 18% 22%,rgba(255,255,255,.042),transparent 22%),
+    radial-gradient(circle at 82% 74%,rgba(192,132,252,.038),transparent 26%),
+    repeating-linear-gradient(135deg,rgba(255,255,255,.024) 0 1px,transparent 1px 13px),
+    repeating-linear-gradient(45deg,rgba(0,0,0,.16) 0 1px,transparent 1px 16px);
   clip-path:inset(0 round 16px);
-  opacity:.66;
+  opacity:.62;
 }
 .grid::after{
   content:'';position:absolute;inset:1px;z-index:0;pointer-events:none;border-radius:15px;
@@ -794,11 +796,12 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   --card-accent:#7dd3fc;--card-glow:rgba(125,211,252,.18);--card-sheen:rgba(125,211,252,.055);
   --card-border:linear-gradient(145deg,rgba(200,244,255,.94),rgba(125,211,252,.28) 30%,rgba(125,211,252,.7) 64%,rgba(11,48,66,.72));
   background:
-    linear-gradient(135deg,transparent 0 44%,rgba(255,255,255,.026) 44% 45%,transparent 45% 100%) 0 0/46px 46px padding-box,
-    linear-gradient(45deg,transparent 0 46%,rgba(125,211,252,.032) 46% 47%,transparent 47% 100%) 0 0/52px 52px padding-box,
+    radial-gradient(circle at 50% 0%,rgba(255,255,255,.09),transparent 34%) padding-box,
+    radial-gradient(circle at 82% 74%,rgba(125,211,252,.038),transparent 26%) padding-box,
+    linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.06)) padding-box,
     repeating-linear-gradient(135deg,rgba(255,255,255,.024) 0 1px,transparent 1px 13px) padding-box,
-    repeating-linear-gradient(45deg,rgba(0,0,0,.15) 0 1px,transparent 1px 16px) padding-box,
-    #181821 padding-box,
+    repeating-linear-gradient(45deg,rgba(0,0,0,.16) 0 1px,transparent 1px 16px) padding-box,
+    #20202a padding-box,
     var(--card-border) border-box,
     #171720;
   border-color:transparent;
@@ -3209,7 +3212,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=159', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=160', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
