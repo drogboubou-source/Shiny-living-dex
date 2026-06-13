@@ -633,7 +633,9 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   padding:12px;
   border-radius:16px;
   background:
-    radial-gradient(circle at 50% 0%,rgba(255,255,255,.09),transparent 34%),
+    radial-gradient(circle at 12% 10%,rgba(var(--grid-rgb,125,211,252),.18),transparent 30%),
+    radial-gradient(circle at 88% 16%,rgba(var(--grid-next-rgb,192,132,252),.12),transparent 32%),
+    radial-gradient(circle at 50% 108%,rgba(var(--grid-rgb,125,211,252),.12),transparent 36%),
     linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.06)),
     #20202a;
   border:1px solid rgba(255,255,255,.12);
@@ -647,12 +649,13 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .grid::before{
   content:'';position:absolute;inset:0;z-index:0;pointer-events:none;
   background:
-    radial-gradient(circle at 18% 22%,rgba(255,255,255,.042),transparent 22%),
-    radial-gradient(circle at 82% 74%,rgba(192,132,252,.038),transparent 26%),
+    linear-gradient(90deg,rgba(var(--grid-rgb,125,211,252),.08),transparent 38%,rgba(var(--grid-next-rgb,192,132,252),.075)),
+    radial-gradient(circle at 18% 22%,rgba(255,255,255,.046),transparent 22%),
+    radial-gradient(circle at 82% 74%,rgba(var(--grid-next-rgb,192,132,252),.055),transparent 26%),
     linear-gradient(135deg,transparent 0 42%,rgba(255,255,255,.034) 42% 43%,transparent 43% 100%) 0 0/34px 34px,
     linear-gradient(135deg,transparent 0 42%,rgba(255,255,255,.018) 42% 43%,transparent 43% 100%) 17px 17px/34px 34px,
-    linear-gradient(45deg,transparent 0 45%,rgba(0,0,0,.095) 45% 46%,transparent 46% 100%) 0 0/42px 42px,
-    linear-gradient(45deg,transparent 0 45%,rgba(125,211,252,.018) 45% 46%,transparent 46% 100%) 21px 21px/42px 42px;
+    linear-gradient(45deg,transparent 0 45%,rgba(0,0,0,.085) 45% 46%,transparent 46% 100%) 0 0/42px 42px,
+    linear-gradient(45deg,transparent 0 45%,rgba(var(--grid-rgb,125,211,252),.028) 45% 46%,transparent 46% 100%) 21px 21px/42px 42px;
   clip-path:inset(0 round 16px);
   opacity:.72;
 }
@@ -675,9 +678,11 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   position:sticky;top:6px;z-index:6;
   display:flex;align-items:center;gap:9px;
   min-height:30px;margin:6px 0 -1px;padding:4px 8px 4px 10px;
-  background:linear-gradient(180deg,rgba(24,24,31,.96),rgba(24,24,31,.88));
+  background:
+    linear-gradient(90deg,rgba(var(--prev-gen-rgb,125,211,252),.1),rgba(var(--gen-rgb,125,211,252),.2) 54%,rgba(24,24,31,.88)),
+    linear-gradient(180deg,rgba(24,24,31,.96),rgba(24,24,31,.88));
   border:1px solid rgba(255,255,255,.08);border-left:3px solid var(--gen-color,#7dd3fc);
-  border-radius:var(--r);box-shadow:0 8px 18px rgba(0,0,0,.22);
+  border-radius:var(--r);box-shadow:0 8px 18px rgba(0,0,0,.22),0 0 18px rgba(var(--gen-rgb,125,211,252),.13);
   backdrop-filter:blur(8px);
   color:var(--muted);font-size:11px;line-height:1.25;
 }
@@ -686,6 +691,11 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   background:var(--gen-color,#7dd3fc);
   box-shadow:0 0 10px rgba(125,211,252,.28);
   flex:0 0 auto;
+}
+.generation-divider::after{
+  content:'';height:1px;flex:1;min-width:18px;
+  background:linear-gradient(90deg,var(--prev-gen-color,var(--gen-color,#7dd3fc)),var(--gen-color,#7dd3fc),transparent);
+  opacity:.42;
 }
 .generation-divider::after{
   content:'';height:1px;flex:1;
@@ -718,6 +728,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
     0 1px 0 rgba(255,255,255,.055),
     0 10px 0 rgba(0,0,0,.11),
     0 16px 24px rgba(0,0,0,.28),
+    0 0 24px rgba(var(--region-rgb,125,211,252),.11),
     0 0 0 1px rgba(0,0,0,.24);
   transition:border-color .15s,box-shadow .15s,background .15s,transform .15s;
 }
@@ -737,11 +748,12 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .card::after{
   content:'';position:absolute;inset:0;border-radius:inherit;
   background:
-    linear-gradient(135deg,var(--card-accent),transparent 18%) top left/54px 54px no-repeat,
+    radial-gradient(circle at 50% 108%,rgba(var(--region-rgb,125,211,252),.18),transparent 38%),
+    linear-gradient(135deg,var(--region-color,var(--card-accent)),transparent 18%) top left/54px 54px no-repeat,
     linear-gradient(225deg,rgba(255,255,255,.16),transparent 20%) top right/40px 40px no-repeat,
-    linear-gradient(315deg,var(--card-accent),transparent 20%) bottom right/58px 58px no-repeat,
+    linear-gradient(315deg,var(--region-color,var(--card-accent)),transparent 20%) bottom right/58px 58px no-repeat,
     linear-gradient(180deg,rgba(255,255,255,.09),transparent 18%,transparent 74%,rgba(0,0,0,.18));
-  opacity:.24;pointer-events:none;
+  opacity:.28;pointer-events:none;
 }
 .card > *{position:relative;z-index:1}
 .card:hover{
@@ -753,6 +765,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
     0 1px 0 rgba(255,255,255,.06),
     0 10px 0 rgba(0,0,0,.1),
     0 18px 30px rgba(0,0,0,.32),
+    0 0 28px rgba(var(--region-rgb,125,211,252),.16),
     0 0 16px var(--card-glow);
 }
 .card > img{width:64px;height:64px;image-rendering:pixelated;display:block;order:2;margin:0;object-fit:contain;filter:drop-shadow(0 6px 8px rgba(0,0,0,.34))}
@@ -764,13 +777,13 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   --card-accent:#c084fc;--card-glow:rgba(192,132,252,.18);--card-sheen:rgba(192,132,252,.055);
   --card-border:linear-gradient(145deg,rgba(222,198,255,.95),rgba(192,132,252,.28) 30%,rgba(192,132,252,.7) 64%,rgba(45,24,64,.72));
   border-color:transparent;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.08),inset 0 0 0 1px rgba(192,132,252,.16),0 0 0 1px rgba(192,132,252,.48),0 0 13px rgba(192,132,252,.22),0 10px 20px rgba(0,0,0,.22);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08),inset 0 0 0 1px rgba(192,132,252,.16),0 0 0 1px rgba(192,132,252,.48),0 0 13px rgba(192,132,252,.22),0 0 22px rgba(var(--region-rgb,125,211,252),.12),0 10px 20px rgba(0,0,0,.22);
 }
 .card.perfect{
   --card-accent:#d4af37;--card-glow:rgba(212,175,55,.22);--card-sheen:rgba(212,175,55,.06);
   --card-border:linear-gradient(145deg,rgba(255,239,166,.96),rgba(212,175,55,.28) 30%,rgba(212,175,55,.74) 64%,rgba(70,52,12,.75));
   border-color:transparent;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.08),inset 0 0 0 1px rgba(212,175,55,.18),0 0 0 1px rgba(212,175,55,.55),0 0 14px rgba(212,175,55,.28),0 10px 20px rgba(0,0,0,.22);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08),inset 0 0 0 1px rgba(212,175,55,.18),0 0 0 1px rgba(212,175,55,.55),0 0 14px rgba(212,175,55,.28),0 0 22px rgba(var(--region-rgb,125,211,252),.12),0 10px 20px rgba(0,0,0,.22);
 }
 .card .num{
   align-self:flex-start;font-family:var(--font);font-size:9px;color:rgba(232,232,240,.7);margin:0 0 -1px 1px;order:0;
@@ -799,17 +812,17 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   --card-border:linear-gradient(145deg,rgba(200,244,255,.94),rgba(125,211,252,.28) 30%,rgba(125,211,252,.7) 64%,rgba(11,48,66,.72));
   background:
     radial-gradient(circle at 50% 0%,rgba(255,255,255,.09),transparent 34%) padding-box,
-    radial-gradient(circle at 82% 74%,rgba(125,211,252,.038),transparent 26%) padding-box,
+    radial-gradient(circle at 82% 74%,rgba(var(--region-rgb,125,211,252),.065),transparent 26%) padding-box,
     linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.06)) padding-box,
     linear-gradient(135deg,transparent 0 42%,rgba(255,255,255,.034) 42% 43%,transparent 43% 100%) 0 0/34px 34px padding-box,
     linear-gradient(135deg,transparent 0 42%,rgba(255,255,255,.018) 42% 43%,transparent 43% 100%) 17px 17px/34px 34px padding-box,
     linear-gradient(45deg,transparent 0 45%,rgba(0,0,0,.095) 45% 46%,transparent 46% 100%) 0 0/42px 42px padding-box,
-    linear-gradient(45deg,transparent 0 45%,rgba(125,211,252,.018) 45% 46%,transparent 46% 100%) 21px 21px/42px 42px padding-box,
+    linear-gradient(45deg,transparent 0 45%,rgba(var(--region-rgb,125,211,252),.028) 45% 46%,transparent 46% 100%) 21px 21px/42px 42px padding-box,
     #20202a padding-box,
     var(--card-border) border-box,
     #171720;
   border-color:transparent;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.08),inset 0 0 0 1px rgba(125,211,252,.14),0 0 0 1px rgba(125,211,252,.42),0 0 13px rgba(125,211,252,.18),0 10px 20px rgba(0,0,0,.22);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08),inset 0 0 0 1px rgba(125,211,252,.14),0 0 0 1px rgba(125,211,252,.42),0 0 13px rgba(125,211,252,.18),0 0 24px rgba(var(--region-rgb,125,211,252),.16),0 10px 20px rgba(0,0,0,.22);
 }
 .card.hunting .pname{color:#7dd3fc}
 .card.hunting .status{background:rgba(125,211,252,.1);color:#dff6ff;border:1px solid rgba(125,211,252,.3)}
@@ -2378,10 +2391,39 @@ function getRegionByPokemonId(id) {
   return REGIONS.find(region => id >= region.start && id <= region.end);
 }
 
-function createGenerationDivider(region) {
+function hexToRgbString(hex) {
+  const clean = String(hex || '').replace('#', '').trim();
+  if (!/^[0-9a-fA-F]{6}$/.test(clean)) return '125,211,252';
+  return [
+    parseInt(clean.slice(0, 2), 16),
+    parseInt(clean.slice(2, 4), 16),
+    parseInt(clean.slice(4, 6), 16)
+  ].join(',');
+}
+
+function setRegionVisualVars(element, region, prefix = 'region') {
+  if (!element || !region) return;
+  element.style.setProperty(`--${prefix}-color`, region.color);
+  element.style.setProperty(`--${prefix}-rgb`, hexToRgbString(region.color));
+}
+
+function setGridVisualVars(grid, region) {
+  if (!grid) return;
+  const activeRegion = currentRegion === 'all' ? REGIONS[0] : region;
+  const nextRegion = currentRegion === 'all'
+    ? REGIONS[REGIONS.length - 1]
+    : REGIONS[Math.min(REGIONS.length - 1, (REGIONS.indexOf(activeRegion) || 0) + 1)];
+  grid.style.setProperty('--grid-rgb', hexToRgbString(activeRegion?.color || '#7dd3fc'));
+  grid.style.setProperty('--grid-next-rgb', hexToRgbString(nextRegion?.color || '#c084fc'));
+}
+
+function createGenerationDivider(region, previousRegion = null) {
   const divider = document.createElement('div');
   divider.className = 'generation-divider';
   divider.style.setProperty('--gen-color', region.color);
+  divider.style.setProperty('--gen-rgb', hexToRgbString(region.color));
+  divider.style.setProperty('--prev-gen-color', previousRegion?.color || region.color);
+  divider.style.setProperty('--prev-gen-rgb', hexToRgbString(previousRegion?.color || region.color));
   divider.innerHTML = `
     <strong>${region.name}</strong>
     <span>Génération ${region.gen} · #${region.start}-${region.end}</span>`;
@@ -2419,6 +2461,7 @@ function createRegionalOriginalCard(id) {
   const statusHtml = getCardStatusHtml(p, isHuntingCard);
   const card = document.createElement('div');
   card.className = 'card form-original' + (isHomeSpriteMode() ? ' sprite-home' : '') + (p.caught ? ' caught' : '') + (p.perfect ? ' perfect' : '') + (isHuntingCard ? ' hunting' : '');
+  setRegionVisualVars(card, getRegionByPokemonId(id));
   card.setAttribute('role', 'button');
   card.setAttribute('tabindex', '0');
   card.setAttribute('aria-label', `${name}, forme originale`);
@@ -2447,6 +2490,7 @@ function createRegionalFormCard(form) {
   const statusHtml = unavailable ? 'Indisponible' : getCardStatusHtml(p, isHuntingCard);
   const card = document.createElement('div');
   card.className = 'card form-card' + (isHomeSpriteMode() ? ' sprite-home' : '') + (p.caught && !unavailable ? ' caught' : '') + (p.perfect && !unavailable ? ' perfect' : '') + (isHuntingCard && !unavailable ? ' hunting' : '') + (unavailable ? ' unavailable' : '');
+  setRegionVisualVars(card, REGIONS.find(region => region.name === form.region) || getRegionByPokemonId(form.baseId));
   card.setAttribute('role', 'button');
   card.setAttribute('tabindex', '0');
   card.setAttribute('aria-label', `${form.label}, forme de ${form.region}`);
@@ -2484,6 +2528,7 @@ function renderGrid() {
   const isHuntingView = counterMode;
   const grid   = document.getElementById('grid');
   grid.classList.toggle('hunt-grid', isHuntingView);
+  setGridVisualVars(grid, r);
   grid.innerHTML = '';
   const ids = [];
 
@@ -2521,6 +2566,7 @@ function renderGrid() {
   });
 
   let lastDividerGen = null;
+  let previousDividerRegion = null;
   const showGenerationDividers = currentRegion === 'all' && (sort === 'number' || sort === 'legendary') && !counterMode;
 
   ids.forEach(id => {
@@ -2532,12 +2578,14 @@ function renderGrid() {
     if (showGenerationDividers) {
       const region = cardRegion;
       if (region && region.gen !== lastDividerGen) {
-        grid.appendChild(createGenerationDivider(region));
+        grid.appendChild(createGenerationDivider(region, previousDividerRegion));
+        previousDividerRegion = region;
         lastDividerGen = region.gen;
       }
     }
     const card = document.createElement('div');
     card.className = 'card' + (isHomeSpriteMode() ? ' sprite-home' : '') + (p.caught && !unavailable ? ' caught' : '') + (p.perfect && !unavailable ? ' perfect' : '') + (isHuntingCard ? ' hunting' : '') + (unavailable ? ' unavailable' : '');
+    setRegionVisualVars(card, getRegionByPokemonId(id));
     card.setAttribute('role', 'button');
     card.setAttribute('tabindex', '0');
     card.setAttribute('aria-label', `${name}, #${String(id).padStart(4,'0')}${p.caught ? ', shiny capture' : (isHuntingCard ? ', en cours' : ', manquant')}`);
@@ -3216,7 +3264,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=161', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=162', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
