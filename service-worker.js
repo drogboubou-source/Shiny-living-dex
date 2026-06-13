@@ -1,5 +1,5 @@
-const CACHE_NAME = 'shiny-living-dex-v160';
-const RUNTIME_CACHE = 'shiny-living-dex-runtime-v160';
+const CACHE_NAME = 'shiny-living-dex-v161';
+const RUNTIME_CACHE = 'shiny-living-dex-runtime-v161';
 const OFFLINE_URL = './index.html';
 const APP_SHELL = [
   './',

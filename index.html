@@ -649,10 +649,12 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   background:
     radial-gradient(circle at 18% 22%,rgba(255,255,255,.042),transparent 22%),
     radial-gradient(circle at 82% 74%,rgba(192,132,252,.038),transparent 26%),
-    repeating-linear-gradient(135deg,rgba(255,255,255,.024) 0 1px,transparent 1px 13px),
-    repeating-linear-gradient(45deg,rgba(0,0,0,.16) 0 1px,transparent 1px 16px);
+    linear-gradient(135deg,transparent 0 42%,rgba(255,255,255,.034) 42% 43%,transparent 43% 100%) 0 0/34px 34px,
+    linear-gradient(135deg,transparent 0 42%,rgba(255,255,255,.018) 42% 43%,transparent 43% 100%) 17px 17px/34px 34px,
+    linear-gradient(45deg,transparent 0 45%,rgba(0,0,0,.095) 45% 46%,transparent 46% 100%) 0 0/42px 42px,
+    linear-gradient(45deg,transparent 0 45%,rgba(125,211,252,.018) 45% 46%,transparent 46% 100%) 21px 21px/42px 42px;
   clip-path:inset(0 round 16px);
-  opacity:.62;
+  opacity:.72;
 }
 .grid::after{
   content:'';position:absolute;inset:1px;z-index:0;pointer-events:none;border-radius:15px;
@@ -799,8 +801,10 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
     radial-gradient(circle at 50% 0%,rgba(255,255,255,.09),transparent 34%) padding-box,
     radial-gradient(circle at 82% 74%,rgba(125,211,252,.038),transparent 26%) padding-box,
     linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.06)) padding-box,
-    repeating-linear-gradient(135deg,rgba(255,255,255,.024) 0 1px,transparent 1px 13px) padding-box,
-    repeating-linear-gradient(45deg,rgba(0,0,0,.16) 0 1px,transparent 1px 16px) padding-box,
+    linear-gradient(135deg,transparent 0 42%,rgba(255,255,255,.034) 42% 43%,transparent 43% 100%) 0 0/34px 34px padding-box,
+    linear-gradient(135deg,transparent 0 42%,rgba(255,255,255,.018) 42% 43%,transparent 43% 100%) 17px 17px/34px 34px padding-box,
+    linear-gradient(45deg,transparent 0 45%,rgba(0,0,0,.095) 45% 46%,transparent 46% 100%) 0 0/42px 42px padding-box,
+    linear-gradient(45deg,transparent 0 45%,rgba(125,211,252,.018) 45% 46%,transparent 46% 100%) 21px 21px/42px 42px padding-box,
     #20202a padding-box,
     var(--card-border) border-box,
     #171720;
@@ -3212,7 +3216,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=160', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=161', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
