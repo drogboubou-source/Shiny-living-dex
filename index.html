@@ -108,9 +108,9 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 }
 .logo-icon{width:32px;height:32px;border-radius:9px;object-fit:cover;box-shadow:0 0 0 1px rgba(255,255,255,.14),0 6px 14px rgba(0,0,0,.24)}
 .logo-stack{display:flex;flex-direction:column;gap:5px;min-width:0}
-.logo-text{display:inline-flex;align-items:center;gap:.22em;line-height:1;transform:translateY(-1px);letter-spacing:0}
+.logo-text{display:inline-flex;align-items:center;gap:.42em;line-height:1;transform:translateY(-1px);letter-spacing:0}
 .logo-word{display:inline-block;letter-spacing:0}
-.logo-sep{width:3px;height:3px;border-radius:50%;background:rgba(212,175,55,.85);box-shadow:0 0 7px rgba(212,175,55,.32);flex:0 0 auto}
+.logo-sep{display:none}
 .logo-subline{font-family:var(--font);font-size:9px;line-height:1;color:rgba(255,255,255,.56);letter-spacing:0;font-weight:800}
 .logo:hover,.logo:focus-visible{border-color:rgba(255,255,255,.105);background:linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.018)),rgba(15,15,21,.56)}
 .logo:hover .logo-dex,.logo:focus-visible .logo-dex{color:#fff}
@@ -633,14 +633,13 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   padding:12px;
   border-radius:16px;
   background:
-    radial-gradient(circle at 50% -12%,rgba(255,255,255,.09),transparent 34%),
-    linear-gradient(180deg,rgba(255,255,255,.065),rgba(255,255,255,.018) 38%,rgba(0,0,0,.1)),
-    linear-gradient(145deg,#20202a 0%,#181821 50%,#101017 100%);
+    repeating-linear-gradient(135deg,rgba(255,255,255,.024) 0 1px,transparent 1px 13px),
+    repeating-linear-gradient(45deg,rgba(0,0,0,.15) 0 1px,transparent 1px 16px),
+    #181821;
   border:1px solid rgba(255,255,255,.12);
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,.075),
     inset 0 0 0 1px rgba(255,255,255,.022),
-    inset 0 -18px 36px rgba(0,0,0,.18),
     0 12px 30px rgba(0,0,0,.24);
   overflow:visible;
   isolation:isolate;
@@ -648,22 +647,24 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .grid::before{
   content:'';position:absolute;inset:0;z-index:0;pointer-events:none;
   background:
-    radial-gradient(circle at 18% 22%,rgba(255,255,255,.042),transparent 22%),
-    radial-gradient(circle at 82% 74%,rgba(192,132,252,.038),transparent 26%),
-    repeating-linear-gradient(135deg,rgba(255,255,255,.024) 0 1px,transparent 1px 13px),
-    repeating-linear-gradient(45deg,rgba(0,0,0,.16) 0 1px,transparent 1px 16px);
-  mask-image:linear-gradient(180deg,rgba(0,0,0,.72),rgba(0,0,0,.28));
+    linear-gradient(135deg,transparent 0 44%,rgba(255,255,255,.026) 44% 45%,transparent 45% 100%) 0 0/46px 46px,
+    linear-gradient(45deg,transparent 0 46%,rgba(192,132,252,.024) 46% 47%,transparent 47% 100%) 0 0/52px 52px;
   clip-path:inset(0 round 16px);
-  opacity:.62;
+  opacity:.66;
 }
 .grid::after{
   content:'';position:absolute;inset:1px;z-index:0;pointer-events:none;border-radius:15px;
   background:
-    linear-gradient(90deg,transparent,rgba(255,255,255,.055),transparent) 0 0/100% 1px no-repeat,
-    radial-gradient(ellipse at center,transparent 48%,rgba(0,0,0,.2) 100%),
-    linear-gradient(180deg,rgba(255,255,255,.018),transparent 40%,rgba(0,0,0,.16));
-  opacity:.8;
+    linear-gradient(90deg,transparent,rgba(255,255,255,.055),transparent) 0 0/100% 1px no-repeat;
+  opacity:.72;
 }
+.grid.hunt-grid{
+  padding:0;
+  background:transparent;
+  border-color:transparent;
+  box-shadow:none;
+}
+.grid.hunt-grid::before,.grid.hunt-grid::after{display:none}
 .grid > *{position:relative;z-index:1}
 .generation-divider{
   grid-column:1/-1;
@@ -792,6 +793,14 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .card.hunting{
   --card-accent:#7dd3fc;--card-glow:rgba(125,211,252,.18);--card-sheen:rgba(125,211,252,.055);
   --card-border:linear-gradient(145deg,rgba(200,244,255,.94),rgba(125,211,252,.28) 30%,rgba(125,211,252,.7) 64%,rgba(11,48,66,.72));
+  background:
+    linear-gradient(135deg,transparent 0 44%,rgba(255,255,255,.026) 44% 45%,transparent 45% 100%) 0 0/46px 46px padding-box,
+    linear-gradient(45deg,transparent 0 46%,rgba(125,211,252,.032) 46% 47%,transparent 47% 100%) 0 0/52px 52px padding-box,
+    repeating-linear-gradient(135deg,rgba(255,255,255,.024) 0 1px,transparent 1px 13px) padding-box,
+    repeating-linear-gradient(45deg,rgba(0,0,0,.15) 0 1px,transparent 1px 16px) padding-box,
+    #181821 padding-box,
+    var(--card-border) border-box,
+    #171720;
   border-color:transparent;
   box-shadow:inset 0 1px 0 rgba(255,255,255,.08),inset 0 0 0 1px rgba(125,211,252,.14),0 0 0 1px rgba(125,211,252,.42),0 0 13px rgba(125,211,252,.18),0 10px 20px rgba(0,0,0,.22);
 }
@@ -1118,7 +1127,7 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
     <button class="logo" onclick="goHomeFromLogo()" aria-label="Retour à l'accueil">
       <img class="logo-icon" src="./Assets/icon-192.png" alt="" width="32" height="32">
       <span class="logo-stack">
-        <span class="logo-text"><span class="logo-word logo-shiny">Shiny</span><span class="logo-sep"></span><span class="logo-word logo-living">Living</span><span class="logo-sep"></span><span class="logo-word logo-dex">Dex</span></span>
+        <span class="logo-text"><span class="logo-word logo-shiny">Shiny</span><span class="logo-word logo-living">Living</span><span class="logo-word logo-dex">Dex</span></span>
         <span class="logo-subline">Merci Thieu</span>
       </span>
     </button>
@@ -2467,6 +2476,7 @@ function renderGrid() {
   const sort   = document.getElementById('sortSelect')?.value || 'number';
   const isHuntingView = counterMode;
   const grid   = document.getElementById('grid');
+  grid.classList.toggle('hunt-grid', isHuntingView);
   grid.innerHTML = '';
   const ids = [];
 
@@ -3199,7 +3209,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=158', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=159', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
