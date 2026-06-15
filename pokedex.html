@@ -59,8 +59,23 @@
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{height:100%;overflow:hidden}
-body{background:var(--bg);color:var(--text);font-family:var(--font);height:100%;overflow:hidden}
+body{
+  background-color:var(--bg);
+  color:var(--text);font-family:var(--font);height:100%;overflow:hidden;
+}
 button,.btn,.card,.gen-btn{-webkit-tap-highlight-color:transparent}
+
+/* ── DECOR : motif d'ombres de pokéballs & créatures derrière les cartes ── */
+body::before{
+  content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-color:var(--bg);
+  background-image:
+    radial-gradient(circle at 18% 22%, rgba(192,132,252,.05), transparent 38%),
+    radial-gradient(circle at 82% 78%, rgba(212,175,55,.045), transparent 42%),
+    url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22420%22 height=%22420%22 viewBox=%220 0 420 420%22%3E%3Cg fill=%22none%22 stroke=%22%23ffffff%22 stroke-opacity=%22.05%22 stroke-width=%224%22%3E%3Ccircle cx=%2270%22 cy=%2270%22 r=%2248%22/%3E%3Cline x1=%2222%22 y1=%2270%22 x2=%22118%22 y2=%2270%22/%3E%3Ccircle cx=%2270%22 cy=%2270%22 r=%2210%22/%3E%3C/g%3E%3Cg fill=%22%23ffffff%22 fill-opacity=%22.045%22%3E%3Cpath d=%22M300 90c-8-26-46-30-60-6-20-14-52 4-44 30-16 8-14 34 6 40-2 20 22 36 40 24 14 16 44 8 48-12 22 0 32-26 16-40 8-16-6-36-22-32 2-6-2-12-8-12z%22/%3E%3C/g%3E%3Cg fill=%22none%22 stroke=%22%23ffffff%22 stroke-opacity=%22.04%22 stroke-width=%223%22%3E%3Ccircle cx=%2240%22 cy=%22330%22 r=%2230%22/%3E%3Cline x1=%2210%22 y1=%22330%22 x2=%2270%22 y2=%22330%22/%3E%3Ccircle cx=%2240%22 cy=%22330%22 r=%226%22/%3E%3C/g%3E%3Cg fill=%22%23ffffff%22 fill-opacity=%22.04%22%3E%3Cpath d=%22M340 300c-26 0-48 22-48 48 0 22 16 40 36 46-6-10-8-22-4-34 6 4 14 6 22 4 14-4 22-18 18-32 10 4 22 0 26-10 6-14-2-30-18-34-6-2-12 0-16 4-2-4-6-10-16 8z%22/%3E%3C/g%3E%3Cg fill=%22%23ffffff%22 fill-opacity=%22.035%22%3E%3Ccircle cx=%22210%22 cy=%22230%22 r=%2218%22/%3E%3Ccircle cx=%22188%22 cy=%22210%22 r=%227%22/%3E%3Ccircle cx=%22232%22 cy=%22210%22 r=%227%22/%3E%3Ccircle cx=%22198%22 cy=%22248%22 r=%227%22/%3E%3Ccircle cx=%22222%22 cy=%22248%22 r=%227%22/%3E%3C/g%3E%3C/svg%3E');
+  background-size:auto, auto, 420px 420px;
+  background-repeat:no-repeat, no-repeat, repeat;
+}
 
 /* scanlines */
 body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.06) 2px,rgba(0,0,0,.06) 4px);pointer-events:none;z-index:9999}
@@ -151,7 +166,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .pull-refresh.ready{border-color:rgba(192,132,252,.44);color:#fff}
 
 /* ── LAYOUT ── */
-.layout{display:flex;margin-top:var(--header-h);height:calc(100dvh - var(--header-h));min-height:0}
+.layout{display:flex;margin-top:var(--header-h);height:calc(100dvh - var(--header-h));min-height:0;position:relative;z-index:1}
 
 /* ── SIDEBAR ── */
 .sidebar{
