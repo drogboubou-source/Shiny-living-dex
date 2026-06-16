@@ -399,8 +399,18 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   scroll-padding-top:1.5rem;overscroll-behavior:contain;
   -webkit-overflow-scrolling:touch;
   background:
-    linear-gradient(180deg,rgba(255,255,255,.018),transparent 180px),
-    radial-gradient(circle at 18% 2%,rgba(212,175,55,.035),transparent 220px);
+    radial-gradient(circle 1.6px at 18px 32px, rgba(255,255,255,.85), transparent),
+    radial-gradient(circle 1px at 64px 88px, rgba(255,255,255,.55), transparent),
+    radial-gradient(circle 1.8px at 120px 20px, rgba(212,175,55,.85), transparent),
+    radial-gradient(circle 1px at 150px 140px, rgba(192,132,252,.65), transparent),
+    radial-gradient(circle 1.4px at 195px 95px, rgba(125,211,252,.7), transparent),
+    radial-gradient(circle 1px at 40px 175px, rgba(255,255,255,.5), transparent),
+    radial-gradient(circle 1.7px at 100px 205px, rgba(255,255,255,.8), transparent),
+    radial-gradient(circle 1.3px at 75px 15px, rgba(255,255,255,.6), transparent),
+    radial-gradient(circle 1px at 200px 180px, rgba(212,175,55,.55), transparent);
+  background-size:220px 220px;
+  background-repeat:repeat;
+  background-attachment:local;
 }
 
 /* region header */
