@@ -1,6 +1,6 @@
 ﻿<!DOCTYPE html>
 <html lang="fr">
-<head> <script src="https://cdn.tailwindcss.com"></script>
+<head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Shiny Living Dex</title>
@@ -72,15 +72,10 @@
 *{box-sizing:border-box;margin:0;padding:0}
 html{height:100%;overflow:hidden}
 body{
-  position:relative;isolation:isolate;
   background:
-    radial-gradient(ellipse 78% 58% at 8% -10%, rgba(192,132,252,.36), transparent 62%),
-    radial-gradient(ellipse 68% 52% at 97% -2%, rgba(212,175,55,.3), transparent 62%),
-    radial-gradient(ellipse 72% 56% at 103% 98%, rgba(125,211,252,.3), transparent 62%),
-    radial-gradient(ellipse 62% 50% at -6% 104%, rgba(126,214,96,.22), transparent 64%),
-    radial-gradient(ellipse 95% 68% at 50% 32%, rgba(122,92,196,.19), transparent 70%),
-    linear-gradient(165deg,#1a1430 0%,#120d22 26%,#0d0c19 52%,#0a0911 78%,#080711 100%);
-  background-color:#0a0911;
+    radial-gradient(circle at 50% -18%,rgba(192,132,252,.12),transparent 34%),
+    radial-gradient(circle at 94% 12%,rgba(125,211,252,.07),transparent 28%),
+    linear-gradient(180deg,#101016 0%,var(--bg) 42%,#0b0b0f 100%);
   color:var(--text);font-family:var(--font);height:100%;overflow:hidden;-webkit-text-size-adjust:100%;text-size-adjust:100%;
 }
 button,.btn,.card,.gen-btn{-webkit-tap-highlight-color:transparent}
@@ -360,12 +355,13 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   .region-detail-chip strong{font-size:9.2px}
   .region-detail-chip span{font-size:5.7px}
   .home-signature{right:.75rem;top:.6rem;font-size:12px}
+  .region-map-mosaic{inset:6px;opacity:.9;filter:saturate(1.12) contrast(1.04) brightness(1.18)}
   .region-name{font-size:11px}
   .filters{display:grid;grid-template-columns:1fr 1fr;gap:8px}
   .filters input{width:100%;min-width:0}
   .filters select,.sort-control,.counter-button,.perfect-summary{width:100%;min-width:0}
   .sort-control select{width:100%}
-  .grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;padding:0}
+  .grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;padding:6px;border-radius:14px}
   .generation-divider{min-height:26px;margin:4px 0 -2px;font-size:9px;gap:7px;padding:3px 7px 3px 8px;top:0}
   .generation-divider strong{font-size:8px}
   .card{min-height:132px;padding:8px 4px 7px}
@@ -398,18 +394,8 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   scroll-padding-top:1.5rem;overscroll-behavior:contain;
   -webkit-overflow-scrolling:touch;
   background:
-    radial-gradient(circle 1.6px at 18px 32px, rgba(255,255,255,.85), transparent),
-    radial-gradient(circle 1px at 64px 88px, rgba(255,255,255,.55), transparent),
-    radial-gradient(circle 1.8px at 120px 20px, rgba(212,175,55,.85), transparent),
-    radial-gradient(circle 1px at 150px 140px, rgba(192,132,252,.65), transparent),
-    radial-gradient(circle 1.4px at 195px 95px, rgba(125,211,252,.7), transparent),
-    radial-gradient(circle 1px at 40px 175px, rgba(255,255,255,.5), transparent),
-    radial-gradient(circle 1.7px at 100px 205px, rgba(255,255,255,.8), transparent),
-    radial-gradient(circle 1.3px at 75px 15px, rgba(255,255,255,.6), transparent),
-    radial-gradient(circle 1px at 200px 180px, rgba(212,175,55,.55), transparent);
-  background-size:220px 220px;
-  background-repeat:repeat;
-  background-attachment:local;
+    linear-gradient(180deg,rgba(255,255,255,.018),transparent 180px),
+    radial-gradient(circle at 18% 2%,rgba(212,175,55,.035),transparent 220px);
 }
 
 /* region header */
@@ -421,19 +407,13 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   box-shadow:0 16px 40px rgba(0,0,0,.32),inset 0 1px 0 rgba(255,255,255,.06),inset 0 0 0 1px rgba(255,255,255,.035);
 }
 .region-header.map-hero::before{
-  content:'';position:absolute;inset:7px;border-radius:calc(var(--r-lg) - 5px);z-index:1;pointer-events:none;
-  background:
-    linear-gradient(135deg,rgba(255,255,255,.09),transparent 30%) top left/72px 72px no-repeat,
-    linear-gradient(315deg,rgba(255,255,255,.05),transparent 28%) bottom right/84px 84px no-repeat,
-    linear-gradient(180deg,rgba(255,255,255,.06),transparent 28%,transparent 72%,rgba(0,0,0,.3));
+  content:'';position:absolute;inset:7px;border-radius:calc(var(--r-lg) - 5px);z-index:1;
+  background:linear-gradient(180deg,rgba(15,15,19,.08),rgba(15,15,19,.84)),linear-gradient(90deg,rgba(15,15,19,.72),rgba(15,15,19,.12));
 }
 .region-header.map-hero::after{
-  content:'';position:absolute;inset:7px;border-radius:calc(var(--r-lg) - 5px);z-index:0;pointer-events:none;
-  background:
-    radial-gradient(circle at 50% 28%,rgba(255,255,255,.045),transparent 46%),
-    linear-gradient(135deg,rgba(255,255,255,.034) 25%,transparent 25%) 0 0/18px 18px,
-    linear-gradient(225deg,rgba(255,255,255,.024) 25%,transparent 25%) 0 0/18px 18px,
-    linear-gradient(180deg,#20202a 0%,#181821 48%,#101017 100%);
+  content:'';position:absolute;inset:7px;border-radius:calc(var(--r-lg) - 5px);z-index:0;
+  background-image:var(--region-map);background-position:center;background-size:cover;background-repeat:no-repeat;
+  filter:saturate(1.08) contrast(1.03);
 }
 .region-header.map-hero > *{position:relative;z-index:2}
 .region-header.map-hero .region-name{text-shadow:0 2px 14px rgba(0,0,0,.65)}
@@ -441,23 +421,12 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .region-header.all-hero{
   min-height:210px;display:flex;align-items:center;justify-content:flex-start;text-align:left;
   position:relative;overflow:hidden;isolation:isolate;border:1px solid rgba(255,255,255,.12);border-radius:var(--r-lg);
-  padding:1.25rem;background:linear-gradient(180deg,#20202a,#15151c);
-  box-shadow:0 16px 40px rgba(0,0,0,.32),inset 0 1px 0 rgba(255,255,255,.06),inset 0 0 0 1px rgba(255,255,255,.035);
+  padding:1.25rem;background:var(--surface);
+  box-shadow:0 16px 40px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.06),inset 0 0 0 1px rgba(255,255,255,.035);
 }
 .region-header.all-hero::before{
-  content:'';position:absolute;inset:7px;z-index:1;border-radius:calc(var(--r-lg) - 5px);pointer-events:none;
-  background:
-    linear-gradient(135deg,rgba(255,255,255,.09),transparent 30%) top left/72px 72px no-repeat,
-    linear-gradient(315deg,rgba(255,255,255,.05),transparent 28%) bottom right/84px 84px no-repeat,
-    linear-gradient(180deg,rgba(255,255,255,.06),transparent 28%,transparent 72%,rgba(0,0,0,.3));
-}
-.region-header.all-hero::after{
-  content:'';position:absolute;inset:7px;z-index:0;border-radius:calc(var(--r-lg) - 5px);pointer-events:none;
-  background:
-    radial-gradient(circle at 50% 28%,rgba(255,255,255,.045),transparent 46%),
-    linear-gradient(135deg,rgba(255,255,255,.034) 25%,transparent 25%) 0 0/18px 18px,
-    linear-gradient(225deg,rgba(255,255,255,.024) 25%,transparent 25%) 0 0/18px 18px,
-    linear-gradient(180deg,#20202a 0%,#181821 48%,#101017 100%);
+  content:'';position:absolute;inset:7px;z-index:1;border-radius:calc(var(--r-lg) - 5px);
+  background:linear-gradient(180deg,rgba(15,15,19,.08),rgba(15,15,19,.84)),linear-gradient(90deg,rgba(15,15,19,.72),rgba(15,15,19,.12));
 }
 .region-header.all-hero .all-hero-copy{position:relative;z-index:2;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:.85rem;min-width:0;width:min(390px,100%);padding:0;background:transparent;box-shadow:none;backdrop-filter:none}
 .region-header.all-hero .progress-wrap{width:100%;flex:none}
@@ -537,6 +506,10 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 }
 .region-detail-chip.eggs strong,.region-detail-chip.encounters strong{color:var(--region-accent,#7dd3fc)}
 .home-signature{position:absolute;right:1.1rem;top:.85rem;z-index:2;font-family:'Pacifico',cursive;font-size:14px;line-height:1;color:#fff7c7;text-shadow:0 2px 10px rgba(0,0,0,.72),0 0 18px rgba(192,132,252,.26);transform:rotate(-3deg);pointer-events:none}
+.region-map-mosaic{position:absolute;inset:7px;z-index:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;opacity:.9;filter:saturate(1.12) contrast(1.02) brightness(1.22);border-radius:calc(var(--r-lg) - 5px);overflow:hidden;background:rgba(255,255,255,.08)}
+.region-map-thumb{position:relative;overflow:hidden;background:rgba(255,255,255,.08);border:0}
+.region-map-thumb img{width:100%;height:100%;display:block;object-fit:cover}
+.region-map-thumb span{display:none}
 .region-name{font-family:var(--font-logo);font-size:13px;line-height:1.35;letter-spacing:0}
 .region-meta{font-family:var(--font-logo);font-size:8px;line-height:1.45;letter-spacing:0;color:var(--muted);margin-top:4px}
 .progress-wrap{flex:1;min-width:140px}
@@ -656,11 +629,48 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   position:relative;
   display:grid;
   grid-template-columns:repeat(auto-fill,minmax(112px,1fr));
-  gap:14px;
-  padding:0;
+  gap:10px;
+  padding:12px;
+  border-radius:16px;
+  background:
+    radial-gradient(circle at 50% 0%,rgba(255,255,255,.105),transparent 34%),
+    radial-gradient(circle at 18% 18%,rgba(255,255,255,.05),transparent 25%),
+    radial-gradient(circle at 86% 80%,rgba(192,132,252,.045),transparent 30%),
+    linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.06)),
+    #20202a;
+  border:1px solid rgba(255,255,255,.12);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.075),
+    inset 0 0 0 1px rgba(255,255,255,.022),
+    0 12px 30px rgba(0,0,0,.24);
   overflow:visible;
   isolation:isolate;
 }
+.grid::before{
+  content:'';position:absolute;inset:0;z-index:0;pointer-events:none;
+  background:
+    linear-gradient(135deg,transparent 0 41%,rgba(255,255,255,.052) 41% 42%,transparent 42% 100%) 0 0/32px 32px,
+    linear-gradient(135deg,transparent 0 41%,rgba(255,255,255,.026) 41% 42%,transparent 42% 100%) 16px 16px/32px 32px,
+    linear-gradient(45deg,transparent 0 45%,rgba(0,0,0,.12) 45% 46%,transparent 46% 100%) 0 0/40px 40px,
+    linear-gradient(45deg,transparent 0 45%,rgba(255,255,255,.02) 45% 46%,transparent 46% 100%) 20px 20px/40px 40px,
+    radial-gradient(circle at 50% 50%,rgba(255,255,255,.024) 0 1px,transparent 1px 100%) 0 0/18px 18px;
+  clip-path:inset(0 round 16px);
+  opacity:.86;
+}
+.grid::after{
+  content:'';position:absolute;inset:1px;z-index:0;pointer-events:none;border-radius:15px;
+  background:
+    linear-gradient(90deg,transparent,rgba(255,255,255,.07),transparent) 0 0/100% 1px no-repeat,
+    radial-gradient(ellipse at center,transparent 44%,rgba(0,0,0,.18) 100%);
+  opacity:.78;
+}
+.grid.hunt-grid{
+  padding:0;
+  background:transparent;
+  border-color:transparent;
+  box-shadow:none;
+}
+.grid.hunt-grid::before,.grid.hunt-grid::after{display:none}
 .grid > *{position:relative;z-index:1}
 .generation-divider{
   grid-column:1/-1;
@@ -1090,7 +1100,7 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   .filters input{width:100%}
   .filters select,.sort-control,.perfect-summary,.counter-button{width:100%;min-width:0}
   .sort-control select{width:100%}
-  .grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;padding:0}
+  .grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;padding:6px;border-radius:14px}
   .generation-divider{min-height:26px;margin:4px 0 -2px;font-size:9px;gap:7px;padding:3px 7px 3px 8px;top:6px}
   .generation-divider strong{font-size:8px}
   .card{min-height:132px;padding:8px 4px 7px}
@@ -2331,11 +2341,16 @@ function renderRegion() {
   const stats = getCurrentStats();
   const statsPanel = renderRegionStatsPanel(stats, r.color);
   const headerClass = isAll ? 'region-header all-hero' : 'region-header map-hero';
-  const mapStyle = `--region-accent:${r.color};`;
+  const mapStyle = `--region-accent:${r.color};${!isAll && r.map ? `--region-map:url('${r.map}')` : ''}`;
 
   document.getElementById('regionHeader').className = headerClass;
   document.getElementById('regionHeader').setAttribute('style', mapStyle);
   if (isAll) {
+    const mosaic = REGIONS.map(region => `
+      <div class="region-map-thumb">
+        <img src="${region.map}" alt="Carte de ${region.name}" loading="lazy">
+        <span>${region.name}</span>
+      </div>`).join('');
     document.getElementById('regionHeader').innerHTML = `
       <div class="all-hero-copy">
         <div class="region-info-block">
@@ -2346,7 +2361,7 @@ function renderRegion() {
           ${statsPanel}
         </div>
       </div>
-      <div class="home-signature">Merci thieu</div>`;
+      <div class="region-map-mosaic">${mosaic}</div>`;
     renderGrid();
     return;
   }
@@ -3240,27 +3255,9 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  let swRefreshed = false;
-  navigator.serviceWorker.addEventListener('controllerchange', () => {
-    if (swRefreshed) return;
-    swRefreshed = true;
-    window.location.reload();
-  });
-  navigator.serviceWorker.register('./service-worker.js?v=165', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=163', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
-    registration.addEventListener('updatefound', () => {
-      const newWorker = registration.installing;
-      if (!newWorker) return;
-      newWorker.addEventListener('statechange', () => {
-        if (newWorker.state === 'installed' && registration.waiting) {
-          registration.waiting.postMessage({ type: 'SKIP_WAITING' });
-        }
-      });
-    });
-    document.addEventListener('visibilitychange', () => {
-      if (document.visibilityState === 'visible') registration.update();
-    });
   }).catch(() => {});
 }
 </script>

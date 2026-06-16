@@ -1,5 +1,5 @@
-const CACHE_NAME = 'shiny-living-dex-v165';
-const RUNTIME_CACHE = 'shiny-living-dex-runtime-v165';
+const CACHE_NAME = 'shiny-living-dex-v163';
+const RUNTIME_CACHE = 'shiny-living-dex-runtime-v163';
 const OFFLINE_URL = './index.html';
 const APP_SHELL = [
   './',
@@ -58,7 +58,7 @@ self.addEventListener('fetch', event => {
 
   if (event.request.mode === 'navigate') {
     event.respondWith(
-      fetch(event.request, { cache: 'no-store' })
+      fetch(event.request)
         .then(response => {
           const copy = response.clone();
           caches.open(CACHE_NAME).then(cache => cache.put(OFFLINE_URL, copy));
