@@ -74,12 +74,11 @@ html{height:100%;overflow:hidden}
 body{
   position:relative;isolation:isolate;
   background:
-    radial-gradient(ellipse 78% 58% at 8% -10%, rgba(192,132,252,.36), transparent 62%),
-    radial-gradient(ellipse 68% 52% at 97% -2%, rgba(212,175,55,.3), transparent 62%),
-    radial-gradient(ellipse 72% 56% at 103% 98%, rgba(125,211,252,.3), transparent 62%),
-    radial-gradient(ellipse 62% 50% at -6% 104%, rgba(126,214,96,.22), transparent 64%),
-    radial-gradient(ellipse 95% 68% at 50% 32%, rgba(122,92,196,.19), transparent 70%),
-    linear-gradient(165deg,#1a1430 0%,#120d22 26%,#0d0c19 52%,#0a0911 78%,#080711 100%);
+    linear-gradient(180deg, rgba(8,7,14,.5) 0%, rgba(8,7,14,.62) 35%, rgba(7,6,12,.8) 70%, rgba(6,5,10,.9) 100%),
+    url('./Assets/img/bg-pokeball-temple.jpg');
+  background-size: 100% 100%, cover;
+  background-position: center, center 22%;
+  background-repeat: no-repeat, no-repeat;
   background-color:#0a0911;
   color:var(--text);font-family:var(--font);height:100%;overflow:hidden;-webkit-text-size-adjust:100%;text-size-adjust:100%;
 }
@@ -398,19 +397,6 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   padding:1.5rem 1.5rem calc(5.5rem + env(safe-area-inset-bottom));
   scroll-padding-top:1.5rem;overscroll-behavior:contain;
   -webkit-overflow-scrolling:touch;
-  background:
-    radial-gradient(circle 1.6px at 18px 32px, rgba(255,255,255,.85), transparent),
-    radial-gradient(circle 1px at 64px 88px, rgba(255,255,255,.55), transparent),
-    radial-gradient(circle 1.8px at 120px 20px, rgba(212,175,55,.85), transparent),
-    radial-gradient(circle 1px at 150px 140px, rgba(192,132,252,.65), transparent),
-    radial-gradient(circle 1.4px at 195px 95px, rgba(125,211,252,.7), transparent),
-    radial-gradient(circle 1px at 40px 175px, rgba(255,255,255,.5), transparent),
-    radial-gradient(circle 1.7px at 100px 205px, rgba(255,255,255,.8), transparent),
-    radial-gradient(circle 1.3px at 75px 15px, rgba(255,255,255,.6), transparent),
-    radial-gradient(circle 1px at 200px 180px, rgba(212,175,55,.55), transparent);
-  background-size:220px 220px;
-  background-repeat:repeat;
-  background-attachment:local;
 }
 
 /* region header */
@@ -3239,7 +3225,7 @@ if ('serviceWorker' in navigator) {
     swRefreshed = true;
     window.location.reload();
   });
-  navigator.serviceWorker.register('./service-worker.js?v=165', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=166', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
     registration.addEventListener('updatefound', () => {
