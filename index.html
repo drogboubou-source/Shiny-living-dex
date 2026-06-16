@@ -72,10 +72,35 @@
 *{box-sizing:border-box;margin:0;padding:0}
 html{height:100%;overflow:hidden}
 body{
+  position:relative;isolation:isolate;
   background:
-    radial-gradient(circle at 50% -18%,rgba(192,132,252,.12),transparent 34%),
-    radial-gradient(circle at 94% 12%,rgba(125,211,252,.07),transparent 28%),
-    linear-gradient(180deg,#101016 0%,var(--bg) 42%,#0b0b0f 100%);
+    radial-gradient(circle 1.6px at 6% 14%, rgba(255,255,255,.95), transparent),
+    radial-gradient(circle 1px at 16% 33%, rgba(255,255,255,.65), transparent),
+    radial-gradient(circle 1.8px at 26% 9%, rgba(212,175,55,.9), transparent),
+    radial-gradient(circle 1px at 38% 24%, rgba(255,255,255,.55), transparent),
+    radial-gradient(circle 1.6px at 52% 7%, rgba(255,255,255,.85), transparent),
+    radial-gradient(circle 1px at 63% 30%, rgba(192,132,252,.85), transparent),
+    radial-gradient(circle 1.8px at 73% 13%, rgba(255,255,255,.9), transparent),
+    radial-gradient(circle 1px at 84% 28%, rgba(125,211,252,.8), transparent),
+    radial-gradient(circle 1.6px at 95% 10%, rgba(255,255,255,.7), transparent),
+    radial-gradient(circle 1px at 9% 57%, rgba(255,255,255,.5), transparent),
+    radial-gradient(circle 1.5px at 30% 67%, rgba(255,255,255,.8), transparent),
+    radial-gradient(circle 1px at 45% 79%, rgba(212,175,55,.7), transparent),
+    radial-gradient(circle 1.7px at 64% 60%, rgba(255,255,255,.9), transparent),
+    radial-gradient(circle 1px at 80% 74%, rgba(125,211,252,.65), transparent),
+    radial-gradient(circle 1.5px at 91% 57%, rgba(255,255,255,.6), transparent),
+    radial-gradient(circle 1px at 14% 90%, rgba(255,255,255,.55), transparent),
+    radial-gradient(circle 1.7px at 36% 96%, rgba(192,132,252,.75), transparent),
+    radial-gradient(circle 1px at 58% 89%, rgba(255,255,255,.6), transparent),
+    radial-gradient(circle 1.6px at 72% 98%, rgba(255,255,255,.85), transparent),
+    radial-gradient(circle 1px at 89% 87%, rgba(212,175,55,.6), transparent),
+    radial-gradient(ellipse 75% 55% at 10% -10%, rgba(192,132,252,.26), transparent 60%),
+    radial-gradient(ellipse 65% 50% at 96% 0%, rgba(212,175,55,.22), transparent 60%),
+    radial-gradient(ellipse 70% 55% at 102% 96%, rgba(125,211,252,.22), transparent 60%),
+    radial-gradient(ellipse 60% 48% at -4% 102%, rgba(126,214,96,.16), transparent 62%),
+    radial-gradient(ellipse 90% 65% at 50% 30%, rgba(122,92,196,.14), transparent 68%),
+    linear-gradient(165deg,#1a1430 0%,#120d22 26%,#0d0c19 52%,#0a0911 78%,#080711 100%);
+  background-color:#0a0911;
   color:var(--text);font-family:var(--font);height:100%;overflow:hidden;-webkit-text-size-adjust:100%;text-size-adjust:100%;
 }
 button,.btn,.card,.gen-btn{-webkit-tap-highlight-color:transparent}
@@ -420,13 +445,19 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .region-header.map-hero .region-meta,.region-header.map-hero .progress-label{color:rgba(255,255,255,.82)}
 .region-header.all-hero{
   min-height:210px;display:flex;align-items:center;justify-content:flex-start;text-align:left;
-  position:relative;overflow:hidden;isolation:isolate;border:1px solid rgba(255,255,255,.12);border-radius:var(--r-lg);
-  padding:1.25rem;background:var(--surface);
-  box-shadow:0 16px 40px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.06),inset 0 0 0 1px rgba(255,255,255,.035);
+  position:relative;overflow:hidden;isolation:isolate;border:1px solid rgba(255,255,255,.14);border-radius:var(--r-lg);
+  padding:1.25rem;
+  background:
+    radial-gradient(circle at 16% 18%, rgba(192,132,252,.24), transparent 46%),
+    radial-gradient(circle at 88% 10%, rgba(212,175,55,.18), transparent 42%),
+    radial-gradient(circle at 94% 92%, rgba(125,211,252,.16), transparent 46%),
+    linear-gradient(160deg, rgba(255,255,255,.05), rgba(255,255,255,.01)),
+    rgba(13,11,21,.78);
+  box-shadow:0 20px 50px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.07),inset 0 0 0 1px rgba(255,255,255,.04);
 }
 .region-header.all-hero::before{
-  content:'';position:absolute;inset:7px;z-index:1;border-radius:calc(var(--r-lg) - 5px);
-  background:linear-gradient(180deg,rgba(15,15,19,.08),rgba(15,15,19,.84)),linear-gradient(90deg,rgba(15,15,19,.72),rgba(15,15,19,.12));
+  content:'';position:absolute;inset:0;z-index:1;border-radius:inherit;pointer-events:none;
+  background:linear-gradient(100deg,rgba(0,0,0,.1),transparent 40%,transparent 60%,rgba(0,0,0,.18));
 }
 .region-header.all-hero .all-hero-copy{position:relative;z-index:2;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:.85rem;min-width:0;width:min(390px,100%);padding:0;background:transparent;box-shadow:none;backdrop-filter:none}
 .region-header.all-hero .progress-wrap{width:100%;flex:none}
@@ -630,19 +661,21 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   display:grid;
   grid-template-columns:repeat(auto-fill,minmax(112px,1fr));
   gap:10px;
-  padding:12px;
-  border-radius:16px;
+  padding:14px;
+  border-radius:20px;
   background:
-    radial-gradient(circle at 50% 0%,rgba(255,255,255,.105),transparent 34%),
-    radial-gradient(circle at 18% 18%,rgba(255,255,255,.05),transparent 25%),
-    radial-gradient(circle at 86% 80%,rgba(192,132,252,.045),transparent 30%),
-    linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.06)),
-    #20202a;
-  border:1px solid rgba(255,255,255,.12);
+    radial-gradient(circle at 50% 0%,rgba(255,255,255,.06),transparent 36%),
+    radial-gradient(circle at 12% 14%,rgba(192,132,252,.06),transparent 32%),
+    radial-gradient(circle at 90% 86%,rgba(125,211,252,.05),transparent 34%),
+    linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.012)),
+    rgba(16,14,26,.38);
+  backdrop-filter:blur(18px) saturate(140%);
+  -webkit-backdrop-filter:blur(18px) saturate(140%);
+  border:1px solid rgba(255,255,255,.10);
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.075),
-    inset 0 0 0 1px rgba(255,255,255,.022),
-    0 12px 30px rgba(0,0,0,.24);
+    inset 0 1px 0 rgba(255,255,255,.06),
+    inset 0 0 0 1px rgba(255,255,255,.02),
+    0 24px 60px rgba(0,0,0,.32);
   overflow:visible;
   isolation:isolate;
 }
@@ -3255,9 +3288,27 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=163', { scope: './' }).then(registration => {
+  let swRefreshed = false;
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (swRefreshed) return;
+    swRefreshed = true;
+    window.location.reload();
+  });
+  navigator.serviceWorker.register('./service-worker.js?v=165', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
+    registration.addEventListener('updatefound', () => {
+      const newWorker = registration.installing;
+      if (!newWorker) return;
+      newWorker.addEventListener('statechange', () => {
+        if (newWorker.state === 'installed' && registration.waiting) {
+          registration.waiting.postMessage({ type: 'SKIP_WAITING' });
+        }
+      });
+    });
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') registration.update();
+    });
   }).catch(() => {});
 }
 </script>
