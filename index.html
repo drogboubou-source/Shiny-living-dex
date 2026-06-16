@@ -360,7 +360,6 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   .region-detail-chip strong{font-size:9.2px}
   .region-detail-chip span{font-size:5.7px}
   .home-signature{right:.75rem;top:.6rem;font-size:12px}
-  .region-map-mosaic{inset:6px;opacity:.9;filter:saturate(1.12) contrast(1.04) brightness(1.18)}
   .region-name{font-size:11px}
   .filters{display:grid;grid-template-columns:1fr 1fr;gap:8px}
   .filters input{width:100%;min-width:0}
@@ -422,13 +421,19 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   box-shadow:0 16px 40px rgba(0,0,0,.32),inset 0 1px 0 rgba(255,255,255,.06),inset 0 0 0 1px rgba(255,255,255,.035);
 }
 .region-header.map-hero::before{
-  content:'';position:absolute;inset:7px;border-radius:calc(var(--r-lg) - 5px);z-index:1;
-  background:linear-gradient(180deg,rgba(15,15,19,.08),rgba(15,15,19,.84)),linear-gradient(90deg,rgba(15,15,19,.72),rgba(15,15,19,.12));
+  content:'';position:absolute;inset:7px;border-radius:calc(var(--r-lg) - 5px);z-index:1;pointer-events:none;
+  background:
+    linear-gradient(135deg,rgba(255,255,255,.09),transparent 30%) top left/72px 72px no-repeat,
+    linear-gradient(315deg,rgba(255,255,255,.05),transparent 28%) bottom right/84px 84px no-repeat,
+    linear-gradient(180deg,rgba(255,255,255,.06),transparent 28%,transparent 72%,rgba(0,0,0,.3));
 }
 .region-header.map-hero::after{
-  content:'';position:absolute;inset:7px;border-radius:calc(var(--r-lg) - 5px);z-index:0;
-  background-image:var(--region-map);background-position:center;background-size:cover;background-repeat:no-repeat;
-  filter:saturate(1.08) contrast(1.03);
+  content:'';position:absolute;inset:7px;border-radius:calc(var(--r-lg) - 5px);z-index:0;pointer-events:none;
+  background:
+    radial-gradient(circle at 50% 28%,rgba(255,255,255,.045),transparent 46%),
+    linear-gradient(135deg,rgba(255,255,255,.034) 25%,transparent 25%) 0 0/18px 18px,
+    linear-gradient(225deg,rgba(255,255,255,.024) 25%,transparent 25%) 0 0/18px 18px,
+    linear-gradient(180deg,#20202a 0%,#181821 48%,#101017 100%);
 }
 .region-header.map-hero > *{position:relative;z-index:2}
 .region-header.map-hero .region-name{text-shadow:0 2px 14px rgba(0,0,0,.65)}
@@ -440,8 +445,19 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   box-shadow:0 16px 40px rgba(0,0,0,.32),inset 0 1px 0 rgba(255,255,255,.06),inset 0 0 0 1px rgba(255,255,255,.035);
 }
 .region-header.all-hero::before{
-  content:'';position:absolute;inset:7px;z-index:1;border-radius:calc(var(--r-lg) - 5px);
-  background:linear-gradient(180deg,rgba(15,15,19,.08),rgba(15,15,19,.84)),linear-gradient(90deg,rgba(15,15,19,.72),rgba(15,15,19,.12));
+  content:'';position:absolute;inset:7px;z-index:1;border-radius:calc(var(--r-lg) - 5px);pointer-events:none;
+  background:
+    linear-gradient(135deg,rgba(255,255,255,.09),transparent 30%) top left/72px 72px no-repeat,
+    linear-gradient(315deg,rgba(255,255,255,.05),transparent 28%) bottom right/84px 84px no-repeat,
+    linear-gradient(180deg,rgba(255,255,255,.06),transparent 28%,transparent 72%,rgba(0,0,0,.3));
+}
+.region-header.all-hero::after{
+  content:'';position:absolute;inset:7px;z-index:0;border-radius:calc(var(--r-lg) - 5px);pointer-events:none;
+  background:
+    radial-gradient(circle at 50% 28%,rgba(255,255,255,.045),transparent 46%),
+    linear-gradient(135deg,rgba(255,255,255,.034) 25%,transparent 25%) 0 0/18px 18px,
+    linear-gradient(225deg,rgba(255,255,255,.024) 25%,transparent 25%) 0 0/18px 18px,
+    linear-gradient(180deg,#20202a 0%,#181821 48%,#101017 100%);
 }
 .region-header.all-hero .all-hero-copy{position:relative;z-index:2;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:.85rem;min-width:0;width:min(390px,100%);padding:0;background:transparent;box-shadow:none;backdrop-filter:none}
 .region-header.all-hero .progress-wrap{width:100%;flex:none}
@@ -521,10 +537,6 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 }
 .region-detail-chip.eggs strong,.region-detail-chip.encounters strong{color:var(--region-accent,#7dd3fc)}
 .home-signature{position:absolute;right:1.1rem;top:.85rem;z-index:2;font-family:'Pacifico',cursive;font-size:14px;line-height:1;color:#fff7c7;text-shadow:0 2px 10px rgba(0,0,0,.72),0 0 18px rgba(192,132,252,.26);transform:rotate(-3deg);pointer-events:none}
-.region-map-mosaic{position:absolute;inset:7px;z-index:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;opacity:.9;filter:saturate(1.12) contrast(1.02) brightness(1.22);border-radius:calc(var(--r-lg) - 5px);overflow:hidden;background:rgba(255,255,255,.08)}
-.region-map-thumb{position:relative;overflow:hidden;background:rgba(255,255,255,.08);border:0}
-.region-map-thumb img{width:100%;height:100%;display:block;object-fit:cover}
-.region-map-thumb span{display:none}
 .region-name{font-family:var(--font-logo);font-size:13px;line-height:1.35;letter-spacing:0}
 .region-meta{font-family:var(--font-logo);font-size:8px;line-height:1.45;letter-spacing:0;color:var(--muted);margin-top:4px}
 .progress-wrap{flex:1;min-width:140px}
@@ -2319,16 +2331,11 @@ function renderRegion() {
   const stats = getCurrentStats();
   const statsPanel = renderRegionStatsPanel(stats, r.color);
   const headerClass = isAll ? 'region-header all-hero' : 'region-header map-hero';
-  const mapStyle = `--region-accent:${r.color};${!isAll && r.map ? `--region-map:url('${r.map}')` : ''}`;
+  const mapStyle = `--region-accent:${r.color};`;
 
   document.getElementById('regionHeader').className = headerClass;
   document.getElementById('regionHeader').setAttribute('style', mapStyle);
   if (isAll) {
-    const mosaic = REGIONS.map(region => `
-      <div class="region-map-thumb">
-        <img src="${region.map}" alt="Carte de ${region.name}" loading="lazy">
-        <span>${region.name}</span>
-      </div>`).join('');
     document.getElementById('regionHeader').innerHTML = `
       <div class="all-hero-copy">
         <div class="region-info-block">
@@ -2339,7 +2346,7 @@ function renderRegion() {
           ${statsPanel}
         </div>
       </div>
-      <div class="region-map-mosaic">${mosaic}</div>`;
+      <div class="home-signature">Merci thieu</div>`;
     renderGrid();
     return;
   }
