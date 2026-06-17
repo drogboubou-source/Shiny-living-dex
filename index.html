@@ -147,6 +147,11 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   transform:translateY(6px);
   filter:drop-shadow(0 5px 8px rgba(0,0,0,.36)) drop-shadow(0 0 8px rgba(212,175,55,.18));
 }
+.header-hunt-sprite.dual-hunt .header-hunt-img.previous{
+  width:52px;height:52px;margin-right:-6px;opacity:1;
+  transform:translateY(1px);
+  filter:drop-shadow(0 7px 10px rgba(0,0,0,.4)) drop-shadow(0 0 10px rgba(125,211,252,.15));
+}
 .header-hunt-sprite .header-hunt-img.current{z-index:1}
 .header-hunt-sprite .header-hunt-img.shiny{filter:drop-shadow(0 7px 10px rgba(0,0,0,.4)) drop-shadow(0 0 10px rgba(212,175,55,.24))}
 .header-hunt-sprite:not(.empty)::before{opacity:1}
@@ -324,6 +329,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   .header-hunt-sprite::before{bottom:6px;width:30px;height:7px;transform:translateX(-8%)}
   .header-hunt-sprite img{width:48px;height:48px;transform:translateY(1px)}
   .header-hunt-sprite .header-hunt-img.previous{width:31px;height:31px;margin-right:-12px;transform:translateY(6px)}
+  .header-hunt-sprite.dual-hunt .header-hunt-img.previous{width:48px;height:48px;margin-right:-6px;transform:translateY(1px)}
   .topbar-stats{display:none}
   #statsButton{min-height:34px;padding:7px 11px}
   .sidebar{position:fixed;top:var(--header-h);bottom:0;left:0;z-index:150;width:var(--sidebar-w);transform:translateX(calc(-1 * var(--sidebar-w)));box-shadow:12px 0 34px rgba(0,0,0,.38);will-change:transform}
@@ -1062,29 +1068,19 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   position:fixed;inset:0;z-index:10000;
   display:flex;align-items:center;justify-content:center;
   overflow:hidden;background:var(--bg);
-  animation:splashSequence 2.9s ease forwards;
+  animation:splashSequence 2.4s ease forwards;
 }
 #appSplash.is-skipped{animation:splashSkipOut .4s ease forwards !important}
-.appSplash__art{
-  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 42%;
-  filter:saturate(1.12) contrast(1.05) brightness(.9);
-  animation:splashZoom 3.1s ease-out forwards;
-  z-index:1;
-}
 .appSplash__halo{
-  position:absolute;inset:-12%;z-index:2;pointer-events:none;mix-blend-mode:screen;
-  background:radial-gradient(circle at 50% 46%,rgba(212,175,55,.4),rgba(192,132,252,.2) 38%,transparent 68%);
-  animation:splashHalo 2.9s ease-in-out forwards;
-}
-#appSplash::before{
-  content:'';position:absolute;inset:0;z-index:3;pointer-events:none;
-  background:radial-gradient(ellipse at 50% 42%,transparent 36%,rgba(10,10,14,.58) 78%,rgba(8,8,11,.94) 100%);
+  position:absolute;inset:-12%;z-index:1;pointer-events:none;mix-blend-mode:screen;
+  background:radial-gradient(circle at 50% 48%,rgba(212,175,55,.4),rgba(192,132,252,.2) 38%,transparent 68%);
+  animation:splashHalo 2.4s ease-in-out forwards;
 }
 #appSplash::after{
-  content:'';position:absolute;inset:0;z-index:4;pointer-events:none;
+  content:'';position:absolute;inset:0;z-index:2;pointer-events:none;
   background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.07) 2px,rgba(0,0,0,.07) 4px);
 }
-.appSplash__sparkles{position:absolute;inset:0;z-index:5;pointer-events:none}
+.appSplash__sparkles{position:absolute;inset:0;z-index:3;pointer-events:none}
 .appSplash__sparkle{
   position:absolute;width:9px;height:9px;
   background:currentColor;
@@ -1092,14 +1088,14 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   opacity:0;animation:sparkleTwinkle 1.7s ease-in-out infinite;
 }
 .appSplash__brand{
-  position:absolute;left:0;right:0;bottom:10%;z-index:6;text-align:center;padding:0 1.2rem;
-  display:flex;flex-direction:column;align-items:center;gap:10px;
-  opacity:0;animation:splashBrandIn 2.9s ease forwards;
+  position:relative;z-index:4;text-align:center;padding:0 1.2rem;
+  display:flex;flex-direction:column;align-items:center;gap:14px;
+  opacity:0;animation:splashBrandIn 2.4s ease forwards;
 }
 .appSplash__logo{
-  width:58px;height:58px;border-radius:16px;object-fit:cover;
-  box-shadow:0 0 0 1px rgba(255,255,255,.18),0 10px 24px rgba(0,0,0,.45),0 0 26px rgba(212,175,55,.35);
-  animation:splashLogoPop 2.9s ease forwards;
+  width:96px;height:96px;border-radius:24px;object-fit:cover;
+  box-shadow:0 0 0 1px rgba(255,255,255,.18),0 10px 28px rgba(0,0,0,.5),0 0 34px rgba(212,175,55,.4);
+  animation:splashLogoPop 2.4s ease forwards;
 }
 .appSplash__title{
   font-family:var(--font-logo);font-size:15px;letter-spacing:.5px;
@@ -1107,35 +1103,34 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
 }
 .appSplash__word--rest{color:#fff;margin-left:.55em}
 .appSplash__sub{
-  margin-top:10px;font-family:var(--font);font-size:10px;color:rgba(255,255,255,.55);
+  margin-top:2px;font-family:var(--font);font-size:10px;color:rgba(255,255,255,.55);
   letter-spacing:.4px;text-shadow:0 1px 4px rgba(0,0,0,.6);
 }
 @keyframes splashSequence{
   0%{opacity:0}
-  6%{opacity:1}
-  82%{opacity:1}
+  8%{opacity:1}
+  78%{opacity:1}
   100%{opacity:0;visibility:hidden;pointer-events:none}
 }
 @keyframes splashSkipOut{0%{opacity:1}100%{opacity:0;visibility:hidden;pointer-events:none}}
 @keyframes splashLogoPop{
   0%{opacity:0;transform:scale(.6) translateY(8px)}
-  14%{opacity:1;transform:scale(1) translateY(0)}
-  80%{opacity:1;transform:scale(1) translateY(0)}
+  16%{opacity:1;transform:scale(1) translateY(0)}
+  78%{opacity:1;transform:scale(1) translateY(0)}
   100%{opacity:0;transform:scale(.94) translateY(-4px)}
 }
-@keyframes splashZoom{0%{transform:scale(1)}100%{transform:scale(1.08)}}
-@keyframes splashHalo{0%,100%{opacity:.45}45%{opacity:.95}82%{opacity:.55}}
+@keyframes splashHalo{0%,100%{opacity:.45}45%{opacity:.95}80%{opacity:.55}}
 @keyframes sparkleTwinkle{0%,100%{opacity:0;transform:scale(.4) rotate(0deg)}50%{opacity:1;transform:scale(1) rotate(20deg)}}
 @keyframes splashBrandIn{
   0%{opacity:0;transform:translateY(10px)}
-  12%{opacity:1;transform:translateY(0)}
-  80%{opacity:1;transform:translateY(0)}
+  14%{opacity:1;transform:translateY(0)}
+  78%{opacity:1;transform:translateY(0)}
   100%{opacity:0;transform:translateY(-6px)}
 }
 @media (prefers-reduced-motion: reduce){
-  .appSplash__art,.appSplash__halo,.appSplash__sparkle{animation:none !important}
-  #appSplash{animation:splashFadeOnly 2.4s ease forwards}
-  .appSplash__brand{animation:splashBrandFadeOnly 2.4s ease forwards}
+  .appSplash__halo,.appSplash__sparkle{animation:none !important}
+  #appSplash{animation:splashFadeOnly 2.1s ease forwards}
+  .appSplash__brand{animation:splashBrandFadeOnly 2.1s ease forwards}
 }
 @keyframes splashFadeOnly{0%{opacity:1}85%{opacity:1}100%{opacity:0;visibility:hidden;pointer-events:none}}
 @keyframes splashBrandFadeOnly{0%{opacity:1}85%{opacity:1}100%{opacity:0}}
@@ -1145,7 +1140,6 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
 
 <!-- SPLASH D'OUVERTURE -->
 <div id="appSplash" aria-hidden="true" onclick="this.classList.add('is-skipped')">
-  <img class="appSplash__art" src="./Assets/splash-art.jpg" alt="">
   <div class="appSplash__halo"></div>
   <div class="appSplash__sparkles">
     <span class="appSplash__sparkle" style="top:14%;left:20%;color:#fff;animation-delay:.1s"></span>
@@ -1172,7 +1166,7 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   try { sessionStorage.setItem('splashShown', '1'); } catch(e) {}
   function removeSplash(){ if (s && s.parentNode) s.parentNode.removeChild(s); }
   s.addEventListener('animationend', function(e){ if (e.target === s) removeSplash(); });
-  setTimeout(removeSplash, 3600); // filet de sécurité
+  setTimeout(removeSplash, 3000); // filet de sécurité
 })();
 </script>
 <!-- /SPLASH -->
@@ -1916,13 +1910,13 @@ function getActiveHuntIds() {
 function getHeaderHuntSprites() {
   const activeIds = getActiveHuntIds();
   if (activeIds.length >= 2) {
-    return { previousId: activeIds[1], currentId: activeIds[0], currentShiny: false, previousShiny: false };
+    return { previousId: activeIds[1], currentId: activeIds[0], currentShiny: false, previousShiny: false, dual: true };
   }
   const captured = readStoredIdList(HUNT_CAPTURED_KEY).filter(id => progress[id]?.caught);
   const currentId = activeIds[0] || captured[captured.length - 1] || null;
   const previousId = captured.filter(id => id !== currentId).slice(-1)[0] || null;
   const currentShiny = !!currentId && !!progress[currentId]?.caught && !activeIds.includes(currentId);
-  return { previousId, currentId, currentShiny, previousShiny: true };
+  return { previousId, currentId, currentShiny, previousShiny: true, dual: false };
 }
 
 function openModalToCounter(id) {
@@ -1934,7 +1928,8 @@ function openModalToCounter(id) {
 function updateHeaderHuntSprite() {
   const holder = document.getElementById('headerHuntSprite');
   if (!holder) return;
-  const { previousId, currentId, currentShiny, previousShiny } = getHeaderHuntSprites();
+  const { previousId, currentId, currentShiny, previousShiny, dual } = getHeaderHuntSprites();
+  holder.classList.toggle('dual-hunt', !!dual);
   if (!previousId && !currentId) {
     holder.classList.add('empty');
     holder.innerHTML = '';
