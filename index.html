@@ -78,6 +78,16 @@ body{
     linear-gradient(180deg,#101016 0%,var(--bg) 42%,#0b0b0f 100%);
   color:var(--text);font-family:var(--font);height:100%;overflow:hidden;-webkit-text-size-adjust:100%;text-size-adjust:100%;
 }
+body::before{
+  content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background-image:
+    url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNjAiIGhlaWdodD0iMjYwIiB2aWV3Qm94PSIwIDAgMjYwIDI2MCI+CjxwYXRoIGQ9Ik0gOTEuMjQsNDguODQgTCA5Mi4wNiw1Mi4zNyBMIDk1LjU5LDUzLjE5IEwgOTIuMDYsNTQuMDAgTCA5MS4yNCw1Ny41MyBMIDkwLjQzLDU0LjAwIEwgODYuOTAsNTMuMTkgTCA5MC40Myw1Mi4zNyBaIiBmaWxsPSIjZmZmZmZmIiBmaWxsLW9wYWNpdHk9IjAuMTA3Ii8+CjxwYXRoIGQ9Ik0gNDAuNzEsMTQzLjAxIEwgNDEuNjgsMTQ3LjI0IEwgNDUuOTEsMTQ4LjIxIEwgNDEuNjgsMTQ5LjE5IEwgNDAuNzEsMTUzLjQyIEwgMzkuNzQsMTQ5LjE5IEwgMzUuNTEsMTQ4LjIxIEwgMzkuNzQsMTQ3LjI0IFoiIGZpbGw9IiNkNGFmMzciIGZpbGwtb3BhY2l0eT0iMC4xMTUiLz4KPHBhdGggZD0iTSAxMTUuNDAsMzIuODcgTCAxMTUuODcsMzQuOTAgTCAxMTcuOTAsMzUuMzcgTCAxMTUuODcsMzUuODQgTCAxMTUuNDAsMzcuODcgTCAxMTQuOTMsMzUuODQgTCAxMTIuOTAsMzUuMzcgTCAxMTQuOTMsMzQuOTAgWiIgZmlsbD0iIzdkZDNmYyIgZmlsbC1vcGFjaXR5PSIwLjA4NyIvPgo8cGF0aCBkPSJNIDE0NC40MCwyMjQuMTYgTCAxNDUuMjAsMjI3LjY0IEwgMTQ4LjY4LDIyOC40NCBMIDE0NS4yMCwyMjkuMjQgTCAxNDQuNDAsMjMyLjcyIEwgMTQzLjYwLDIyOS4yNCBMIDE0MC4xMiwyMjguNDQgTCAxNDMuNjAsMjI3LjY0IFoiIGZpbGw9IiNmZmZmZmYiIGZpbGwtb3BhY2l0eT0iMC4wOTYiLz4KPHBhdGggZD0iTSAxMDcuMjcsMjMyLjQyIEwgMTA3LjcxLDIzNC4zNCBMIDEwOS42MiwyMzQuNzggTCAxMDcuNzEsMjM1LjIyIEwgMTA3LjI3LDIzNy4xMyBMIDEwNi44MywyMzUuMjIgTCAxMDQuOTIsMjM0Ljc4IEwgMTA2LjgzLDIzNC4zNCBaIiBmaWxsPSIjZDRhZjM3IiBmaWxsLW9wYWNpdHk9IjAuMTMzIi8+CjxwYXRoIGQ9Ik0gNTEuNzQsNDIuNzAgTCA1Mi4zNCw0NS4zMSBMIDU0Ljk1LDQ1LjkxIEwgNTIuMzQsNDYuNTIgTCA1MS43NCw0OS4xMyBMIDUxLjEzLDQ2LjUyIEwgNDguNTIsNDUuOTEgTCA1MS4xMyw0NS4zMSBaIiBmaWxsPSIjZDRhZjM3IiBmaWxsLW9wYWNpdHk9IjAuMTE5Ii8+CjxwYXRoIGQ9Ik0gMTQ1LjY2LDU4LjgxIEwgMTQ2LjE0LDYwLjg2IEwgMTQ4LjE5LDYxLjMzIEwgMTQ2LjE0LDYxLjgwIEwgMTQ1LjY2LDYzLjg1IEwgMTQ1LjE5LDYxLjgwIEwgMTQzLjE0LDYxLjMzIEwgMTQ1LjE5LDYwLjg2IFoiIGZpbGw9IiNmZmZmZmYiIGZpbGwtb3BhY2l0eT0iMC4wOTUiLz4KPHBhdGggZD0iTSAxNTYuMTgsMTI1LjI2IEwgMTU2LjkyLDEyOC40NyBMIDE2MC4xNCwxMjkuMjEgTCAxNTYuOTIsMTI5Ljk1IEwgMTU2LjE4LDEzMy4xNyBMIDE1NS40NCwxMjkuOTUgTCAxNTIuMjMsMTI5LjIxIEwgMTU1LjQ0LDEyOC40NyBaIiBmaWxsPSIjYzA4NGZjIiBmaWxsLW9wYWNpdHk9IjAuMTI3Ii8+CjxwYXRoIGQ9Ik0gMjIzLjE2LDk2LjUzIEwgMjIzLjcyLDk4Ljk4IEwgMjI2LjE4LDk5LjU1IEwgMjIzLjcyLDEwMC4xMSBMIDIyMy4xNiwxMDIuNTcgTCAyMjIuNTksMTAwLjExIEwgMjIwLjE0LDk5LjU1IEwgMjIyLjU5LDk4Ljk4IFoiIGZpbGw9IiNkNGFmMzciIGZpbGwtb3BhY2l0eT0iMC4xNjIiLz4KPC9zdmc+"),
+    url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI3OCIgaGVpZ2h0PSI0NS4wMzMiIHZpZXdCb3g9IjAgMCA3OCA0NS4wMzMiPgo8cG9seWdvbiBwb2ludHM9IjI2LjAsMjIuNTE3IDEzLjAsNDUuMDMzIC0xMy4wLDQ1LjAzMyAtMjYuMCwyMi41MTcgLTEzLjAsLTAuMCAxMy4wLC0wLjAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLW9wYWNpdHk9IjAuMDUiIHN0cm9rZS13aWR0aD0iMSIvPgo8cG9seWdvbiBwb2ludHM9IjEwNC4wLDIyLjUxNyA5MS4wLDQ1LjAzMyA2NS4wLDQ1LjAzMyA1Mi4wLDIyLjUxNyA2NS4wLC0wLjAgOTEuMCwtMC4wIiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS1vcGFjaXR5PSIwLjA1IiBzdHJva2Utd2lkdGg9IjEiLz4KPHBvbHlnb24gcG9pbnRzPSI2NS4wLDAuMCA1Mi4wLDIyLjUxNyAyNi4wLDIyLjUxNyAxMy4wLDAuMCAyNi4wLC0yMi41MTcgNTIuMCwtMjIuNTE3IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS1vcGFjaXR5PSIwLjA1IiBzdHJva2Utd2lkdGg9IjEiLz4KPHBvbHlnb24gcG9pbnRzPSI2NS4wLDQ1LjAzMyA1Mi4wLDY3LjU1IDI2LjAsNjcuNTUgMTMuMCw0NS4wMzMgMjYuMCwyMi41MTcgNTIuMCwyMi41MTciIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLW9wYWNpdHk9IjAuMDUiIHN0cm9rZS13aWR0aD0iMSIvPgo8L3N2Zz4=");
+  background-position:0 0,0 0;
+  background-size:260px 260px,78px 45.033px;
+  background-repeat:repeat,repeat;
+  opacity:.9;
+}
 button,.btn,.card,.gen-btn{-webkit-tap-highlight-color:transparent}
 
 /* scanlines */
@@ -706,7 +716,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
     linear-gradient(165deg,#24242f 0%,#1a1a23 45%,#0c0c11 100%) padding-box,
     linear-gradient(165deg,rgba(255,255,255,.5),rgba(255,255,255,.1) 40%,rgba(0,0,0,.55) 100%) border-box;
   border:1px solid transparent;
-  padding:14px 10px 10px;min-height:158px;
+  padding:14px 9px 10px;min-height:158px;
   text-align:center;cursor:pointer;position:relative;overflow:hidden;
   display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:7px;
   box-shadow:
@@ -744,12 +754,10 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 }
 .card > *{position:relative;z-index:1}
 .card > img{
-  width:58px;height:58px;image-rendering:pixelated;object-fit:contain;order:2;margin-bottom:2px;
+  width:58px;height:58px;image-rendering:pixelated;object-fit:contain;order:2;
   filter:drop-shadow(0 0 10px rgba(0,0,0,.5));
-  box-shadow:0 9px 0 -7px rgba(255,255,255,.3);
 }
 .card.sprite-home > img{width:62px;height:58px;image-rendering:auto}
-.card.caught > img,.card.perfect > img,.card.hunting > img{box-shadow:0 9px 0 -7px var(--card-accent)}
 .card .num{
   align-self:flex-start;font-size:9px;font-weight:800;color:var(--card-accent);order:0;letter-spacing:.6px;
   font-variant-numeric:tabular-nums;border-bottom:1px solid var(--card-accent);padding-bottom:3px;
@@ -784,7 +792,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 }
 .card.hunting .pname{color:#7dd3fc;text-shadow:0 0 10px rgba(125,211,252,.7)}
 .card .status{
-  margin-top:auto;font-size:9px;padding:4px 9px 4px 8px;font-weight:800;order:4;letter-spacing:.25px;
+  margin-top:auto;font-size:9px;padding:4px 8px 4px 7px;font-weight:800;order:4;letter-spacing:.25px;
   display:inline-flex;align-items:center;gap:5px;white-space:nowrap;max-width:100%;
   clip-path:polygon(6px 0,100% 0,100% 100%,0 100%,0 6px);
   background:rgba(255,255,255,.08);color:rgba(255,255,255,.6);
@@ -804,8 +812,8 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .form-tag{position:absolute;top:6px;right:6px;font-size:7px;font-weight:800;color:#0d0d12;background:var(--card-accent);padding:3px 5px;z-index:2}
 .card .status-shiny{color:#c084fc}
 .card .status-perfect{color:#d4af37}
-.card .status-pair{display:inline-flex;gap:5px;justify-content:center;align-items:center;white-space:nowrap}
-.card .status-pair .status-perfect::before{content:'';display:inline-block;width:1px;height:8px;background:rgba(255,255,255,.25);margin-right:5px;flex:0 0 auto}
+.card .status-pair{display:inline-flex;gap:4px;justify-content:center;align-items:center;white-space:nowrap;font-size:.9em;letter-spacing:0}
+.card .status-pair .status-perfect::before{content:'';display:inline-block;width:1px;height:8px;background:rgba(255,255,255,.25);margin-right:4px;flex:0 0 auto}
 
 .type-row{width:100%;min-height:19px;margin:2px 0 5px;display:flex;justify-content:center;gap:3px;flex-wrap:wrap;padding:0 2px;order:3}
 .type-pill{display:inline-grid;place-items:center;width:46px;height:12px;filter:drop-shadow(0 2px 5px rgba(0,0,0,.32))}
