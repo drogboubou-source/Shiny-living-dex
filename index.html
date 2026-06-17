@@ -640,46 +640,11 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   display:grid;
   grid-template-columns:repeat(auto-fill,minmax(112px,1fr));
   gap:10px;
-  padding:12px;
-  border-radius:16px;
-  background:
-    radial-gradient(circle at center top,rgba(192,132,252,.11),transparent 42%),
-    radial-gradient(circle at right 30px top 70px,rgba(212,175,55,.09),transparent 38%),
-    radial-gradient(circle at left 24px top 170px,rgba(125,211,252,.085),transparent 36%),
-    linear-gradient(180deg,#222230 0%,#1a1a23 48%,#14141a 100%);
-  border:1px solid rgba(255,255,255,.12);
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.075),
-    inset 0 0 0 1px rgba(255,255,255,.022),
-    0 12px 30px rgba(0,0,0,.24);
+  padding:12px 2px;
   overflow:visible;
   isolation:isolate;
 }
-.grid::before{
-  content:'';position:absolute;inset:0;z-index:0;pointer-events:none;
-  background-image:
-    url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNjAiIGhlaWdodD0iMjYwIiB2aWV3Qm94PSIwIDAgMjYwIDI2MCI+CjxwYXRoIGQ9Ik0gOTEuMjQsNDguODQgTCA5Mi4wNiw1Mi4zNyBMIDk1LjU5LDUzLjE5IEwgOTIuMDYsNTQuMDAgTCA5MS4yNCw1Ny41MyBMIDkwLjQzLDU0LjAwIEwgODYuOTAsNTMuMTkgTCA5MC40Myw1Mi4zNyBaIiBmaWxsPSIjZmZmZmZmIiBmaWxsLW9wYWNpdHk9IjAuMTA3Ii8+CjxwYXRoIGQ9Ik0gNDAuNzEsMTQzLjAxIEwgNDEuNjgsMTQ3LjI0IEwgNDUuOTEsMTQ4LjIxIEwgNDEuNjgsMTQ5LjE5IEwgNDAuNzEsMTUzLjQyIEwgMzkuNzQsMTQ5LjE5IEwgMzUuNTEsMTQ4LjIxIEwgMzkuNzQsMTQ3LjI0IFoiIGZpbGw9IiNkNGFmMzciIGZpbGwtb3BhY2l0eT0iMC4xMTUiLz4KPHBhdGggZD0iTSAxMTUuNDAsMzIuODcgTCAxMTUuODcsMzQuOTAgTCAxMTcuOTAsMzUuMzcgTCAxMTUuODcsMzUuODQgTCAxMTUuNDAsMzcuODcgTCAxMTQuOTMsMzUuODQgTCAxMTIuOTAsMzUuMzcgTCAxMTQuOTMsMzQuOTAgWiIgZmlsbD0iIzdkZDNmYyIgZmlsbC1vcGFjaXR5PSIwLjA4NyIvPgo8cGF0aCBkPSJNIDE0NC40MCwyMjQuMTYgTCAxNDUuMjAsMjI3LjY0IEwgMTQ4LjY4LDIyOC40NCBMIDE0NS4yMCwyMjkuMjQgTCAxNDQuNDAsMjMyLjcyIEwgMTQzLjYwLDIyOS4yNCBMIDE0MC4xMiwyMjguNDQgTCAxNDMuNjAsMjI3LjY0IFoiIGZpbGw9IiNmZmZmZmYiIGZpbGwtb3BhY2l0eT0iMC4wOTYiLz4KPHBhdGggZD0iTSAxMDcuMjcsMjMyLjQyIEwgMTA3LjcxLDIzNC4zNCBMIDEwOS42MiwyMzQuNzggTCAxMDcuNzEsMjM1LjIyIEwgMTA3LjI3LDIzNy4xMyBMIDEwNi44MywyMzUuMjIgTCAxMDQuOTIsMjM0Ljc4IEwgMTA2LjgzLDIzNC4zNCBaIiBmaWxsPSIjZDRhZjM3IiBmaWxsLW9wYWNpdHk9IjAuMTMzIi8+CjxwYXRoIGQ9Ik0gNTEuNzQsNDIuNzAgTCA1Mi4zNCw0NS4zMSBMIDU0Ljk1LDQ1LjkxIEwgNTIuMzQsNDYuNTIgTCA1MS43NCw0OS4xMyBMIDUxLjEzLDQ2LjUyIEwgNDguNTIsNDUuOTEgTCA1MS4xMyw0NS4zMSBaIiBmaWxsPSIjZDRhZjM3IiBmaWxsLW9wYWNpdHk9IjAuMTE5Ii8+CjxwYXRoIGQ9Ik0gMTQ1LjY2LDU4LjgxIEwgMTQ2LjE0LDYwLjg2IEwgMTQ4LjE5LDYxLjMzIEwgMTQ2LjE0LDYxLjgwIEwgMTQ1LjY2LDYzLjg1IEwgMTQ1LjE5LDYxLjgwIEwgMTQzLjE0LDYxLjMzIEwgMTQ1LjE5LDYwLjg2IFoiIGZpbGw9IiNmZmZmZmYiIGZpbGwtb3BhY2l0eT0iMC4wOTUiLz4KPHBhdGggZD0iTSAxNTYuMTgsMTI1LjI2IEwgMTU2LjkyLDEyOC40NyBMIDE2MC4xNCwxMjkuMjEgTCAxNTYuOTIsMTI5Ljk1IEwgMTU2LjE4LDEzMy4xNyBMIDE1NS40NCwxMjkuOTUgTCAxNTIuMjMsMTI5LjIxIEwgMTU1LjQ0LDEyOC40NyBaIiBmaWxsPSIjYzA4NGZjIiBmaWxsLW9wYWNpdHk9IjAuMTI3Ii8+CjxwYXRoIGQ9Ik0gMjIzLjE2LDk2LjUzIEwgMjIzLjcyLDk4Ljk4IEwgMjI2LjE4LDk5LjU1IEwgMjIzLjcyLDEwMC4xMSBMIDIyMy4xNiwxMDIuNTcgTCAyMjIuNTksMTAwLjExIEwgMjIwLjE0LDk5LjU1IEwgMjIyLjU5LDk4Ljk4IFoiIGZpbGw9IiNkNGFmMzciIGZpbGwtb3BhY2l0eT0iMC4xNjIiLz4KPC9zdmc+"),
-    url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI3OCIgaGVpZ2h0PSI0NS4wMzMiIHZpZXdCb3g9IjAgMCA3OCA0NS4wMzMiPgo8cG9seWdvbiBwb2ludHM9IjI2LjAsMjIuNTE3IDEzLjAsNDUuMDMzIC0xMy4wLDQ1LjAzMyAtMjYuMCwyMi41MTcgLTEzLjAsLTAuMCAxMy4wLC0wLjAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLW9wYWNpdHk9IjAuMDUiIHN0cm9rZS13aWR0aD0iMSIvPgo8cG9seWdvbiBwb2ludHM9IjEwNC4wLDIyLjUxNyA5MS4wLDQ1LjAzMyA2NS4wLDQ1LjAzMyA1Mi4wLDIyLjUxNyA2NS4wLC0wLjAgOTEuMCwtMC4wIiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS1vcGFjaXR5PSIwLjA1IiBzdHJva2Utd2lkdGg9IjEiLz4KPHBvbHlnb24gcG9pbnRzPSI2NS4wLDAuMCA1Mi4wLDIyLjUxNyAyNi4wLDIyLjUxNyAxMy4wLDAuMCAyNi4wLC0yMi41MTcgNTIuMCwtMjIuNTE3IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS1vcGFjaXR5PSIwLjA1IiBzdHJva2Utd2lkdGg9IjEiLz4KPHBvbHlnb24gcG9pbnRzPSI2NS4wLDQ1LjAzMyA1Mi4wLDY3LjU1IDI2LjAsNjcuNTUgMTMuMCw0NS4wMzMgMjYuMCwyMi41MTcgNTIuMCwyMi41MTciIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLW9wYWNpdHk9IjAuMDUiIHN0cm9rZS13aWR0aD0iMSIvPgo8L3N2Zz4=");
-  background-position:0 0,0 0;
-  background-size:260px 260px,78px 45.033px;
-  background-repeat:repeat,repeat;
-  clip-path:inset(0 round 16px);
-  opacity:.9;
-}
-.grid::after{
-  content:'';position:absolute;inset:1px;z-index:0;pointer-events:none;border-radius:15px;
-  background:
-    linear-gradient(90deg,transparent,rgba(255,255,255,.07),transparent) 0 0/100% 1px no-repeat,
-    radial-gradient(ellipse at center,transparent 55%,rgba(0,0,0,.16) 100%);
-  opacity:.78;
-}
-.grid.hunt-grid{
-  padding:0;
-  background:transparent;
-  border-color:transparent;
-  box-shadow:none;
-}
-.grid.hunt-grid::before,.grid.hunt-grid::after{display:none}
+.grid.hunt-grid{padding:0}
 .grid > *{position:relative;z-index:1}
 .generation-divider{
   grid-column:1/-1;
@@ -710,21 +675,21 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .generation-divider span{opacity:.82;font-variant-numeric:tabular-nums}
 .scroll-end{height:1px}
 .card{
-  --card-accent: rgba(255,255,255,.4);
+  --card-accent: rgba(255,255,255,.45);
   clip-path: polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px);
   background:
-    linear-gradient(165deg,#24242f 0%,#1a1a23 45%,#0c0c11 100%) padding-box,
-    linear-gradient(165deg,rgba(255,255,255,.5),rgba(255,255,255,.1) 40%,rgba(0,0,0,.55) 100%) border-box;
+    linear-gradient(165deg,#35353f 0%,#272730 48%,#1c1c23 100%) padding-box,
+    linear-gradient(165deg,rgba(255,255,255,.62),rgba(255,255,255,.2) 45%,rgba(255,255,255,.18) 100%) border-box;
   border:1px solid transparent;
   padding:14px 9px 10px;min-height:158px;
   text-align:center;cursor:pointer;position:relative;overflow:hidden;
   display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:7px;
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.08),
-    inset 0 -24px 28px rgba(0,0,0,.24),
-    0 1px 0 rgba(255,255,255,.04),
-    0 4px 8px rgba(0,0,0,.22),
-    0 16px 26px rgba(0,0,0,.32);
+    inset 0 1px 0 rgba(255,255,255,.13),
+    inset 0 -14px 18px rgba(0,0,0,.18),
+    0 0 0 1px rgba(0,0,0,.55),
+    0 6px 10px rgba(0,0,0,.4),
+    0 18px 30px rgba(0,0,0,.5);
   transition:transform .18s ease,box-shadow .18s ease,filter .2s ease;
 }
 .card::before{
@@ -746,11 +711,11 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .card:hover{
   transform:translateY(-3px) scale(1.014);
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.1),
-    inset 0 -24px 28px rgba(0,0,0,.24),
-    0 1px 0 rgba(255,255,255,.05),
-    0 6px 10px rgba(0,0,0,.24),
-    0 22px 34px rgba(0,0,0,.4);
+    inset 0 1px 0 rgba(255,255,255,.15),
+    inset 0 -14px 18px rgba(0,0,0,.18),
+    0 0 0 1px rgba(0,0,0,.6),
+    0 8px 14px rgba(0,0,0,.44),
+    0 24px 38px rgba(0,0,0,.55);
 }
 .card > *{position:relative;z-index:1}
 .card > img{
@@ -767,8 +732,8 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .card.caught{
   --card-accent:#c084fc;
   background:
-    linear-gradient(165deg,#271d36 0%,#1c1628 45%,#0c0c11 100%) padding-box,
-    linear-gradient(165deg,#f7ecff,#c084fc 32%,#54307a 100%) border-box;
+    linear-gradient(165deg,#33263f 0%,#251c30 48%,#1b1424 100%) padding-box,
+    linear-gradient(165deg,#f7ecff,#c084fc 32%,#6b3d98 100%) border-box;
   border:1px solid transparent;
   filter:drop-shadow(0 0 13px rgba(192,132,252,.5));
 }
@@ -776,8 +741,8 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .card.perfect{
   --card-accent:#d4af37;
   background:
-    linear-gradient(165deg,#2c2113 0%,#241c14 45%,#0c0c11 100%) padding-box,
-    linear-gradient(165deg,#fffaea,#d4af37 32%,#73560f 100%) border-box;
+    linear-gradient(165deg,#392c14 0%,#2b2114 48%,#1e1810 100%) padding-box,
+    linear-gradient(165deg,#fffaea,#d4af37 32%,#8a6a18 100%) border-box;
   border:1px solid transparent;
   filter:drop-shadow(0 0 14px rgba(212,175,55,.55));
 }
@@ -785,8 +750,8 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .card.hunting{
   --card-accent:#7dd3fc;
   background:
-    linear-gradient(165deg,#13282f 0%,#101e24 45%,#0c0c11 100%) padding-box,
-    linear-gradient(165deg,#edfbff,#7dd3fc 32%,#19536c 100%) border-box;
+    linear-gradient(165deg,#193640 0%,#142a31 48%,#102025 100%) padding-box,
+    linear-gradient(165deg,#edfbff,#7dd3fc 32%,#226a87 100%) border-box;
   border:1px solid transparent;
   filter:drop-shadow(0 0 13px rgba(125,211,252,.5));
 }
