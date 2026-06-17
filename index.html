@@ -380,7 +380,6 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   .card .pname{font-size:11px;min-height:27px;padding:0}
   .card .num{font-size:8px;padding:3px 6px 2px;margin-left:2px}
   .card .status{font-size:7px;padding:3px 6px}
-  .card .status-pair{gap:4px}
   .type-row{gap:3px;margin:1px 0 3px;padding:0}
   .type-pill,.type-pill img{width:40px;height:10px}
   .two-col{grid-template-columns:1fr}
@@ -757,14 +756,12 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 }
 .card.hunting .pname{color:#7dd3fc;text-shadow:0 0 10px rgba(125,211,252,.7)}
 .card .status{
-  margin-top:auto;font-size:9px;padding:4px 7px 4px 6px;font-weight:800;order:4;letter-spacing:.25px;
-  display:inline-flex;align-items:center;gap:4px;white-space:nowrap;max-width:100%;
+  margin-top:auto;font-size:9px;padding:4px 9px 4px 8px;font-weight:800;order:4;letter-spacing:.25px;
+  display:inline-flex;align-items:center;gap:5px;white-space:nowrap;max-width:100%;
   clip-path:polygon(6px 0,100% 0,100% 100%,0 100%,0 6px);
   background:rgba(255,255,255,.08);color:rgba(255,255,255,.6);
 }
 .card .status::before{content:'';width:6px;height:6px;background:rgba(255,255,255,.4);transform:rotate(45deg);flex:0 0 auto}
-.card .status:has(.status-pair)::before{display:none}
-.card .status:has(.status-pair){padding-left:9px}
 .card.caught .status::before{background:#c084fc;box-shadow:0 0 6px rgba(192,132,252,.9)}
 .card.perfect .status::before{background:#d4af37;box-shadow:0 0 6px rgba(212,175,55,.9)}
 .card.hunting .status::before{background:#7dd3fc;box-shadow:0 0 6px rgba(125,211,252,.9)}
@@ -777,10 +774,15 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .card.form-card .status{background:rgba(125,211,252,.16);color:#fff}
 .card.unavailable{filter:grayscale(.85) saturate(.5);opacity:.55}
 .form-tag{position:absolute;top:6px;right:6px;font-size:7px;font-weight:800;color:#0d0d12;background:var(--card-accent);padding:3px 5px;z-index:2}
-.card .status-shiny{color:#c084fc;line-height:1}
-.card .status-perfect{color:#d4af37;line-height:1}
-.card .status-pair{display:inline-flex;gap:3px;justify-content:center;align-items:center;white-space:nowrap;font-size:.82em;letter-spacing:0}
-.card .status-pair .status-perfect::before{content:'';display:inline-block;width:1px;height:7px;background:rgba(255,255,255,.25);margin-right:3px;vertical-align:middle}
+.card .status-shiny{color:#c084fc}
+.card .status-perfect{color:#d4af37}
+
+
+
+
+
+
+
 
 
 
@@ -1034,7 +1036,6 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   .card .pname{font-size:11px;min-height:27px;padding:0}
   .card .num{font-size:8px;padding:3px 6px 2px;margin-left:2px}
   .card .status{font-size:7px;padding:3px 6px}
-  .card .status-pair{gap:4px}
   .type-row{gap:3px;margin:1px 0 3px;padding:0}
   .type-pill,.type-pill img{width:40px;height:10px}
   .modal-hero{display:grid;grid-template-columns:1fr;justify-items:center;text-align:center;gap:.85rem}
@@ -2365,7 +2366,7 @@ function getRegionalFormsForScope(range, search) {
 function getCardStatusHtml(p, isHuntingCard = false) {
   if (isHuntingCard) return '<span>En cours</span>';
   if (p.caught && p.perfect) {
-    return '<span class="status-pair"><span class="status-shiny">Shiny</span><span class="status-perfect">Parfait</span></span>';
+    return '<span class="status-perfect">Parfait</span>';
   }
   return p.caught ? '<span class="status-shiny">Shiny</span>' : 'Manquant';
 }
