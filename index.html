@@ -702,16 +702,20 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .card{
   --card-accent: rgba(255,255,255,.4);
   clip-path: polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px);
-  background:linear-gradient(165deg,#23232f 0%,#1a1a23 45%,#0d0d12 100%);
-  border:1px solid var(--card-accent);
-  padding:13px 9px 9px;min-height:156px;
+  background:
+    linear-gradient(165deg,#24242f 0%,#1a1a23 45%,#0c0c11 100%) padding-box,
+    linear-gradient(165deg,rgba(255,255,255,.5),rgba(255,255,255,.1) 40%,rgba(0,0,0,.55) 100%) border-box;
+  border:1px solid transparent;
+  padding:14px 10px 10px;min-height:158px;
   text-align:center;cursor:pointer;position:relative;overflow:hidden;
   display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:7px;
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.07),
-    inset 0 -22px 26px rgba(0,0,0,.22),
-    0 10px 22px rgba(0,0,0,.34);
-  transition:transform .15s,box-shadow .15s,border-color .15s,filter .2s;
+    inset 0 1px 0 rgba(255,255,255,.08),
+    inset 0 -24px 28px rgba(0,0,0,.24),
+    0 1px 0 rgba(255,255,255,.04),
+    0 4px 8px rgba(0,0,0,.22),
+    0 16px 26px rgba(0,0,0,.32);
+  transition:transform .18s ease,box-shadow .18s ease,filter .2s ease;
 }
 .card::before{
   content:'';position:absolute;top:0;left:0;right:0;height:3px;z-index:2;
@@ -721,16 +725,31 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .card::after{
   content:'';position:absolute;inset:0;pointer-events:none;z-index:0;
   background:
+    radial-gradient(circle 1.6px at right 6px top 6px,var(--card-accent),transparent 75%),
+    radial-gradient(circle 1.6px at left 6px bottom 6px,var(--card-accent),transparent 75%),
     linear-gradient(var(--card-accent),var(--card-accent)) no-repeat right 6px top 6px/14px 2px,
     linear-gradient(var(--card-accent),var(--card-accent)) no-repeat right 6px top 6px/2px 14px,
     linear-gradient(var(--card-accent),var(--card-accent)) no-repeat left 6px bottom 6px/14px 2px,
     linear-gradient(var(--card-accent),var(--card-accent)) no-repeat left 6px bottom 6px/2px 14px;
   opacity:.9;
 }
-.card:hover{transform:translateY(-2px) scale(1.012);box-shadow:inset 0 1px 0 rgba(255,255,255,.08),inset 0 -22px 26px rgba(0,0,0,.22),0 16px 28px rgba(0,0,0,.4)}
+.card:hover{
+  transform:translateY(-3px) scale(1.014);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.1),
+    inset 0 -24px 28px rgba(0,0,0,.24),
+    0 1px 0 rgba(255,255,255,.05),
+    0 6px 10px rgba(0,0,0,.24),
+    0 22px 34px rgba(0,0,0,.4);
+}
 .card > *{position:relative;z-index:1}
-.card > img{width:58px;height:58px;image-rendering:pixelated;object-fit:contain;order:2;filter:drop-shadow(0 0 10px rgba(0,0,0,.5))}
+.card > img{
+  width:58px;height:58px;image-rendering:pixelated;object-fit:contain;order:2;margin-bottom:2px;
+  filter:drop-shadow(0 0 10px rgba(0,0,0,.5));
+  box-shadow:0 9px 0 -7px rgba(255,255,255,.3);
+}
 .card.sprite-home > img{width:62px;height:58px;image-rendering:auto}
+.card.caught > img,.card.perfect > img,.card.hunting > img{box-shadow:0 9px 0 -7px var(--card-accent)}
 .card .num{
   align-self:flex-start;font-size:9px;font-weight:800;color:var(--card-accent);order:0;letter-spacing:.6px;
   font-variant-numeric:tabular-nums;border-bottom:1px solid var(--card-accent);padding-bottom:3px;
@@ -740,28 +759,28 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .card.caught{
   --card-accent:#c084fc;
   background:
-    linear-gradient(165deg,#251c33 0%,#1c1628 45%,#0d0d12 100%) padding-box,
-    linear-gradient(165deg,#f1e3ff,#c084fc 32%,#5b3580 100%) border-box;
+    linear-gradient(165deg,#271d36 0%,#1c1628 45%,#0c0c11 100%) padding-box,
+    linear-gradient(165deg,#f7ecff,#c084fc 32%,#54307a 100%) border-box;
   border:1px solid transparent;
-  filter:drop-shadow(0 0 12px rgba(192,132,252,.55));
+  filter:drop-shadow(0 0 13px rgba(192,132,252,.5));
 }
 .card.caught .pname{color:#c084fc;text-shadow:0 0 10px rgba(192,132,252,.7)}
 .card.perfect{
   --card-accent:#d4af37;
   background:
-    linear-gradient(165deg,#2a2012 0%,#241c14 45%,#0d0d12 100%) padding-box,
-    linear-gradient(165deg,#fff6da,#d4af37 32%,#7a5d16 100%) border-box;
+    linear-gradient(165deg,#2c2113 0%,#241c14 45%,#0c0c11 100%) padding-box,
+    linear-gradient(165deg,#fffaea,#d4af37 32%,#73560f 100%) border-box;
   border:1px solid transparent;
-  filter:drop-shadow(0 0 13px rgba(212,175,55,.6));
+  filter:drop-shadow(0 0 14px rgba(212,175,55,.55));
 }
 .card.perfect .pname{color:#d4af37;text-shadow:0 0 10px rgba(212,175,55,.75)}
 .card.hunting{
   --card-accent:#7dd3fc;
   background:
-    linear-gradient(165deg,#13262e 0%,#101e24 45%,#0d0d12 100%) padding-box,
-    linear-gradient(165deg,#e3f7ff,#7dd3fc 32%,#1c5872 100%) border-box;
+    linear-gradient(165deg,#13282f 0%,#101e24 45%,#0c0c11 100%) padding-box,
+    linear-gradient(165deg,#edfbff,#7dd3fc 32%,#19536c 100%) border-box;
   border:1px solid transparent;
-  filter:drop-shadow(0 0 12px rgba(125,211,252,.55));
+  filter:drop-shadow(0 0 13px rgba(125,211,252,.5));
 }
 .card.hunting .pname{color:#7dd3fc;text-shadow:0 0 10px rgba(125,211,252,.7)}
 .card .status{
