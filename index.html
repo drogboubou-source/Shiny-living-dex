@@ -1054,9 +1054,111 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   .region-detail-chip strong{font-size:9.2px}
   .region-detail-chip span{font-size:5.7px}
 }
+
+/* ══════════════════════════════════════
+   SPLASH D'OUVERTURE
+══════════════════════════════════════ */
+#appSplash{
+  position:fixed;inset:0;z-index:10000;
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;background:var(--bg);
+  animation:splashSequence 2.9s ease forwards;
+}
+#appSplash.is-skipped{animation:splashSkipOut .4s ease forwards !important}
+.appSplash__art{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 42%;
+  filter:saturate(1.12) contrast(1.05) brightness(.9);
+  animation:splashZoom 3.1s ease-out forwards;
+  z-index:1;
+}
+.appSplash__halo{
+  position:absolute;inset:-12%;z-index:2;pointer-events:none;mix-blend-mode:screen;
+  background:radial-gradient(circle at 50% 46%,rgba(212,175,55,.4),rgba(192,132,252,.2) 38%,transparent 68%);
+  animation:splashHalo 2.9s ease-in-out forwards;
+}
+#appSplash::before{
+  content:'';position:absolute;inset:0;z-index:3;pointer-events:none;
+  background:radial-gradient(ellipse at 50% 42%,transparent 36%,rgba(10,10,14,.58) 78%,rgba(8,8,11,.94) 100%);
+}
+#appSplash::after{
+  content:'';position:absolute;inset:0;z-index:4;pointer-events:none;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.07) 2px,rgba(0,0,0,.07) 4px);
+}
+.appSplash__sparkles{position:absolute;inset:0;z-index:5;pointer-events:none}
+.appSplash__sparkle{
+  position:absolute;width:9px;height:9px;
+  background:currentColor;
+  clip-path:polygon(50% 0%,61% 39%,100% 50%,61% 61%,50% 100%,39% 61%,0% 50%,39% 39%);
+  opacity:0;animation:sparkleTwinkle 1.7s ease-in-out infinite;
+}
+.appSplash__brand{
+  position:absolute;left:0;right:0;bottom:10%;z-index:6;text-align:center;padding:0 1.2rem;
+  opacity:0;animation:splashBrandIn 2.9s ease forwards;
+}
+.appSplash__title{
+  font-family:var(--font-logo);font-size:15px;letter-spacing:.5px;
+  text-shadow:0 0 16px rgba(0,0,0,.65),0 2px 0 rgba(0,0,0,.45);
+}
+.appSplash__word--rest{color:#fff;margin-left:.55em}
+.appSplash__sub{
+  margin-top:10px;font-family:var(--font);font-size:10px;color:rgba(255,255,255,.55);
+  letter-spacing:.4px;text-shadow:0 1px 4px rgba(0,0,0,.6);
+}
+@keyframes splashSequence{
+  0%{opacity:0}
+  6%{opacity:1}
+  82%{opacity:1}
+  100%{opacity:0;visibility:hidden;pointer-events:none}
+}
+@keyframes splashSkipOut{0%{opacity:1}100%{opacity:0;visibility:hidden;pointer-events:none}}
+@keyframes splashZoom{0%{transform:scale(1)}100%{transform:scale(1.08)}}
+@keyframes splashHalo{0%,100%{opacity:.45}45%{opacity:.95}82%{opacity:.55}}
+@keyframes sparkleTwinkle{0%,100%{opacity:0;transform:scale(.4) rotate(0deg)}50%{opacity:1;transform:scale(1) rotate(20deg)}}
+@keyframes splashBrandIn{
+  0%{opacity:0;transform:translateY(10px)}
+  12%{opacity:1;transform:translateY(0)}
+  80%{opacity:1;transform:translateY(0)}
+  100%{opacity:0;transform:translateY(-6px)}
+}
+@media (prefers-reduced-motion: reduce){
+  .appSplash__art,.appSplash__halo,.appSplash__sparkle{animation:none !important}
+  #appSplash{animation:splashFadeOnly 2.4s ease forwards}
+  .appSplash__brand{animation:splashBrandFadeOnly 2.4s ease forwards}
+}
+@keyframes splashFadeOnly{0%{opacity:1}85%{opacity:1}100%{opacity:0;visibility:hidden;pointer-events:none}}
+@keyframes splashBrandFadeOnly{0%{opacity:1}85%{opacity:1}100%{opacity:0}}
 </style>
 </head>
 <body>
+
+<!-- SPLASH D'OUVERTURE -->
+<div id="appSplash" aria-hidden="true" onclick="this.classList.add('is-skipped')">
+  <img class="appSplash__art" src="./Assets/splash-art.jpg" alt="">
+  <div class="appSplash__halo"></div>
+  <div class="appSplash__sparkles">
+    <span class="appSplash__sparkle" style="top:14%;left:20%;color:#fff;animation-delay:.1s"></span>
+    <span class="appSplash__sparkle" style="top:22%;left:78%;color:#d4af37;animation-delay:.55s"></span>
+    <span class="appSplash__sparkle" style="top:68%;left:12%;color:#c084fc;animation-delay:.9s"></span>
+    <span class="appSplash__sparkle" style="top:74%;left:84%;color:#fff;animation-delay:.3s"></span>
+    <span class="appSplash__sparkle" style="top:40%;left:8%;color:#7dd3fc;animation-delay:1.2s"></span>
+    <span class="appSplash__sparkle" style="top:9%;left:55%;color:#d4af37;animation-delay:1.5s"></span>
+    <span class="appSplash__sparkle" style="top:84%;left:50%;color:#fff;animation-delay:.75s"></span>
+  </div>
+  <div class="appSplash__brand">
+    <div class="appSplash__title"><span class="logo-shiny">✦ Shiny</span><span class="appSplash__word--rest">Living Dex</span></div>
+    <div class="appSplash__sub">Chasse aux Shiny</div>
+  </div>
+</div>
+<script>
+(function(){
+  var s = document.getElementById('appSplash');
+  if(!s) return;
+  function removeSplash(){ if (s && s.parentNode) s.parentNode.removeChild(s); }
+  s.addEventListener('animationend', function(e){ if (e.target === s) removeSplash(); });
+  setTimeout(removeSplash, 3600); // filet de sécurité
+})();
+</script>
+<!-- /SPLASH -->
 
 <!-- TOPBAR -->
 <div class="topbar">
