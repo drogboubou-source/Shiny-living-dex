@@ -7,7 +7,7 @@
 <link rel="manifest" href="./manifest.json">
 <link rel="icon" href="./Assets/icon-192.png">
 <link rel="apple-touch-icon" href="./Assets/icon-192.png">
-<meta name="theme-color" content="#0f0f13">
+<meta name="theme-color" content="#15101a">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="LivingDex">
@@ -772,7 +772,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .card.form-card{--card-accent:#7dd3fc;border-color:#7dd3fc}
 .card.form-card .pname{color:#dff6ff}
 .card.form-card .status{background:rgba(125,211,252,.16);color:#fff}
-.card.unavailable{filter:grayscale(.85) saturate(.5);opacity:.55}
+.card.unavailable{filter:grayscale(.85) saturate(.5);opacity:1}
 .form-tag{position:absolute;top:6px;right:6px;font-size:7px;font-weight:800;color:#0d0d12;background:var(--card-accent);padding:3px 5px;z-index:2}
 .card .status-shiny{color:#c084fc}
 .card .status-perfect{color:#d4af37}
@@ -1093,7 +1093,13 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
 }
 .appSplash__brand{
   position:absolute;left:0;right:0;bottom:10%;z-index:6;text-align:center;padding:0 1.2rem;
+  display:flex;flex-direction:column;align-items:center;gap:10px;
   opacity:0;animation:splashBrandIn 2.9s ease forwards;
+}
+.appSplash__logo{
+  width:58px;height:58px;border-radius:16px;object-fit:cover;
+  box-shadow:0 0 0 1px rgba(255,255,255,.18),0 10px 24px rgba(0,0,0,.45),0 0 26px rgba(212,175,55,.35);
+  animation:splashLogoPop 2.9s ease forwards;
 }
 .appSplash__title{
   font-family:var(--font-logo);font-size:15px;letter-spacing:.5px;
@@ -1111,6 +1117,12 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   100%{opacity:0;visibility:hidden;pointer-events:none}
 }
 @keyframes splashSkipOut{0%{opacity:1}100%{opacity:0;visibility:hidden;pointer-events:none}}
+@keyframes splashLogoPop{
+  0%{opacity:0;transform:scale(.6) translateY(8px)}
+  14%{opacity:1;transform:scale(1) translateY(0)}
+  80%{opacity:1;transform:scale(1) translateY(0)}
+  100%{opacity:0;transform:scale(.94) translateY(-4px)}
+}
 @keyframes splashZoom{0%{transform:scale(1)}100%{transform:scale(1.08)}}
 @keyframes splashHalo{0%,100%{opacity:.45}45%{opacity:.95}82%{opacity:.55}}
 @keyframes sparkleTwinkle{0%,100%{opacity:0;transform:scale(.4) rotate(0deg)}50%{opacity:1;transform:scale(1) rotate(20deg)}}
@@ -1145,6 +1157,7 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
     <span class="appSplash__sparkle" style="top:84%;left:50%;color:#fff;animation-delay:.75s"></span>
   </div>
   <div class="appSplash__brand">
+    <img class="appSplash__logo" src="./Assets/icon-192.png" alt="">
     <div class="appSplash__title"><span class="logo-shiny">✦ Shiny</span><span class="appSplash__word--rest">Living Dex</span></div>
     <div class="appSplash__sub">Chasse aux Shiny</div>
   </div>
@@ -1153,6 +1166,10 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
 (function(){
   var s = document.getElementById('appSplash');
   if(!s) return;
+  var alreadyShown = false;
+  try { alreadyShown = sessionStorage.getItem('splashShown') === '1'; } catch(e) {}
+  if (alreadyShown) { s.remove(); return; }
+  try { sessionStorage.setItem('splashShown', '1'); } catch(e) {}
   function removeSplash(){ if (s && s.parentNode) s.parentNode.removeChild(s); }
   s.addEventListener('animationend', function(e){ if (e.target === s) removeSplash(); });
   setTimeout(removeSplash, 3600); // filet de sécurité
