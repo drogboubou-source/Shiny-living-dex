@@ -139,7 +139,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 }
 .header-hunt-sprite img{
   position:relative;z-index:1;width:52px;height:52px;object-fit:contain;display:block;
-  transform:translateY(1px);
+  transform:translateY(1px);pointer-events:auto;cursor:pointer;
   filter:drop-shadow(0 7px 10px rgba(0,0,0,.4)) drop-shadow(0 0 10px rgba(125,211,252,.15));
 }
 .header-hunt-sprite .header-hunt-img.previous{
@@ -1915,31 +1915,42 @@ function getActiveHuntIds() {
 
 function getHeaderHuntSprites() {
   const activeIds = getActiveHuntIds();
+  if (activeIds.length >= 2) {
+    return { previousId: activeIds[1], currentId: activeIds[0], currentShiny: false, previousShiny: false };
+  }
   const captured = readStoredIdList(HUNT_CAPTURED_KEY).filter(id => progress[id]?.caught);
   const currentId = activeIds[0] || captured[captured.length - 1] || null;
   const previousId = captured.filter(id => id !== currentId).slice(-1)[0] || null;
   const currentShiny = !!currentId && !!progress[currentId]?.caught && !activeIds.includes(currentId);
-  return { previousId, currentId, currentShiny };
+  return { previousId, currentId, currentShiny, previousShiny: true };
+}
+
+function openModalToCounter(id) {
+  if (!id) return;
+  openModal(id);
+  setModalCounterMode(true);
 }
 
 function updateHeaderHuntSprite() {
   const holder = document.getElementById('headerHuntSprite');
   if (!holder) return;
-  const { previousId, currentId, currentShiny } = getHeaderHuntSprites();
+  const { previousId, currentId, currentShiny, previousShiny } = getHeaderHuntSprites();
   if (!previousId && !currentId) {
     holder.classList.add('empty');
     holder.innerHTML = '';
     return;
   }
   const previousHtml = previousId ? `
-    <img class="header-hunt-img previous shiny"
-         src="${getPokemonSpriteUrl(previousId, true, 'home')}"
+    <img class="header-hunt-img previous ${previousShiny ? 'shiny' : 'normal'}"
+         src="${getPokemonSpriteUrl(previousId, previousShiny, 'home')}"
          alt="${getPokemonDisplayName(previousId)}" width="34" height="34" decoding="async"
-         onerror="handleSpriteError(this, ${previousId}, true)">` : '';
+         onclick="openModalToCounter(${previousId})"
+         onerror="handleSpriteError(this, ${previousId}, ${previousShiny})">` : '';
   const currentHtml = currentId ? `
     <img class="header-hunt-img current ${currentShiny ? 'shiny' : 'normal'}"
          src="${getPokemonSpriteUrl(currentId, currentShiny, 'home')}"
          alt="${getPokemonDisplayName(currentId)}" width="52" height="52" decoding="async"
+         onclick="openModalToCounter(${currentId})"
          onerror="handleSpriteError(this, ${currentId}, ${currentShiny})">` : '';
   holder.classList.remove('empty');
   holder.innerHTML = `${previousHtml}${currentHtml}`;
@@ -2625,11 +2636,11 @@ function renderGrid() {
     card.setAttribute('role', 'button');
     card.setAttribute('tabindex', '0');
     card.setAttribute('aria-label', `${name}, #${String(id).padStart(4,'0')}${p.caught ? ', shiny capture' : (isHuntingCard ? ', en cours' : ', manquant')}`);
-    card.onclick = () => { if (!unavailable) activatePokemonCard(card, id); };
+    card.onclick = () => activatePokemonCard(card, id);
     card.onkeydown = e => {
       if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
-        if (!unavailable) activatePokemonCard(card, id);
+        activatePokemonCard(card, id);
       }
     };
 
@@ -2675,6 +2686,7 @@ function setSidebar(open) {
 function initSidebarSwipe() {
   const sb = document.getElementById('sidebar');
   const maxWidth = () => parseInt(getComputedStyle(document.documentElement).getPropertyValue('--sidebar-w'), 10) || 220;
+  const edgeZone = 24;
   let startX = 0;
   let startY = 0;
   let dragging = false;
@@ -2685,8 +2697,8 @@ function initSidebarSwipe() {
     if (document.getElementById('overlay')?.classList.contains('open')) return;
     const x = e.touches[0].clientX;
     const y = e.touches[0].clientY;
+    if (!sidebarOpen && x > edgeZone) { canDrag = false; return; }
     canDrag = true;
-    if (!canDrag) return;
     startX = x;
     startY = y;
     dragging = false;
@@ -2729,21 +2741,41 @@ function initPullToRefresh() {
   const indicator = document.getElementById('pullRefresh');
   if (!main || !indicator) return;
 
+  let startX = 0;
   let startY = 0;
   let pulling = false;
   let distance = 0;
+  let axisLocked = null; // 'x' (swipe région) ou 'y' (pull to refresh)
   const threshold = 76;
+  const swipeThreshold = 70;
 
   main.addEventListener('touchstart', e => {
-    if (main.scrollTop > 0 || e.touches.length !== 1) return;
+    if (e.touches.length !== 1) return;
+    startX = e.touches[0].clientX;
     startY = e.touches[0].clientY;
-    pulling = true;
+    pulling = main.scrollTop <= 0;
+    axisLocked = null;
     distance = 0;
   }, { passive: true });
 
   main.addEventListener('touchmove', e => {
-    if (!pulling || e.touches.length !== 1) return;
-    distance = e.touches[0].clientY - startY;
+    if (e.touches.length !== 1) return;
+    const x = e.touches[0].clientX;
+    const y = e.touches[0].clientY;
+    const dx = x - startX;
+    const dy = y - startY;
+
+    if (!axisLocked && (Math.abs(dx) > 10 || Math.abs(dy) > 10)) {
+      axisLocked = Math.abs(dx) > Math.abs(dy) * 1.2 ? 'x' : 'y';
+    }
+
+    if (axisLocked === 'x') {
+      indicator.classList.remove('visible', 'ready');
+      return;
+    }
+
+    if (!pulling) return;
+    distance = dy;
     if (distance <= 0 || main.scrollTop > 0) {
       indicator.classList.remove('visible', 'ready');
       return;
@@ -2756,19 +2788,28 @@ function initPullToRefresh() {
     indicator.classList.add('visible');
   }, { passive: false });
 
-  main.addEventListener('touchend', () => {
-    if (!pulling) return;
-    pulling = false;
-    const shouldRefresh = distance >= threshold;
-    distance = 0;
-    if (shouldRefresh) {
+  main.addEventListener('touchend', e => {
+    const endX = e.changedTouches[0]?.clientX ?? startX;
+    const endY = e.changedTouches[0]?.clientY ?? startY;
+    const dx = endX - startX;
+
+    if (axisLocked === 'x') {
+      if (Math.abs(dx) >= swipeThreshold) goToAdjacentRegion(dx < 0 ? 1 : -1);
+    } else if (pulling && distance >= threshold) {
       indicator.textContent = 'Actualisation...';
       indicator.classList.add('visible', 'ready');
       refreshApp();
+      pulling = false;
+      axisLocked = null;
+      distance = 0;
       return;
     }
+
     indicator.classList.remove('visible', 'ready');
     indicator.style.transform = '';
+    pulling = false;
+    axisLocked = null;
+    distance = 0;
   }, { passive: true });
 }
 
@@ -2917,6 +2958,20 @@ function switchRegion(i) {
   });
 }
 
+function getRegionSequence() {
+  return ['all', ...REGIONS.map((_, idx) => idx)];
+}
+
+function goToAdjacentRegion(direction) {
+  if (document.getElementById('overlay')?.classList.contains('open')) return;
+  const seq = getRegionSequence();
+  const index = seq.indexOf(currentRegion);
+  if (index === -1) return;
+  const nextIndex = index + direction;
+  if (nextIndex < 0 || nextIndex >= seq.length) return;
+  switchRegion(seq[nextIndex]);
+}
+
 function goHomeFromLogo() {
   currentRegion = 'all';
   currentPokemon = null;
@@ -2955,12 +3010,18 @@ function isHuntingMode() {
 }
 
 function setModalCounterMode(enabled) {
-  enabled = !!enabled && !!currentPokemon && !progress[currentPokemon]?.caught;
+  enabled = !!enabled && !!currentPokemon;
+  const caught = !!progress[currentPokemon]?.caught;
   const modal = document.querySelector('#overlay .modal');
   modal?.classList.toggle('hunt-mode', enabled);
+  modal?.classList.toggle('hunt-mode-caught', enabled && caught);
   document.getElementById('huntPanel')?.classList.toggle('open', enabled);
   const button = document.getElementById('modalCounterBtn');
   if (button) button.textContent = enabled ? 'Formulaire' : 'Compteur';
+  const label = document.querySelector('#huntPanel .hunt-label');
+  if (label) label.textContent = caught ? 'Rencontres avant capture' : 'Rencontres en cours';
+  const foundBtn = document.querySelector('#huntPanel .hunt-found');
+  if (foundBtn) foundBtn.style.display = caught ? 'none' : '';
   if (enabled) renderHuntCounter();
 }
 
@@ -3004,15 +3065,17 @@ function getCurrentHuntEntry() {
   if (!currentPokemon) return null;
   const existing = progress[currentPokemon] || {};
   const entry = { ...existing };
-  entry.hunting = true;
+  if (!entry.caught) entry.hunting = true;
   entry.huntCount = parseInt(entry.huntCount) || 0;
+  entry.encounters = parseInt(entry.encounters) || 0;
   return entry;
 }
 
 function renderHuntCounter() {
   const counter = document.getElementById('huntCount');
   if (!counter || !currentPokemon) return;
-  const count = parseInt(progress[currentPokemon]?.huntCount) || 0;
+  const p = progress[currentPokemon] || {};
+  const count = p.caught ? (parseInt(p.encounters) || 0) : (parseInt(p.huntCount) || 0);
   const oddsMeta = getHuntOddsMeta(currentPokemon);
   const chance = getCumulativeShinyChance(count, oddsMeta.odds);
   const chanceText = chance.toLocaleString('fr-FR', {
@@ -3031,12 +3094,15 @@ function renderHuntCounter() {
 function adjustHuntCounter(delta) {
   const entry = getCurrentHuntEntry();
   if (!entry) return;
-  const previousCount = parseInt(entry.huntCount) || 0;
-  entry.huntCount = Math.max(0, (parseInt(entry.huntCount) || 0) + delta);
-  if (previousCount === 0 && entry.huntCount > 0) registerHuntStart(currentPokemon);
-  if (entry.huntCount === 0) {
-    entry.hunting = false;
-    unregisterHunt(currentPokemon);
+  const field = entry.caught ? 'encounters' : 'huntCount';
+  const previousCount = parseInt(entry[field]) || 0;
+  entry[field] = Math.max(0, previousCount + delta);
+  if (!entry.caught) {
+    if (previousCount === 0 && entry.huntCount > 0) registerHuntStart(currentPokemon);
+    if (entry.huntCount === 0) {
+      entry.hunting = false;
+      unregisterHunt(currentPokemon);
+    }
   }
   saveProgressEntry(currentPokemon, entry);
   renderHuntCounter();
@@ -3046,9 +3112,12 @@ function adjustHuntCounter(delta) {
 function resetHuntCounter() {
   const entry = getCurrentHuntEntry();
   if (!entry) return;
-  entry.huntCount = 0;
-  entry.hunting = false;
-  unregisterHunt(currentPokemon);
+  const field = entry.caught ? 'encounters' : 'huntCount';
+  entry[field] = 0;
+  if (!entry.caught) {
+    entry.hunting = false;
+    unregisterHunt(currentPokemon);
+  }
   saveProgressEntry(currentPokemon, entry);
   renderHuntCounter();
   renderGrid();
@@ -3071,7 +3140,6 @@ function markHuntFound() {
    MODAL
 ══════════════════════════════════════ */
 function openModal(id, options = {}) {
-  if (isUnavailablePokemon(id)) return;
   currentPokemon = id;
   initModalChoiceLists();
   const form = getRegionalFormById(id);
