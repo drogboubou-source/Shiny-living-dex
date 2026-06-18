@@ -373,58 +373,42 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
    EFFET HOLOGRAPHIQUE — discret et premium, uniquement sur les
    cartes Shiny trouvé / Parfait — jamais sur les cartes
    manquantes, ni sur .region-header / .gen-btn.
-   Pas de voile, juste de petites étincelles dans la couleur
-   propre de la carte (via un masque CSS), placées principalement
-   autour du sprite, qui crépitent légèrement par à-coups puis
-   s'effacent, en rappel du sparkle des Pokémon shiny en jeu.
+   De petites étincelles, dans la couleur propre de la carte
+   (via un masque CSS), placées autour du sprite. Chacune a son
+   propre délai : elles apparaissent l'une après l'autre plutôt
+   qu'ensemble, pour un rendu plus naturel, puis s'effacent.
    Tout est animé via "transform" / "opacity" (GPU, sans
-   repaint) et chaque calque est partagé par les 2 états pour
-   rester parfaitement synchronisé entre les cartes.
+   repaint) et toutes les étincelles d'un même rang partagent
+   la même animation pour rester parfaitement synchronisées
+   entre les cartes.
 ══════════════════════════════════════ */
 .card .holo{
   position:absolute;inset:0;z-index:2;pointer-events:none;overflow:hidden;
 }
-.card .holo::before,
-.card .holo::after{
-  content:'';position:absolute;inset:0;opacity:0;
+.card .holo .spark{
+  position:absolute;width:8px;height:8px;margin:-4px 0 0 -4px;opacity:0;
+  -webkit-mask-image:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M12,2 L14.8,9.2 L22,12 L14.8,14.8 L12,22 L9.2,14.8 L2,12 L9.2,9.2 Z' fill='white'/></svg>");
+  mask-image:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M12,2 L14.8,9.2 L22,12 L14.8,14.8 L12,22 L9.2,14.8 L2,12 L9.2,9.2 Z' fill='white'/></svg>");
   -webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;
   -webkit-mask-size:100% 100%;mask-size:100% 100%;
-  -webkit-mask-position:center;mask-position:center;
-}
-.card.caught .holo::before,
-.card.perfect .holo::before{
-  -webkit-mask-image:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 140'><path d='M36,46 L37.12,48.88 L40,50 L37.12,51.12 L36,54 L34.88,51.12 L32,50 L34.88,48.88 Z' fill='white'/><path d='M64,42.8 L64.9,45.1 L67.2,46 L64.9,46.9 L64,49.2 L63.1,46.9 L60.8,46 L63.1,45.1 Z' fill='white'/></svg>");
-  mask-image:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 140'><path d='M36,46 L37.12,48.88 L40,50 L37.12,51.12 L36,54 L34.88,51.12 L32,50 L34.88,48.88 Z' fill='white'/><path d='M64,42.8 L64.9,45.1 L67.2,46 L64.9,46.9 L64,49.2 L63.1,46.9 L60.8,46 L63.1,45.1 Z' fill='white'/></svg>");
   mix-blend-mode:screen;
   will-change:opacity,transform;
   animation:holoCrackle 6.5s ease-out infinite;
 }
-.card.caught .holo::after,
-.card.perfect .holo::after{
-  -webkit-mask-image:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 140'><path d='M40,74.4 L41,77 L43.6,78 L41,79 L40,81.6 L39,79 L36.4,78 L39,77 Z' fill='white'/><path d='M62,77.6 L63.2,80.8 L66.4,82 L63.2,83.2 L62,86.4 L60.8,83.2 L57.6,82 L60.8,80.8 Z' fill='white'/></svg>");
-  mask-image:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 140'><path d='M40,74.4 L41,77 L43.6,78 L41,79 L40,81.6 L39,79 L36.4,78 L39,77 Z' fill='white'/><path d='M62,77.6 L63.2,80.8 L66.4,82 L63.2,83.2 L62,86.4 L60.8,83.2 L57.6,82 L60.8,80.8 Z' fill='white'/></svg>");
-  mix-blend-mode:screen;
-  will-change:opacity,transform;
-  animation:holoCrackle 6.5s ease-out infinite;
-  animation-delay:.4s;
-}
-.card.caught .holo::before,.card.caught .holo::after{background-color:#c084fc}
-.card.perfect .holo::before,.card.perfect .holo::after{background-color:#d4af37}
+.card .holo .spark.s1{top:36%;left:36%;width:9px;height:9px;margin:-4.5px 0 0 -4.5px}
+.card .holo .spark.s2{top:33%;left:64%;width:7px;height:7px;margin:-3.5px 0 0 -3.5px;animation-delay:.5s}
+.card .holo .spark.s3{top:56%;left:40%;width:8px;height:8px;margin:-4px 0 0 -4px;animation-delay:1s}
+.card .holo .spark.s4{top:59%;left:62%;width:6px;height:6px;margin:-3px 0 0 -3px;animation-delay:1.5s}
+.card.caught .holo .spark{background-color:#c084fc}
+.card.perfect .holo .spark{background-color:#d4af37}
 @keyframes holoCrackle{
-  0%{opacity:0;transform:scale(.5) translate(0,0)}
-  3%{opacity:.5;transform:scale(.95) translate(0,0)}
-  6%{opacity:.08;transform:scale(.78) translate(0,0)}
-  9%{opacity:.55;transform:scale(1) translate(.4%,-.4%)}
-  13%{opacity:.1;transform:scale(.74) translate(.4%,-.4%)}
-  17%{opacity:.4;transform:scale(.92) translate(.8%,-.8%)}
-  24%{opacity:0;transform:scale(.65) translate(1.5%,-2%)}
-  100%{opacity:0;transform:scale(.5) translate(0,0)}
+  0%{opacity:0;transform:scale(.5)}
+  8%{opacity:.6;transform:scale(1)}
+  22%{opacity:0;transform:scale(.7)}
+  100%{opacity:0;transform:scale(.5)}
 }
 @media (prefers-reduced-motion:reduce){
-  .card.caught .holo::before,.card.perfect .holo::before,
-  .card.caught .holo::after,.card.perfect .holo::after{
-    animation:none;opacity:0
-  }
+  .card .holo .spark{animation:none;opacity:0}
 }
 
 .type-row{width:100%;min-height:19px;margin:2px 0 4px;display:flex;justify-content:center;gap:3px;flex-wrap:wrap;padding:0 2px;order:3}
@@ -1367,6 +1351,9 @@ function renderGrid() {
     const statusHtml = p.caught && p.perfect
       ? '<span class="status-pair"><span class="status-shiny">Shiny</span><span class="status-perfect">Parfait</span></span>'
       : (p.caught ? '<span class="status-shiny">Shiny</span>' : 'Manquant');
+    const sparkHtml = (p.caught || p.perfect)
+      ? '<i class="spark s1"></i><i class="spark s2"></i><i class="spark s3"></i><i class="spark s4"></i>'
+      : '';
 
     card.innerHTML = `
       <div class="num">#${String(id).padStart(4,'0')}</div>
@@ -1375,7 +1362,7 @@ function renderGrid() {
       <img src="${spriteUrl}"
              alt="${name}" loading="lazy" width="64" height="64" onerror="handleSpriteError(this, ${id}, ${useShinySprite})">
       <div class="status">${statusHtml}</div>
-      <div class="holo" aria-hidden="true"></div>`;
+      <div class="holo" aria-hidden="true">${sparkHtml}</div>`;
     grid.appendChild(card);
   });
 
