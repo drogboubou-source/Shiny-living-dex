@@ -777,6 +777,68 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .card .status-shiny{color:#c084fc}
 .card .status-perfect{color:#d4af37}
 
+/* ══════════════════════════════════════
+   EFFET HOLOGRAPHIQUE — discret et premium, uniquement sur les
+   cartes Shiny trouvé / Parfait / En cours — jamais sur les
+   cartes manquantes, ni sur .region-header / .gen-btn.
+   Pas de trait : un voile de couleur (la couleur propre de la
+   carte, --card-accent) qui respire doucement, plus de petites
+   étincelles qui scintillent par intermittence, en rappel du
+   sparkle des Pokémon shiny en jeu. Tout est animé via
+   "transform"/"opacity" (GPU, sans repaint) et chaque calque
+   est partagé par les 3 états pour rester parfaitement
+   synchronisé entre toutes les cartes.
+══════════════════════════════════════ */
+.card .holo{
+  position:absolute;inset:0;z-index:2;pointer-events:none;overflow:hidden;
+}
+.card .holo::before,
+.card .holo::after{
+  content:'';position:absolute;inset:0;opacity:0;
+}
+.card.caught .holo::before,
+.card.perfect .holo::before,
+.card.hunting .holo::before{
+  top:-22%;left:-22%;width:144%;height:144%;
+  opacity:.42;
+  background:
+    radial-gradient(circle at 24% 28%, var(--card-accent) 0%, transparent 42%),
+    radial-gradient(circle at 76% 68%, var(--card-accent) 0%, transparent 46%),
+    radial-gradient(circle at 58% 14%, color-mix(in srgb, var(--card-accent) 65%, white 35%) 0%, transparent 38%);
+  mix-blend-mode:screen;
+  will-change:transform;
+  animation:holoDrift 9s ease-in-out infinite;
+}
+.card.caught .holo::after,
+.card.perfect .holo::after,
+.card.hunting .holo::after{
+  background-image:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 140'><path d='M20,19 L21.68,23.32 L26,25 L21.68,26.68 L20,31 L18.32,26.68 L14,25 L18.32,23.32 Z' fill='white'/><path d='M78,51 L79.12,53.88 L82,55 L79.12,56.12 L78,59 L76.88,56.12 L74,55 L76.88,53.88 Z' fill='white'/><path d='M50,95 L51.4,98.6 L55,100 L51.4,101.4 L50,105 L48.6,101.4 L45,100 L48.6,98.6 Z' fill='white'/></svg>");
+  background-repeat:no-repeat;
+  background-size:100% 100%;
+  mix-blend-mode:screen;
+  will-change:opacity,transform;
+  animation:holoTwinkle 4.5s ease-in-out infinite;
+}
+@keyframes holoDrift{
+  0%,100%{transform:translate(0,0) scale(1)}
+  50%{transform:translate(-4%,5%) scale(1.12)}
+}
+@keyframes holoTwinkle{
+  0%,68%{opacity:0;transform:scale(.6)}
+  80%{opacity:.85;transform:scale(1.15)}
+  92%{opacity:0;transform:scale(.85)}
+  100%{opacity:0;transform:scale(.6)}
+}
+@media (prefers-reduced-motion:reduce){
+  .card.caught .holo::before,.card.perfect .holo::before,.card.hunting .holo::before{
+    animation:none;transform:translate(0,0) scale(1)
+  }
+  .card.caught .holo::after,.card.perfect .holo::after,.card.hunting .holo::after{
+    animation:none;opacity:0
+  }
+}
+
+
 
 
 
@@ -2408,7 +2470,8 @@ function createRegionalOriginalCard(id) {
     <div class="type-row">${renderTypeBadges(id)}</div>
     <img src="${getPokemonSpriteUrl(id, !!p.caught)}"
          alt="${name}" loading="lazy" width="64" height="64" onerror="handleSpriteError(this, ${id}, ${!!p.caught})">
-    <div class="status">${statusHtml}</div>`;
+    <div class="status">${statusHtml}</div>
+    <div class="holo" aria-hidden="true"></div>`;
   return card;
 }
 
@@ -2437,7 +2500,8 @@ function createRegionalFormCard(form) {
     <div class="type-row">${renderTypeBadgesForTypes(form.types)}</div>
     <img src="${getPokemonSpriteUrl(form.formId, !!p.caught, isHomeSpriteMode() ? 'home' : 'pixel')}"
          alt="${form.label}" loading="lazy" width="64" height="64" onerror="handleSpriteError(this, ${form.formId}, ${!!p.caught})">
-    <div class="status">${statusHtml}</div>`;
+    <div class="status">${statusHtml}</div>
+    <div class="holo" aria-hidden="true"></div>`;
   return card;
 }
 
@@ -2537,7 +2601,8 @@ function renderGrid() {
       <div class="type-row">${typeBadges}</div>
       <img src="${spriteUrl}"
              alt="${name}" loading="lazy" width="64" height="64" onerror="handleSpriteError(this, ${id}, ${useShinySprite})">
-      <div class="status">${statusHtml}</div>`;
+      <div class="status">${statusHtml}</div>
+      <div class="holo" aria-hidden="true"></div>`;
     grid.appendChild(card);
   });
 
