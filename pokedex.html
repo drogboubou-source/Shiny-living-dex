@@ -368,48 +368,6 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .card .status-shiny{color:#c084fc}
 .card .status-perfect{color:#d4af37}
 .card .status-pair{display:inline-flex;align-items:center;justify-content:center;gap:5px}
-
-/* ══════════════════════════════════════
-   EFFET HOLOGRAPHIQUE — discret et premium, uniquement sur les
-   cartes Shiny trouvé / Parfait — jamais sur les cartes
-   manquantes, ni sur .region-header / .gen-btn.
-   Optimisation : on anime "transform" (traité par le GPU, sans
-   repaint à chaque frame) plutôt que "background-position",
-   ce qui reste fluide même avec un grand nombre de cartes.
-   Une seule animation partagée garde toutes les cartes
-   parfaitement synchronisées entre elles.
-══════════════════════════════════════ */
-.card .holo{
-  position:absolute;inset:0;z-index:2;pointer-events:none;overflow:hidden;
-}
-.card .holo::before{
-  content:'';position:absolute;top:-55%;left:-25%;width:50%;height:210%;opacity:0;
-}
-.card.caught .holo::before,
-.card.perfect .holo::before{
-  opacity:.5;
-  mix-blend-mode:screen;
-  will-change:transform;
-  animation:holoSweep 7s ease-in-out infinite;
-}
-.card.caught .holo::before{
-  background:linear-gradient(to right,
-    transparent 0%,#c084fc 32%,color-mix(in srgb,#c084fc 55%,white 45%) 50%,#c084fc 68%,transparent 100%);
-}
-.card.perfect .holo::before{
-  background:linear-gradient(to right,
-    transparent 0%,#d4af37 32%,color-mix(in srgb,#d4af37 55%,white 45%) 50%,#d4af37 68%,transparent 100%);
-}
-@keyframes holoSweep{
-  from{transform:translateX(-160%) rotate(18deg)}
-  to{transform:translateX(160%) rotate(18deg)}
-}
-@media (prefers-reduced-motion:reduce){
-  .card.caught .holo::before,.card.perfect .holo::before{
-    animation:none;transform:translateX(0) rotate(18deg)
-  }
-}
-
 .type-row{width:100%;min-height:19px;margin:2px 0 4px;display:flex;justify-content:center;gap:3px;flex-wrap:wrap;padding:0 2px;order:3}
 .type-pill{display:inline-grid;place-items:center;width:46px;height:12px;filter:drop-shadow(0 2px 5px rgba(0,0,0,.25))}
 .type-pill img{width:46px;height:12px;display:block;image-rendering:auto}
@@ -1357,8 +1315,7 @@ function renderGrid() {
       <div class="type-row">${typeBadges}</div>
       <img src="${spriteUrl}"
              alt="${name}" loading="lazy" width="64" height="64" onerror="handleSpriteError(this, ${id}, ${useShinySprite})">
-      <div class="status">${statusHtml}</div>
-      <div class="holo" aria-hidden="true"></div>`;
+      <div class="status">${statusHtml}</div>`;
     grid.appendChild(card);
   });
 
