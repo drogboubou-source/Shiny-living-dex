@@ -781,7 +781,9 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
    EFFET HOLOGRAPHIQUE — discret, uniquement sur les cartes
    Shiny trouvé / Parfait / En cours — jamais sur les cartes
    manquantes, ni sur .region-header / .gen-btn / region-map-*
-   Utilise la couleur propre à chaque état (--card-accent).
+   Utilise la couleur propre à chaque état (--card-accent) et
+   une seule animation partagée pour que toutes les cartes
+   bougent à l'identique, en parfaite synchronisation.
 ══════════════════════════════════════ */
 .card .holo{
   position:absolute;inset:0;z-index:2;pointer-events:none;opacity:0;
@@ -789,22 +791,21 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .card.caught .holo,
 .card.perfect .holo,
 .card.hunting .holo{
-  opacity:.38;
-  background:linear-gradient(100deg,
-    transparent 30%,
+  opacity:.55;
+  background-image:linear-gradient(115deg,
+    transparent 38%,
     var(--card-accent) 47%,
-    rgba(255,255,255,.8) 50%,
+    color-mix(in srgb, var(--card-accent) 65%, white 35%) 50%,
     var(--card-accent) 53%,
-    transparent 70%);
-  background-size:240% 240%;
+    transparent 62%);
+  background-size:300% 300%;
+  background-repeat:no-repeat;
   mix-blend-mode:screen;
-  animation:holoSweep 6.5s ease-in-out infinite;
+  animation:holoSweep 6s linear infinite;
 }
-.card.perfect .holo{animation-duration:7.5s}
-.card.hunting .holo{animation-duration:5.5s}
 @keyframes holoSweep{
-  0%,100%{background-position:82% 18%}
-  50%{background-position:18% 82%}
+  from{background-position:200% -100%}
+  to{background-position:-100% 200%}
 }
 @media (prefers-reduced-motion:reduce){
   .card.caught .holo,.card.perfect .holo,.card.hunting .holo{animation:none;background-position:50% 50%}
