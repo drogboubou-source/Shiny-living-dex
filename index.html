@@ -782,8 +782,9 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
    cartes Shiny trouvé / Parfait / En cours — jamais sur les
    cartes manquantes, ni sur .region-header / .gen-btn.
    Pas de voile, juste de petites étincelles dans la couleur
-   propre de la carte (--card-accent, via un masque CSS) qui
-   crépitent par à-coups puis s'effacent, en rappel du sparkle
+   propre de la carte (--card-accent, via un masque CSS),
+   placées principalement autour du sprite, qui crépitent
+   légèrement par à-coups puis s'effacent, en rappel du sparkle
    des Pokémon shiny en jeu. Tout est animé via "transform" /
    "opacity" (GPU, sans repaint) et chaque calque est partagé
    par les 3 états pour rester parfaitement synchronisé entre
@@ -803,8 +804,8 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .card.caught .holo::before,
 .card.perfect .holo::before,
 .card.hunting .holo::before{
-  -webkit-mask-image:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 140'><path d='M20,19 L21.68,23.32 L26,25 L21.68,26.68 L20,31 L18.32,26.68 L14,25 L18.32,23.32 Z' fill='white'/><path d='M58,38 L59.12,40.88 L62,42 L59.12,43.12 L58,46 L56.88,43.12 L54,42 L56.88,40.88 Z' fill='white'/></svg>");
-  mask-image:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 140'><path d='M20,19 L21.68,23.32 L26,25 L21.68,26.68 L20,31 L18.32,26.68 L14,25 L18.32,23.32 Z' fill='white'/><path d='M58,38 L59.12,40.88 L62,42 L59.12,43.12 L58,46 L56.88,43.12 L54,42 L56.88,40.88 Z' fill='white'/></svg>");
+  -webkit-mask-image:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 140'><path d='M36,46 L37.12,48.88 L40,50 L37.12,51.12 L36,54 L34.88,51.12 L32,50 L34.88,48.88 Z' fill='white'/><path d='M64,42.8 L64.9,45.1 L67.2,46 L64.9,46.9 L64,49.2 L63.1,46.9 L60.8,46 L63.1,45.1 Z' fill='white'/></svg>");
+  mask-image:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 140'><path d='M36,46 L37.12,48.88 L40,50 L37.12,51.12 L36,54 L34.88,51.12 L32,50 L34.88,48.88 Z' fill='white'/><path d='M64,42.8 L64.9,45.1 L67.2,46 L64.9,46.9 L64,49.2 L63.1,46.9 L60.8,46 L63.1,45.1 Z' fill='white'/></svg>");
   mix-blend-mode:screen;
   will-change:opacity,transform;
   animation:holoCrackle 6.5s ease-out infinite;
@@ -812,22 +813,22 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .card.caught .holo::after,
 .card.perfect .holo::after,
 .card.hunting .holo::after{
-  -webkit-mask-image:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 140'><path d='M78,75 L79.4,78.6 L83,80 L79.4,81.4 L78,85 L76.6,81.4 L73,80 L76.6,78.6 Z' fill='white'/><path d='M42,103.5 L43.26,106.74 L46.5,108 L43.26,109.26 L42,112.5 L40.74,109.26 L37.5,108 L40.74,106.74 Z' fill='white'/></svg>");
-  mask-image:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 140'><path d='M78,75 L79.4,78.6 L83,80 L79.4,81.4 L78,85 L76.6,81.4 L73,80 L76.6,78.6 Z' fill='white'/><path d='M42,103.5 L43.26,106.74 L46.5,108 L43.26,109.26 L42,112.5 L40.74,109.26 L37.5,108 L40.74,106.74 Z' fill='white'/></svg>");
+  -webkit-mask-image:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 140'><path d='M40,74.4 L41,77 L43.6,78 L41,79 L40,81.6 L39,79 L36.4,78 L39,77 Z' fill='white'/><path d='M62,77.6 L63.2,80.8 L66.4,82 L63.2,83.2 L62,86.4 L60.8,83.2 L57.6,82 L60.8,80.8 Z' fill='white'/></svg>");
+  mask-image:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 140'><path d='M40,74.4 L41,77 L43.6,78 L41,79 L40,81.6 L39,79 L36.4,78 L39,77 Z' fill='white'/><path d='M62,77.6 L63.2,80.8 L66.4,82 L63.2,83.2 L62,86.4 L60.8,83.2 L57.6,82 L60.8,80.8 Z' fill='white'/></svg>");
   mix-blend-mode:screen;
   will-change:opacity,transform;
   animation:holoCrackle 6.5s ease-out infinite;
   animation-delay:.4s;
 }
 @keyframes holoCrackle{
-  0%{opacity:0;transform:scale(.4) translate(0,0)}
-  3%{opacity:.95;transform:scale(1.05) translate(0,0)}
-  6%{opacity:.1;transform:scale(.7) translate(0,0)}
-  9%{opacity:1;transform:scale(1.15) translate(1%,-1%)}
-  13%{opacity:.15;transform:scale(.6) translate(1%,-1%)}
-  17%{opacity:.85;transform:scale(1) translate(2%,-2%)}
-  24%{opacity:0;transform:scale(.5) translate(4%,-6%)}
-  100%{opacity:0;transform:scale(.4) translate(0,0)}
+  0%{opacity:0;transform:scale(.5) translate(0,0)}
+  3%{opacity:.5;transform:scale(.95) translate(0,0)}
+  6%{opacity:.08;transform:scale(.78) translate(0,0)}
+  9%{opacity:.55;transform:scale(1) translate(.4%,-.4%)}
+  13%{opacity:.1;transform:scale(.74) translate(.4%,-.4%)}
+  17%{opacity:.4;transform:scale(.92) translate(.8%,-.8%)}
+  24%{opacity:0;transform:scale(.65) translate(1.5%,-2%)}
+  100%{opacity:0;transform:scale(.5) translate(0,0)}
 }
 @media (prefers-reduced-motion:reduce){
   .card.caught .holo::before,.card.perfect .holo::before,.card.hunting .holo::before,
