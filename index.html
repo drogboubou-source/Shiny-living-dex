@@ -802,15 +802,18 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   -webkit-mask-size:100% 100%;mask-size:100% 100%;
   mix-blend-mode:screen;
   will-change:opacity,transform;
-  animation:holoCrackle 6.5s ease-out infinite;
+  animation:holoCrackle 3.2s ease-out infinite;
 }
-.card .holo .spark.s1{top:36%;left:36%;width:9px;height:9px;margin:-4.5px 0 0 -4.5px}
-.card .holo .spark.s2{top:33%;left:64%;width:7px;height:7px;margin:-3.5px 0 0 -3.5px;animation-delay:.5s}
-.card .holo .spark.s3{top:56%;left:40%;width:8px;height:8px;margin:-4px 0 0 -4px;animation-delay:1s}
-.card .holo .spark.s4{top:59%;left:62%;width:6px;height:6px;margin:-3px 0 0 -3px;animation-delay:1.5s}
+.card .holo .spark.s1{top:30%;left:32%;width:9px;height:9px;margin:-4.5px 0 0 -4.5px}
+.card .holo .spark.s2{top:28%;left:62%;width:7px;height:7px;margin:-3.5px 0 0 -3.5px;animation-delay:.4s}
+.card .holo .spark.s3{top:52%;left:38%;width:8px;height:8px;margin:-4px 0 0 -4px;animation-delay:.8s}
+.card .holo .spark.s4{top:55%;left:64%;width:6px;height:6px;margin:-3px 0 0 -3px;animation-delay:1.2s}
+.card .holo .spark.s5{top:40%;left:50%;width:7px;height:7px;margin:-3.5px 0 0 -3.5px;animation-delay:1.6s}
+.card .holo .spark.s6{top:23%;left:48%;width:6px;height:6px;margin:-3px 0 0 -3px;animation-delay:2s}
+.card .holo .spark.s7{top:62%;left:50%;width:7px;height:7px;margin:-3.5px 0 0 -3.5px;animation-delay:2.4s}
 @keyframes holoCrackle{
   0%{opacity:0;transform:scale(.5)}
-  8%{opacity:.6;transform:scale(1)}
+  8%{opacity:.65;transform:scale(1)}
   22%{opacity:0;transform:scale(.7)}
   100%{opacity:0;transform:scale(.5)}
 }
@@ -2426,7 +2429,7 @@ function getCardStatusHtml(p, isHuntingCard = false) {
 }
 
 function getHoloSparkHtml(show) {
-  return show ? '<i class="spark s1"></i><i class="spark s2"></i><i class="spark s3"></i><i class="spark s4"></i>' : '';
+  return show ? '<i class="spark s1"></i><i class="spark s2"></i><i class="spark s3"></i><i class="spark s4"></i><i class="spark s5"></i><i class="spark s6"></i><i class="spark s7"></i>' : '';
 }
 
 function createRegionalOriginalCard(id) {
