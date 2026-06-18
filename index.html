@@ -2458,7 +2458,7 @@ function createRegionalOriginalCard(id) {
     <img src="${getPokemonSpriteUrl(id, !!p.caught)}"
          alt="${name}" loading="lazy" width="64" height="64" onerror="handleSpriteError(this, ${id}, ${!!p.caught})">
     <div class="status">${statusHtml}</div>
-    <div class="holo" aria-hidden="true">${getHoloSparkHtml(p.caught || p.perfect || isHuntingCard)}</div>`;
+    <div class="holo" aria-hidden="true">${getHoloSparkHtml(p.caught || p.perfect)}</div>`;
   return card;
 }
 
@@ -2488,7 +2488,7 @@ function createRegionalFormCard(form) {
     <img src="${getPokemonSpriteUrl(form.formId, !!p.caught, isHomeSpriteMode() ? 'home' : 'pixel')}"
          alt="${form.label}" loading="lazy" width="64" height="64" onerror="handleSpriteError(this, ${form.formId}, ${!!p.caught})">
     <div class="status">${statusHtml}</div>
-    <div class="holo" aria-hidden="true">${getHoloSparkHtml(!unavailable && (p.caught || p.perfect || isHuntingCard))}</div>`;
+    <div class="holo" aria-hidden="true">${getHoloSparkHtml(!unavailable && (p.caught || p.perfect))}</div>`;
   return card;
 }
 
@@ -2589,7 +2589,7 @@ function renderGrid() {
       <img src="${spriteUrl}"
              alt="${name}" loading="lazy" width="64" height="64" onerror="handleSpriteError(this, ${id}, ${useShinySprite})">
       <div class="status">${statusHtml}</div>
-      <div class="holo" aria-hidden="true">${getHoloSparkHtml((p.caught && !unavailable) || (p.perfect && !unavailable) || isHuntingCard)}</div>`;
+      <div class="holo" aria-hidden="true">${getHoloSparkHtml((p.caught && !unavailable) || (p.perfect && !unavailable))}</div>`;
     grid.appendChild(card);
   });
 
