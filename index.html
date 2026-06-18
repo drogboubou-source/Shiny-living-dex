@@ -793,32 +793,31 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .card .holo{
   position:absolute;inset:0;z-index:2;pointer-events:none;overflow:hidden;
 }
-.card .holo .spark{
-  position:absolute;width:8px;height:8px;margin:-4px 0 0 -4px;opacity:0;
-  background-color:var(--card-accent);
-  -webkit-mask-image:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M12,2 L14.8,9.2 L22,12 L14.8,14.8 L12,22 L9.2,14.8 L2,12 L9.2,9.2 Z' fill='white'/></svg>");
-  mask-image:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M12,2 L14.8,9.2 L22,12 L14.8,14.8 L12,22 L9.2,14.8 L2,12 L9.2,9.2 Z' fill='white'/></svg>");
-  -webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;
-  -webkit-mask-size:100% 100%;mask-size:100% 100%;
+.card .holo::before{
+  content:'';position:absolute;
+  top:-50%;left:-110%;width:320%;height:200%;
+  background:linear-gradient(to right,
+    transparent 20%,
+    color-mix(in srgb,var(--card-accent) 55%,transparent) 42%,
+    color-mix(in srgb,var(--card-accent) 30%,white 70%) 50%,
+    color-mix(in srgb,var(--card-accent) 55%,transparent) 58%,
+    transparent 80%);
   mix-blend-mode:screen;
-  will-change:opacity,transform;
-  animation:holoCrackle 3.2s ease-out infinite;
+  opacity:0;
+  will-change:transform;
+  transform:rotate(20deg) translateX(0%);
 }
-.card .holo .spark.s1{top:30%;left:32%;width:9px;height:9px;margin:-4.5px 0 0 -4.5px}
-.card .holo .spark.s2{top:28%;left:62%;width:7px;height:7px;margin:-3.5px 0 0 -3.5px;animation-delay:.4s}
-.card .holo .spark.s3{top:52%;left:38%;width:8px;height:8px;margin:-4px 0 0 -4px;animation-delay:.8s}
-.card .holo .spark.s4{top:55%;left:64%;width:6px;height:6px;margin:-3px 0 0 -3px;animation-delay:1.2s}
-.card .holo .spark.s5{top:40%;left:50%;width:7px;height:7px;margin:-3.5px 0 0 -3.5px;animation-delay:1.6s}
-.card .holo .spark.s6{top:23%;left:48%;width:6px;height:6px;margin:-3px 0 0 -3px;animation-delay:2s}
-.card .holo .spark.s7{top:62%;left:50%;width:7px;height:7px;margin:-3.5px 0 0 -3.5px;animation-delay:2.4s}
-@keyframes holoCrackle{
-  0%{opacity:0;transform:scale(.5)}
-  8%{opacity:.65;transform:scale(1)}
-  22%{opacity:0;transform:scale(.7)}
-  100%{opacity:0;transform:scale(.5)}
+.card.caught .holo::before,
+.card.perfect .holo::before{
+  opacity:.14;
+  animation:holoSheen 8s cubic-bezier(.45,0,.55,1) infinite;
+}
+@keyframes holoSheen{
+  0%{transform:rotate(20deg) translateX(-10%)}
+  100%{transform:rotate(20deg) translateX(60%)}
 }
 @media (prefers-reduced-motion:reduce){
-  .card .holo .spark{animation:none;opacity:0}
+  .card.caught .holo::before,.card.perfect .holo::before{animation:none;opacity:0}
 }
 
 
@@ -2429,7 +2428,7 @@ function getCardStatusHtml(p, isHuntingCard = false) {
 }
 
 function getHoloSparkHtml(show) {
-  return show ? '<i class="spark s1"></i><i class="spark s2"></i><i class="spark s3"></i><i class="spark s4"></i><i class="spark s5"></i><i class="spark s6"></i><i class="spark s7"></i>' : '';
+  return '';
 }
 
 function createRegionalOriginalCard(id) {
