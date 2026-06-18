@@ -781,13 +781,13 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
    EFFET HOLOGRAPHIQUE — discret et premium, uniquement sur les
    cartes Shiny trouvé / Parfait / En cours — jamais sur les
    cartes manquantes, ni sur .region-header / .gen-btn.
-   Pas de trait : un voile de couleur (la couleur propre de la
-   carte, --card-accent) qui respire doucement, plus de petites
-   étincelles qui scintillent par intermittence, en rappel du
-   sparkle des Pokémon shiny en jeu. Tout est animé via
-   "transform"/"opacity" (GPU, sans repaint) et chaque calque
-   est partagé par les 3 états pour rester parfaitement
-   synchronisé entre toutes les cartes.
+   Pas de voile, juste de petites étincelles dans la couleur
+   propre de la carte (--card-accent, via un masque CSS) qui
+   crépitent par à-coups puis s'effacent, en rappel du sparkle
+   des Pokémon shiny en jeu. Tout est animé via "transform" /
+   "opacity" (GPU, sans repaint) et chaque calque est partagé
+   par les 3 états pour rester parfaitement synchronisé entre
+   toutes les cartes.
 ══════════════════════════════════════ */
 .card .holo{
   position:absolute;inset:0;z-index:2;pointer-events:none;overflow:hidden;
@@ -795,44 +795,42 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .card .holo::before,
 .card .holo::after{
   content:'';position:absolute;inset:0;opacity:0;
+  background-color:var(--card-accent);
+  -webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;
+  -webkit-mask-size:100% 100%;mask-size:100% 100%;
+  -webkit-mask-position:center;mask-position:center;
 }
 .card.caught .holo::before,
 .card.perfect .holo::before,
 .card.hunting .holo::before{
-  top:-22%;left:-22%;width:144%;height:144%;
-  opacity:.42;
-  background:
-    radial-gradient(circle at 24% 28%, var(--card-accent) 0%, transparent 42%),
-    radial-gradient(circle at 76% 68%, var(--card-accent) 0%, transparent 46%),
-    radial-gradient(circle at 58% 14%, color-mix(in srgb, var(--card-accent) 65%, white 35%) 0%, transparent 38%);
+  -webkit-mask-image:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 140'><path d='M20,19 L21.68,23.32 L26,25 L21.68,26.68 L20,31 L18.32,26.68 L14,25 L18.32,23.32 Z' fill='white'/><path d='M58,38 L59.12,40.88 L62,42 L59.12,43.12 L58,46 L56.88,43.12 L54,42 L56.88,40.88 Z' fill='white'/></svg>");
+  mask-image:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 140'><path d='M20,19 L21.68,23.32 L26,25 L21.68,26.68 L20,31 L18.32,26.68 L14,25 L18.32,23.32 Z' fill='white'/><path d='M58,38 L59.12,40.88 L62,42 L59.12,43.12 L58,46 L56.88,43.12 L54,42 L56.88,40.88 Z' fill='white'/></svg>");
   mix-blend-mode:screen;
-  will-change:transform;
-  animation:holoDrift 9s ease-in-out infinite;
+  will-change:opacity,transform;
+  animation:holoCrackle 6.5s ease-out infinite;
 }
 .card.caught .holo::after,
 .card.perfect .holo::after,
 .card.hunting .holo::after{
-  background-image:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 140'><path d='M20,19 L21.68,23.32 L26,25 L21.68,26.68 L20,31 L18.32,26.68 L14,25 L18.32,23.32 Z' fill='white'/><path d='M78,51 L79.12,53.88 L82,55 L79.12,56.12 L78,59 L76.88,56.12 L74,55 L76.88,53.88 Z' fill='white'/><path d='M50,95 L51.4,98.6 L55,100 L51.4,101.4 L50,105 L48.6,101.4 L45,100 L48.6,98.6 Z' fill='white'/></svg>");
-  background-repeat:no-repeat;
-  background-size:100% 100%;
+  -webkit-mask-image:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 140'><path d='M78,75 L79.4,78.6 L83,80 L79.4,81.4 L78,85 L76.6,81.4 L73,80 L76.6,78.6 Z' fill='white'/><path d='M42,103.5 L43.26,106.74 L46.5,108 L43.26,109.26 L42,112.5 L40.74,109.26 L37.5,108 L40.74,106.74 Z' fill='white'/></svg>");
+  mask-image:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 140'><path d='M78,75 L79.4,78.6 L83,80 L79.4,81.4 L78,85 L76.6,81.4 L73,80 L76.6,78.6 Z' fill='white'/><path d='M42,103.5 L43.26,106.74 L46.5,108 L43.26,109.26 L42,112.5 L40.74,109.26 L37.5,108 L40.74,106.74 Z' fill='white'/></svg>");
   mix-blend-mode:screen;
   will-change:opacity,transform;
-  animation:holoTwinkle 4.5s ease-in-out infinite;
+  animation:holoCrackle 6.5s ease-out infinite;
+  animation-delay:.4s;
 }
-@keyframes holoDrift{
-  0%,100%{transform:translate(0,0) scale(1)}
-  50%{transform:translate(-4%,5%) scale(1.12)}
-}
-@keyframes holoTwinkle{
-  0%,68%{opacity:0;transform:scale(.6)}
-  80%{opacity:.85;transform:scale(1.15)}
-  92%{opacity:0;transform:scale(.85)}
-  100%{opacity:0;transform:scale(.6)}
+@keyframes holoCrackle{
+  0%{opacity:0;transform:scale(.4) translate(0,0)}
+  3%{opacity:.95;transform:scale(1.05) translate(0,0)}
+  6%{opacity:.1;transform:scale(.7) translate(0,0)}
+  9%{opacity:1;transform:scale(1.15) translate(1%,-1%)}
+  13%{opacity:.15;transform:scale(.6) translate(1%,-1%)}
+  17%{opacity:.85;transform:scale(1) translate(2%,-2%)}
+  24%{opacity:0;transform:scale(.5) translate(4%,-6%)}
+  100%{opacity:0;transform:scale(.4) translate(0,0)}
 }
 @media (prefers-reduced-motion:reduce){
-  .card.caught .holo::before,.card.perfect .holo::before,.card.hunting .holo::before{
-    animation:none;transform:translate(0,0) scale(1)
-  }
+  .card.caught .holo::before,.card.perfect .holo::before,.card.hunting .holo::before,
   .card.caught .holo::after,.card.perfect .holo::after,.card.hunting .holo::after{
     animation:none;opacity:0
   }
