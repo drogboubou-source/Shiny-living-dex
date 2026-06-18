@@ -778,37 +778,44 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .card .status-perfect{color:#d4af37}
 
 /* ══════════════════════════════════════
-   EFFET HOLOGRAPHIQUE — discret, uniquement sur les cartes
-   Shiny trouvé / Parfait / En cours — jamais sur les cartes
-   manquantes, ni sur .region-header / .gen-btn / region-map-*
-   Utilise la couleur propre à chaque état (--card-accent) et
-   une seule animation partagée pour que toutes les cartes
-   bougent à l'identique, en parfaite synchronisation.
+   EFFET HOLOGRAPHIQUE — discret et premium, uniquement sur les
+   cartes Shiny trouvé / Parfait / En cours — jamais sur les
+   cartes manquantes, ni sur .region-header / .gen-btn.
+   Le reflet reprend la couleur propre de la carte (--card-accent).
+   Optimisation : on anime "transform" (traité par le GPU, sans
+   repaint à chaque frame) plutôt que "background-position",
+   ce qui reste fluide même avec un grand nombre de cartes.
+   Une seule animation partagée garde toutes les cartes
+   parfaitement synchronisées entre elles.
 ══════════════════════════════════════ */
 .card .holo{
-  position:absolute;inset:0;z-index:2;pointer-events:none;opacity:0;
+  position:absolute;inset:0;z-index:2;pointer-events:none;overflow:hidden;
 }
-.card.caught .holo,
-.card.perfect .holo,
-.card.hunting .holo{
-  opacity:.55;
-  background-image:linear-gradient(115deg,
-    transparent 38%,
-    var(--card-accent) 47%,
-    color-mix(in srgb, var(--card-accent) 65%, white 35%) 50%,
-    var(--card-accent) 53%,
-    transparent 62%);
-  background-size:300% 300%;
-  background-repeat:no-repeat;
+.card .holo::before{
+  content:'';position:absolute;top:-55%;left:-25%;width:50%;height:210%;opacity:0;
+}
+.card.caught .holo::before,
+.card.perfect .holo::before,
+.card.hunting .holo::before{
+  opacity:.5;
+  background:linear-gradient(to right,
+    transparent 0%,
+    var(--card-accent) 32%,
+    color-mix(in srgb, var(--card-accent) 55%, white 45%) 50%,
+    var(--card-accent) 68%,
+    transparent 100%);
   mix-blend-mode:screen;
-  animation:holoSweep 6s linear infinite;
+  will-change:transform;
+  animation:holoSweep 7s ease-in-out infinite;
 }
 @keyframes holoSweep{
-  from{background-position:200% -100%}
-  to{background-position:-100% 200%}
+  from{transform:translateX(-160%) rotate(18deg)}
+  to{transform:translateX(160%) rotate(18deg)}
 }
 @media (prefers-reduced-motion:reduce){
-  .card.caught .holo,.card.perfect .holo,.card.hunting .holo{animation:none;background-position:50% 50%}
+  .card.caught .holo::before,.card.perfect .holo::before,.card.hunting .holo::before{
+    animation:none;transform:translateX(0) rotate(18deg)
+  }
 }
 
 
