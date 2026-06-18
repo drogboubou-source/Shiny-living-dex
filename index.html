@@ -707,6 +707,32 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
     linear-gradient(var(--card-accent),var(--card-accent)) no-repeat left 6px bottom 6px/2px 14px;
   opacity:.9;
 }
+.card .card-holo{
+  position:absolute;inset:0;z-index:5;pointer-events:none;opacity:0;
+  background-size:300% 300%;background-position:-100% -100%;
+  mix-blend-mode:screen;
+}
+.card.caught .card-holo{
+  background:linear-gradient(105deg,
+    transparent 0%, transparent 40%,
+    rgba(192,132,252,.6) 46%,
+    rgba(255,255,255,.95) 50%,
+    rgba(212,175,55,.5) 55%,
+    rgba(125,211,252,.5) 60%,
+    transparent 67%, transparent 100%);
+}
+.card.perfect .card-holo{
+  background:linear-gradient(105deg,
+    transparent 0%, transparent 38%,
+    rgba(212,175,55,.6) 45%,
+    rgba(255,255,255,.95) 50%,
+    rgba(192,132,252,.55) 56%,
+    transparent 64%, transparent 100%);
+}
+.card.caught .card-holo,.card.perfect .card-holo{
+  opacity:.9;animation:holoSweep 4.3s ease-in-out infinite;
+}
+.card.caught:hover .card-holo,.card.perfect:hover .card-holo{animation-duration:1.6s}
 .card:hover{
   transform:translateY(-3px) scale(1.014);
   box-shadow:
@@ -773,9 +799,17 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .card.form-card .pname{color:#dff6ff}
 .card.form-card .status{background:rgba(125,211,252,.16);color:#fff}
 .card.unavailable{filter:grayscale(.85) saturate(.5);opacity:1}
+.card.unavailable .card-holo{display:none}
 .form-tag{position:absolute;top:6px;right:6px;font-size:7px;font-weight:800;color:#0d0d12;background:var(--card-accent);padding:3px 5px;z-index:2}
 .card .status-shiny{color:#c084fc}
 .card .status-perfect{color:#d4af37}
+@keyframes holoSweep{
+  0%,100%{background-position:-100% -100%}
+  50%{background-position:200% 200%}
+}
+@media (prefers-reduced-motion: reduce){
+  .card-holo{animation:none !important}
+}
 
 
 
@@ -2408,7 +2442,8 @@ function createRegionalOriginalCard(id) {
     <div class="type-row">${renderTypeBadges(id)}</div>
     <img src="${getPokemonSpriteUrl(id, !!p.caught)}"
          alt="${name}" loading="lazy" width="64" height="64" onerror="handleSpriteError(this, ${id}, ${!!p.caught})">
-    <div class="status">${statusHtml}</div>`;
+    <div class="status">${statusHtml}</div>
+    <span class="card-holo" aria-hidden="true"></span>`;
   return card;
 }
 
@@ -2423,11 +2458,11 @@ function createRegionalFormCard(form) {
   card.setAttribute('role', 'button');
   card.setAttribute('tabindex', '0');
   card.setAttribute('aria-label', `${form.label}, forme de ${form.region}`);
-  card.onclick = () => { if (!unavailable) activatePokemonCard(card, form.formId); };
+  card.onclick = () => activatePokemonCard(card, form.formId);
   card.onkeydown = e => {
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
-      if (!unavailable) activatePokemonCard(card, form.formId);
+      activatePokemonCard(card, form.formId);
     }
   };
   card.innerHTML = `
@@ -2437,7 +2472,8 @@ function createRegionalFormCard(form) {
     <div class="type-row">${renderTypeBadgesForTypes(form.types)}</div>
     <img src="${getPokemonSpriteUrl(form.formId, !!p.caught, isHomeSpriteMode() ? 'home' : 'pixel')}"
          alt="${form.label}" loading="lazy" width="64" height="64" onerror="handleSpriteError(this, ${form.formId}, ${!!p.caught})">
-    <div class="status">${statusHtml}</div>`;
+    <div class="status">${statusHtml}</div>
+    <span class="card-holo" aria-hidden="true"></span>`;
   return card;
 }
 
@@ -2537,7 +2573,8 @@ function renderGrid() {
       <div class="type-row">${typeBadges}</div>
       <img src="${spriteUrl}"
              alt="${name}" loading="lazy" width="64" height="64" onerror="handleSpriteError(this, ${id}, ${useShinySprite})">
-      <div class="status">${statusHtml}</div>`;
+      <div class="status">${statusHtml}</div>
+      <span class="card-holo" aria-hidden="true"></span>`;
     grid.appendChild(card);
   });
 
