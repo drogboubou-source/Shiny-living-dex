@@ -92,6 +92,10 @@ button,.btn,.card,.gen-btn{-webkit-tap-highlight-color:transparent}
 
 /* scanlines */
 body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.06) 2px,rgba(0,0,0,.06) 4px);pointer-events:none;z-index:9999}
+body.readonly-share .edit-only{display:none!important}
+body.readonly-share .readonly-disabled{opacity:.62;pointer-events:none}
+body.readonly-share .modal-form-fields input,
+body.readonly-share .modal-form-fields select{pointer-events:none}
 
 /* ── TOPBAR ── */
 .topbar{
@@ -1150,12 +1154,12 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
       <div id="genList"></div>
       <div class="sidebar-actions">
         <div class="sidebar-section-label">Données</div>
-        <label class="btn" title="Importer pokemon.json">
+        <label class="btn edit-only" title="Importer pokemon.json">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
           Importer JSON
           <input type="file" accept=".json" style="display:none" onchange="importJSON(event)">
         </label>
-        <button class="btn" onclick="exportJSON()">
+        <button class="btn edit-only" onclick="exportJSON()">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
           Exporter JSON
         </button>
@@ -1186,7 +1190,7 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
           <option value="forms">Formes régionales</option>
         </select>
       </label>
-      <button class="counter-button" id="counterButton" type="button" onclick="toggleCounterMode()" onpointerup="this.blur()" ontouchend="this.blur()"></button>
+        <button class="counter-button edit-only" id="counterButton" type="button" onclick="toggleCounterMode()" onpointerup="this.blur()" ontouchend="this.blur()"></button>
       <button class="perfect-summary" id="perfectSummary" type="button" onclick="toggleSpriteMode()" onpointerup="this.blur()" ontouchend="this.blur()"></button>
     </div>
     <div class="grid" id="grid"></div>
@@ -1292,7 +1296,7 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
     </div>
     </div>
 
-    <div class="hunt-panel" id="huntPanel">
+    <div class="hunt-panel edit-only" id="huntPanel">
       <div class="hunt-label">Rencontres en cours</div>
       <div class="hunt-count" id="huntCount">0</div>
       <div class="hunt-odds" aria-live="polite">
@@ -1315,8 +1319,8 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
 
     <div class="modal-footer">
       <button class="btn" onclick="closeModal()">Annuler</button>
-      <button class="btn btn-counter-modal" id="modalCounterBtn" type="button" onclick="toggleModalCounter()">Compteur</button>
-      <button class="btn-save" id="saveBtn" onclick="saveModal()">✦ Sauvegarder</button>
+      <button class="btn btn-counter-modal edit-only" id="modalCounterBtn" type="button" onclick="toggleModalCounter()">Compteur</button>
+      <button class="btn-save edit-only" id="saveBtn" onclick="saveModal()">✦ Sauvegarder</button>
     </div>
   </div>
 </div>
@@ -1454,6 +1458,14 @@ let spriteMode = 'pixel';
 let counterMode = false;
 let restoringHistory = false;
 const SPRITE_FALLBACK = './Assets/icon-192.png';
+const READONLY_PARAM_VALUES = new Set(['1', 'true', 'yes', 'view']);
+const READONLY_SHARE = (() => {
+  const params = new URLSearchParams(location.search);
+  return READONLY_PARAM_VALUES.has(String(params.get('readonly') || '').toLowerCase())
+    || READONLY_PARAM_VALUES.has(String(params.get('readOnly') || '').toLowerCase())
+    || READONLY_PARAM_VALUES.has(String(params.get('view') || '').toLowerCase())
+    || String(params.get('mode') || '').toLowerCase() === 'readonly';
+})();
 const STORAGE_KEY = 'shiny_dex_v4';
 const LEGACY_STORAGE_KEY = 'shiny_dex_v3';
 const REGION_SESSION_KEY = 'shiny_dex_session_region';
@@ -1464,6 +1476,18 @@ const HUNT_CAPTURED_KEY = 'shiny_dex_hunt_captured';
 const POKEMON_CRY_BASE = 'https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/latest';
 const ITEM_SPRITE_BASE = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items';
 let activePokemonCry = null;
+
+function isReadOnlyShare() {
+  return READONLY_SHARE;
+}
+
+function applyReadOnlyShareMode() {
+  document.body.classList.toggle('readonly-share', isReadOnlyShare());
+  if (!isReadOnlyShare()) return;
+  document.querySelectorAll('#modalFormFields input, #modalFormFields select').forEach(field => {
+    field.disabled = true;
+  });
+}
 
 const REGIONAL_FORMS = [
   {baseId:19, formId:10091, region:'Alola', label:'Rattata d’Alola', types:['dark','normal']},
@@ -1616,21 +1640,24 @@ const NATURES = [
    INIT — charge pokemon.json depuis GitHub Pages
 ══════════════════════════════════════ */
 function init() {
+  applyReadOnlyShareMode();
   // Charge la progression locale depuis le localStorage
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    const legacyRaw = localStorage.getItem(LEGACY_STORAGE_KEY);
     const sessionRegion = sessionStorage.getItem(REGION_SESSION_KEY);
     const savedSpriteMode = localStorage.getItem(SPRITE_MODE_KEY);
     const savedCounterMode = localStorage.getItem(COUNTER_MODE_KEY);
     currentRegion = sessionRegion === 'all' || REGIONS[parseInt(sessionRegion)] ? (sessionRegion === 'all' ? 'all' : parseInt(sessionRegion)) : 'all';
     spriteMode = savedSpriteMode === 'home' ? 'home' : 'pixel';
-    counterMode = savedCounterMode === 'true';
-    if (raw) {
-      progress = sanitizeProgress(JSON.parse(raw), { trustCaught: true });
-    } else if (legacyRaw) {
-      progress = sanitizeProgress(JSON.parse(legacyRaw), { trustCaught: false });
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+    counterMode = isReadOnlyShare() ? false : savedCounterMode === 'true';
+    if (!isReadOnlyShare()) {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      const legacyRaw = localStorage.getItem(LEGACY_STORAGE_KEY);
+      if (raw) {
+        progress = sanitizeProgress(JSON.parse(raw), { trustCaught: true });
+      } else if (legacyRaw) {
+        progress = sanitizeProgress(JSON.parse(legacyRaw), { trustCaught: false });
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+      }
     }
   } catch(e) { progress = {}; }
 
@@ -1699,7 +1726,7 @@ function rowMeansCaught(p) {
 
 // Au chargement de la page, on tente de récupérer le fichier pokemon.json
 document.addEventListener('DOMContentLoaded', () => {
-  fetch('pokemon.json')
+  fetch('pokemon.json', { cache: 'no-store' })
     .then(response => {
       if (!response.ok) {
         throw new Error("Le fichier pokemon.json n'a pas pu être chargé automatiquement.");
@@ -1825,6 +1852,7 @@ function readStoredIdList(key) {
 }
 
 function writeStoredIdList(key, ids) {
+  if (isReadOnlyShare()) return;
   localStorage.setItem(key, JSON.stringify([...new Set(ids.map(Number).filter(Number.isFinite))]));
 }
 
@@ -2111,6 +2139,7 @@ function updateCounterButton() {
 }
 
 function toggleCounterMode() {
+  if (isReadOnlyShare()) return;
   counterMode = !counterMode;
   localStorage.setItem(COUNTER_MODE_KEY, String(counterMode));
   updateCounterButton();
@@ -2962,6 +2991,7 @@ function setModalCounterMode(enabled) {
 }
 
 function toggleModalCounter() {
+  if (isReadOnlyShare()) return;
   const modal = document.querySelector('#overlay .modal');
   const enabled = !modal?.classList.contains('hunt-mode');
   setModalCounterMode(enabled);
@@ -2969,6 +2999,7 @@ function toggleModalCounter() {
 }
 
 function saveProgressEntry(id, entry) {
+  if (isReadOnlyShare()) return;
   const hasIvs = entry.ivs && Object.values(entry.ivs).some(Boolean);
   const isEmpty = !entry.caught && !entry.perfect && !entry.hunting && !entry.huntCount && !entry.nickname && !entry.encounters && !entry.eggs && !entry.date && !entry.context && !entry.youtube && !entry.pokeball && !entry.nature && !hasIvs;
   if (isEmpty) delete progress[id];
@@ -2991,6 +3022,7 @@ function unregisterHunt(id) {
 }
 
 function registerHuntCapture(id) {
+  if (isReadOnlyShare()) return;
   unregisterHunt(id);
   const captured = readStoredIdList(HUNT_CAPTURED_KEY).filter(storedId => storedId !== id && progress[storedId]?.caught);
   captured.push(id);
@@ -3028,6 +3060,7 @@ function renderHuntCounter() {
 }
 
 function adjustHuntCounter(delta) {
+  if (isReadOnlyShare()) return;
   const entry = getCurrentHuntEntry();
   if (!entry) return;
   const field = entry.caught ? 'encounters' : 'huntCount';
@@ -3046,6 +3079,7 @@ function adjustHuntCounter(delta) {
 }
 
 function resetHuntCounter() {
+  if (isReadOnlyShare()) return;
   const entry = getCurrentHuntEntry();
   if (!entry) return;
   const field = entry.caught ? 'encounters' : 'huntCount';
@@ -3060,6 +3094,7 @@ function resetHuntCounter() {
 }
 
 function markHuntFound() {
+  if (isReadOnlyShare()) return;
   const entry = getCurrentHuntEntry();
   if (!entry) return;
   entry.caught = true;
@@ -3147,6 +3182,7 @@ function closeModal(options = {}) {
 }
 
 function saveModal() {
+  if (isReadOnlyShare()) return;
   if (!currentPokemon) return;
   const enc  = parseInt(document.getElementById('fEncounters').value) || 0;
   const eggs = parseInt(document.getElementById('fEggs').value) || 0;
@@ -3185,6 +3221,7 @@ function saveModal() {
      pour pouvoir le republier sur GitHub
 ══════════════════════════════════════ */
 function exportJSON() {
+  if (isReadOnlyShare()) return;
   const out = [];
   const exportIds = [
     ...Array.from({ length: 1025 }, (_, index) => index + 1),
@@ -3233,10 +3270,12 @@ function exportJSON() {
 }
 
 async function shareAppLink() {
-  const url = new URL('./', location.href).href;
+  const shareUrl = new URL('./', location.href);
+  shareUrl.searchParams.set('readonly', '1');
+  const url = shareUrl.href;
   const data = {
     title: 'Shiny Living Dex',
-    text: 'Voici mon Shiny Living Dex',
+    text: 'Voici mon Shiny Living Dex en lecture seule',
     url
   };
   try {
@@ -3261,6 +3300,7 @@ async function shareAppLink() {
 }
 
 function importJSON(e) {
+  if (isReadOnlyShare()) return;
   const file = e.target.files[0];
   if (!file) return;
   const reader = new FileReader();
@@ -3312,6 +3352,3 @@ if ('serviceWorker' in navigator) {
 </script>
 </body>
 </html>
-
-
-
