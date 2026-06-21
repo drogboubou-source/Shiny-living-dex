@@ -1492,6 +1492,7 @@ let spriteMode = 'pixel';
 let counterMode = false;
 let currentGameFilter = '';
 let restoringHistory = false;
+let suppressCardActivationUntil = 0;
 const SPRITE_FALLBACK = './Assets/icon-192.png';
 const READONLY_PARAM_VALUES = new Set(['1', 'true', 'yes', 'view']);
 const READONLY_SHARE = (() => {
@@ -2218,6 +2219,7 @@ function playPokemonCry(id) {
 }
 
 function activatePokemonCard(card, id) {
+  if (Date.now() < suppressCardActivationUntil) return;
   openModal(id);
 }
 
@@ -2898,11 +2900,11 @@ function initSidebarSwipe() {
     sb.classList.remove('dragging');
     sb.style.transform = '';
     if (dragging) {
+      suppressCardActivationUntil = Date.now() + 350;
       if (sidebarOpen && dx < -swipeThreshold) {
         setSidebar(false);
       } else if (!sidebarOpen && dx > swipeThreshold) {
-        const openCard = startedCard || document.elementFromPoint(endX, endY)?.closest('.card');
-        if (openCard) openCard.click();
+        setSidebar(true);
       }
     }
     canDrag = false;
