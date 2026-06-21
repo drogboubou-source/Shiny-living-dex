@@ -2853,10 +2853,12 @@ function initSidebarSwipe() {
   const sb = document.getElementById('sidebar');
   const maxWidth = () => parseInt(getComputedStyle(document.documentElement).getPropertyValue('--sidebar-w'), 10) || 220;
   const edgeZone = 24;
+  const swipeThreshold = 58;
   let startX = 0;
   let startY = 0;
   let dragging = false;
   let canDrag = false;
+  let startedCard = null;
 
   document.addEventListener('touchstart', e => {
     if (window.innerWidth > 720 || e.touches.length !== 1) return;
@@ -2868,6 +2870,7 @@ function initSidebarSwipe() {
     startX = x;
     startY = y;
     dragging = false;
+    startedCard = e.target.closest('.card');
   }, { passive: true });
 
   document.addEventListener('touchmove', e => {
@@ -2877,28 +2880,34 @@ function initSidebarSwipe() {
     const dx = x - startX;
     if (!dragging && Math.abs(dx) > 12 && Math.abs(dx) > Math.abs(y - startY)) {
       dragging = true;
-      sb.classList.add('dragging');
+      if (sidebarOpen) sb.classList.add('dragging');
     }
     if (!dragging) return;
     e.preventDefault();
-    const w = maxWidth();
-    const offset = sidebarOpen ? Math.min(0, dx) : Math.min(0, -w + Math.max(0, dx));
-    sb.style.transform = `translateX(${offset}px)`;
+    if (sidebarOpen) {
+      const offset = Math.min(0, dx);
+      sb.style.transform = `translateX(${offset}px)`;
+    }
   }, { passive: false });
 
   document.addEventListener('touchend', e => {
     if (!canDrag) return;
     const endX = e.changedTouches[0]?.clientX || startX;
+    const endY = e.changedTouches[0]?.clientY || startY;
     const dx = endX - startX;
     sb.classList.remove('dragging');
     sb.style.transform = '';
     if (dragging) {
-      if (!sidebarOpen && dx > 58) setSidebar(true);
-      else if (sidebarOpen && dx < -58) setSidebar(false);
-      else setSidebar(sidebarOpen);
+      if (sidebarOpen && dx < -swipeThreshold) {
+        setSidebar(false);
+      } else if (!sidebarOpen && dx > swipeThreshold) {
+        const openCard = startedCard || document.elementFromPoint(endX, endY)?.closest('.card');
+        if (openCard) openCard.click();
+      }
     }
     canDrag = false;
     dragging = false;
+    startedCard = null;
   }, { passive: true });
 }
 
@@ -2913,7 +2922,6 @@ function initPullToRefresh() {
   let distance = 0;
   let axisLocked = null; // 'x' (swipe région) ou 'y' (pull to refresh)
   let startedInEdgeZone = false;
-  let startedCard = null;
   const threshold = 76;
   const swipeThreshold = 70;
   const edgeZone = 24; // même zone que le bord utilisé pour le menu latéral
@@ -2926,7 +2934,6 @@ function initPullToRefresh() {
     axisLocked = null;
     distance = 0;
     startedInEdgeZone = startX <= edgeZone;
-    startedCard = e.target.closest('.card');
   }, { passive: true });
 
   main.addEventListener('touchmove', e => {
@@ -2966,13 +2973,7 @@ function initPullToRefresh() {
     const dx = endX - startX;
 
     if (axisLocked === 'x' && Math.abs(dx) >= swipeThreshold) {
-      if (startedInEdgeZone && dx > 0) {
-        const openCard = startedCard || document.elementFromPoint(endX, endY)?.closest('.card');
-        if (openCard) openCard.click();
-        else goToAdjacentRegion(-1);
-      } else {
-        goToAdjacentRegion(dx < 0 ? 1 : -1);
-      }
+      if (!startedInEdgeZone) goToAdjacentRegion(dx < 0 ? 1 : -1);
     } else if (pulling && distance >= threshold) {
       indicator.textContent = 'Actualisation...';
       indicator.classList.add('visible', 'ready');
