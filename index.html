@@ -2912,7 +2912,6 @@ function initPullToRefresh() {
   let pulling = false;
   let distance = 0;
   let axisLocked = null; // 'x' (swipe région) ou 'y' (pull to refresh)
-  let startedOnCard = false;
   const threshold = 76;
   const swipeThreshold = 70;
 
@@ -2923,7 +2922,6 @@ function initPullToRefresh() {
     pulling = main.scrollTop <= 0;
     axisLocked = null;
     distance = 0;
-    startedOnCard = !!e.target.closest('.card');
   }, { passive: true });
 
   main.addEventListener('touchmove', e => {
@@ -2938,6 +2936,7 @@ function initPullToRefresh() {
     }
 
     if (axisLocked === 'x') {
+      e.preventDefault();
       indicator.classList.remove('visible', 'ready');
       return;
     }
@@ -2962,7 +2961,7 @@ function initPullToRefresh() {
     const dx = endX - startX;
 
     if (axisLocked === 'x') {
-      if (!startedOnCard && Math.abs(dx) >= swipeThreshold) goToAdjacentRegion(dx < 0 ? 1 : -1);
+      if (Math.abs(dx) >= swipeThreshold) goToAdjacentRegion(dx < 0 ? 1 : -1);
     } else if (pulling && distance >= threshold) {
       indicator.textContent = 'Actualisation...';
       indicator.classList.add('visible', 'ready');
