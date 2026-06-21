@@ -2553,12 +2553,55 @@ function getActiveGameFilter() {
   return currentGameFilter ? GAME_FILTER_BY_ID[currentGameFilter] : null;
 }
 
+function getVisiblePokemonIds() {
+  const r = currentRegion === 'all' ? getAllRegionStats() : REGIONS[currentRegion];
+  const search = document.getElementById('searchInput')?.value.toLowerCase() || '';
+  const filter = document.getElementById('filterSelect')?.value || 'all';
+  const sort = document.getElementById('sortSelect')?.value || 'number';
+  const activeGame = getActiveGameFilter();
+  const sourceIds = activeGame
+    ? activeGame.ids
+    : Array.from({ length: r.end - r.start + 1 }, (_, index) => r.start + index);
+  const ids = [];
+
+  for (const id of sourceIds) {
+    const name = NAMES[id] || `#${id}`;
+    const p = progress[id] || {};
+    const unavailable = isUnavailablePokemon(id);
+    if (search && !name.toLowerCase().includes(search) && !String(id).includes(search)) continue;
+    if (counterMode && (p.caught || (parseInt(p.huntCount) || 0) < 1)) continue;
+    if (sort === 'legendary' && !LEGENDARY_ODDS_BASE_IDS.has(id)) continue;
+    if (unavailable) continue;
+    if (!pokemonMatchesSortMode(p, sort)) continue;
+    if (filter === 'caught' && !p.caught) continue;
+    if (filter === 'missing' && p.caught) continue;
+    if (filter === 'perfect' && (!p.caught || !p.perfect)) continue;
+    ids.push(id);
+  }
+
+  ids.sort((a, b) => {
+    if (!counterMode) return comparePokemonBySort(a, b, sort);
+    const pa = progress[a] || {};
+    const pb = progress[b] || {};
+    const ha = !!pa.hunting || !!pa.huntCount;
+    const hb = !!pb.hunting || !!pb.huntCount;
+    if (ha !== hb) return ha ? -1 : 1;
+    const ca = parseInt(pa.huntCount) || 0;
+    const cb = parseInt(pb.huntCount) || 0;
+    if (ca !== cb) return cb - ca;
+    return a - b;
+  });
+
+  return ids;
+}
+
 function getCardStatusHtml(p, isHuntingCard = false) {
   if (isHuntingCard) return '<span>En cours</span>';
   if (p.caught && p.perfect) {
     return '<span class="status-perfect">Parfait</span>';
   }
-  return p.caught ? '<span class="status-shiny">Shiny</span>' : 'Manquant';
+  if (p.caught) return '<span class="status-shiny">Shiny</span>';
+  return p.target ? 'Manquant' : 'Ignoré';
 }
 
 function getHoloSparkHtml(show) {
@@ -2636,7 +2679,6 @@ function renderRegionalFormsGrid(range, search, grid) {
 function renderGrid() {
   const r      = currentRegion === 'all' ? getAllRegionStats() : REGIONS[currentRegion];
   const search = document.getElementById('searchInput').value.toLowerCase();
-  const filter = document.getElementById('filterSelect')?.value || 'all';
   const sort   = document.getElementById('sortSelect')?.value || 'number';
   const activeGame = getActiveGameFilter();
   const isHuntingView = counterMode;
@@ -2644,44 +2686,13 @@ function renderGrid() {
   grid.classList.toggle('hunt-grid', isHuntingView);
   setGridVisualVars(grid, r);
   grid.innerHTML = '';
-  const ids = [];
 
   if (!activeGame && !counterMode && sort === 'forms') {
     renderRegionalFormsGrid(r, search, grid);
     return;
   }
 
-  const sourceIds = activeGame
-    ? activeGame.ids
-    : Array.from({ length: r.end - r.start + 1 }, (_, index) => r.start + index);
-
-  for (const id of sourceIds) {
-    const name = NAMES[id] || `#${id}`;
-    const p    = progress[id] || {};
-    const unavailable = isUnavailablePokemon(id);
-    if (search && !name.toLowerCase().includes(search) && !String(id).includes(search)) continue;
-    if (counterMode && (p.caught || (parseInt(p.huntCount) || 0) < 1)) continue;
-    if (sort === 'legendary' && !LEGENDARY_ODDS_BASE_IDS.has(id)) continue;
-    if (unavailable && ['caught','missing','perfect','date-desc','date-asc'].includes(sort)) continue;
-    if (!pokemonMatchesSortMode(p, sort)) continue;
-    if (filter === 'caught'  && !p.caught)  continue;
-    if (filter === 'missing' && p.caught)   continue;
-    if (filter === 'perfect' && (!p.caught || !p.perfect)) continue;
-    ids.push(id);
-  }
-
-  ids.sort((a, b) => {
-    if (!counterMode) return comparePokemonBySort(a, b, sort);
-    const pa = progress[a] || {};
-    const pb = progress[b] || {};
-    const ha = !!pa.hunting || !!pa.huntCount;
-    const hb = !!pb.hunting || !!pb.huntCount;
-    if (ha !== hb) return ha ? -1 : 1;
-    const ca = parseInt(pa.huntCount) || 0;
-    const cb = parseInt(pb.huntCount) || 0;
-    if (ca !== cb) return cb - ca;
-    return a - b;
-  });
+  const ids = getVisiblePokemonIds();
 
   let lastDividerGen = null;
   let previousDividerRegion = null;
@@ -2891,14 +2902,13 @@ function getModalRange() {
 
 function getAdjacentModalId(direction, fromId = currentPokemon) {
   if (!fromId) return null;
-  const range = getModalRange();
+  const ids = getVisiblePokemonIds();
   const baseId = getPokemonBaseId(fromId);
-  if (!range) return null;
-  let nextId = baseId + direction;
-  while (nextId >= range.start && nextId <= range.end) {
-    if (!isUnavailablePokemon(nextId)) return nextId;
-    nextId += direction;
-  }
+  const index = ids.indexOf(baseId);
+  if (index >= 0) return ids[index + direction] || null;
+  const sorted = direction < 0 ? [...ids].reverse() : ids;
+  const fallback = sorted.find(id => direction < 0 ? id < baseId : id > baseId);
+  if (fallback) return fallback;
   return null;
 }
 
