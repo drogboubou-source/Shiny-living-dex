@@ -786,6 +786,8 @@ body.readonly-share .modal-form-fields select{pointer-events:none}
 .card.caught .status{background:rgba(192,132,252,.18);color:#fff}
 .card.perfect .status{background:rgba(212,175,55,.2);color:#fff}
 .card.hunting .status{background:rgba(125,211,252,.18);color:#fff}
+.card.target:not(.caught):not(.perfect):not(.hunting) .status{background:rgba(126,214,96,.18);color:#fff;border-color:rgba(126,214,96,.36)}
+.card.target:not(.caught):not(.perfect):not(.hunting) .status::before{background:#7ed660;box-shadow:0 0 6px rgba(126,214,96,.9)}
 .card.form-original{--card-accent:rgba(255,255,255,.4)}
 .card.form-card{--card-accent:#7dd3fc;border-color:#7dd3fc}
 .card.form-card .pname{color:#dff6ff}
