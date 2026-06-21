@@ -1508,12 +1508,31 @@ const COUNTER_MODE_KEY = 'shiny_dex_counter_mode';
 const GAME_FILTER_KEY = 'shiny_dex_game_filter';
 const HUNT_ORDER_KEY = 'shiny_dex_hunt_order';
 const HUNT_CAPTURED_KEY = 'shiny_dex_hunt_captured';
+const TARGET_REGION_ID = 'targets';
+const TARGETS_META = {
+  name: 'Cibles',
+  gen: 'Focus',
+  start: 1,
+  end: 1025,
+  color: '#7ed660',
+  map: './Assets/targets-header.png'
+};
 const POKEMON_CRY_BASE = 'https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/latest';
 const ITEM_SPRITE_BASE = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items';
 let activePokemonCry = null;
 
 function isReadOnlyShare() {
   return READONLY_SHARE;
+}
+
+function isValidRegionKey(value) {
+  if (value === 'all' || value === TARGET_REGION_ID) return true;
+  return !!REGIONS[parseInt(value)];
+}
+
+function normalizeRegionKey(value) {
+  if (value === 'all' || value === TARGET_REGION_ID) return value;
+  return REGIONS[parseInt(value)] ? parseInt(value) : 'all';
 }
 
 function applyReadOnlyShareMode() {
@@ -1633,11 +1652,37 @@ function isUnavailablePokemon(id) {
 }
 
 function getAvailableIdsInRange(range) {
+  if (Array.isArray(range?.ids)) return range.ids.filter(id => !isUnavailablePokemon(id));
   const ids = [];
   for (let id = range.start; id <= range.end; id++) {
     if (!isUnavailablePokemon(id)) ids.push(id);
   }
   return ids;
+}
+
+function getTargetIds() {
+  return Object.keys(progress)
+    .map(Number)
+    .filter(id => Number.isFinite(id) && !isUnavailablePokemon(id) && progress[id]?.target)
+    .sort((a, b) => a - b);
+}
+
+function getTargetsRegionStats() {
+  const ids = getTargetIds();
+  const caught = ids.filter(id => progress[id]?.caught).length;
+  const perfect = ids.filter(id => progress[id]?.caught && progress[id]?.perfect).length;
+  return {
+    ...TARGETS_META,
+    ids,
+    caught,
+    perfect,
+    total: ids.length
+  };
+}
+
+function getCurrentRegionScope() {
+  if (currentRegion === TARGET_REGION_ID) return getTargetsRegionStats();
+  return currentRegion === 'all' ? getAllRegionStats() : REGIONS[currentRegion];
 }
 
 function getHuntOddsMeta(id) {
@@ -1717,7 +1762,7 @@ function init() {
     const savedSpriteMode = localStorage.getItem(SPRITE_MODE_KEY);
     const savedCounterMode = localStorage.getItem(COUNTER_MODE_KEY);
     const savedGameFilter = localStorage.getItem(GAME_FILTER_KEY) || '';
-    currentRegion = sessionRegion === 'all' || REGIONS[parseInt(sessionRegion)] ? (sessionRegion === 'all' ? 'all' : parseInt(sessionRegion)) : 'all';
+    currentRegion = normalizeRegionKey(sessionRegion);
     spriteMode = savedSpriteMode === 'home' ? 'home' : 'pixel';
     counterMode = isReadOnlyShare() ? false : savedCounterMode === 'true';
     currentGameFilter = GAME_FILTER_BY_ID[savedGameFilter] ? savedGameFilter : '';
@@ -1903,7 +1948,7 @@ function updateAppHistory(mode = 'replace') {
 function applyAppHistoryState(state) {
   if (!state || state.app !== 'shiny-living-dex') return;
   restoringHistory = true;
-  currentRegion = state.region === 'all' || REGIONS[parseInt(state.region)] ? (state.region === 'all' ? 'all' : parseInt(state.region)) : 'all';
+  currentRegion = normalizeRegionKey(state.region);
   sessionStorage.setItem(REGION_SESSION_KEY, String(currentRegion));
   renderSidebar();
   renderStats();
@@ -1998,9 +2043,12 @@ function updateHeaderHuntSprite() {
 function renderStats() {
   const stats = getCurrentStats();
   const scopeLabel = document.getElementById('statsScopeLabel');
+  const scope = getCurrentRegionScope();
   if (scopeLabel) {
-    scopeLabel.textContent = currentRegion === 'all' ? 'Toutes les régions' : `${stats.regionName} · Génération ${stats.gen}`;
-    scopeLabel.style.color = (currentRegion === 'all' ? getAllRegionStats() : REGIONS[currentRegion]).color;
+    scopeLabel.textContent = currentRegion === 'all'
+      ? 'Toutes les régions'
+      : (currentRegion === TARGET_REGION_ID ? 'Cibles' : `${stats.regionName} · Génération ${stats.gen}`);
+    scopeLabel.style.color = scope.color;
   }
   document.getElementById('statsBar').innerHTML = `
     <div class="tstat"><strong style="color:#7ed660">${stats.caught}/${stats.total}</strong> Shinys</div>
@@ -2057,17 +2105,16 @@ function renderRegionStatsPanel(stats, color) {
 }
 
 function getCurrentRegionPerfectCount() {
-  const r = currentRegion === 'all' ? getAllRegionStats() : REGIONS[currentRegion];
+  const r = getCurrentRegionScope();
   let perfect = 0;
-  for (let id = r.start; id <= r.end; id++) {
-    if (isUnavailablePokemon(id)) continue;
+  for (const id of getAvailableIdsInRange(r)) {
     if (progress[id]?.caught && progress[id]?.perfect) perfect++;
   }
   return perfect;
 }
 
 function getCurrentStats() {
-  const r = currentRegion === 'all' ? getAllRegionStats() : REGIONS[currentRegion];
+  const r = getCurrentRegionScope();
   const availableIds = getAvailableIdsInRange(r);
   const total = availableIds.length;
   const entries = [];
@@ -2330,12 +2377,14 @@ function closeStatsOnOutsideClick(e) {
 }
 
 function countCaught(r) {
+  if (Array.isArray(r?.ids)) return r.ids.filter(id => progress[id]?.caught).length;
   let c = 0;
   for (let i = r.start; i <= r.end; i++) if (!isUnavailablePokemon(i) && progress[i]?.caught) c++;
   return c;
 }
 
 function countPerfect(r) {
+  if (Array.isArray(r?.ids)) return r.ids.filter(id => progress[id]?.caught && progress[id]?.perfect).length;
   let c = 0;
   for (let i = r.start; i <= r.end; i++) if (!isUnavailablePokemon(i) && progress[i]?.perfect) c++;
   return c;
@@ -2370,6 +2419,9 @@ function renderSidebar() {
   const all = getAllRegionStats();
   const allPct = all.caught / all.total * 100;
   const allPctText = formatPercent(allPct);
+  const targets = getTargetsRegionStats();
+  const targetsPct = targets.total > 0 ? targets.caught / targets.total * 100 : 0;
+  const targetsPctText = formatPercent(targetsPct);
   const allButton = `
     <div class="gen-item all-progress ${currentRegion === 'all' ? 'active' : ''}">
       <button class="gen-btn ${currentRegion === 'all' ? 'active' : ''}" onclick="switchRegion('all')">
@@ -2388,6 +2440,26 @@ function renderSidebar() {
       </div>
       <div class="gen-perfect-row">
         ${all.perfect} ${perfectLabel(all.perfect).toLowerCase()}
+      </div>
+    </div>`;
+  const targetsButton = `
+    <div class="gen-item all-progress ${currentRegion === TARGET_REGION_ID ? 'active' : ''}">
+      <button class="gen-btn ${currentRegion === TARGET_REGION_ID ? 'active' : ''}" onclick="switchRegion('${TARGET_REGION_ID}')">
+        <span class="gen-dot" style="background:${targets.color}"></span>
+        <span class="gen-main">
+          <span class="gen-name-row">
+            <span class="gen-name" style="color:${targets.color}">${targets.name}</span>
+            <span class="gen-badge">Focus</span>
+          </span>
+          <span class="gen-range">Liste perso</span>
+        </span>
+        <span class="gen-progress">${targets.caught}/${targets.total} · ${targetsPctText}</span>
+      </button>
+      <div class="gen-bar-wrap">
+        <div class="gen-bar-fill" style="width:${targetsPct}%;background:${targets.color}"></div>
+      </div>
+      <div class="gen-perfect-row">
+        ${targets.perfect} ${perfectLabel(targets.perfect).toLowerCase()}
       </div>
     </div>`;
 
@@ -2424,6 +2496,7 @@ function renderSidebar() {
     <div class="sidebar-section">
       <div class="sidebar-section-label">Progression</div>
       ${allButton}
+      ${targetsButton}
     </div>
     <div class="sidebar-section">
       <div class="sidebar-section-label">Régions</div>
@@ -2433,7 +2506,8 @@ function renderSidebar() {
 
 function renderRegion() {
   const isAll  = currentRegion === 'all';
-  const r      = isAll ? getAllRegionStats() : REGIONS[currentRegion];
+  const isTargets = currentRegion === TARGET_REGION_ID;
+  const r      = getCurrentRegionScope();
   const stats = getCurrentStats();
   const statsPanel = renderRegionStatsPanel(stats, r.color);
   const headerClass = isAll ? 'region-header all-hero' : 'region-header map-hero';
@@ -2466,7 +2540,7 @@ function renderRegion() {
     <div class="region-info-block">
       <div>
         <div class="region-name" style="color:${r.color}">${r.name}</div>
-        <div class="region-meta">Gen ${r.gen}</div>
+        <div class="region-meta">${isTargets ? 'Liste de shasse personnalisée' : `Gen ${r.gen}`}</div>
       </div>
       ${statsPanel}
     </div>`;
@@ -2497,7 +2571,9 @@ function setRegionVisualVars(element, region, prefix = 'region') {
 function setGridVisualVars(grid, region) {
   if (!grid) return;
   const activeRegion = currentRegion === 'all' ? REGIONS[0] : region;
-  const nextRegion = currentRegion === 'all'
+  const nextRegion = currentRegion === TARGET_REGION_ID
+    ? region
+    : currentRegion === 'all'
     ? REGIONS[REGIONS.length - 1]
     : REGIONS[Math.min(REGIONS.length - 1, (REGIONS.indexOf(activeRegion) || 0) + 1)];
   grid.style.setProperty('--grid-rgb', hexToRgbString(activeRegion?.color || '#7dd3fc'));
@@ -2556,14 +2632,18 @@ function getActiveGameFilter() {
 }
 
 function getVisiblePokemonIds() {
-  const r = currentRegion === 'all' ? getAllRegionStats() : REGIONS[currentRegion];
+  const r = getCurrentRegionScope();
   const search = document.getElementById('searchInput')?.value.toLowerCase() || '';
   const filter = document.getElementById('filterSelect')?.value || 'all';
   const sort = document.getElementById('sortSelect')?.value || 'number';
   const activeGame = getActiveGameFilter();
+  const baseIds = currentRegion === TARGET_REGION_ID
+    ? getTargetIds()
+    : Array.from({ length: r.end - r.start + 1 }, (_, index) => r.start + index);
   const sourceIds = activeGame
     ? activeGame.ids
-    : Array.from({ length: r.end - r.start + 1 }, (_, index) => r.start + index);
+        .filter(id => currentRegion !== TARGET_REGION_ID || baseIds.includes(id))
+    : baseIds;
   const ids = [];
 
   for (const id of sourceIds) {
@@ -2679,7 +2759,7 @@ function renderRegionalFormsGrid(range, search, grid) {
 }
 
 function renderGrid() {
-  const r      = currentRegion === 'all' ? getAllRegionStats() : REGIONS[currentRegion];
+  const r      = getCurrentRegionScope();
   const search = document.getElementById('searchInput').value.toLowerCase();
   const sort   = document.getElementById('sortSelect')?.value || 'number';
   const activeGame = getActiveGameFilter();
@@ -2689,7 +2769,7 @@ function renderGrid() {
   setGridVisualVars(grid, r);
   grid.innerHTML = '';
 
-  if (!activeGame && !counterMode && sort === 'forms') {
+  if (currentRegion !== TARGET_REGION_ID && !activeGame && !counterMode && sort === 'forms') {
     renderRegionalFormsGrid(r, search, grid);
     return;
   }
@@ -2745,7 +2825,7 @@ function renderGrid() {
   });
 
   if (ids.length === 0) {
-    grid.innerHTML = `<div class="empty">Aucun Pokémon trouvé${activeGame ? ' pour ce jeu' : ''}.</div>`;
+    grid.innerHTML = `<div class="empty">${currentRegion === TARGET_REGION_ID ? 'Aucune cible ajoutée.' : `Aucun Pokémon trouvé${activeGame ? ' pour ce jeu' : ''}.`}</div>`;
   }
 }
 
@@ -3043,7 +3123,7 @@ function switchRegion(i) {
 }
 
 function getRegionSequence() {
-  return ['all', ...REGIONS.map((_, idx) => idx)];
+  return ['all', TARGET_REGION_ID, ...REGIONS.map((_, idx) => idx)];
 }
 
 function goToAdjacentRegion(direction) {
