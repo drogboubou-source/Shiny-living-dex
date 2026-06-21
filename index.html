@@ -532,7 +532,7 @@ body.readonly-share .modal-form-fields select{pointer-events:none}
 .progress-label{display:flex;justify-content:flex-start;gap:8px;font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums}
 
 /* filters */
-.filters{display:grid;grid-template-columns:minmax(180px,260px) minmax(150px,190px) auto auto;gap:8px;margin-bottom:1.25rem;align-items:center}
+.filters{display:grid;grid-template-columns:minmax(160px,240px) minmax(150px,190px) minmax(170px,230px) auto auto;gap:8px;margin-bottom:1.25rem;align-items:center}
 .filters input,.filters select{
   background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.014)),rgba(24,24,31,.94);
   border:1px solid rgba(255,255,255,.105);
@@ -759,6 +759,20 @@ body.readonly-share .modal-form-fields select{pointer-events:none}
   filter:drop-shadow(0 0 13px rgba(125,211,252,.5));
 }
 .card.hunting .pname{color:#7dd3fc;text-shadow:0 0 10px rgba(125,211,252,.7)}
+.card.target{
+  border-color:#7ed660;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.15),
+    inset 0 -14px 18px rgba(0,0,0,.18),
+    0 0 0 2px rgba(126,214,96,.78),
+    0 0 18px rgba(126,214,96,.44),
+    0 18px 30px rgba(0,0,0,.5);
+}
+.card.target::before{
+  background:linear-gradient(90deg,transparent,#7ed660 18%,#7ed660 82%,transparent);
+}
+.card.target .num{color:#7ed660;border-bottom-color:#7ed660}
+.card.target .status{border:1px solid rgba(126,214,96,.34)}
 .card .status{
   margin-top:auto;font-size:9px;padding:4px 9px 4px 8px;font-weight:800;order:4;letter-spacing:.25px;
   display:inline-flex;align-items:center;gap:5px;white-space:nowrap;max-width:100%;
@@ -1188,9 +1202,16 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
           <option value="perfect">Shinys parfaits</option>
           <option value="legendary">Légendaires</option>
           <option value="forms">Formes régionales</option>
+          <option value="target">Cibles</option>
         </select>
       </label>
-        <button class="counter-button edit-only" id="counterButton" type="button" onclick="toggleCounterMode()" onpointerup="this.blur()" ontouchend="this.blur()"></button>
+      <label class="sort-control">
+        <span>Jeu</span>
+        <select id="gameSelect" onchange="setGameFilter(this.value)">
+          <option value="">Tous jeux</option>
+        </select>
+      </label>
+      <button class="counter-button edit-only" id="counterButton" type="button" onclick="toggleCounterMode()" onpointerup="this.blur()" ontouchend="this.blur()"></button>
       <button class="perfect-summary" id="perfectSummary" type="button" onclick="toggleSpriteMode()" onpointerup="this.blur()" ontouchend="this.blur()"></button>
     </div>
     <div class="grid" id="grid"></div>
@@ -1235,6 +1256,10 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
     <label class="shiny-perfect">
       <input type="checkbox" id="fPerfect">
       <span>⬡ Shiny parfait</span>
+    </label>
+    <label class="caught-toggle">
+      <input type="checkbox" id="fTarget">
+      <span>◇ Cible de shasse</span>
     </label>
 
     <div class="form-row">
@@ -1424,6 +1449,11 @@ function comparePokemonBySort(a, b, mode) {
     return a - b;
   }
 
+  if (mode === 'target') {
+    if (!!pa.target !== !!pb.target) return pa.target ? -1 : 1;
+    return a - b;
+  }
+
   return a - b;
 }
 
@@ -1431,6 +1461,7 @@ function pokemonMatchesSortMode(p, mode) {
   if (mode === 'caught') return !!p.caught;
   if (mode === 'missing') return !p.caught;
   if (mode === 'perfect') return !!p.caught && !!p.perfect;
+  if (mode === 'target') return !!p.target;
   if (mode === 'date-desc' || mode === 'date-asc') return !!p.caught && !!p.date;
   return true;
 }
@@ -1456,6 +1487,7 @@ let currentPokemon = null;
 let sidebarOpen = false;
 let spriteMode = 'pixel';
 let counterMode = false;
+let currentGameFilter = '';
 let restoringHistory = false;
 const SPRITE_FALLBACK = './Assets/icon-192.png';
 const READONLY_PARAM_VALUES = new Set(['1', 'true', 'yes', 'view']);
@@ -1471,6 +1503,7 @@ const LEGACY_STORAGE_KEY = 'shiny_dex_v3';
 const REGION_SESSION_KEY = 'shiny_dex_session_region';
 const SPRITE_MODE_KEY = 'shiny_dex_sprite_mode';
 const COUNTER_MODE_KEY = 'shiny_dex_counter_mode';
+const GAME_FILTER_KEY = 'shiny_dex_game_filter';
 const HUNT_ORDER_KEY = 'shiny_dex_hunt_order';
 const HUNT_CAPTURED_KEY = 'shiny_dex_hunt_captured';
 const POKEMON_CRY_BASE = 'https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/latest';
@@ -1636,6 +1669,41 @@ const NATURES = [
   'Timide','Pressé','Jovial','Naïf','Sérieux'
 ];
 
+const GAME_FILTERS = [
+  { id: 'swordShield', label: 'Pokemon Epee / Bouclier', ranges: '1-12,25-45,50-55,58-68,72-73,77-83,90-95,98-99,102-149,163-164,169-178,182-186,194-197,199,202,206,208,211-215,220-227,230,233,236-242,246-248,263-264,270-275,278-282,290-295,298,302-306,309-310,315,318-321,324,328-330,333-334,337-350,355-356,359-365,369,371-379,403-407,415-416,420-423,425-428,434-440,442-454,458-468,470-471,473-475,477-479,506-510,517-521,524-539,543-579,582-584,587-593,595-601,605-640,659-663,674-675,677-715,736-738,742-773,776-778,780-784,810-898' },
+  { id: 'letsGo', label: 'Pokemon Lets Go', ranges: '1-151,808-809' },
+  { id: 'bdsp', label: 'Diamant Etincelant / Perle Scintillante', ranges: '25-26,35-36,41-42,54-55,63-68,72-78,81-82,92-95,108,111-114,118-119,122-123,125-126,129-130,133-137,143,163-164,169,172-173,175-176,183-185,190,193-198,200-201,203,207-208,212,214-215,220-221,223-224,226,228-229,233,239-240,242,265-269,278-282,298-299,307-308,315,333-334,339-340,349-350,355-359,361-362,387-484,487,490' },
+  { id: 'legendsArceus', label: 'Legendes Pokemon Arceus', ranges: '25-26,35-38,41-42,46-47,54-55,58-59,63-68,72-78,81-82,92-95,100-101,108,111-114,122-123,125-126,129-130,133-137,143,155-157,169,172-173,175-176,185,190,193,196-198,200-201,207-208,211-212,214-217,220-221,223-224,226,233-234,239-240,242,265-269,280-282,299,315,339-340,355-356,358,361-365,387-493,501-503,548-550,570-571,627-628,641-642,645,700,704-706,712-713,722-724,899-905' },
+  { id: 'scarletViolet', label: 'Pokemon Ecarlate / Violet', ranges: '1-9,23-28,35-40,43-45,48-62,69-76,79-82,84-94,96-97,100-103,106-107,109-113,116-117,123,125-126,128-137,143,147-149,152-164,167-168,170-174,179-200,203-207,209-212,214-221,225,227-237,239-240,242,246-248,252-262,270-275,278-289,296-299,302,307-308,311-314,316-317,322-326,328-336,339-342,349-350,353-358,361-362,370-376,387-398,401-405,408-411,415-419,422-426,429-430,433-438,440,442-450,453-454,456-457,459-462,464,466-467,469-479,495-503,522-523,529-530,532-534,540-542,546-553,559-560,570-581,585-586,590-591,594-596,602-604,607-615,619-620,622-625,627-630,633-637,650-658,661-673,677-678,686-687,690-693,700-709,712-715,722-745,747-754,757-758,761-766,769-770,774-775,778-779,782-784,810-823,833-834,837-849,854-861,868-879,884-887,900-902,904,906-1025' },
+  { id: 'xy', label: 'Pokemon X / Y', ranges: '1-18,21-34,39-45,50-51,54-55,60-76,79-85,90-95,100-105,108,111-112,115-124,127-136,142-150,161-172,174,179-189,193-199,202,206-230,235,238,241,246-248,261-264,270-272,276-284,290-321,324-330,333-342,352-354,358-360,366-373,396-400,406-407,412-419,425-426,430,433-435,438-439,441,443-455,458-464,469-473,475-476,479,504-505,509-516,524-528,531-534,538-539,543-545,550-553,557-561,568-571,574-584,587-591,594,597-598,607-625,631-635,650-718' },
+  { id: 'oras', label: 'Rubis Omega / Saphir Alpha', ranges: '25-28,37-45,54-55,63-68,72-76,81-82,84-85,88-89,100-101,109-112,116-121,127,129-130,169-172,174,177-178,182-184,202-203,214,218-219,222,227,230-232,252-386,406-407,433,462,464,475-478' },
+  { id: 'sunMoon', label: 'Pokemon Soleil / Lune', ranges: '10-12,19-22,25-28,35-42,46-47,50-68,72-76,79-82,88-94,96-97,102-105,113,115,118-121,123,125-137,142-143,147-149,165-174,185-186,196-200,209-210,212,215,222,225,227,233,235,239-242,278-279,283-284,296-297,299,302,318-321,324,327-330,339-340,349-351,359,361-362,369-376,408-411,422-423,425-426,429-430,438,440,443-448,456-457,461-462,466-467,470-471,474,476,478,506-508,524-526,546-549,551-553,564-569,582-584,587,594,627-630,661-663,674-675,700,703-709,718,722-802' },
+  { id: 'ultraSunMoon', label: 'Ultra-Soleil / Ultra-Lune', ranges: '10-12,19-28,35-42,46-47,50-68,72-76,79-82,86-94,96-97,102-105,108,113,115,118-143,147-149,163-174,177-181,185-186,190,196-200,204-206,209-210,212,214-215,222-229,233,235,238-242,246-248,278-279,283-284,296-297,299,302-303,309-310,318-321,324,327-330,339-354,357,359,361-362,366-376,408-411,422-430,438-440,443-448,456-458,461-463,466-467,470-471,474,476,478,506-508,524-526,546-553,559-560,564-573,582-584,587,592-594,605-606,619-625,627-630,636-637,661-663,667-671,674-676,686-687,690-693,696-709,714-715,718,722-807' },
+  { id: 'blackWhite', label: 'Pokemon Noir / Blanc', ranges: '494-649' },
+  { id: 'black2White2', label: 'Noir 2 / Blanc 2', ranges: '19-20,27-28,35-42,54-55,58-59,81-82,86-89,95,108-110,114,120-121,125-127,131-136,169,173-174,179-181,183-184,191-193,196-197,206-208,213-215,220-227,239-240,246-248,278-279,287-289,298-301,304-306,315,320-323,325-326,328-330,333-338,341-344,351,353-354,357,359,363-365,374-376,406-407,415-416,418-419,425-428,436-437,447-448,451-455,458,461-463,465-467,469-473,476,494-649' },
+  { id: 'heartGoldSoulSilver', label: 'HeartGold / SoulSilver', ranges: '1-251,424,463,465,469,473' },
+  { id: 'diamondPearl', label: 'Diamant / Perle', ranges: '25-26,35-36,41-42,54-55,63-68,72-78,92-95,113,118-119,122,129-130,143,163-164,169,172-173,183-185,190,194-195,198,200-201,203,208,214-215,223-224,226,242,265-269,278-279,298,307-308,315,339-340,349-350,358,387-461,480-484,490' },
+  { id: 'platinum', label: 'Platine', ranges: '25-26,35-36,41-42,54-55,63-68,72-78,81-82,92-95,108,111-114,118-119,122-123,125-126,129-130,133-137,143,163-164,169,172-173,175-176,183-185,190,193-198,200-201,203,207-208,212,214-215,220-221,223-224,226,228-229,233,239-240,242,265-269,278-282,298-299,307-308,315,333-334,339-340,349-350,355-359,361-362,387-484,487,490' },
+  { id: 'rubySapphireEmerald', label: 'Rubis / Saphir / Emeraude', ranges: '25-28,37-45,54-55,63-68,72-76,81-82,84-85,88-89,100-101,109-112,116-121,127,129-130,169-172,174,177-178,182-184,202-203,214,218-219,222,227,230-232,252-386' },
+  { id: 'goldSilverCrystal', label: 'Or / Argent / Cristal', ranges: '1-251' },
+  { id: 'redBlueYellow', label: 'Rouge / Bleu / Jaune', ranges: '1-151' },
+];
+
+function expandGameRanges(ranges) {
+  const ids = [];
+  String(ranges || '').split(',').forEach(part => {
+    const [start, end = start] = part.split('-').map(Number);
+    if (!Number.isFinite(start) || !Number.isFinite(end)) return;
+    for (let id = start; id <= end; id++) ids.push(id);
+  });
+  return ids;
+}
+
+const GAME_FILTER_BY_ID = Object.fromEntries(GAME_FILTERS.map(game => [
+  game.id,
+  { ...game, ids: expandGameRanges(game.ranges) }
+]));
+
 /* ══════════════════════════════════════
    INIT — charge pokemon.json depuis GitHub Pages
 ══════════════════════════════════════ */
@@ -1646,9 +1714,11 @@ function init() {
     const sessionRegion = sessionStorage.getItem(REGION_SESSION_KEY);
     const savedSpriteMode = localStorage.getItem(SPRITE_MODE_KEY);
     const savedCounterMode = localStorage.getItem(COUNTER_MODE_KEY);
+    const savedGameFilter = localStorage.getItem(GAME_FILTER_KEY) || '';
     currentRegion = sessionRegion === 'all' || REGIONS[parseInt(sessionRegion)] ? (sessionRegion === 'all' ? 'all' : parseInt(sessionRegion)) : 'all';
     spriteMode = savedSpriteMode === 'home' ? 'home' : 'pixel';
     counterMode = isReadOnlyShare() ? false : savedCounterMode === 'true';
+    currentGameFilter = GAME_FILTER_BY_ID[savedGameFilter] ? savedGameFilter : '';
     if (!isReadOnlyShare()) {
       const raw = localStorage.getItem(STORAGE_KEY);
       const legacyRaw = localStorage.getItem(LEGACY_STORAGE_KEY);
@@ -1662,6 +1732,7 @@ function init() {
   } catch(e) { progress = {}; }
 
   // Affichage initial avec les données locales déjà disponibles
+  initGameFilterSelect();
   renderAll();
 }
 
@@ -1670,6 +1741,7 @@ function hasUserData(p) {
   const ivs = p.ivs || {};
   return !!(
     p.perfect ||
+    p.target ||
     p.hunting ||
     p.huntCount ||
     p.nickname ||
@@ -1696,7 +1768,7 @@ function sanitizeProgress(data, options = {}) {
     entry.nature = entry.nature || '';
     // Ancienne logique: pokemon.json pouvait mettre caught=true juste parce que le nom etait rempli.
     if (!trustCaught && entry.caught && !hasUserData(entry)) delete entry.caught;
-    const isEmpty = !entry.caught && !hasUserData(entry);
+    const isEmpty = !entry.caught && !entry.target && !hasUserData(entry);
     if (!isEmpty) clean[id] = entry;
   });
   return clean;
@@ -1722,6 +1794,13 @@ function rowMeansCaught(p) {
     p['IV parfaits'] ||
     p['Parfait']
   );
+}
+
+function rowMeansTarget(p) {
+  const explicit = p['Ciblé'] ?? p['Cible'] ?? p['Target'] ?? p['target'];
+  if (explicit === undefined) return false;
+  const value = String(explicit).trim().toLowerCase();
+  return ['true', '1', 'oui', 'yes', '✓', 'x'].includes(value);
 }
 
 // Au chargement de la page, on tente de récupérer le fichier pokemon.json
@@ -1772,6 +1851,7 @@ function mergePokedexIntoProgress() {
     if (!existing.nature     && p['Nature'])              existing.nature     = p['Nature'];
     // Statuts: le nom seul ne signifie pas que le shiny est capturé.
     if (rowMeansCaught(p)) existing.caught = true;
+    if (rowMeansTarget(p)) existing.target = true;
     if (p['Parfait'] === true || p['Parfait'] === 'true' || p['Parfait'] === '✓') existing.perfect = true;
     // IVs depuis la chaîne "PV/Atq/Déf/..." ou objet
     if (!existing.ivs && p['IV parfaits']) existing.ivs = parseIVs(p['IV parfaits']);
@@ -2451,6 +2531,28 @@ function getRegionalFormsForScope(range, search) {
     .sort((a, b) => a.baseId - b.baseId || a.region.localeCompare(b.region, 'fr') || a.label.localeCompare(b.label, 'fr'));
 }
 
+function initGameFilterSelect() {
+  const select = document.getElementById('gameSelect');
+  if (!select || select.dataset.ready) return;
+  select.innerHTML = '<option value="">Tous jeux</option>' + GAME_FILTERS
+    .map(game => `<option value="${game.id}">${game.label}</option>`)
+    .join('');
+  select.value = currentGameFilter;
+  select.dataset.ready = 'true';
+}
+
+function setGameFilter(value) {
+  currentGameFilter = GAME_FILTER_BY_ID[value] ? value : '';
+  localStorage.setItem(GAME_FILTER_KEY, currentGameFilter);
+  const sortSelect = document.getElementById('sortSelect');
+  if (sortSelect && currentGameFilter && sortSelect.value === 'forms') sortSelect.value = 'number';
+  renderGrid();
+}
+
+function getActiveGameFilter() {
+  return currentGameFilter ? GAME_FILTER_BY_ID[currentGameFilter] : null;
+}
+
 function getCardStatusHtml(p, isHuntingCard = false) {
   if (isHuntingCard) return '<span>En cours</span>';
   if (p.caught && p.perfect) {
@@ -2469,7 +2571,7 @@ function createRegionalOriginalCard(id) {
   const isHuntingCard = !p.caught && (p.hunting || p.huntCount);
   const statusHtml = getCardStatusHtml(p, isHuntingCard);
   const card = document.createElement('div');
-  card.className = 'card form-original' + (isHomeSpriteMode() ? ' sprite-home' : '') + (p.caught ? ' caught' : '') + (p.perfect ? ' perfect' : '') + (isHuntingCard ? ' hunting' : '');
+  card.className = 'card form-original' + (isHomeSpriteMode() ? ' sprite-home' : '') + (p.caught ? ' caught' : '') + (p.perfect ? ' perfect' : '') + (isHuntingCard ? ' hunting' : '') + (p.target ? ' target' : '');
   setRegionVisualVars(card, getRegionByPokemonId(id));
   card.setAttribute('role', 'button');
   card.setAttribute('tabindex', '0');
@@ -2499,7 +2601,7 @@ function createRegionalFormCard(form) {
   const unavailable = isUnavailablePokemon(form.formId);
   const statusHtml = unavailable ? 'Indisponible' : getCardStatusHtml(p, isHuntingCard);
   const card = document.createElement('div');
-  card.className = 'card form-card' + (isHomeSpriteMode() ? ' sprite-home' : '') + (p.caught && !unavailable ? ' caught' : '') + (p.perfect && !unavailable ? ' perfect' : '') + (isHuntingCard && !unavailable ? ' hunting' : '') + (unavailable ? ' unavailable' : '');
+  card.className = 'card form-card' + (isHomeSpriteMode() ? ' sprite-home' : '') + (p.caught && !unavailable ? ' caught' : '') + (p.perfect && !unavailable ? ' perfect' : '') + (isHuntingCard && !unavailable ? ' hunting' : '') + (p.target && !unavailable ? ' target' : '') + (unavailable ? ' unavailable' : '');
   setRegionVisualVars(card, REGIONS.find(region => region.name === form.region) || getRegionByPokemonId(form.baseId));
   card.setAttribute('role', 'button');
   card.setAttribute('tabindex', '0');
@@ -2536,6 +2638,7 @@ function renderGrid() {
   const search = document.getElementById('searchInput').value.toLowerCase();
   const filter = document.getElementById('filterSelect')?.value || 'all';
   const sort   = document.getElementById('sortSelect')?.value || 'number';
+  const activeGame = getActiveGameFilter();
   const isHuntingView = counterMode;
   const grid   = document.getElementById('grid');
   grid.classList.toggle('hunt-grid', isHuntingView);
@@ -2543,12 +2646,16 @@ function renderGrid() {
   grid.innerHTML = '';
   const ids = [];
 
-  if (!counterMode && sort === 'forms') {
+  if (!activeGame && !counterMode && sort === 'forms') {
     renderRegionalFormsGrid(r, search, grid);
     return;
   }
 
-  for (let id = r.start; id <= r.end; id++) {
+  const sourceIds = activeGame
+    ? activeGame.ids
+    : Array.from({ length: r.end - r.start + 1 }, (_, index) => r.start + index);
+
+  for (const id of sourceIds) {
     const name = NAMES[id] || `#${id}`;
     const p    = progress[id] || {};
     const unavailable = isUnavailablePokemon(id);
@@ -2578,7 +2685,7 @@ function renderGrid() {
 
   let lastDividerGen = null;
   let previousDividerRegion = null;
-  const showGenerationDividers = currentRegion === 'all' && (sort === 'number' || sort === 'legendary') && !counterMode;
+  const showGenerationDividers = (activeGame || currentRegion === 'all') && (sort === 'number' || sort === 'legendary') && !counterMode;
 
   ids.forEach(id => {
     const name = NAMES[id] || `#${id}`;
@@ -2595,7 +2702,7 @@ function renderGrid() {
       }
     }
     const card = document.createElement('div');
-    card.className = 'card' + (isHomeSpriteMode() ? ' sprite-home' : '') + (p.caught && !unavailable ? ' caught' : '') + (p.perfect && !unavailable ? ' perfect' : '') + (isHuntingCard ? ' hunting' : '') + (unavailable ? ' unavailable' : '');
+    card.className = 'card' + (isHomeSpriteMode() ? ' sprite-home' : '') + (p.caught && !unavailable ? ' caught' : '') + (p.perfect && !unavailable ? ' perfect' : '') + (isHuntingCard ? ' hunting' : '') + (p.target && !unavailable ? ' target' : '') + (unavailable ? ' unavailable' : '');
     setRegionVisualVars(card, getRegionByPokemonId(id));
     card.setAttribute('role', 'button');
     card.setAttribute('tabindex', '0');
@@ -2625,7 +2732,7 @@ function renderGrid() {
   });
 
   if (ids.length === 0) {
-    grid.innerHTML = '<div class="empty">Aucun Pokémon trouvé.</div>';
+    grid.innerHTML = `<div class="empty">Aucun Pokémon trouvé${activeGame ? ' pour ce jeu' : ''}.</div>`;
   }
 }
 
@@ -3001,7 +3108,7 @@ function toggleModalCounter() {
 function saveProgressEntry(id, entry) {
   if (isReadOnlyShare()) return;
   const hasIvs = entry.ivs && Object.values(entry.ivs).some(Boolean);
-  const isEmpty = !entry.caught && !entry.perfect && !entry.hunting && !entry.huntCount && !entry.nickname && !entry.encounters && !entry.eggs && !entry.date && !entry.context && !entry.youtube && !entry.pokeball && !entry.nature && !hasIvs;
+  const isEmpty = !entry.caught && !entry.perfect && !entry.target && !entry.hunting && !entry.huntCount && !entry.nickname && !entry.encounters && !entry.eggs && !entry.date && !entry.context && !entry.youtube && !entry.pokeball && !entry.nature && !hasIvs;
   if (isEmpty) delete progress[id];
   else progress[id] = entry;
   localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
@@ -3137,6 +3244,7 @@ function openModal(id, options = {}) {
 
   document.getElementById('fCaught').checked   = !!p.caught;
   document.getElementById('fPerfect').checked  = !!p.perfect;
+  document.getElementById('fTarget').checked   = !!p.target;
   document.getElementById('fNickname').value   = p.nickname   || '';
   document.getElementById('fEncounters').value = p.encounters || '';
   document.getElementById('fEggs').value       = p.eggs       || '';
@@ -3190,6 +3298,7 @@ function saveModal() {
   const entry = {
     caught:    document.getElementById('fCaught').checked,
     perfect:   document.getElementById('fPerfect').checked,
+    target:    document.getElementById('fTarget').checked,
     hunting:   !document.getElementById('fCaught').checked && !!existing.hunting,
     huntCount: !document.getElementById('fCaught').checked ? (parseInt(existing.huntCount) || 0) : 0,
     nickname:  document.getElementById('fNickname').value.trim(),
@@ -3240,7 +3349,7 @@ function exportJSON() {
     ].filter(Boolean).join(' / ');
 
     // N'inclut que les entrées non vides
-    if (!p.caught && !p.perfect && !p.hunting && !p.huntCount && !p.nickname && !p.encounters && !p.eggs && !p.date && !p.context && !p.youtube && !p.pokeball && !p.nature && !ivStr) continue;
+    if (!p.caught && !p.perfect && !p.target && !p.hunting && !p.huntCount && !p.nickname && !p.encounters && !p.eggs && !p.date && !p.context && !p.youtube && !p.pokeball && !p.nature && !ivStr) continue;
 
     out.push({
       'N° pokédex':          id,
@@ -3248,6 +3357,7 @@ function exportJSON() {
       'Forme de base':       getRegionalFormById(id)?.baseId || '',
       'Région forme':        getRegionalFormById(id)?.region || '',
       'Capturé':             p.caught ? 'oui' : '',
+      'Ciblé':               p.target ? 'oui' : '',
       'Surnoms':             p.nickname   || '',
       'Oeufs parent parfait': p.eggs      || '',
       'Nombre de rencontres': p.encounters || '',
