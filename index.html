@@ -214,14 +214,34 @@ body.readonly-share .modal-form-fields select{pointer-events:none}
   border:1px solid rgba(255,255,255,.12);border-radius:var(--r);
   box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
 }
+.stats-section{margin-top:12px}
+.stats-section:first-child{margin-top:0}
+.stats-section-title{
+  display:flex;align-items:center;gap:7px;margin:0 0 7px;
+  color:rgba(255,255,255,.72);font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.08em;
+}
+.stats-section-title::before{content:'';width:7px;height:7px;background:var(--stats-accent,#7dd3fc);transform:rotate(45deg);box-shadow:0 0 8px var(--stats-accent,#7dd3fc)}
 .stats-highlight span,.stats-item span{display:block;color:var(--muted);font-size:12px;line-height:1.2}
 .stats-highlight strong{display:block;margin-top:4px;font-size:24px;line-height:1;font-variant-numeric:tabular-nums}
+.stats-highlight strong small{font-size:12px;color:rgba(255,255,255,.58);font-weight:800}
 .stats-highlight.shiny strong{color:#c084fc}
 .stats-highlight.perfect strong{color:#d4af37}
 .stats-highlight.caught strong,.stats-highlight.missing strong{color:#c084fc}
 .stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .stats-item{display:flex;flex-direction:column;gap:4px;min-width:0;padding:10px;background:rgba(32,32,43,.92);border:1px solid rgba(255,255,255,.1);border-radius:var(--r);font-size:13px;color:var(--muted);box-shadow:inset 0 1px 0 rgba(255,255,255,.045)}
 .stats-item strong{color:var(--text);font-size:15px;font-variant-numeric:tabular-nums}
+.stats-method-grid{display:grid;grid-template-columns:1fr;gap:8px}
+.stats-method{
+  display:grid;grid-template-columns:minmax(0,1.2fr) repeat(3,minmax(0,.9fr));align-items:center;gap:8px;
+  min-width:0;padding:10px 11px;border-radius:var(--r);
+  background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.025)),rgba(32,32,43,.92);
+  border:1px solid rgba(255,255,255,.105);box-shadow:inset 0 1px 0 rgba(255,255,255,.05);
+}
+.stats-method-name{display:flex;align-items:center;gap:7px;min-width:0;color:#fff;font-size:13px;font-weight:900}
+.stats-method-name::before{content:'';width:8px;height:8px;background:var(--method-accent,#c084fc);transform:rotate(45deg);box-shadow:0 0 8px var(--method-accent,#c084fc);flex:0 0 auto}
+.stats-method-metric{min-width:0;text-align:right}
+.stats-method-metric strong{display:block;color:var(--text);font-size:14px;line-height:1.1;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stats-method-metric span{display:block;margin-top:2px;color:rgba(255,255,255,.58);font-size:9px;font-weight:800;text-transform:uppercase;line-height:1.1;white-space:nowrap}
 .pull-refresh{
   position:fixed;left:50%;top:calc(var(--header-h) + 10px);z-index:170;
   transform:translate(-50%,-18px);opacity:0;pointer-events:none;
@@ -352,6 +372,11 @@ body.readonly-share .modal-form-fields select{pointer-events:none}
   .stats-highlight-grid,.stats-grid{grid-template-columns:1fr 1fr;gap:7px}
   .stats-highlight{padding:10px}
   .stats-highlight strong{font-size:20px}
+  .stats-section{margin-top:10px}
+  .stats-method{grid-template-columns:minmax(0,1fr) repeat(3,minmax(0,.72fr));gap:5px;padding:9px 8px}
+  .stats-method-name{font-size:11px;gap:5px}
+  .stats-method-metric strong{font-size:11px}
+  .stats-method-metric span{font-size:7px}
   .region-header.map-hero{min-height:170px;padding:.95rem}
   .region-header.all-hero{min-height:170px;padding:.95rem}
   .region-header.all-hero .all-hero-copy{width:100%;padding:0}
@@ -2127,17 +2152,38 @@ function renderStats() {
   `;
   updateHeaderHuntSprite();
   document.getElementById('statsPopinContent').innerHTML = `
-    <div class="stats-highlight-grid">
-      <div class="stats-highlight shiny"><span>Shiny Living dex</span><strong>${stats.caughtPercentText}</strong></div>
-      <div class="stats-highlight perfect"><span>Shiny${stats.perfect > 1 ? 's' : ''} ${perfectLabel(stats.perfect).toLowerCase()}</span><strong>${stats.perfect}</strong></div>
-      <div class="stats-highlight caught"><span>Shinys captur&eacute;s</span><strong>${stats.caught}</strong></div>
-      <div class="stats-highlight missing"><span>Shinys manquants</span><strong>${stats.missing}</strong></div>
+    <div class="stats-section" style="--stats-accent:#c084fc">
+      <div class="stats-section-title">Progression</div>
+      <div class="stats-highlight-grid">
+        <div class="stats-highlight shiny"><span>Compl&eacute;tion</span><strong>${stats.caughtPercentText}</strong></div>
+        <div class="stats-highlight caught"><span>Shinys captur&eacute;s</span><strong>${stats.caught}<small>/ ${stats.total}</small></strong></div>
+        <div class="stats-highlight missing"><span>Shinys manquants</span><strong>${stats.missing}</strong></div>
+        <div class="stats-highlight perfect"><span>${perfectLabel(stats.perfect)}</span><strong>${stats.perfect}</strong></div>
+      </div>
     </div>
-    <div class="stats-grid">
-      <div class="stats-item"><span>Moyenne rencontres</span><strong>${stats.avgEncountersText}</strong></div>
-      <div class="stats-item"><span>Total rencontres</span><strong>${stats.totalEncountersText}</strong></div>
-      <div class="stats-item"><span>Masuda</span><strong>${masudaStats.caught}</strong><span>${masudaStats.avgEncountersText} moy. · ${masudaStats.totalEncountersText} total</span></div>
-      <div class="stats-item"><span>Resets</span><strong>${resetStats.caught}</strong><span>${resetStats.avgEncountersText} moy. · ${resetStats.totalEncountersText} total</span></div>
+    <div class="stats-section" style="--stats-accent:#7dd3fc">
+      <div class="stats-section-title">Rencontres globales</div>
+      <div class="stats-grid">
+        <div class="stats-item"><span>Total toutes m&eacute;thodes</span><strong>${stats.totalEncountersText}</strong></div>
+        <div class="stats-item"><span>Moyenne par shiny</span><strong>${stats.avgEncountersText}</strong></div>
+      </div>
+    </div>
+    <div class="stats-section" style="--stats-accent:#7ed660">
+      <div class="stats-section-title">Rencontres par m&eacute;thode</div>
+      <div class="stats-method-grid">
+        <div class="stats-method" style="--method-accent:#c084fc">
+          <div class="stats-method-name">Masuda</div>
+          <div class="stats-method-metric"><strong>${masudaStats.caught}</strong><span>Shinys</span></div>
+          <div class="stats-method-metric"><strong>${masudaStats.totalEncountersText}</strong><span>Total</span></div>
+          <div class="stats-method-metric"><strong>${masudaStats.avgEncountersText}</strong><span>Moyenne</span></div>
+        </div>
+        <div class="stats-method" style="--method-accent:#7dd3fc">
+          <div class="stats-method-name">Resets</div>
+          <div class="stats-method-metric"><strong>${resetStats.caught}</strong><span>Shinys</span></div>
+          <div class="stats-method-metric"><strong>${resetStats.totalEncountersText}</strong><span>Total</span></div>
+          <div class="stats-method-metric"><strong>${resetStats.avgEncountersText}</strong><span>Moyenne</span></div>
+        </div>
+      </div>
     </div>
   `;
   const perfectSummary = document.getElementById('perfectSummary');
@@ -2165,12 +2211,12 @@ function renderRegionStatsPanel(stats, color) {
     </div>
     <div class="region-detail-row" style="--region-accent:${color}">
       <div class="region-detail-group">
-        <div class="region-detail-chip encounters"><strong>${stats.avgEncountersText}</strong><span>Moy. globale</span></div>
-        <div class="region-detail-chip encounters"><strong>${stats.totalEncountersText}</strong><span>Total global</span></div>
+        <div class="region-detail-chip encounters"><strong>${stats.totalEncountersText}</strong><span>Total rencontres</span></div>
+        <div class="region-detail-chip encounters"><strong>${stats.avgEncountersText}</strong><span>Moy. par shiny</span></div>
       </div>
       <div class="region-detail-group">
-        <div class="region-detail-chip encounters"><strong>${masudaStats.caught}</strong><span>Masuda · ${masudaStats.avgEncountersText}</span></div>
-        <div class="region-detail-chip encounters"><strong>${resetStats.caught}</strong><span>Resets · ${resetStats.avgEncountersText}</span></div>
+        <div class="region-detail-chip encounters"><strong>${masudaStats.caught}</strong><span>Masuda · moy. ${masudaStats.avgEncountersText}</span></div>
+        <div class="region-detail-chip encounters"><strong>${resetStats.caught}</strong><span>Resets · moy. ${resetStats.avgEncountersText}</span></div>
       </div>
     </div>`;
 }
@@ -3703,7 +3749,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=174', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=175', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
