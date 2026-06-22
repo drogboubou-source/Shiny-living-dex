@@ -1684,7 +1684,7 @@ const UNAVAILABLE_POKEMON_IDS = new Set([
 
 const HUNT_METHODS = {
   masuda: { label: 'Masuda', shortLabel: 'Masuda', odds: 512 },
-  resets: { label: 'Resets', shortLabel: 'Resets', odds: 4096 }
+  resets: { label: 'Resets', shortLabel: 'Resets', odds: 1365 }
 };
 
 function normalizeHuntMethod(value) {
@@ -2096,6 +2096,8 @@ function updateHeaderHuntSprite() {
 
 function renderStats() {
   const stats = getCurrentStats();
+  const masudaStats = stats.methodStats.masuda;
+  const resetStats = stats.methodStats.resets;
   const scopeLabel = document.getElementById('statsScopeLabel');
   const scope = getCurrentRegionScope();
   if (scopeLabel) {
@@ -2119,10 +2121,10 @@ function renderStats() {
       <div class="stats-highlight missing"><span>Shinys manquants</span><strong>${stats.missing}</strong></div>
     </div>
     <div class="stats-grid">
-      <div class="stats-item"><span>Moyenne oeufs parent</span><strong>${stats.avgEggsText}</strong></div>
-      <div class="stats-item"><span>Total oeufs parent</span><strong>${stats.totalEggsText}</strong></div>
       <div class="stats-item"><span>Moyenne rencontres</span><strong>${stats.avgEncountersText}</strong></div>
       <div class="stats-item"><span>Total rencontres</span><strong>${stats.totalEncountersText}</strong></div>
+      <div class="stats-item"><span>Masuda</span><strong>${masudaStats.caught}</strong><span>${masudaStats.avgEncountersText} moy. · ${masudaStats.totalEncountersText} total</span></div>
+      <div class="stats-item"><span>Resets</span><strong>${resetStats.caught}</strong><span>${resetStats.avgEncountersText} moy. · ${resetStats.totalEncountersText} total</span></div>
     </div>
   `;
   const perfectSummary = document.getElementById('perfectSummary');
@@ -2132,6 +2134,8 @@ function renderStats() {
 
 function renderRegionStatsPanel(stats, color) {
   const pct = Math.max(0, Math.min(100, stats.caughtPercent || 0));
+  const masudaStats = stats.methodStats.masuda;
+  const resetStats = stats.methodStats.resets;
   return `
     <div class="region-stat-row primary">
       <div class="region-stat-main">
@@ -2148,12 +2152,12 @@ function renderRegionStatsPanel(stats, color) {
     </div>
     <div class="region-detail-row" style="--region-accent:${color}">
       <div class="region-detail-group">
-        <div class="region-detail-chip eggs"><strong>${stats.avgEggsText}</strong><span>Moy. oeufs</span></div>
-        <div class="region-detail-chip eggs"><strong>${stats.totalEggsText}</strong><span>Total oeufs</span></div>
+        <div class="region-detail-chip encounters"><strong>${stats.avgEncountersText}</strong><span>Moy. globale</span></div>
+        <div class="region-detail-chip encounters"><strong>${stats.totalEncountersText}</strong><span>Total global</span></div>
       </div>
       <div class="region-detail-group">
-        <div class="region-detail-chip encounters"><strong>${stats.avgEncountersText}</strong><span>Moy. renc.</span></div>
-        <div class="region-detail-chip encounters"><strong>${stats.totalEncountersText}</strong><span>Total renc.</span></div>
+        <div class="region-detail-chip encounters"><strong>${masudaStats.caught}</strong><span>Masuda · ${masudaStats.avgEncountersText}</span></div>
+        <div class="region-detail-chip encounters"><strong>${resetStats.caught}</strong><span>Resets · ${resetStats.avgEncountersText}</span></div>
       </div>
     </div>`;
 }
@@ -2167,6 +2171,17 @@ function getCurrentRegionPerfectCount() {
   return perfect;
 }
 
+function createEmptyMethodStats() {
+  return Object.fromEntries(Object.keys(HUNT_METHODS).map(id => [
+    id,
+    { id, label: HUNT_METHODS[id].label, caught: 0, totalEncounters: 0, avgEncounters: 0 }
+  ]));
+}
+
+function formatMethodStatLine(stat) {
+  return `${stat.caught} shiny${stat.caught > 1 ? 's' : ''} · moy. ${stat.avgEncountersText}`;
+}
+
 function getCurrentStats() {
   const r = getCurrentRegionScope();
   const availableIds = getAvailableIdsInRange(r);
@@ -2178,10 +2193,22 @@ function getCurrentStats() {
   const caught = entries.filter(p => p.caught).length;
   const missing = Math.max(0, total - caught);
   const perfect = entries.filter(p => p.caught && p.perfect).length;
-  const totalEncounters = entries.reduce((a,p) => a + (parseInt(p.encounters) || 0), 0);
-  const totalEggs = entries.reduce((a,p) => a + (parseInt(p.eggs) || 0), 0);
+  const caughtEntries = entries.filter(p => p.caught);
+  const totalEncounters = caughtEntries.reduce((a,p) => a + (parseInt(p.encounters) || 0), 0);
   const avgEncounters = caught > 0 ? Math.round(totalEncounters / caught) : 0;
-  const avgEggs = caught > 0 ? Math.round(totalEggs / caught) : 0;
+  const methodStats = createEmptyMethodStats();
+  caughtEntries.forEach(p => {
+    const methodId = normalizeHuntMethod(p.huntMethod);
+    const stat = methodStats[methodId];
+    stat.caught++;
+    stat.totalEncounters += parseInt(p.encounters) || 0;
+  });
+  Object.values(methodStats).forEach(stat => {
+    stat.avgEncounters = stat.caught > 0 ? Math.round(stat.totalEncounters / stat.caught) : 0;
+    stat.totalEncountersText = stat.totalEncounters.toLocaleString('fr-FR');
+    stat.avgEncountersText = stat.avgEncounters.toLocaleString('fr-FR');
+    stat.summaryText = formatMethodStatLine(stat);
+  });
   const caughtPercent = total > 0 ? caught / total * 100 : 0;
   return {
     regionName: r.name,
@@ -2192,8 +2219,7 @@ function getCurrentStats() {
     perfect,
     totalEncountersText: totalEncounters.toLocaleString('fr-FR'),
     avgEncountersText: avgEncounters.toLocaleString('fr-FR'),
-    totalEggsText: totalEggs.toLocaleString('fr-FR'),
-    avgEggsText: avgEggs.toLocaleString('fr-FR'),
+    methodStats,
     caughtPercent,
     caughtPercentText: formatPercent(caughtPercent),
   };
@@ -3664,7 +3690,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=172', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=173', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
