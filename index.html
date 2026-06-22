@@ -1010,6 +1010,21 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
 .hunt-panel.open{display:block}
 .hunt-label{font-family:var(--font-logo);font-size:11px;line-height:1.35;color:#7dd3fc;margin-bottom:.75rem}
 .hunt-count{font-family:var(--font);font-size:22px;font-weight:800;line-height:1;color:#fff;text-shadow:0 2px 12px rgba(0,0,0,.45);margin-bottom:.9rem;font-variant-numeric:tabular-nums}
+.hunt-methods{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 .85rem}
+.hunt-method{
+  min-height:34px;padding:6px 7px;border-radius:9px;
+  border:1px solid rgba(255,255,255,.1);
+  background:rgba(255,255,255,.045);color:rgba(255,255,255,.68);
+  font-family:var(--font);font-size:10px;font-weight:900;line-height:1.15;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+  cursor:pointer;box-shadow:inset 0 1px 0 rgba(255,255,255,.045);
+}
+.hunt-method small{font-size:8px;color:rgba(255,255,255,.45);font-weight:800}
+.hunt-method.active{
+  color:#fff;background:linear-gradient(180deg,rgba(125,211,252,.2),rgba(125,211,252,.07)),#1b2430;
+  border-color:rgba(125,211,252,.55);box-shadow:inset 0 1px 0 rgba(255,255,255,.09),0 0 12px rgba(125,211,252,.18);
+}
+.hunt-method.active small{color:#7dd3fc}
 .hunt-odds{
   margin:0 0 .9rem;padding:9px;border-radius:var(--r);
   background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.014)),rgba(17,17,24,.5);
@@ -1344,6 +1359,7 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
     <div class="hunt-panel edit-only" id="huntPanel">
       <div class="hunt-label">Rencontres en cours</div>
       <div class="hunt-count" id="huntCount">0</div>
+      <div class="hunt-methods" id="huntMethods"></div>
       <div class="hunt-odds" aria-live="polite">
         <div class="hunt-odds-top">
           <span class="hunt-odds-label" id="huntOddsLabel">Taux 1/512</span>
@@ -1666,6 +1682,15 @@ const UNAVAILABLE_POKEMON_IDS = new Set([
   10169,10170,10171
 ]);
 
+const HUNT_METHODS = {
+  masuda: { label: 'Masuda', shortLabel: 'Masuda', odds: 512 },
+  resets: { label: 'Resets', shortLabel: 'Resets', odds: 4096 }
+};
+
+function normalizeHuntMethod(value) {
+  return HUNT_METHODS[value] ? value : 'masuda';
+}
+
 function isUnavailablePokemon(id) {
   return UNAVAILABLE_POKEMON_IDS.has(Number(id));
 }
@@ -1705,11 +1730,10 @@ function getCurrentRegionScope() {
 }
 
 function getHuntOddsMeta(id) {
-  const baseId = getPokemonBaseId(id);
-  if (LEGENDARY_ODDS_BASE_IDS.has(baseId)) {
-    return { odds: 1365, label: 'Légendaire · 1/1365' };
-  }
-  return { odds: 512, label: 'Masuda · 1/512' };
+  const p = progress[id] || {};
+  const methodId = normalizeHuntMethod(p.huntMethod);
+  const method = HUNT_METHODS[methodId];
+  return { methodId, odds: method.odds, label: `${method.label} · 1/${method.odds}` };
 }
 
 function getCumulativeShinyChance(count, odds) {
@@ -1810,6 +1834,7 @@ function hasUserData(p) {
     p.target ||
     p.hunting ||
     p.huntCount ||
+    p.huntMethod ||
     p.nickname ||
     p.encounters ||
     p.eggs ||
@@ -1829,6 +1854,7 @@ function sanitizeProgress(data, options = {}) {
     if (!p || typeof p !== 'object') return;
     const entry = { ...p };
     entry.huntCount = parseInt(entry.huntCount) || 0;
+    entry.huntMethod = normalizeHuntMethod(entry.huntMethod);
     entry.hunting = !!entry.hunting || entry.huntCount > 0;
     entry.pokeball = entry.pokeball || '';
     entry.nature = entry.nature || '';
@@ -1867,6 +1893,14 @@ function rowMeansTarget(p) {
   if (explicit === undefined) return false;
   const value = String(explicit).trim().toLowerCase();
   return ['true', '1', 'oui', 'yes', '✓', 'x'].includes(value);
+}
+
+function rowHuntMethod(p) {
+  const raw = p['Méthode'] ?? p['Methode'] ?? p['Méthode de shasse'] ?? p['Methode de shasse'] ?? p['Hunt method'] ?? p['huntMethod'];
+  const value = String(raw || '').trim().toLowerCase();
+  if (value.includes('reset')) return 'resets';
+  if (value.includes('masuda')) return 'masuda';
+  return '';
 }
 
 // Au chargement de la page, on tente de récupérer le fichier pokemon.json
@@ -1909,6 +1943,7 @@ function mergePokedexIntoProgress() {
     if (!existing.encounters && p['Nombre de rencontres'])existing.encounters = parseInt(p['Nombre de rencontres']) || 0;
     if (!existing.eggs       && p['Oeufs parent parfait'])existing.eggs       = parseInt(p['Oeufs parent parfait']) || 0;
     if (!existing.huntCount  && p['Compteur en cours'])    existing.huntCount  = parseInt(p['Compteur en cours']) || 0;
+    if (!existing.huntMethod && rowHuntMethod(p))          existing.huntMethod = rowHuntMethod(p);
     if (String(p['En cours'] || '').trim().toLowerCase() === 'oui' || existing.huntCount > 0) existing.hunting = !existing.caught;
     if (!existing.date       && p['Date de capture'])     existing.date       = p['Date de capture'];
     if (!existing.context    && p['Contexte de capture']) existing.context    = p['Contexte de capture'];
@@ -3254,7 +3289,8 @@ function toggleModalCounter() {
 function saveProgressEntry(id, entry) {
   if (isReadOnlyShare()) return;
   const hasIvs = entry.ivs && Object.values(entry.ivs).some(Boolean);
-  const isEmpty = !entry.caught && !entry.perfect && !entry.target && !entry.hunting && !entry.huntCount && !entry.nickname && !entry.encounters && !entry.eggs && !entry.date && !entry.context && !entry.youtube && !entry.pokeball && !entry.nature && !hasIvs;
+  const hasCustomHuntMethod = entry.huntMethod && entry.huntMethod !== 'masuda';
+  const isEmpty = !entry.caught && !entry.perfect && !entry.target && !entry.hunting && !entry.huntCount && !hasCustomHuntMethod && !entry.nickname && !entry.encounters && !entry.eggs && !entry.date && !entry.context && !entry.youtube && !entry.pokeball && !entry.nature && !hasIvs;
   if (isEmpty) delete progress[id];
   else progress[id] = entry;
   localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
@@ -3289,7 +3325,30 @@ function getCurrentHuntEntry() {
   if (!entry.caught) entry.hunting = true;
   entry.huntCount = parseInt(entry.huntCount) || 0;
   entry.encounters = parseInt(entry.encounters) || 0;
+  entry.huntMethod = normalizeHuntMethod(entry.huntMethod);
   return entry;
+}
+
+function renderHuntMethodSelector(methodId) {
+  const holder = document.getElementById('huntMethods');
+  if (!holder) return;
+  const active = normalizeHuntMethod(methodId);
+  holder.innerHTML = Object.entries(HUNT_METHODS).map(([id, method]) => `
+    <button class="hunt-method ${id === active ? 'active' : ''}" type="button" onclick="setHuntMethod('${id}')" aria-pressed="${id === active}">
+      <span>${method.shortLabel}</span>
+      <small>1/${method.odds}</small>
+    </button>
+  `).join('');
+}
+
+function setHuntMethod(methodId) {
+  if (isReadOnlyShare() || !currentPokemon) return;
+  const entry = getCurrentHuntEntry();
+  if (!entry) return;
+  entry.huntMethod = normalizeHuntMethod(methodId);
+  saveProgressEntry(currentPokemon, entry);
+  renderHuntCounter();
+  renderGrid();
 }
 
 function renderHuntCounter() {
@@ -3298,6 +3357,7 @@ function renderHuntCounter() {
   const p = progress[currentPokemon] || {};
   const count = p.caught ? (parseInt(p.encounters) || 0) : (parseInt(p.huntCount) || 0);
   const oddsMeta = getHuntOddsMeta(currentPokemon);
+  renderHuntMethodSelector(oddsMeta.methodId);
   const chance = getCumulativeShinyChance(count, oddsMeta.odds);
   const chanceText = chance.toLocaleString('fr-FR', {
     minimumFractionDigits: 2,
@@ -3352,6 +3412,7 @@ function markHuntFound() {
   if (!entry) return;
   entry.caught = true;
   entry.hunting = false;
+  entry.huntMethod = normalizeHuntMethod(entry.huntMethod);
   entry.encounters = parseInt(entry.huntCount) || parseInt(entry.encounters) || 0;
   entry.huntCount = 0;
   registerHuntCapture(currentPokemon);
@@ -3447,6 +3508,7 @@ function saveModal() {
     target:    getFormTargetState(),
     hunting:   !document.getElementById('fCaught').checked && !!existing.hunting,
     huntCount: !document.getElementById('fCaught').checked ? (parseInt(existing.huntCount) || 0) : 0,
+    huntMethod: normalizeHuntMethod(existing.huntMethod),
     nickname:  document.getElementById('fNickname').value.trim(),
     encounters: enc,
     eggs:      eggs,
@@ -3495,7 +3557,8 @@ function exportJSON() {
     ].filter(Boolean).join(' / ');
 
     // N'inclut que les entrées non vides
-    if (!p.caught && !p.perfect && !p.target && !p.hunting && !p.huntCount && !p.nickname && !p.encounters && !p.eggs && !p.date && !p.context && !p.youtube && !p.pokeball && !p.nature && !ivStr) continue;
+    const hasCustomHuntMethod = p.huntMethod && p.huntMethod !== 'masuda';
+    if (!p.caught && !p.perfect && !p.target && !p.hunting && !p.huntCount && !hasCustomHuntMethod && !p.nickname && !p.encounters && !p.eggs && !p.date && !p.context && !p.youtube && !p.pokeball && !p.nature && !ivStr) continue;
 
     out.push({
       'N° pokédex':          id,
@@ -3509,6 +3572,7 @@ function exportJSON() {
       'Nombre de rencontres': p.encounters || '',
       'En cours':             p.hunting ? 'oui' : '',
       'Compteur en cours':    p.huntCount || '',
+      'Méthode':              p.huntMethod ? HUNT_METHODS[normalizeHuntMethod(p.huntMethod)].label : '',
       'Date de capture':     p.date        || '',
       'Lien YouTube':        p.youtube     || '',
       'Contexte de capture': p.context     || '',
@@ -3600,7 +3664,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=171', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=172', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
