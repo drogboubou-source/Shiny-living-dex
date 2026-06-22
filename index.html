@@ -796,6 +796,14 @@ body.readonly-share .modal-form-fields select{pointer-events:none}
 .form-tag{position:absolute;top:6px;right:6px;font-size:7px;font-weight:800;color:#0d0d12;background:var(--card-accent);padding:3px 5px;z-index:2}
 .card .status-shiny{color:#c084fc}
 .card .status-perfect{color:#d4af37}
+.card .status-method{
+  margin-left:1px;
+  padding-left:5px;
+  border-left:1px solid rgba(255,255,255,.22);
+  color:rgba(255,255,255,.72);
+  font-size:8px;
+  line-height:1;
+}
 
 .target-toggle-btn{
   margin-top:8px;
@@ -1236,6 +1244,8 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
           <option value="date-asc">Date croissante</option>
           <option value="type">Types</option>
           <option value="caught">Shinys trouvés</option>
+          <option value="method-masuda">Shinys Masuda</option>
+          <option value="method-resets">Shinys Resets</option>
           <option value="missing">Manquants</option>
           <option value="perfect">Shinys parfaits</option>
           <option value="legendary">Légendaires</option>
@@ -1301,15 +1311,9 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
       <label>Surnom</label>
       <input type="text" id="fNickname" placeholder="Aucun surnom">
     </div>
-    <div class="two-col">
-      <div class="form-row">
-        <label>Oeufs parent parfait</label>
-        <input type="text" id="fEggs" placeholder="ex: 140">
-      </div>
-      <div class="form-row">
-        <label>Nombre de rencontres</label>
-        <input type="text" id="fEncounters" placeholder="ex: 849">
-      </div>
+    <div class="form-row">
+      <label>Nombre de rencontres</label>
+      <input type="text" id="fEncounters" placeholder="ex: 849">
     </div>
     <div class="form-row">
       <label>Date de capture</label>
@@ -1475,6 +1479,13 @@ function comparePokemonBySort(a, b, mode) {
     return a - b;
   }
 
+  if (mode === 'method-masuda' || mode === 'method-resets') {
+    const da = pa.date || '';
+    const db = pb.date || '';
+    if (da !== db) return db.localeCompare(da);
+    return a - b;
+  }
+
   if (mode === 'missing') {
     if (!!pa.caught !== !!pb.caught) return pa.caught ? 1 : -1;
     return a - b;
@@ -1495,6 +1506,8 @@ function comparePokemonBySort(a, b, mode) {
 
 function pokemonMatchesSortMode(p, mode) {
   if (mode === 'caught') return !!p.caught;
+  if (mode === 'method-masuda') return !!p.caught && normalizeHuntMethod(p.huntMethod) === 'masuda';
+  if (mode === 'method-resets') return !!p.caught && normalizeHuntMethod(p.huntMethod) === 'resets';
   if (mode === 'missing') return !p.caught;
   if (mode === 'perfect') return !!p.caught && !!p.perfect;
   if (mode === 'target') return !!p.target;
@@ -2775,10 +2788,12 @@ function getVisiblePokemonIds() {
 
 function getCardStatusHtml(p, isHuntingCard = false) {
   if (isHuntingCard) return '<span>En cours</span>';
+  const method = p.caught ? HUNT_METHODS[normalizeHuntMethod(p.huntMethod)] : null;
+  const methodHtml = method ? `<span class="status-method">${method.shortLabel}</span>` : '';
   if (p.caught && p.perfect) {
-    return '<span class="status-perfect">Parfait</span>';
+    return `<span class="status-perfect">Parfait</span>${methodHtml}`;
   }
-  if (p.caught) return '<span class="status-shiny">Shiny</span>';
+  if (p.caught) return `<span class="status-shiny">Shiny</span>${methodHtml}`;
   return p.target ? 'Manquant' : 'Ignoré';
 }
 
@@ -3480,7 +3495,6 @@ function openModal(id, options = {}) {
   setFormTargetState(!!p.target);
   document.getElementById('fNickname').value   = p.nickname   || '';
   document.getElementById('fEncounters').value = p.encounters || '';
-  document.getElementById('fEggs').value       = p.eggs       || '';
   document.getElementById('fDate').value       = p.date       || '';
   document.getElementById('fContext').value    = p.context    || '';
   document.getElementById('fYoutube').value    = p.youtube    || '';
@@ -3526,7 +3540,6 @@ function saveModal() {
   if (isReadOnlyShare()) return;
   if (!currentPokemon) return;
   const enc  = parseInt(document.getElementById('fEncounters').value) || 0;
-  const eggs = parseInt(document.getElementById('fEggs').value) || 0;
   const existing = progress[currentPokemon] || {};
   const entry = {
     caught:    document.getElementById('fCaught').checked,
@@ -3537,7 +3550,7 @@ function saveModal() {
     huntMethod: normalizeHuntMethod(existing.huntMethod),
     nickname:  document.getElementById('fNickname').value.trim(),
     encounters: enc,
-    eggs:      eggs,
+    eggs:      parseInt(existing.eggs) || 0,
     date:      document.getElementById('fDate').value,
     context:   document.getElementById('fContext').value.trim(),
     youtube:   document.getElementById('fYoutube').value.trim(),
@@ -3690,7 +3703,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=173', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=174', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
