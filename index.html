@@ -2298,7 +2298,7 @@ function renderRegionStatsPanel(stats, color) {
         <span class="region-method-label">Resets</span>
         <strong class="region-method-value">${resetStats.caught}</strong>
       </div>
-      <div class="region-method-chip" style="--method-accent:#7ed660">
+      <div class="region-method-chip" style="--method-accent:#38bdf8">
         <span class="region-method-label">Dynamax</span>
         <strong class="region-method-value">${dynamaxStats.caught}</strong>
       </div>
@@ -2928,7 +2928,7 @@ function getCardStatusHtml(p, isHuntingCard = false) {
     return `<span class="status-perfect">Parfait</span>${methodHtml}`;
   }
   if (p.caught) return `<span class="status-shiny">Shiny</span>${methodHtml}`;
-  return p.target ? 'Manquant' : 'Ignoré';
+  return 'Manquant';
 }
 
 function getTargetCardClasses(p, isHuntingCard = false, unavailable = false) {
@@ -3838,7 +3838,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=180', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=181', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
