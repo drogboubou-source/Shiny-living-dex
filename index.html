@@ -2236,19 +2236,19 @@ function renderStats() {
     <div class="stats-section" style="--stats-accent:#7ed660">
       <div class="stats-section-title">M&eacute;thodes de shasse</div>
       <div class="stats-method-grid">
-        <div class="stats-method" style="--method-accent:#c084fc">
+        <div class="stats-method" style="--method-accent:#00ff9c">
           <div class="stats-method-name">Masuda</div>
           <div class="stats-method-metric"><strong>${masudaStats.caught}</strong><span>Shinys</span></div>
           <div class="stats-method-metric"><strong>${masudaStats.totalEncountersText}</strong><span>Total</span></div>
           <div class="stats-method-metric"><strong>${masudaStats.avgEncountersText}</strong><span>Moyenne</span></div>
         </div>
-        <div class="stats-method" style="--method-accent:#7dd3fc">
+        <div class="stats-method" style="--method-accent:#ff00c8">
           <div class="stats-method-name">Resets</div>
           <div class="stats-method-metric"><strong>${resetStats.caught}</strong><span>Shinys</span></div>
           <div class="stats-method-metric"><strong>${resetStats.totalEncountersText}</strong><span>Total</span></div>
           <div class="stats-method-metric"><strong>${resetStats.avgEncountersText}</strong><span>Moyenne</span></div>
         </div>
-        <div class="stats-method count-only" style="--method-accent:#7ed660">
+        <div class="stats-method count-only" style="--method-accent:#6366f1">
           <div class="stats-method-name">Exp&eacute;ditions Dynamax</div>
           <div class="stats-method-count-pill"><strong>${dynamaxStats.caught}</strong><span>Shinys</span></div>
         </div>
@@ -2290,11 +2290,11 @@ function renderRegionStatsPanel(stats, color) {
       </div>
     </div>
     <div class="region-method-row">
-      <div class="region-method-chip" style="--method-accent:#c084fc">
+      <div class="region-method-chip" style="--method-accent:#00ff9c">
         <span class="region-method-label">Masuda</span>
         <strong class="region-method-value">${masudaStats.caught}</strong>
       </div>
-      <div class="region-method-chip" style="--method-accent:#7dd3fc">
+      <div class="region-method-chip" style="--method-accent:#ff00c8">
         <span class="region-method-label">Resets</span>
         <strong class="region-method-value">${resetStats.caught}</strong>
       </div>
@@ -3838,7 +3838,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=184', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=185', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
