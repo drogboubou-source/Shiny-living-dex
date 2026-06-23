@@ -1043,7 +1043,7 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
 .hunt-panel.open{display:block}
 .hunt-label{font-family:var(--font-logo);font-size:11px;line-height:1.35;color:#7dd3fc;margin-bottom:.75rem}
 .hunt-count{font-family:var(--font);font-size:22px;font-weight:800;line-height:1;color:#fff;text-shadow:0 2px 12px rgba(0,0,0,.45);margin-bottom:.9rem;font-variant-numeric:tabular-nums}
-.hunt-methods{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 .85rem}
+.hunt-methods{display:grid;grid-template-columns:repeat(auto-fit,minmax(92px,1fr));gap:8px;margin:0 0 .85rem}
 .hunt-method{
   min-height:34px;padding:6px 7px;border-radius:9px;
   border:1px solid rgba(255,255,255,.1);
@@ -1722,8 +1722,11 @@ const UNAVAILABLE_POKEMON_IDS = new Set([
 
 const HUNT_METHODS = {
   masuda: { label: 'Masuda', shortLabel: 'Masuda', odds: 512 },
-  resets: { label: 'Resets', shortLabel: 'Resets', odds: 1365 }
+  resets: { label: 'Resets', shortLabel: 'Resets', odds: 1365 },
+  dynamax: { label: 'Expéditions Dynamax', shortLabel: 'Dynamax', odds: null, stats: false }
 };
+
+const STAT_HUNT_METHOD_IDS = Object.keys(HUNT_METHODS).filter(id => HUNT_METHODS[id].stats !== false);
 
 function normalizeHuntMethod(value) {
   return HUNT_METHODS[value] ? value : 'masuda';
@@ -1771,6 +1774,7 @@ function getHuntOddsMeta(id) {
   const p = progress[id] || {};
   const methodId = normalizeHuntMethod(p.huntMethod);
   const method = HUNT_METHODS[methodId];
+  if (!method.odds) return { methodId, odds: null, label: `${method.label} · info` };
   return { methodId, odds: method.odds, label: `${method.label} · 1/${method.odds}` };
 }
 
@@ -2231,7 +2235,7 @@ function getCurrentRegionPerfectCount() {
 }
 
 function createEmptyMethodStats() {
-  return Object.fromEntries(Object.keys(HUNT_METHODS).map(id => [
+  return Object.fromEntries(STAT_HUNT_METHOD_IDS.map(id => [
     id,
     { id, label: HUNT_METHODS[id].label, caught: 0, totalEncounters: 0, avgEncounters: 0 }
   ]));
@@ -2259,6 +2263,7 @@ function getCurrentStats() {
   caughtEntries.forEach(p => {
     const methodId = normalizeHuntMethod(p.huntMethod);
     const stat = methodStats[methodId];
+    if (!stat) return;
     stat.caught++;
     stat.totalEncounters += parseInt(p.encounters) || 0;
   });
@@ -3420,10 +3425,11 @@ function renderHuntMethodSelector(methodId) {
   const holder = document.getElementById('huntMethods');
   if (!holder) return;
   const active = normalizeHuntMethod(methodId);
+  const methodSubLabel = method => method.odds ? `1/${method.odds}` : 'Info';
   holder.innerHTML = Object.entries(HUNT_METHODS).map(([id, method]) => `
     <button class="hunt-method ${id === active ? 'active' : ''}" type="button" onclick="setHuntMethod('${id}')" aria-pressed="${id === active}">
       <span>${method.shortLabel}</span>
-      <small>1/${method.odds}</small>
+      <small>${methodSubLabel(method)}</small>
     </button>
   `).join('');
 }
@@ -3445,18 +3451,18 @@ function renderHuntCounter() {
   const count = p.caught ? (parseInt(p.encounters) || 0) : (parseInt(p.huntCount) || 0);
   const oddsMeta = getHuntOddsMeta(currentPokemon);
   renderHuntMethodSelector(oddsMeta.methodId);
-  const chance = getCumulativeShinyChance(count, oddsMeta.odds);
-  const chanceText = chance.toLocaleString('fr-FR', {
+  const chance = oddsMeta.odds ? getCumulativeShinyChance(count, oddsMeta.odds) : 0;
+  const chanceText = oddsMeta.odds ? chance.toLocaleString('fr-FR', {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2
-  }) + '%';
+  }) + '%' : 'Info';
   counter.textContent = count.toLocaleString('fr-FR');
   const oddsLabel = document.getElementById('huntOddsLabel');
   const oddsChance = document.getElementById('huntOddsChance');
   const oddsFill = document.getElementById('huntOddsFill');
   if (oddsLabel) oddsLabel.textContent = oddsMeta.label;
   if (oddsChance) oddsChance.textContent = chanceText;
-  if (oddsFill) oddsFill.style.width = `${Math.min(100, chance)}%`;
+  if (oddsFill) oddsFill.style.width = oddsMeta.odds ? `${Math.min(100, chance)}%` : '0%';
 }
 
 function adjustHuntCounter(delta) {
@@ -3749,7 +3755,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=175', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=176', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
