@@ -417,10 +417,21 @@ body.readonly-share .modal-form-fields select{pointer-events:none}
   .home-signature{right:.75rem;top:.6rem;font-size:12px}
   .region-map-mosaic{inset:6px;opacity:.9;filter:saturate(1.12) contrast(1.04) brightness(1.18)}
   .region-name{font-size:11px}
-  .filters{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-  .filters input{width:100%;min-width:0}
+  .filters{
+    display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) 42px 74px;
+    gap:6px;margin-bottom:.9rem;align-items:center;
+  }
+  .filters input{grid-column:1/-1;width:100%;min-width:0}
   .filters select,.sort-control,.counter-button,.perfect-summary{width:100%;min-width:0}
-  .sort-control select{width:100%}
+  .sort-control{height:34px;min-height:34px;padding:0 7px}
+  .sort-control span{display:none}
+  .sort-control select{width:100%;font-size:10px;padding:0;min-width:0}
+  .counter-button,.perfect-summary{height:34px;min-height:34px;padding:5px}
+  .counter-label strong{display:none}
+  .counter-label{gap:0}
+  .counter-icon{width:22px;height:22px}
+  .sprite-switch{height:24px}
+  .sprite-switch-option{height:18px;font-size:10px}
   .grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;padding:6px;border-radius:14px}
   .generation-divider{min-height:26px;margin:4px 0 -2px;font-size:9px;gap:7px;padding:3px 7px 3px 8px;top:0}
   .generation-divider strong{font-size:8px}
@@ -1196,10 +1207,21 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   .main{height:calc(100vh - var(--header-h));height:calc(100dvh - var(--header-h));padding:1rem 1rem calc(5.5rem + env(safe-area-inset-bottom))}
   .region-header.map-hero,.region-header.all-hero{min-height:170px;padding:.95rem}
   .region-header.all-hero .all-hero-copy{width:100%;padding:0}
-  .filters{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-  .filters input{width:100%}
+  .filters{
+    display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) 42px 74px;
+    gap:6px;margin-bottom:.9rem;align-items:center;
+  }
+  .filters input{grid-column:1/-1;width:100%;min-width:0}
   .filters select,.sort-control,.perfect-summary,.counter-button{width:100%;min-width:0}
-  .sort-control select{width:100%}
+  .sort-control{height:34px;min-height:34px;padding:0 7px}
+  .sort-control span{display:none}
+  .sort-control select{width:100%;font-size:10px;padding:0;min-width:0}
+  .counter-button,.perfect-summary{height:34px;min-height:34px;padding:5px}
+  .counter-label strong{display:none}
+  .counter-label{gap:0}
+  .counter-icon{width:22px;height:22px}
+  .sprite-switch{height:24px}
+  .sprite-switch-option{height:18px;font-size:10px}
   .grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;padding:6px;border-radius:14px}
   .generation-divider{min-height:26px;margin:4px 0 -2px;font-size:9px;gap:7px;padding:3px 7px 3px 8px;top:6px}
   .generation-divider strong{font-size:8px}
@@ -3816,7 +3838,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=179', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=180', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
