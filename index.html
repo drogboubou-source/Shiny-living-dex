@@ -242,6 +242,12 @@ body.readonly-share .modal-form-fields select{pointer-events:none}
 .stats-method-metric{min-width:0;text-align:right}
 .stats-method-metric strong{display:block;color:var(--text);font-size:14px;line-height:1.1;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .stats-method-metric span{display:block;margin-top:2px;color:rgba(255,255,255,.58);font-size:9px;font-weight:800;text-transform:uppercase;line-height:1.1;white-space:nowrap}
+.stats-method.count-only{
+  grid-template-columns:minmax(0,1.2fr) minmax(0,.9fr) minmax(0,1.15fr);
+  background:linear-gradient(180deg,rgba(126,214,96,.12),rgba(126,214,96,.035)),rgba(32,32,43,.92);
+  border-color:rgba(126,214,96,.22);
+}
+.stats-method-note{color:rgba(255,255,255,.58);font-size:10px;font-weight:800;text-align:right;line-height:1.2}
 .pull-refresh{
   position:fixed;left:50%;top:calc(var(--header-h) + 10px);z-index:170;
   transform:translate(-50%,-18px);opacity:0;pointer-events:none;
@@ -377,6 +383,8 @@ body.readonly-share .modal-form-fields select{pointer-events:none}
   .stats-method-name{font-size:11px;gap:5px}
   .stats-method-metric strong{font-size:11px}
   .stats-method-metric span{font-size:7px}
+  .stats-method.count-only{grid-template-columns:minmax(0,1fr) minmax(0,.65fr) minmax(0,.9fr)}
+  .stats-method-note{font-size:8px}
   .region-header.map-hero{min-height:170px;padding:.95rem}
   .region-header.all-hero{min-height:170px;padding:.95rem}
   .region-header.all-hero .all-hero-copy{width:100%;padding:0}
@@ -390,7 +398,7 @@ body.readonly-share .modal-form-fields select{pointer-events:none}
   .region-stat{padding:6px 3px}
   .region-stat strong{font-size:12px}
   .region-stat span{font-size:6.5px;letter-spacing:0}
-  .region-detail-row{grid-template-columns:repeat(4,minmax(0,1fr));gap:4px}
+  .region-detail-row{grid-template-columns:repeat(5,minmax(0,1fr));gap:4px}
   .region-detail-chip{min-height:28px;padding:4px 3px 3px 5px}
   .region-detail-chip strong{font-size:9.2px}
   .region-detail-chip span{font-size:5.7px}
@@ -516,7 +524,7 @@ body.readonly-share .modal-form-fields select{pointer-events:none}
 }
 .region-stat.missing strong{color:#c084fc}
 .region-stat.perfect strong{color:#d4af37}
-.region-detail-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;width:100%}
+.region-detail-row{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px;width:100%}
 .region-detail-group{
   position:relative;display:contents;min-width:0;
   padding:0;border-radius:0;
@@ -1185,7 +1193,7 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   .region-stat-main{grid-template-columns:1.08fr .92fr .88fr .98fr;gap:6px}
   .region-stat-main .region-stat strong{font-size:12px}
   .region-stat-main .region-stat span{font-size:6.2px;margin-top:3px}
-  .region-detail-row{grid-template-columns:repeat(4,minmax(0,1fr));gap:4px}
+  .region-detail-row{grid-template-columns:repeat(5,minmax(0,1fr));gap:4px}
   .region-detail-chip{min-height:28px;padding:4px 3px 3px 5px}
   .region-detail-chip strong{font-size:9.2px}
   .region-detail-chip span{font-size:5.7px}
@@ -1723,10 +1731,11 @@ const UNAVAILABLE_POKEMON_IDS = new Set([
 const HUNT_METHODS = {
   masuda: { label: 'Masuda', shortLabel: 'Masuda', odds: 512 },
   resets: { label: 'Resets', shortLabel: 'Resets', odds: 1365 },
-  dynamax: { label: 'Expéditions Dynamax', shortLabel: 'Dynamax', odds: null, stats: false }
+  dynamax: { label: 'Expéditions Dynamax', shortLabel: 'Dynamax', odds: null, stats: 'countOnly' }
 };
 
-const STAT_HUNT_METHOD_IDS = Object.keys(HUNT_METHODS).filter(id => HUNT_METHODS[id].stats !== false);
+const STAT_HUNT_METHOD_IDS = Object.keys(HUNT_METHODS);
+const TRACKED_ENCOUNTER_METHOD_IDS = Object.keys(HUNT_METHODS).filter(id => HUNT_METHODS[id].stats !== 'countOnly');
 
 function normalizeHuntMethod(value) {
   return HUNT_METHODS[value] ? value : 'masuda';
@@ -2140,6 +2149,7 @@ function renderStats() {
   const stats = getCurrentStats();
   const masudaStats = stats.methodStats.masuda;
   const resetStats = stats.methodStats.resets;
+  const dynamaxStats = stats.methodStats.dynamax;
   const scopeLabel = document.getElementById('statsScopeLabel');
   const scope = getCurrentRegionScope();
   if (scopeLabel) {
@@ -2151,8 +2161,8 @@ function renderStats() {
   document.getElementById('statsBar').innerHTML = `
     <div class="tstat"><strong style="color:#7ed660">${stats.caught}/${stats.total}</strong> Shinys</div>
     <div class="tstat"><strong style="color:#d4af37">${stats.perfect}</strong> ${perfectLabel(stats.perfect)}</div>
-    <div class="tstat"><strong>${stats.totalEncountersText}</strong> Rencontres</div>
-    <div class="tstat"><strong>${stats.avgEncountersText}</strong> Moy.</div>
+    <div class="tstat"><strong>${stats.totalEncountersText}</strong> M+R</div>
+    <div class="tstat"><strong>${stats.avgEncountersText}</strong> Moy. M+R</div>
   `;
   updateHeaderHuntSprite();
   document.getElementById('statsPopinContent').innerHTML = `
@@ -2166,10 +2176,10 @@ function renderStats() {
       </div>
     </div>
     <div class="stats-section" style="--stats-accent:#7dd3fc">
-      <div class="stats-section-title">Rencontres globales</div>
+      <div class="stats-section-title">Rencontres calcul&eacute;es</div>
       <div class="stats-grid">
-        <div class="stats-item"><span>Total toutes m&eacute;thodes</span><strong>${stats.totalEncountersText}</strong></div>
-        <div class="stats-item"><span>Moyenne par shiny</span><strong>${stats.avgEncountersText}</strong></div>
+        <div class="stats-item"><span>Total Masuda + Resets</span><strong>${stats.totalEncountersText}</strong></div>
+        <div class="stats-item"><span>Moyenne Masuda + Resets</span><strong>${stats.avgEncountersText}</strong></div>
       </div>
     </div>
     <div class="stats-section" style="--stats-accent:#7ed660">
@@ -2187,6 +2197,11 @@ function renderStats() {
           <div class="stats-method-metric"><strong>${resetStats.totalEncountersText}</strong><span>Total</span></div>
           <div class="stats-method-metric"><strong>${resetStats.avgEncountersText}</strong><span>Moyenne</span></div>
         </div>
+        <div class="stats-method count-only" style="--method-accent:#7ed660">
+          <div class="stats-method-name">Exp&eacute;ditions Dynamax</div>
+          <div class="stats-method-metric"><strong>${dynamaxStats.caught}</strong><span>Shinys</span></div>
+          <div class="stats-method-note">Compteur seul<br>pas de moyenne</div>
+        </div>
       </div>
     </div>
   `;
@@ -2199,6 +2214,7 @@ function renderRegionStatsPanel(stats, color) {
   const pct = Math.max(0, Math.min(100, stats.caughtPercent || 0));
   const masudaStats = stats.methodStats.masuda;
   const resetStats = stats.methodStats.resets;
+  const dynamaxStats = stats.methodStats.dynamax;
   return `
     <div class="region-stat-row primary">
       <div class="region-stat-main">
@@ -2215,12 +2231,13 @@ function renderRegionStatsPanel(stats, color) {
     </div>
     <div class="region-detail-row" style="--region-accent:${color}">
       <div class="region-detail-group">
-        <div class="region-detail-chip encounters"><strong>${stats.totalEncountersText}</strong><span>Total rencontres</span></div>
-        <div class="region-detail-chip encounters"><strong>${stats.avgEncountersText}</strong><span>Moy. par shiny</span></div>
+        <div class="region-detail-chip encounters"><strong>${stats.totalEncountersText}</strong><span>Total M+R</span></div>
+        <div class="region-detail-chip encounters"><strong>${stats.avgEncountersText}</strong><span>Moy. M+R</span></div>
       </div>
       <div class="region-detail-group">
         <div class="region-detail-chip encounters"><strong>${masudaStats.caught}</strong><span>Masuda · moy. ${masudaStats.avgEncountersText}</span></div>
         <div class="region-detail-chip encounters"><strong>${resetStats.caught}</strong><span>Resets · moy. ${resetStats.avgEncountersText}</span></div>
+        <div class="region-detail-chip encounters"><strong>${dynamaxStats.caught}</strong><span>Dynamax · shinys</span></div>
       </div>
     </div>`;
 }
@@ -2257,15 +2274,18 @@ function getCurrentStats() {
   const missing = Math.max(0, total - caught);
   const perfect = entries.filter(p => p.caught && p.perfect).length;
   const caughtEntries = entries.filter(p => p.caught);
-  const totalEncounters = caughtEntries.reduce((a,p) => a + (parseInt(p.encounters) || 0), 0);
-  const avgEncounters = caught > 0 ? Math.round(totalEncounters / caught) : 0;
+  const trackedEntries = caughtEntries.filter(p => TRACKED_ENCOUNTER_METHOD_IDS.includes(normalizeHuntMethod(p.huntMethod)));
+  const totalEncounters = trackedEntries.reduce((a,p) => a + (parseInt(p.encounters) || 0), 0);
+  const avgEncounters = trackedEntries.length > 0 ? Math.round(totalEncounters / trackedEntries.length) : 0;
   const methodStats = createEmptyMethodStats();
   caughtEntries.forEach(p => {
     const methodId = normalizeHuntMethod(p.huntMethod);
     const stat = methodStats[methodId];
     if (!stat) return;
     stat.caught++;
-    stat.totalEncounters += parseInt(p.encounters) || 0;
+    if (HUNT_METHODS[methodId].stats !== 'countOnly') {
+      stat.totalEncounters += parseInt(p.encounters) || 0;
+    }
   });
   Object.values(methodStats).forEach(stat => {
     stat.avgEncounters = stat.caught > 0 ? Math.round(stat.totalEncounters / stat.caught) : 0;
@@ -3755,7 +3775,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=176', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=177', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
