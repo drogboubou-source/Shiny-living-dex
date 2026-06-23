@@ -2298,7 +2298,7 @@ function renderRegionStatsPanel(stats, color) {
         <span class="region-method-label">Resets</span>
         <strong class="region-method-value">${resetStats.caught}</strong>
       </div>
-      <div class="region-method-chip" style="--method-accent:#38bdf8">
+      <div class="region-method-chip" style="--method-accent:#ff4d6d">
         <span class="region-method-label">Dynamax</span>
         <strong class="region-method-value">${dynamaxStats.caught}</strong>
       </div>
@@ -2650,7 +2650,7 @@ function getAllRegionStats() {
     gen: '1 à 9',
     start,
     end,
-    color: '#38bdf8',
+    color: '#ff4d6d',
     caught,
     perfect,
     total
@@ -3838,7 +3838,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=181', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=182', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
