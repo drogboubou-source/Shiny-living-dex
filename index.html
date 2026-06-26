@@ -410,7 +410,7 @@ body.readonly-share .modal-form-fields select{pointer-events:none}
   .region-stat{padding:6px 3px}
   .region-stat strong{font-size:12px}
   .region-stat span{font-size:6.5px;letter-spacing:0}
-  .region-detail-row{grid-template-columns:repeat(4,minmax(0,1fr));gap:4px}
+  .region-detail-row{grid-template-columns:repeat(2,minmax(0,1fr));gap:4px}
   .region-detail-chip{min-height:28px;padding:4px 3px 3px 5px}
   .region-detail-chip strong{font-size:9.2px}
   .region-detail-chip span{font-size:5.7px}
@@ -547,7 +547,7 @@ body.readonly-share .modal-form-fields select{pointer-events:none}
 }
 .region-stat.missing strong{color:#c084fc}
 .region-stat.perfect strong{color:#d4af37}
-.region-detail-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;width:100%}
+.region-detail-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(116px,1fr));gap:5px;width:100%}
 .region-detail-group{
   position:relative;display:contents;min-width:0;
   padding:0;border-radius:0;
@@ -1245,7 +1245,7 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   .region-stat-main{grid-template-columns:1.08fr .92fr .88fr .98fr;gap:6px}
   .region-stat-main .region-stat strong{font-size:12px}
   .region-stat-main .region-stat span{font-size:6.2px;margin-top:3px}
-  .region-detail-row{grid-template-columns:repeat(4,minmax(0,1fr));gap:4px}
+  .region-detail-row{grid-template-columns:repeat(2,minmax(0,1fr));gap:4px}
   .region-detail-chip{min-height:28px;padding:4px 3px 3px 5px}
   .region-detail-chip strong{font-size:9.2px}
   .region-detail-chip span{font-size:5.7px}
@@ -2217,8 +2217,8 @@ function renderStats() {
   document.getElementById('statsBar').innerHTML = `
     <div class="tstat"><strong style="color:#7ed660">${stats.caught}/${stats.total}</strong> Shinys</div>
     <div class="tstat"><strong style="color:#d4af37">${stats.perfect}</strong> ${perfectLabel(stats.perfect)}</div>
-    <div class="tstat"><strong>${stats.totalEncountersText}</strong> Calc.</div>
-    <div class="tstat"><strong>${stats.avgEncountersText}</strong> Moy. calc.</div>
+    <div class="tstat"><strong>${stats.totalEncountersText}</strong> Méthodes</div>
+    <div class="tstat"><strong>${stats.avgEncountersText}</strong> Moy. méthodes</div>
   `;
   updateHeaderHuntSprite();
   document.getElementById('statsPopinContent').innerHTML = `
@@ -2234,8 +2234,8 @@ function renderStats() {
     <div class="stats-section" style="--stats-accent:#7dd3fc">
       <div class="stats-section-title">Rencontres calcul&eacute;es</div>
       <div class="stats-grid">
-        <div class="stats-item"><span>Total méthodes calculées</span><strong>${stats.totalEncountersText}</strong></div>
-        <div class="stats-item"><span>Moyenne méthodes calculées</span><strong>${stats.avgEncountersText}</strong></div>
+        <div class="stats-item"><span>Total méthodes</span><strong>${stats.totalEncountersText}</strong></div>
+        <div class="stats-item"><span>Moyenne méthodes</span><strong>${stats.avgEncountersText}</strong></div>
       </div>
     </div>
     <div class="stats-section" style="--stats-accent:#7ed660">
@@ -2293,12 +2293,8 @@ function renderRegionStatsPanel(stats, color) {
     </div>
     <div class="region-detail-row" style="--region-accent:${color}">
       <div class="region-detail-group">
-        <div class="region-detail-chip encounters"><strong>${stats.totalEncountersText}</strong><span>Total calculé</span></div>
-        <div class="region-detail-chip encounters"><strong>${stats.avgEncountersText}</strong><span>Moy. calculée</span></div>
-      </div>
-      <div class="region-detail-group">
-        <div class="region-detail-chip encounters"><strong>${masudaStats.caught + resetStats.caught + randomStats.caught}</strong><span>Shinys calculés</span></div>
-        <div class="region-detail-chip encounters"><strong>${dynamaxStats.caught}</strong><span>Shinys Dynamax</span></div>
+        <div class="region-detail-chip encounters"><strong>${stats.totalEncountersText}</strong><span>Total méthodes</span></div>
+        <div class="region-detail-chip encounters"><strong>${stats.avgEncountersText}</strong><span>Moy. méthodes</span></div>
       </div>
     </div>
     <div class="region-method-row">
@@ -2319,7 +2315,7 @@ function renderRegionStatsPanel(stats, color) {
       </div>
       <div class="region-method-chip" style="--method-accent:#6366f1">
         <span class="region-method-label">Dynamax</span>
-        <span class="region-method-sub">Compteur</span>
+        <span class="region-method-sub">Total</span>
         <strong class="region-method-value">${dynamaxStats.caught}</strong>
       </div>
     </div>`;
@@ -3858,7 +3854,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=186', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=187', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
