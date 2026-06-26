@@ -256,7 +256,7 @@ body.readonly-share .modal-form-fields select{pointer-events:none}
   background:rgba(126,214,96,.14);border:1px solid rgba(126,214,96,.28);
   box-shadow:inset 0 1px 0 rgba(255,255,255,.055);
 }
-.stats-method-count-pill strong{display:block;color:#7ed660;font-size:18px;line-height:1;font-variant-numeric:tabular-nums}
+.stats-method-count-pill strong{display:block;color:var(--method-accent,#7ed660);font-size:18px;line-height:1;font-variant-numeric:tabular-nums}
 .stats-method-count-pill span{display:block;margin-top:3px;color:rgba(255,255,255,.62);font-size:8px;font-weight:900;text-transform:uppercase;white-space:nowrap}
 .pull-refresh{
   position:fixed;left:50%;top:calc(var(--header-h) + 10px);z-index:170;
@@ -576,22 +576,23 @@ body.readonly-share .modal-form-fields select{pointer-events:none}
 }
 .region-detail-chip.eggs strong,.region-detail-chip.encounters strong{color:var(--region-accent,#7dd3fc)}
 .region-method-row{
-  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;width:100%;
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;width:100%;
   margin-top:5px;
 }
 .region-method-chip{
-  position:relative;min-width:0;min-height:34px;padding:6px 7px;border-radius:8px;
-  display:flex;align-items:center;justify-content:space-between;gap:6px;overflow:hidden;
+  position:relative;min-width:0;min-height:38px;padding:5px 6px;border-radius:8px;
+  display:grid;grid-template-columns:7px minmax(0,1fr) auto;grid-template-rows:auto auto;align-items:center;gap:1px 5px;overflow:hidden;
   background:linear-gradient(180deg,rgba(28,28,39,.78),rgba(15,15,21,.62));
   border:1px solid rgba(255,255,255,.085);
   box-shadow:inset 0 1px 0 rgba(255,255,255,.045);
 }
 .region-method-chip::before{
-  content:'';width:6px;height:6px;background:var(--method-accent,var(--region-accent,#7dd3fc));
-  transform:rotate(45deg);box-shadow:0 0 7px var(--method-accent,var(--region-accent,#7dd3fc));flex:0 0 auto;
+  content:'';grid-row:1/3;width:6px;height:6px;background:var(--method-accent,var(--region-accent,#7dd3fc));
+  transform:rotate(45deg);box-shadow:0 0 7px var(--method-accent,var(--region-accent,#7dd3fc));
 }
-.region-method-label{min-width:0;flex:1;color:rgba(255,255,255,.68);font-size:6.7px;font-weight:900;text-transform:uppercase;line-height:1.12;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.region-method-value{color:var(--method-accent,var(--region-accent,#7dd3fc));font-family:var(--font);font-size:10.5px;font-weight:900;font-variant-numeric:tabular-nums;white-space:nowrap}
+.region-method-label{grid-column:2;min-width:0;color:rgba(255,255,255,.72);font-size:6.5px;font-weight:900;text-transform:uppercase;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.region-method-value{grid-column:3;grid-row:1/3;color:var(--method-accent,var(--region-accent,#7dd3fc));font-family:var(--font);font-size:10.5px;font-weight:900;font-variant-numeric:tabular-nums;white-space:nowrap}
+.region-method-sub{grid-column:2;color:rgba(255,255,255,.48);font-size:5.8px;font-weight:900;text-transform:uppercase;line-height:1.05;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .home-signature{position:absolute;right:1.1rem;top:.85rem;z-index:2;font-family:'Pacifico',cursive;font-size:14px;line-height:1;color:#fff7c7;text-shadow:0 2px 10px rgba(0,0,0,.72),0 0 18px rgba(192,132,252,.26);transform:rotate(-3deg);pointer-events:none}
 .region-map-mosaic{position:absolute;inset:7px;z-index:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;opacity:.9;filter:saturate(1.12) contrast(1.02) brightness(1.22);border-radius:calc(var(--r-lg) - 5px);overflow:hidden;background:rgba(255,255,255,.08)}
 .region-map-thumb{position:relative;overflow:hidden;background:rgba(255,255,255,.08);border:0}
@@ -1330,6 +1331,7 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
           <option value="caught">Shinys trouvés</option>
           <option value="method-masuda">Shinys Masuda</option>
           <option value="method-resets">Shinys Resets</option>
+          <option value="method-random">Shinys Random</option>
           <option value="missing">Manquants</option>
           <option value="perfect">Shinys parfaits</option>
           <option value="legendary">Légendaires</option>
@@ -1563,7 +1565,7 @@ function comparePokemonBySort(a, b, mode) {
     return a - b;
   }
 
-  if (mode === 'method-masuda' || mode === 'method-resets') {
+  if (mode === 'method-masuda' || mode === 'method-resets' || mode === 'method-random') {
     const da = pa.date || '';
     const db = pb.date || '';
     if (da !== db) return db.localeCompare(da);
@@ -1592,6 +1594,7 @@ function pokemonMatchesSortMode(p, mode) {
   if (mode === 'caught') return !!p.caught;
   if (mode === 'method-masuda') return !!p.caught && normalizeHuntMethod(p.huntMethod) === 'masuda';
   if (mode === 'method-resets') return !!p.caught && normalizeHuntMethod(p.huntMethod) === 'resets';
+  if (mode === 'method-random') return !!p.caught && normalizeHuntMethod(p.huntMethod) === 'random';
   if (mode === 'missing') return !p.caught;
   if (mode === 'perfect') return !!p.caught && !!p.perfect;
   if (mode === 'target') return !!p.target;
@@ -1782,6 +1785,7 @@ const UNAVAILABLE_POKEMON_IDS = new Set([
 const HUNT_METHODS = {
   masuda: { label: 'Masuda', shortLabel: 'Masuda', odds: 512 },
   resets: { label: 'Resets', shortLabel: 'Resets', odds: 1365 },
+  random: { label: 'Random Encounters', shortLabel: 'Random', odds: 1365 },
   dynamax: { label: 'Expéditions Dynamax', shortLabel: 'Dynamax', odds: null, stats: 'countOnly' }
 };
 
@@ -2200,6 +2204,7 @@ function renderStats() {
   const stats = getCurrentStats();
   const masudaStats = stats.methodStats.masuda;
   const resetStats = stats.methodStats.resets;
+  const randomStats = stats.methodStats.random;
   const dynamaxStats = stats.methodStats.dynamax;
   const scopeLabel = document.getElementById('statsScopeLabel');
   const scope = getCurrentRegionScope();
@@ -2212,8 +2217,8 @@ function renderStats() {
   document.getElementById('statsBar').innerHTML = `
     <div class="tstat"><strong style="color:#7ed660">${stats.caught}/${stats.total}</strong> Shinys</div>
     <div class="tstat"><strong style="color:#d4af37">${stats.perfect}</strong> ${perfectLabel(stats.perfect)}</div>
-    <div class="tstat"><strong>${stats.totalEncountersText}</strong> M+R</div>
-    <div class="tstat"><strong>${stats.avgEncountersText}</strong> Moy. M+R</div>
+    <div class="tstat"><strong>${stats.totalEncountersText}</strong> Calc.</div>
+    <div class="tstat"><strong>${stats.avgEncountersText}</strong> Moy. calc.</div>
   `;
   updateHeaderHuntSprite();
   document.getElementById('statsPopinContent').innerHTML = `
@@ -2229,8 +2234,8 @@ function renderStats() {
     <div class="stats-section" style="--stats-accent:#7dd3fc">
       <div class="stats-section-title">Rencontres calcul&eacute;es</div>
       <div class="stats-grid">
-        <div class="stats-item"><span>Total Masuda + Resets</span><strong>${stats.totalEncountersText}</strong></div>
-        <div class="stats-item"><span>Moyenne Masuda + Resets</span><strong>${stats.avgEncountersText}</strong></div>
+        <div class="stats-item"><span>Total méthodes calculées</span><strong>${stats.totalEncountersText}</strong></div>
+        <div class="stats-item"><span>Moyenne méthodes calculées</span><strong>${stats.avgEncountersText}</strong></div>
       </div>
     </div>
     <div class="stats-section" style="--stats-accent:#7ed660">
@@ -2248,6 +2253,12 @@ function renderStats() {
           <div class="stats-method-metric"><strong>${resetStats.totalEncountersText}</strong><span>Total</span></div>
           <div class="stats-method-metric"><strong>${resetStats.avgEncountersText}</strong><span>Moyenne</span></div>
         </div>
+        <div class="stats-method" style="--method-accent:#d6ff00">
+          <div class="stats-method-name">Random Encounters</div>
+          <div class="stats-method-metric"><strong>${randomStats.caught}</strong><span>Shinys</span></div>
+          <div class="stats-method-metric"><strong>${randomStats.totalEncountersText}</strong><span>Total</span></div>
+          <div class="stats-method-metric"><strong>${randomStats.avgEncountersText}</strong><span>Moyenne</span></div>
+        </div>
         <div class="stats-method count-only" style="--method-accent:#6366f1">
           <div class="stats-method-name">Exp&eacute;ditions Dynamax</div>
           <div class="stats-method-count-pill"><strong>${dynamaxStats.caught}</strong><span>Shinys</span></div>
@@ -2264,6 +2275,7 @@ function renderRegionStatsPanel(stats, color) {
   const pct = Math.max(0, Math.min(100, stats.caughtPercent || 0));
   const masudaStats = stats.methodStats.masuda;
   const resetStats = stats.methodStats.resets;
+  const randomStats = stats.methodStats.random;
   const dynamaxStats = stats.methodStats.dynamax;
   return `
     <div class="region-stat-row primary">
@@ -2281,25 +2293,33 @@ function renderRegionStatsPanel(stats, color) {
     </div>
     <div class="region-detail-row" style="--region-accent:${color}">
       <div class="region-detail-group">
-        <div class="region-detail-chip encounters"><strong>${stats.totalEncountersText}</strong><span>Total M+R</span></div>
-        <div class="region-detail-chip encounters"><strong>${stats.avgEncountersText}</strong><span>Moy. M+R</span></div>
+        <div class="region-detail-chip encounters"><strong>${stats.totalEncountersText}</strong><span>Total calculé</span></div>
+        <div class="region-detail-chip encounters"><strong>${stats.avgEncountersText}</strong><span>Moy. calculée</span></div>
       </div>
       <div class="region-detail-group">
-        <div class="region-detail-chip encounters"><strong>${masudaStats.avgEncountersText}</strong><span>Moy. Masuda</span></div>
-        <div class="region-detail-chip encounters"><strong>${resetStats.avgEncountersText}</strong><span>Moy. Resets</span></div>
+        <div class="region-detail-chip encounters"><strong>${masudaStats.caught + resetStats.caught + randomStats.caught}</strong><span>Shinys calculés</span></div>
+        <div class="region-detail-chip encounters"><strong>${dynamaxStats.caught}</strong><span>Shinys Dynamax</span></div>
       </div>
     </div>
     <div class="region-method-row">
       <div class="region-method-chip" style="--method-accent:#00ff9c">
         <span class="region-method-label">Masuda</span>
+        <span class="region-method-sub">Moy. ${masudaStats.avgEncountersText}</span>
         <strong class="region-method-value">${masudaStats.caught}</strong>
       </div>
       <div class="region-method-chip" style="--method-accent:#ff00c8">
         <span class="region-method-label">Resets</span>
+        <span class="region-method-sub">Moy. ${resetStats.avgEncountersText}</span>
         <strong class="region-method-value">${resetStats.caught}</strong>
+      </div>
+      <div class="region-method-chip" style="--method-accent:#d6ff00">
+        <span class="region-method-label">Random</span>
+        <span class="region-method-sub">Moy. ${randomStats.avgEncountersText}</span>
+        <strong class="region-method-value">${randomStats.caught}</strong>
       </div>
       <div class="region-method-chip" style="--method-accent:#6366f1">
         <span class="region-method-label">Dynamax</span>
+        <span class="region-method-sub">Compteur</span>
         <strong class="region-method-value">${dynamaxStats.caught}</strong>
       </div>
     </div>`;
@@ -3838,7 +3858,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=185', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=186', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
