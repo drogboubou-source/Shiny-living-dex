@@ -67,7 +67,7 @@
   --r:        10px;
   --r-lg:     16px;
   --sidebar-w: 220px;
-  --header-h:  60px;
+  --header-h:  74px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{height:100%;overflow:hidden;overscroll-behavior-x:none}
@@ -106,7 +106,7 @@ body.readonly-share .modal-form-fields select{pointer-events:none}
     rgba(20,20,28,.96);
   border-bottom:1px solid rgba(255,255,255,.09);
   box-shadow:0 10px 26px rgba(0,0,0,.28),inset 0 -1px 0 rgba(255,255,255,.025);
-  display:grid;grid-template-columns:minmax(0,1fr) 72px;align-items:center;
+  display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;
   gap:.7rem;padding:0 1rem 0 1.25rem;z-index:100;
 }
 .topbar::after{
@@ -114,53 +114,52 @@ body.readonly-share .modal-form-fields select{pointer-events:none}
   background:linear-gradient(90deg,rgba(192,132,252,.75),rgba(212,175,55,.58),rgba(125,211,252,.6),transparent);
   opacity:.62;pointer-events:none;
 }
+.brand-block{display:grid;grid-template-rows:auto auto;align-items:start;gap:2px;min-width:0;width:min(360px,100%)}
 .logo{
   position:relative;font-family:var(--font-logo);font-size:13px;line-height:1;white-space:nowrap;letter-spacing:.5px;
   color:#fff;background:linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.018)),rgba(15,15,21,.56);
   border:1px solid rgba(255,255,255,.105);border-radius:13px;cursor:pointer;text-align:left;
-  padding:5px 10px 5px 6px;display:inline-flex;align-items:center;gap:9px;min-width:0;height:44px;
+  padding:4px 9px 4px 5px;display:inline-flex;align-items:center;gap:8px;min-width:0;height:32px;width:max-content;
   box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 8px 20px rgba(0,0,0,.18);
 }
-.logo-icon{width:32px;height:32px;border-radius:9px;object-fit:cover;box-shadow:0 0 0 1px rgba(255,255,255,.14),0 6px 14px rgba(0,0,0,.24)}
-.logo-stack{display:flex;flex-direction:column;gap:5px;min-width:0}
+.logo-icon{width:24px;height:24px;border-radius:7px;object-fit:cover;box-shadow:0 0 0 1px rgba(255,255,255,.14),0 6px 14px rgba(0,0,0,.24)}
+.logo-stack{display:flex;flex-direction:column;gap:2px;min-width:0}
 .logo-text{display:inline-flex;align-items:center;gap:.42em;line-height:1;transform:translateY(-1px);letter-spacing:0}
 .logo-word{display:inline-block;letter-spacing:0}
 .logo-sep{display:none}
-.logo-subline{font-family:var(--font);font-size:9px;line-height:1;color:rgba(255,255,255,.56);letter-spacing:0;font-weight:800}
+.logo-subline{display:none}
 .logo:hover,.logo:focus-visible{border-color:rgba(255,255,255,.105);background:linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.018)),rgba(15,15,21,.56)}
 .logo:hover .logo-dex,.logo:focus-visible .logo-dex{color:#fff}
 .logo-shiny{color:#c084fc}
 .logo-living,.logo-dex{color:#fff}
 .title-actions{display:flex;align-items:center;gap:8px;min-width:0;height:100%}
 .header-hunt-sprite{
-  position:relative;width:86px;height:54px;display:grid;grid-template-columns:repeat(2,38px);grid-auto-rows:25px;
-  align-content:center;justify-content:end;gap:1px 2px;justify-self:end;overflow:visible;
-  padding:2px 3px;border-radius:14px;
-  background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.014)),rgba(15,15,21,.36);
+  position:relative;width:auto;max-width:150px;height:30px;display:flex;align-items:center;gap:3px;overflow:hidden;
+  padding:2px 5px;border-radius:12px;
+  background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.014)),rgba(15,15,21,.42);
   border:1px solid rgba(255,255,255,.075);box-shadow:inset 0 1px 0 rgba(255,255,255,.045);
-  pointer-events:none;
+  pointer-events:auto;
 }
 .header-hunt-sprite::before{
-  content:'';position:absolute;inset:4px;border-radius:11px;
-  background:radial-gradient(circle at 75% 30%,rgba(125,211,252,.14),transparent 58%);
+  content:'';position:absolute;inset:3px;border-radius:10px;
+  background:linear-gradient(90deg,rgba(125,211,252,.08),rgba(212,175,55,.055));
   opacity:0;transition:opacity .15s ease;
 }
-.header-hunt-sprite img{
-  position:relative;z-index:1;width:38px;height:28px;object-fit:contain;display:block;
-  transform:none;pointer-events:auto;cursor:pointer;align-self:center;justify-self:center;
+.header-hunt-item{
+  position:relative;z-index:1;width:32px;height:26px;border:0;background:transparent;padding:0;
+  display:grid;place-items:center;cursor:pointer;flex:0 0 auto;
+}
+.header-hunt-item img{
+  width:32px;height:30px;object-fit:contain;display:block;
   filter:drop-shadow(0 7px 10px rgba(0,0,0,.4)) drop-shadow(0 0 10px rgba(125,211,252,.15));
 }
-.header-hunt-sprite .header-hunt-img.slot-0{grid-column:1;grid-row:1}
-.header-hunt-sprite .header-hunt-img.slot-1{grid-column:2;grid-row:1}
-.header-hunt-sprite .header-hunt-img.slot-2{grid-column:1;grid-row:2}
-.header-hunt-sprite .header-hunt-img.slot-3{grid-column:2;grid-row:2}
-.header-hunt-sprite[data-count="1"]{grid-template-columns:42px;width:52px}
-.header-hunt-sprite[data-count="1"] img{width:44px;height:44px}
-.header-hunt-sprite[data-count="2"]{grid-template-columns:repeat(2,38px);grid-auto-rows:44px;width:86px}
-.header-hunt-sprite[data-count="2"] img{width:40px;height:40px}
-.header-hunt-sprite[data-count="2"] .header-hunt-img.slot-0{grid-column:1;grid-row:1}
-.header-hunt-sprite[data-count="2"] .header-hunt-img.slot-1{grid-column:2;grid-row:1}
-.header-hunt-sprite .header-hunt-img.shiny{filter:drop-shadow(0 7px 10px rgba(0,0,0,.4)) drop-shadow(0 0 10px rgba(212,175,55,.24))}
+.header-hunt-item.shiny img{filter:drop-shadow(0 7px 10px rgba(0,0,0,.4)) drop-shadow(0 0 10px rgba(212,175,55,.24))}
+.header-hunt-state{
+  position:absolute;right:1px;bottom:1px;width:8px;height:8px;border-radius:50%;
+  border:1px solid rgba(15,15,21,.9);background:#7dd3fc;box-shadow:0 0 7px rgba(125,211,252,.8);
+}
+.header-hunt-item.shiny .header-hunt-state{background:#d4af37;box-shadow:0 0 7px rgba(212,175,55,.85)}
+.header-hunt-item.shiny .header-hunt-state{border-radius:2px;transform:rotate(45deg)}
 .header-hunt-sprite:not(.empty)::before{opacity:1}
 .header-hunt-sprite.empty{display:none}
 .topbar-stats{display:none}
@@ -363,17 +362,15 @@ body.readonly-share .modal-form-fields select{pointer-events:none}
 .sidebar-toggle.open{left:var(--sidebar-w)}
 .sidebar-toggle:focus-visible,.btn:focus-visible,.gen-btn:focus-visible,.card:focus-visible,.modal-close:focus-visible,.btn-save:focus-visible{outline:2px solid #c084fc;outline-offset:2px}
 @media (max-width: 720px){
-  .topbar{grid-template-columns:minmax(0,1fr) 66px;gap:.4rem;padding:0 .45rem 0 .7rem}
+  .topbar{grid-template-columns:minmax(0,1fr);gap:.4rem;padding:0 .45rem 0 .7rem}
   .title-actions{gap:6px}
-  .logo{height:42px;font-size:10.5px;gap:7px;padding:5px 8px 5px 6px;border-radius:12px}
-  .logo-icon{width:30px;height:30px;border-radius:8px}
+  .brand-block{width:100%}
+  .logo{height:30px;font-size:10.5px;gap:7px;padding:4px 8px 4px 5px;border-radius:12px}
+  .logo-icon{width:22px;height:22px;border-radius:7px}
   .logo-subline{font-size:8px}
-  .header-hunt-sprite{width:76px;height:44px;grid-template-columns:repeat(2,34px);grid-auto-rows:20px;padding:2px;border-radius:12px}
-  .header-hunt-sprite img{width:34px;height:23px;transform:none}
-  .header-hunt-sprite[data-count="1"]{width:46px;grid-template-columns:40px}
-  .header-hunt-sprite[data-count="1"] img{width:40px;height:40px}
-  .header-hunt-sprite[data-count="2"]{width:76px;grid-template-columns:repeat(2,34px);grid-auto-rows:38px}
-  .header-hunt-sprite[data-count="2"] img{width:36px;height:36px}
+  .header-hunt-sprite{height:28px;max-width:142px;padding:2px 4px}
+  .header-hunt-item{width:31px;height:24px}
+  .header-hunt-item img{width:31px;height:29px}
   .topbar-stats{display:none}
   #statsButton{min-height:34px;padding:7px 11px}
   .sidebar{position:fixed;top:var(--header-h);bottom:0;left:0;z-index:150;width:var(--sidebar-w);transform:translateX(calc(-1 * var(--sidebar-w)));box-shadow:12px 0 34px rgba(0,0,0,.38);will-change:transform}
@@ -1266,15 +1263,17 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
 <!-- TOPBAR -->
 <div class="topbar">
   <div class="title-actions">
-    <button class="logo" onclick="goHomeFromLogo()" aria-label="Retour à l'accueil">
-      <img class="logo-icon" src="./Assets/icon-192.png" alt="" width="32" height="32">
-      <span class="logo-stack">
-        <span class="logo-text"><span class="logo-word logo-shiny">Shiny</span><span class="logo-word logo-living">Living</span><span class="logo-word logo-dex">Dex</span></span>
-        <span class="logo-subline">Merci Thieu</span>
-      </span>
-    </button>
+    <div class="brand-block">
+      <button class="logo" onclick="goHomeFromLogo()" aria-label="Retour à l'accueil">
+        <img class="logo-icon" src="./Assets/icon-192.png" alt="" width="32" height="32">
+        <span class="logo-stack">
+          <span class="logo-text"><span class="logo-word logo-shiny">Shiny</span><span class="logo-word logo-living">Living</span><span class="logo-word logo-dex">Dex</span></span>
+          <span class="logo-subline">Merci Thieu</span>
+        </span>
+      </button>
+      <div class="header-hunt-sprite empty" id="headerHuntSprite" aria-label="Shasses en cours et derniers shinys"></div>
+    </div>
   </div>
-  <div class="header-hunt-sprite empty" id="headerHuntSprite" aria-hidden="true"></div>
   <div class="topbar-stats" id="statsBar"></div>
 </div>
 
@@ -2197,11 +2196,15 @@ function updateHeaderHuntSprite() {
   }
   holder.classList.remove('empty');
   holder.innerHTML = sprites.map((sprite, index) => `
-    <img class="header-hunt-img slot-${index} ${sprite.shiny ? 'shiny' : 'normal'}"
-         src="${getPokemonSpriteUrl(sprite.id, sprite.shiny, 'home')}"
-         alt="${getPokemonDisplayName(sprite.id)}" width="52" height="52" decoding="async"
-         onclick="openModalToCounter(${sprite.id})"
-         onerror="handleSpriteError(this, ${sprite.id}, ${sprite.shiny})">`
+    <button class="header-hunt-item slot-${index} ${sprite.shiny ? 'shiny' : 'normal'}" type="button"
+            onclick="openModalToCounter(${sprite.id})"
+            aria-label="${getPokemonDisplayName(sprite.id)} · ${sprite.shiny ? 'capturé' : 'en cours'}">
+      <img class="header-hunt-img"
+           src="${getPokemonSpriteUrl(sprite.id, sprite.shiny, 'home')}"
+           alt="" width="32" height="32" decoding="async"
+           onerror="handleSpriteError(this, ${sprite.id}, ${sprite.shiny})">
+      <span class="header-hunt-state" aria-hidden="true"></span>
+    </button>`
   ).join('');
 }
 
@@ -3859,7 +3862,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=189', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=190', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
