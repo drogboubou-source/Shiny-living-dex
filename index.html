@@ -2234,8 +2234,8 @@ function getActiveHuntIds() {
 function getHeaderHuntSprites() {
   const activeIds = getActiveHuntIds();
   const captured = readStoredIdList(HUNT_CAPTURED_KEY).filter(id => progress[id]?.caught);
-  const currentId = activeIds[0] || captured[captured.length - 1] || null;
-  const currentShiny = !!currentId && !!progress[currentId]?.caught && !activeIds.includes(currentId);
+  const currentId = captured[captured.length - 1] || activeIds[0] || null;
+  const currentShiny = !!currentId && !!progress[currentId]?.caught;
   return { currentId, currentShiny };
 }
 
@@ -3979,7 +3979,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=192', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=193', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
