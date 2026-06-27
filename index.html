@@ -133,12 +133,12 @@ body.readonly-share .modal-form-fields select{pointer-events:none}
 .logo-living,.logo-dex{color:#fff}
 .title-actions{display:flex;align-items:center;gap:8px;min-width:0;height:100%}
 .header-hunt-sprite{
-  position:relative;width:54px;height:54px;display:flex;align-items:center;justify-content:center;justify-self:end;overflow:visible;
+  position:relative;width:72px;height:54px;display:flex;align-items:center;justify-content:flex-end;justify-self:end;overflow:visible;
   background:transparent;border:0;box-shadow:none;pointer-events:none;
 }
 .header-hunt-sprite::before{
   content:'';position:absolute;left:50%;bottom:7px;width:34px;height:8px;border-radius:50%;
-  transform:translateX(-50%);
+  transform:translateX(-10%);
   background:radial-gradient(ellipse at center,rgba(125,211,252,.22),rgba(125,211,252,.08) 48%,transparent 72%);
   opacity:0;transition:opacity .15s ease;
 }
@@ -148,7 +148,6 @@ body.readonly-share .modal-form-fields select{pointer-events:none}
   filter:drop-shadow(0 7px 10px rgba(0,0,0,.4)) drop-shadow(0 0 10px rgba(125,211,252,.15));
 }
 .header-hunt-sprite .header-hunt-img.previous{
-  display:none;
   width:52px;height:52px;margin-right:-6px;opacity:1;z-index:0;
   transform:translateY(1px);
   filter:drop-shadow(0 7px 10px rgba(0,0,0,.4)) drop-shadow(0 0 10px rgba(125,211,252,.15));
@@ -410,13 +409,13 @@ body.readonly-share .modal-form-fields select{pointer-events:none}
 .sidebar-toggle.open{left:var(--sidebar-w)}
 .sidebar-toggle:focus-visible,.btn:focus-visible,.gen-btn:focus-visible,.card:focus-visible,.modal-close:focus-visible,.btn-save:focus-visible{outline:2px solid #c084fc;outline-offset:2px}
 @media (max-width: 720px){
-  .topbar{grid-template-columns:minmax(0,1fr) 48px 34px;gap:.4rem;padding:0 .45rem 0 .7rem}
+  .topbar{grid-template-columns:minmax(0,1fr) 66px 34px;gap:.4rem;padding:0 .45rem 0 .7rem}
   .title-actions{gap:6px}
   .logo{height:42px;font-size:10.5px;gap:7px;padding:5px 8px 5px 6px;border-radius:12px}
   .logo-icon{width:30px;height:30px;border-radius:8px}
   .logo-subline{font-size:8px}
-  .header-hunt-sprite{width:48px;height:48px}
-  .header-hunt-sprite::before{bottom:6px;width:30px;height:7px;transform:translateX(-50%)}
+  .header-hunt-sprite{width:66px;height:48px}
+  .header-hunt-sprite::before{bottom:6px;width:30px;height:7px;transform:translateX(-8%)}
   .header-hunt-sprite img{width:48px;height:48px;transform:translateY(1px)}
   .header-hunt-sprite .header-hunt-img.previous{width:48px;height:48px;margin-right:-6px;transform:translateY(1px)}
   .hunt-tray-button{width:34px;height:34px;border-radius:11px}
@@ -2086,6 +2085,7 @@ function rowHuntMethod(p) {
 
 // Au chargement de la page, on tente de récupérer le fichier pokemon.json
 document.addEventListener('DOMContentLoaded', () => {
+  document.addEventListener('pointerdown', closeHuntTrayOnOutsidePointer, true);
   fetch('pokemon.json', { cache: 'no-store' })
     .then(response => {
       if (!response.ok) {
@@ -2232,11 +2232,10 @@ function getActiveHuntIds() {
 }
 
 function getHeaderHuntSprites() {
-  const activeIds = getActiveHuntIds();
   const captured = readStoredIdList(HUNT_CAPTURED_KEY).filter(id => progress[id]?.caught);
-  const currentId = captured[captured.length - 1] || activeIds[0] || null;
-  const currentShiny = !!currentId && !!progress[currentId]?.caught;
-  return { currentId, currentShiny };
+  const latest = captured[captured.length - 1] || null;
+  const previous = captured.filter(id => id !== latest).slice(-1)[0] || null;
+  return { previousId: previous, currentId: latest };
 }
 
 function getHuntTrayItems(limit = 5) {
@@ -2262,19 +2261,25 @@ function openModalToCounter(id) {
 function updateHeaderHuntSprite() {
   const holder = document.getElementById('headerHuntSprite');
   if (!holder) return;
-  const { currentId, currentShiny } = getHeaderHuntSprites();
-  if (!currentId) {
+  const { previousId, currentId } = getHeaderHuntSprites();
+  if (!previousId && !currentId) {
     holder.classList.add('empty');
     holder.innerHTML = '';
   } else {
+    const previousHtml = previousId ? `
+      <img class="header-hunt-img previous shiny"
+           src="${getPokemonSpriteUrl(previousId, true, 'home')}"
+           alt="${getPokemonDisplayName(previousId)}" width="34" height="34" decoding="async"
+           onclick="openModalToCounter(${previousId})"
+           onerror="handleSpriteError(this, ${previousId}, true)">` : '';
     const currentHtml = currentId ? `
-      <img class="header-hunt-img current ${currentShiny ? 'shiny' : 'normal'}"
-           src="${getPokemonSpriteUrl(currentId, currentShiny, 'home')}"
+      <img class="header-hunt-img current shiny"
+           src="${getPokemonSpriteUrl(currentId, true, 'home')}"
            alt="${getPokemonDisplayName(currentId)}" width="52" height="52" decoding="async"
            onclick="openModalToCounter(${currentId})"
-           onerror="handleSpriteError(this, ${currentId}, ${currentShiny})">` : '';
+           onerror="handleSpriteError(this, ${currentId}, true)">` : '';
     holder.classList.remove('empty');
-    holder.innerHTML = currentHtml;
+    holder.innerHTML = `${previousHtml}${currentHtml}`;
   }
   renderHuntTray();
 }
@@ -2323,6 +2328,16 @@ function closeHuntTray() {
   huntTrayOpen = false;
   document.getElementById('huntTrayPopin')?.classList.remove('open');
   document.getElementById('huntTrayButton')?.setAttribute('aria-expanded', 'false');
+}
+
+function closeHuntTrayOnOutsidePointer(e) {
+  if (!huntTrayOpen) return;
+  const popin = document.getElementById('huntTrayPopin');
+  const button = document.getElementById('huntTrayButton');
+  if (popin?.contains(e.target) || button?.contains(e.target)) return;
+  e.preventDefault();
+  e.stopPropagation();
+  closeHuntTray();
 }
 
 function renderStats() {
@@ -3074,7 +3089,7 @@ function getCardStatusHtml(p, isHuntingCard = false) {
 
 function getTargetCardClasses(p, isHuntingCard = false, unavailable = false) {
   if (!p?.target || unavailable) return '';
-  const outline = currentRegion !== TARGET_REGION_ID && !p.caught && !p.perfect && !isHuntingCard;
+  const outline = currentRegion !== TARGET_REGION_ID && currentRegion !== 'all' && !p.caught && !p.perfect && !isHuntingCard;
   return ' target' + (outline ? ' target-outline' : '');
 }
 
@@ -3979,7 +3994,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=193', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=194', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
