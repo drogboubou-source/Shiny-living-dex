@@ -133,26 +133,23 @@ body.readonly-share .modal-form-fields select{pointer-events:none}
 .logo-living,.logo-dex{color:#fff}
 .title-actions{display:flex;align-items:center;gap:8px;min-width:0;height:100%}
 .header-hunt-sprite{
-  position:relative;width:72px;height:54px;display:flex;align-items:center;justify-content:flex-end;justify-self:end;overflow:visible;
+  position:relative;width:112px;height:54px;display:flex;align-items:center;justify-content:flex-end;justify-self:end;overflow:visible;
   background:transparent;border:0;box-shadow:none;pointer-events:none;
 }
 .header-hunt-sprite::before{
-  content:'';position:absolute;left:50%;bottom:7px;width:34px;height:8px;border-radius:50%;
-  transform:translateX(-10%);
+  content:'';position:absolute;right:2px;bottom:7px;width:76px;height:8px;border-radius:50%;
   background:radial-gradient(ellipse at center,rgba(125,211,252,.22),rgba(125,211,252,.08) 48%,transparent 72%);
   opacity:0;transition:opacity .15s ease;
 }
 .header-hunt-sprite img{
-  position:relative;z-index:1;width:52px;height:52px;object-fit:contain;display:block;
+  position:absolute;right:0;bottom:0;width:52px;height:52px;object-fit:contain;display:block;
   transform:translateY(1px);pointer-events:auto;cursor:pointer;
   filter:drop-shadow(0 7px 10px rgba(0,0,0,.4)) drop-shadow(0 0 10px rgba(125,211,252,.15));
 }
-.header-hunt-sprite .header-hunt-img.previous{
-  width:52px;height:52px;margin-right:-6px;opacity:1;z-index:0;
-  transform:translateY(1px);
-  filter:drop-shadow(0 7px 10px rgba(0,0,0,.4)) drop-shadow(0 0 10px rgba(125,211,252,.15));
-}
-.header-hunt-sprite .header-hunt-img.current{z-index:1}
+.header-hunt-sprite .header-hunt-img.slot-0{right:0;z-index:4}
+.header-hunt-sprite .header-hunt-img.slot-1{right:22px;z-index:3;width:48px;height:48px;opacity:.98}
+.header-hunt-sprite .header-hunt-img.slot-2{right:44px;z-index:2;width:44px;height:44px;opacity:.94}
+.header-hunt-sprite .header-hunt-img.slot-3{right:64px;z-index:1;width:40px;height:40px;opacity:.9}
 .header-hunt-sprite .header-hunt-img.shiny{filter:drop-shadow(0 7px 10px rgba(0,0,0,.4)) drop-shadow(0 0 10px rgba(212,175,55,.24))}
 .header-hunt-sprite:not(.empty)::before{opacity:1}
 .header-hunt-sprite.empty img{display:none}
@@ -361,10 +358,13 @@ body.readonly-share .modal-form-fields select{pointer-events:none}
   .logo{height:42px;font-size:10.5px;gap:7px;padding:5px 8px 5px 6px;border-radius:12px}
   .logo-icon{width:30px;height:30px;border-radius:8px}
   .logo-subline{font-size:8px}
-  .header-hunt-sprite{width:66px;height:48px}
-  .header-hunt-sprite::before{bottom:6px;width:30px;height:7px;transform:translateX(-8%)}
-  .header-hunt-sprite img{width:48px;height:48px;transform:translateY(1px)}
-  .header-hunt-sprite .header-hunt-img.previous{width:48px;height:48px;margin-right:-6px;transform:translateY(1px)}
+  .header-hunt-sprite{width:92px;height:48px}
+  .header-hunt-sprite::before{right:2px;bottom:6px;width:62px;height:7px}
+  .header-hunt-sprite img{width:46px;height:46px;transform:translateY(1px)}
+  .header-hunt-sprite .header-hunt-img.slot-0{right:0;width:46px;height:46px}
+  .header-hunt-sprite .header-hunt-img.slot-1{right:18px;width:43px;height:43px}
+  .header-hunt-sprite .header-hunt-img.slot-2{right:36px;width:40px;height:40px}
+  .header-hunt-sprite .header-hunt-img.slot-3{right:52px;width:37px;height:37px}
   .topbar-stats{display:none}
   #statsButton{min-height:34px;padding:7px 11px}
   .sidebar{position:fixed;top:var(--header-h);bottom:0;left:0;z-index:150;width:var(--sidebar-w);transform:translateX(calc(-1 * var(--sidebar-w)));box-shadow:12px 0 34px rgba(0,0,0,.38);will-change:transform}
@@ -2158,14 +2158,16 @@ function getActiveHuntIds() {
 
 function getHeaderHuntSprites() {
   const activeIds = getActiveHuntIds();
-  if (activeIds.length >= 2) {
-    return { previousId: activeIds[1], currentId: activeIds[0], currentShiny: false, previousShiny: false, dual: true };
-  }
   const captured = readStoredIdList(HUNT_CAPTURED_KEY).filter(id => progress[id]?.caught);
-  const currentId = activeIds[0] || captured[captured.length - 1] || null;
-  const previousId = captured.filter(id => id !== currentId).slice(-1)[0] || null;
-  const currentShiny = !!currentId && !!progress[currentId]?.caught && !activeIds.includes(currentId);
-  return { previousId, currentId, currentShiny, previousShiny: true, dual: false };
+  const activeSprites = activeIds.slice(0, 4).map(id => ({ id, shiny: false }));
+  if (activeSprites.length >= 4) return activeSprites;
+  const used = new Set(activeSprites.map(sprite => sprite.id));
+  const recentCaptured = [...captured]
+    .reverse()
+    .filter(id => !used.has(id))
+    .slice(0, 4 - activeSprites.length)
+    .map(id => ({ id, shiny: true }));
+  return [...activeSprites, ...recentCaptured];
 }
 
 function openModalToCounter(id) {
@@ -2177,27 +2179,21 @@ function openModalToCounter(id) {
 function updateHeaderHuntSprite() {
   const holder = document.getElementById('headerHuntSprite');
   if (!holder) return;
-  const { previousId, currentId, currentShiny, previousShiny, dual } = getHeaderHuntSprites();
-  holder.classList.toggle('dual-hunt', !!dual);
-  if (!previousId && !currentId) {
+  const sprites = getHeaderHuntSprites();
+  holder.dataset.count = String(sprites.length);
+  if (!sprites.length) {
     holder.classList.add('empty');
     holder.innerHTML = '';
     return;
   }
-  const previousHtml = previousId ? `
-    <img class="header-hunt-img previous ${previousShiny ? 'shiny' : 'normal'}"
-         src="${getPokemonSpriteUrl(previousId, previousShiny, 'home')}"
-         alt="${getPokemonDisplayName(previousId)}" width="34" height="34" decoding="async"
-         onclick="openModalToCounter(${previousId})"
-         onerror="handleSpriteError(this, ${previousId}, ${previousShiny})">` : '';
-  const currentHtml = currentId ? `
-    <img class="header-hunt-img current ${currentShiny ? 'shiny' : 'normal'}"
-         src="${getPokemonSpriteUrl(currentId, currentShiny, 'home')}"
-         alt="${getPokemonDisplayName(currentId)}" width="52" height="52" decoding="async"
-         onclick="openModalToCounter(${currentId})"
-         onerror="handleSpriteError(this, ${currentId}, ${currentShiny})">` : '';
   holder.classList.remove('empty');
-  holder.innerHTML = `${previousHtml}${currentHtml}`;
+  holder.innerHTML = sprites.map((sprite, index) => `
+    <img class="header-hunt-img slot-${index} ${sprite.shiny ? 'shiny' : 'normal'}"
+         src="${getPokemonSpriteUrl(sprite.id, sprite.shiny, 'home')}"
+         alt="${getPokemonDisplayName(sprite.id)}" width="52" height="52" decoding="async"
+         onclick="openModalToCounter(${sprite.id})"
+         onerror="handleSpriteError(this, ${sprite.id}, ${sprite.shiny})">`
+  ).join('');
 }
 
 function renderStats() {
@@ -3854,7 +3850,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=187', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=188', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
