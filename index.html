@@ -133,12 +133,12 @@ body.readonly-share .modal-form-fields select{pointer-events:none}
 .logo-living,.logo-dex{color:#fff}
 .title-actions{display:flex;align-items:center;gap:8px;min-width:0;height:100%}
 .header-hunt-sprite{
-  position:relative;width:72px;height:54px;display:flex;align-items:center;justify-content:flex-end;justify-self:end;overflow:visible;
+  position:relative;width:54px;height:54px;display:flex;align-items:center;justify-content:center;justify-self:end;overflow:visible;
   background:transparent;border:0;box-shadow:none;pointer-events:none;
 }
 .header-hunt-sprite::before{
   content:'';position:absolute;left:50%;bottom:7px;width:34px;height:8px;border-radius:50%;
-  transform:translateX(-10%);
+  transform:translateX(-50%);
   background:radial-gradient(ellipse at center,rgba(125,211,252,.22),rgba(125,211,252,.08) 48%,transparent 72%);
   opacity:0;transition:opacity .15s ease;
 }
@@ -148,6 +148,7 @@ body.readonly-share .modal-form-fields select{pointer-events:none}
   filter:drop-shadow(0 7px 10px rgba(0,0,0,.4)) drop-shadow(0 0 10px rgba(125,211,252,.15));
 }
 .header-hunt-sprite .header-hunt-img.previous{
+  display:none;
   width:52px;height:52px;margin-right:-6px;opacity:1;z-index:0;
   transform:translateY(1px);
   filter:drop-shadow(0 7px 10px rgba(0,0,0,.4)) drop-shadow(0 0 10px rgba(125,211,252,.15));
@@ -163,6 +164,12 @@ body.readonly-share .modal-form-fields select{pointer-events:none}
   box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 8px 18px rgba(0,0,0,.18);
 }
 .hunt-tray-button svg{width:17px;height:17px}
+.hunt-tray-button::before{
+  content:'';position:absolute;inset:4px;border-radius:9px;
+  background:radial-gradient(circle at 65% 28%,rgba(125,211,252,.18),transparent 58%);
+  pointer-events:none;
+}
+.hunt-tray-button svg,.hunt-tray-count{position:relative;z-index:1}
 .hunt-tray-button:hover,.hunt-tray-button[aria-expanded="true"]{border-color:rgba(125,211,252,.44);background:linear-gradient(180deg,rgba(125,211,252,.16),rgba(125,211,252,.045)),#1b2430}
 .hunt-tray-count{
   position:absolute;right:-3px;top:-4px;min-width:15px;height:15px;padding:0 4px;border-radius:999px;
@@ -403,13 +410,13 @@ body.readonly-share .modal-form-fields select{pointer-events:none}
 .sidebar-toggle.open{left:var(--sidebar-w)}
 .sidebar-toggle:focus-visible,.btn:focus-visible,.gen-btn:focus-visible,.card:focus-visible,.modal-close:focus-visible,.btn-save:focus-visible{outline:2px solid #c084fc;outline-offset:2px}
 @media (max-width: 720px){
-  .topbar{grid-template-columns:minmax(0,1fr) 66px 34px;gap:.4rem;padding:0 .45rem 0 .7rem}
+  .topbar{grid-template-columns:minmax(0,1fr) 48px 34px;gap:.4rem;padding:0 .45rem 0 .7rem}
   .title-actions{gap:6px}
   .logo{height:42px;font-size:10.5px;gap:7px;padding:5px 8px 5px 6px;border-radius:12px}
   .logo-icon{width:30px;height:30px;border-radius:8px}
   .logo-subline{font-size:8px}
-  .header-hunt-sprite{width:66px;height:48px}
-  .header-hunt-sprite::before{bottom:6px;width:30px;height:7px;transform:translateX(-8%)}
+  .header-hunt-sprite{width:48px;height:48px}
+  .header-hunt-sprite::before{bottom:6px;width:30px;height:7px;transform:translateX(-50%)}
   .header-hunt-sprite img{width:48px;height:48px;transform:translateY(1px)}
   .header-hunt-sprite .header-hunt-img.previous{width:48px;height:48px;margin-right:-6px;transform:translateY(1px)}
   .hunt-tray-button{width:34px;height:34px;border-radius:11px}
@@ -2227,13 +2234,9 @@ function getActiveHuntIds() {
 function getHeaderHuntSprites() {
   const activeIds = getActiveHuntIds();
   const captured = readStoredIdList(HUNT_CAPTURED_KEY).filter(id => progress[id]?.caught);
-  if (activeIds.length >= 2) {
-    return { previousId: activeIds[1], currentId: activeIds[0], currentShiny: false, previousShiny: false, dual: true };
-  }
   const currentId = activeIds[0] || captured[captured.length - 1] || null;
-  const previousId = captured.filter(id => id !== currentId).slice(-1)[0] || null;
   const currentShiny = !!currentId && !!progress[currentId]?.caught && !activeIds.includes(currentId);
-  return { previousId, currentId, currentShiny, previousShiny: true, dual: false };
+  return { currentId, currentShiny };
 }
 
 function getHuntTrayItems(limit = 5) {
@@ -2259,18 +2262,11 @@ function openModalToCounter(id) {
 function updateHeaderHuntSprite() {
   const holder = document.getElementById('headerHuntSprite');
   if (!holder) return;
-  const { previousId, currentId, currentShiny, previousShiny, dual } = getHeaderHuntSprites();
-  holder.classList.toggle('dual-hunt', !!dual);
-  if (!previousId && !currentId) {
+  const { currentId, currentShiny } = getHeaderHuntSprites();
+  if (!currentId) {
     holder.classList.add('empty');
     holder.innerHTML = '';
   } else {
-    const previousHtml = previousId ? `
-      <img class="header-hunt-img previous ${previousShiny ? 'shiny' : 'normal'}"
-           src="${getPokemonSpriteUrl(previousId, previousShiny, 'home')}"
-           alt="${getPokemonDisplayName(previousId)}" width="34" height="34" decoding="async"
-           onclick="openModalToCounter(${previousId})"
-           onerror="handleSpriteError(this, ${previousId}, ${previousShiny})">` : '';
     const currentHtml = currentId ? `
       <img class="header-hunt-img current ${currentShiny ? 'shiny' : 'normal'}"
            src="${getPokemonSpriteUrl(currentId, currentShiny, 'home')}"
@@ -2278,7 +2274,7 @@ function updateHeaderHuntSprite() {
            onclick="openModalToCounter(${currentId})"
            onerror="handleSpriteError(this, ${currentId}, ${currentShiny})">` : '';
     holder.classList.remove('empty');
-    holder.innerHTML = `${previousHtml}${currentHtml}`;
+    holder.innerHTML = currentHtml;
   }
   renderHuntTray();
 }
@@ -3983,7 +3979,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=191', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=192', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
