@@ -1700,6 +1700,7 @@ let currentGameFilter = '';
 let restoringHistory = false;
 let suppressCardActivationUntil = 0;
 let huntTrayOpen = false;
+let suppressNextDocumentClick = false;
 const SPRITE_FALLBACK = './Assets/icon-192.png';
 const READONLY_PARAM_VALUES = new Set(['1', 'true', 'yes', 'view']);
 const READONLY_SHARE = (() => {
@@ -2086,6 +2087,7 @@ function rowHuntMethod(p) {
 // Au chargement de la page, on tente de récupérer le fichier pokemon.json
 document.addEventListener('DOMContentLoaded', () => {
   document.addEventListener('pointerdown', closeHuntTrayOnOutsidePointer, true);
+  document.addEventListener('click', blockClickAfterHuntTrayClose, true);
   fetch('pokemon.json', { cache: 'no-store' })
     .then(response => {
       if (!response.ok) {
@@ -2228,11 +2230,21 @@ function getActiveHuntIds() {
   const activeSet = new Set(active);
   const ordered = readStoredIdList(HUNT_ORDER_KEY).filter(id => activeSet.has(id));
   const missing = active.filter(id => !ordered.includes(id)).sort((a, b) => a - b);
-  return [...ordered, ...missing];
+  return [...ordered].reverse().concat(missing);
 }
 
 function getHeaderHuntSprites() {
-  const captured = readStoredIdList(HUNT_CAPTURED_KEY).filter(id => progress[id]?.caught);
+  const recentByHistory = readStoredIdList(HUNT_CAPTURED_KEY).filter(id => progress[id]?.caught);
+  const historyRank = new Map(recentByHistory.map((id, index) => [id, index]));
+  const captured = Object.keys(progress)
+    .map(Number)
+    .filter(id => progress[id]?.caught)
+    .sort((a, b) => {
+      const da = progress[a]?.date || '';
+      const db = progress[b]?.date || '';
+      if (da !== db) return da.localeCompare(db);
+      return (historyRank.get(a) ?? -1) - (historyRank.get(b) ?? -1);
+    });
   const latest = captured[captured.length - 1] || null;
   const previous = captured.filter(id => id !== latest).slice(-1)[0] || null;
   return { previousId: previous, currentId: latest };
@@ -2240,16 +2252,19 @@ function getHeaderHuntSprites() {
 
 function getHuntTrayItems(limit = 5) {
   const activeIds = getActiveHuntIds();
-  const activeItems = activeIds.slice(0, limit).map(id => ({ id, shiny: false, state: 'active' }));
-  if (activeItems.length >= limit) return activeItems;
-  const used = new Set(activeItems.map(item => item.id));
   const captured = readStoredIdList(HUNT_CAPTURED_KEY).filter(id => progress[id]?.caught);
-  const capturedItems = [...captured]
-    .reverse()
-    .filter(id => !used.has(id))
-    .slice(0, limit - activeItems.length)
-    .map(id => ({ id, shiny: true, state: 'captured' }));
-  return [...activeItems, ...capturedItems];
+  const items = [
+    ...activeIds.map((id, index) => ({ id, shiny: false, state: 'active', rank: index })),
+    ...[...captured].reverse().map((id, index) => ({ id, shiny: true, state: 'captured', rank: index }))
+  ];
+  const seen = new Set();
+  return items
+    .filter(item => {
+      if (seen.has(item.id)) return false;
+      seen.add(item.id);
+      return true;
+    })
+    .slice(0, limit);
 }
 
 function openModalToCounter(id) {
@@ -2337,7 +2352,16 @@ function closeHuntTrayOnOutsidePointer(e) {
   if (popin?.contains(e.target) || button?.contains(e.target)) return;
   e.preventDefault();
   e.stopPropagation();
+  suppressNextDocumentClick = true;
+  suppressCardActivationUntil = Date.now() + 450;
   closeHuntTray();
+}
+
+function blockClickAfterHuntTrayClose(e) {
+  if (!suppressNextDocumentClick) return;
+  suppressNextDocumentClick = false;
+  e.preventDefault();
+  e.stopPropagation();
 }
 
 function renderStats() {
@@ -3633,8 +3657,9 @@ function registerHuntStart(id) {
     const p = progress[storedId] || {};
     return !p.caught && (parseInt(p.huntCount) || 0) > 0;
   });
-  if (!order.includes(id)) order.push(id);
-  writeStoredIdList(HUNT_ORDER_KEY, order);
+  const next = order.filter(storedId => storedId !== id);
+  next.push(id);
+  writeStoredIdList(HUNT_ORDER_KEY, next);
 }
 
 function unregisterHunt(id) {
@@ -3646,7 +3671,7 @@ function registerHuntCapture(id) {
   unregisterHunt(id);
   const captured = readStoredIdList(HUNT_CAPTURED_KEY).filter(storedId => storedId !== id && progress[storedId]?.caught);
   captured.push(id);
-  localStorage.setItem(HUNT_CAPTURED_KEY, JSON.stringify(captured.slice(-2)));
+  localStorage.setItem(HUNT_CAPTURED_KEY, JSON.stringify(captured.slice(-20)));
 }
 
 function getCurrentHuntEntry() {
@@ -3712,7 +3737,7 @@ function adjustHuntCounter(delta) {
   const previousCount = parseInt(entry[field]) || 0;
   entry[field] = Math.max(0, previousCount + delta);
   if (!entry.caught) {
-    if (previousCount === 0 && entry.huntCount > 0) registerHuntStart(currentPokemon);
+    if (entry.huntCount > 0) registerHuntStart(currentPokemon);
     if (entry.huntCount === 0) {
       entry.hunting = false;
       unregisterHunt(currentPokemon);
@@ -3994,7 +4019,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=194', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=195', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
