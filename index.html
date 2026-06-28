@@ -299,9 +299,20 @@ body.readonly-share .modal-form-fields select{pointer-events:none}
   background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.016)),rgba(25,25,36,.88);
   cursor:pointer;text-align:left;color:var(--text);
 }
+.hunt-tray-card.featured{
+  grid-template-columns:58px minmax(0,1fr) auto;padding:9px;
+  background:
+    linear-gradient(180deg,rgba(212,175,55,.13),rgba(212,175,55,.035)),
+    linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.018)),
+    rgba(28,25,36,.95);
+  border-color:rgba(212,175,55,.24);
+}
 .hunt-tray-card img{width:46px;height:46px;object-fit:contain;filter:drop-shadow(0 7px 10px rgba(0,0,0,.38))}
+.hunt-tray-card.featured img{width:58px;height:58px}
 .hunt-tray-name{font-size:12px;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hunt-tray-card.featured .hunt-tray-name{font-size:13px;color:#fff7c8}
 .hunt-tray-meta{margin-top:3px;color:rgba(255,255,255,.56);font-size:9px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hunt-tray-card.featured .hunt-tray-meta{color:rgba(255,247,200,.68)}
 .hunt-tray-state{
   display:inline-flex;align-items:center;gap:5px;padding:5px 7px;border-radius:999px;
   font-size:8px;font-weight:900;text-transform:uppercase;white-space:nowrap;
@@ -1335,7 +1346,7 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   <div class="hunt-tray-head">
     <div>
       <div class="hunt-tray-title" id="huntTrayTitle">Shasses rapides</div>
-      <div class="hunt-tray-subtitle">En cours et derniers capturés</div>
+      <div class="hunt-tray-subtitle">Dernier capturé puis shasses récentes</div>
     </div>
     <button class="hunt-tray-close" onclick="closeHuntTray()" aria-label="Fermer">&times;</button>
   </div>
@@ -2233,10 +2244,10 @@ function getActiveHuntIds() {
   return [...ordered].reverse().concat(missing);
 }
 
-function getHeaderHuntSprites() {
+function getRecentCapturedIds(limit = 20) {
   const recentByHistory = readStoredIdList(HUNT_CAPTURED_KEY).filter(id => progress[id]?.caught);
   const historyRank = new Map(recentByHistory.map((id, index) => [id, index]));
-  const captured = Object.keys(progress)
+  return Object.keys(progress)
     .map(Number)
     .filter(id => progress[id]?.caught)
     .sort((a, b) => {
@@ -2244,18 +2255,26 @@ function getHeaderHuntSprites() {
       const db = progress[b]?.date || '';
       if (da !== db) return da.localeCompare(db);
       return (historyRank.get(a) ?? -1) - (historyRank.get(b) ?? -1);
-    });
-  const latest = captured[captured.length - 1] || null;
-  const previous = captured.filter(id => id !== latest).slice(-1)[0] || null;
+    })
+    .slice(-limit)
+    .reverse();
+}
+
+function getHeaderHuntSprites() {
+  const captured = getRecentCapturedIds(2);
+  const latest = captured[0] || null;
+  const previous = captured.find(id => id !== latest) || null;
   return { previousId: previous, currentId: latest };
 }
 
 function getHuntTrayItems(limit = 5) {
   const activeIds = getActiveHuntIds();
-  const captured = readStoredIdList(HUNT_CAPTURED_KEY).filter(id => progress[id]?.caught);
+  const captured = getRecentCapturedIds(limit);
+  const latestCaptured = captured[0] || null;
   const items = [
+    ...(latestCaptured ? [{ id: latestCaptured, shiny: true, state: 'captured', featured: true }] : []),
     ...activeIds.map((id, index) => ({ id, shiny: false, state: 'active', rank: index })),
-    ...[...captured].reverse().map((id, index) => ({ id, shiny: true, state: 'captured', rank: index }))
+    ...captured.filter(id => id !== latestCaptured).map((id, index) => ({ id, shiny: true, state: 'captured', rank: index }))
   ];
   const seen = new Set();
   return items
@@ -2314,11 +2333,12 @@ function renderHuntTray() {
   list.innerHTML = items.map(item => {
     const p = progress[item.id] || {};
     const method = HUNT_METHODS[normalizeHuntMethod(p.huntMethod)];
-    const stateLabel = item.state === 'captured' ? 'Capturé' : 'En cours';
+    const stateLabel = item.featured ? 'Dernier capturé' : (item.state === 'captured' ? 'Capturé' : 'En cours');
     const countValue = item.state === 'captured' ? (parseInt(p.encounters) || 0) : (parseInt(p.huntCount) || 0);
-    const meta = `${method.shortLabel} · ${countValue.toLocaleString('fr-FR')} rencontres`;
+    const dateText = p.date ? ` · ${p.date}` : '';
+    const meta = `${method.shortLabel} · ${countValue.toLocaleString('fr-FR')} rencontres${item.state === 'captured' ? dateText : ''}`;
     return `
-      <button class="hunt-tray-card" type="button" onclick="openModalToCounter(${item.id}); closeHuntTray();">
+      <button class="hunt-tray-card ${item.featured ? 'featured' : ''}" type="button" onclick="openModalToCounter(${item.id}); closeHuntTray();">
         <img src="${getPokemonSpriteUrl(item.id, item.shiny, 'home')}" alt="" width="46" height="46" decoding="async"
              onerror="handleSpriteError(this, ${item.id}, ${item.shiny})">
         <span>
@@ -4019,7 +4039,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=196', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=197', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
