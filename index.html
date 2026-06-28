@@ -106,7 +106,7 @@ body.readonly-share .modal-form-fields select{pointer-events:none}
     rgba(20,20,28,.96);
   border-bottom:1px solid rgba(255,255,255,.09);
   box-shadow:0 10px 26px rgba(0,0,0,.28),inset 0 -1px 0 rgba(255,255,255,.025);
-  display:grid;grid-template-columns:minmax(0,1fr) 72px 38px;align-items:center;
+  display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;
   gap:.7rem;padding:0 1rem 0 1.25rem;z-index:100;
 }
 .topbar::after{
@@ -132,46 +132,30 @@ body.readonly-share .modal-form-fields select{pointer-events:none}
 .logo-shiny{color:#c084fc}
 .logo-living,.logo-dex{color:#fff}
 .title-actions{display:flex;align-items:center;gap:8px;min-width:0;height:100%}
-.header-hunt-sprite{
-  position:relative;width:72px;height:54px;display:flex;align-items:center;justify-content:flex-end;justify-self:end;overflow:visible;
-  background:transparent;border:0;box-shadow:none;pointer-events:none;
-}
-.header-hunt-sprite::before{
-  content:'';position:absolute;left:50%;bottom:7px;width:34px;height:8px;border-radius:50%;
-  transform:translateX(-10%);
-  background:radial-gradient(ellipse at center,rgba(125,211,252,.22),rgba(125,211,252,.08) 48%,transparent 72%);
-  opacity:0;transition:opacity .15s ease;
-}
-.header-hunt-sprite img{
-  position:relative;z-index:1;width:52px;height:52px;object-fit:contain;display:block;
-  transform:translateY(1px);pointer-events:auto;cursor:pointer;
-  filter:drop-shadow(0 7px 10px rgba(0,0,0,.4)) drop-shadow(0 0 10px rgba(125,211,252,.15));
-}
-.header-hunt-sprite .header-hunt-img.previous{
-  width:52px;height:52px;margin-right:-6px;opacity:1;z-index:0;
-  transform:translateY(1px);
-  filter:drop-shadow(0 7px 10px rgba(0,0,0,.4)) drop-shadow(0 0 10px rgba(125,211,252,.15));
-}
-.header-hunt-sprite .header-hunt-img.current{z-index:1}
-.header-hunt-sprite .header-hunt-img.shiny{filter:drop-shadow(0 7px 10px rgba(0,0,0,.4)) drop-shadow(0 0 10px rgba(212,175,55,.24))}
-.header-hunt-sprite:not(.empty)::before{opacity:1}
-.header-hunt-sprite.empty img{display:none}
 .hunt-tray-button{
-  position:relative;width:36px;height:36px;border-radius:12px;border:1px solid rgba(255,255,255,.12);
-  display:grid;place-items:center;justify-self:end;cursor:pointer;color:#dff6ff;
-  background:linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.022)),rgba(27,36,48,.92);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 8px 18px rgba(0,0,0,.18);
+  position:relative;min-width:142px;height:40px;border-radius:14px;border:1px solid rgba(255,255,255,.13);
+  display:grid;grid-template-columns:32px minmax(0,1fr);align-items:center;gap:8px;justify-self:end;cursor:pointer;color:#fff;
+  padding:4px 10px 4px 5px;text-align:left;
+  background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.02)),rgba(27,31,40,.94);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 8px 18px rgba(0,0,0,.2);
 }
-.hunt-tray-button svg{width:17px;height:17px}
-.hunt-tray-button::before{
-  content:'';position:absolute;inset:4px;border-radius:9px;
-  background:radial-gradient(circle at 65% 28%,rgba(125,211,252,.18),transparent 58%);
-  pointer-events:none;
+.hunt-tray-pokeball{
+  position:relative;width:30px;height:30px;border-radius:50%;overflow:hidden;display:block;
+  background:linear-gradient(#f04b4b 0 46%,#1d1d25 46% 54%,#f4f4f4 54% 100%);
+  box-shadow:inset 0 0 0 2px rgba(255,255,255,.18),inset 0 -4px 8px rgba(0,0,0,.24),0 5px 12px rgba(0,0,0,.32);
 }
-.hunt-tray-button svg,.hunt-tray-count{position:relative;z-index:1}
-.hunt-tray-button:hover,.hunt-tray-button[aria-expanded="true"]{border-color:rgba(125,211,252,.44);background:linear-gradient(180deg,rgba(125,211,252,.16),rgba(125,211,252,.045)),#1b2430}
+.hunt-tray-pokeball::before{
+  content:'';position:absolute;left:50%;top:50%;width:11px;height:11px;border-radius:50%;
+  transform:translate(-50%,-50%);
+  background:#f6f6f6;border:3px solid #1d1d25;box-shadow:inset 0 0 0 2px rgba(0,0,0,.08);
+}
+.hunt-tray-label{display:flex;flex-direction:column;gap:2px;min-width:0}
+.hunt-tray-label strong{font-size:10px;line-height:1;font-weight:900;color:#fff;white-space:nowrap}
+.hunt-tray-label span{font-size:8px;line-height:1;color:rgba(255,255,255,.58);font-weight:800;white-space:nowrap}
+.hunt-tray-button:hover,.hunt-tray-button[aria-expanded="true"]{border-color:rgba(240,75,75,.38);background:linear-gradient(180deg,rgba(240,75,75,.13),rgba(255,255,255,.025)),rgba(28,31,40,.96)}
+.hunt-tray-button:hover .hunt-tray-pokeball,.hunt-tray-button[aria-expanded="true"] .hunt-tray-pokeball{box-shadow:inset 0 0 0 2px rgba(255,255,255,.2),inset 0 -4px 8px rgba(0,0,0,.24),0 0 16px rgba(240,75,75,.28)}
 .hunt-tray-count{
-  position:absolute;right:-3px;top:-4px;min-width:15px;height:15px;padding:0 4px;border-radius:999px;
+  position:absolute;left:24px;top:1px;min-width:15px;height:15px;padding:0 4px;border-radius:999px;
   display:grid;place-items:center;background:#c084fc;color:#fff;font-size:8px;font-weight:900;border:1px solid rgba(15,15,21,.92);
 }
 .hunt-tray-button.empty .hunt-tray-count{display:none}
@@ -475,16 +459,15 @@ body.card-effects-locked .card:active{
 .sidebar-toggle.open{left:var(--sidebar-w)}
 .sidebar-toggle:focus-visible,.btn:focus-visible,.gen-btn:focus-visible,.card:focus-visible,.modal-close:focus-visible,.btn-save:focus-visible{outline:2px solid #c084fc;outline-offset:2px}
 @media (max-width: 720px){
-  .topbar{grid-template-columns:minmax(0,1fr) 66px 34px;gap:.4rem;padding:0 .45rem 0 .7rem}
+  .topbar{grid-template-columns:minmax(0,1fr) 42px;gap:.4rem;padding:0 .45rem 0 .7rem}
   .title-actions{gap:6px}
   .logo{height:42px;font-size:10.5px;gap:7px;padding:5px 8px 5px 6px;border-radius:12px}
   .logo-icon{width:30px;height:30px;border-radius:8px}
   .logo-subline{font-size:8px}
-  .header-hunt-sprite{width:66px;height:48px}
-  .header-hunt-sprite::before{bottom:6px;width:30px;height:7px;transform:translateX(-8%)}
-  .header-hunt-sprite img{width:48px;height:48px;transform:translateY(1px)}
-  .header-hunt-sprite .header-hunt-img.previous{width:48px;height:48px;margin-right:-6px;transform:translateY(1px)}
-  .hunt-tray-button{width:34px;height:34px;border-radius:11px}
+  .hunt-tray-button{min-width:38px;width:38px;height:38px;border-radius:13px;grid-template-columns:1fr;padding:4px;place-items:center}
+  .hunt-tray-pokeball{width:29px;height:29px}
+  .hunt-tray-label{display:none}
+  .hunt-tray-count{left:auto;right:-2px;top:-3px}
   .hunt-tray-backdrop{top:var(--header-h)}
   .hunt-tray-popin{right:.75rem;top:calc(var(--header-h) + 8px);width:calc(100vw - 1.5rem)}
   .topbar-stats{display:none}
@@ -1387,12 +1370,12 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
       </span>
     </button>
   </div>
-  <div class="header-hunt-sprite empty" id="headerHuntSprite" aria-hidden="true"></div>
-  <button class="hunt-tray-button" id="huntTrayButton" type="button" onclick="toggleHuntTray()" aria-label="Voir les shasses" aria-expanded="false">
-    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path d="M7 7h10M7 12h10M7 17h6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-      <path d="M18 15v4M16 17h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-    </svg>
+  <button class="hunt-tray-button" id="huntTrayButton" type="button" onclick="toggleHuntTray()" aria-label="Ouvrir les shasses rapides" aria-expanded="false">
+    <span class="hunt-tray-pokeball" aria-hidden="true"></span>
+    <span class="hunt-tray-label" aria-hidden="true">
+      <strong>Shasses</strong>
+      <span>ouvrir</span>
+    </span>
     <span class="hunt-tray-count" id="huntTrayCount">0</span>
   </button>
   <div class="topbar-stats" id="statsBar"></div>
@@ -2351,28 +2334,6 @@ function openModalToCounter(id) {
 }
 
 function updateHeaderHuntSprite() {
-  const holder = document.getElementById('headerHuntSprite');
-  if (!holder) return;
-  const { previousId, currentId } = getHeaderHuntSprites();
-  if (!previousId && !currentId) {
-    holder.classList.add('empty');
-    holder.innerHTML = '';
-  } else {
-    const previousHtml = previousId ? `
-      <img class="header-hunt-img previous shiny"
-           src="${getPokemonSpriteUrl(previousId, true, 'home')}"
-           alt="${getPokemonDisplayName(previousId)}" width="34" height="34" decoding="async"
-           onclick="openModalToCounter(${previousId})"
-           onerror="handleSpriteError(this, ${previousId}, true)">` : '';
-    const currentHtml = currentId ? `
-      <img class="header-hunt-img current shiny"
-           src="${getPokemonSpriteUrl(currentId, true, 'home')}"
-           alt="${getPokemonDisplayName(currentId)}" width="52" height="52" decoding="async"
-           onclick="openModalToCounter(${currentId})"
-           onerror="handleSpriteError(this, ${currentId}, true)">` : '';
-    holder.classList.remove('empty');
-    holder.innerHTML = `${previousHtml}${currentHtml}`;
-  }
   renderHuntTray();
 }
 
@@ -2425,7 +2386,7 @@ function renderHuntTray() {
       <span class="hunt-tray-open-chip" aria-hidden="true">&gt;</span>
     </button>` : '';
   const restHtml = rest.length ? `
-    <div class="hunt-tray-section-label">${featured ? 'À reprendre' : 'Shasses rapides'}</div>
+    <div class="hunt-tray-section-label">${featured ? 'Suite' : 'Shasses rapides'}</div>
     <div class="hunt-tray-compact-list">${rest.map(renderHuntTrayItem).join('')}</div>` : '';
   list.innerHTML = `${featuredHtml}${restHtml}`;
 }
@@ -4140,7 +4101,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=201', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=203', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
