@@ -282,11 +282,26 @@ body.readonly-share .modal-form-fields select{pointer-events:none}
   display:none;background:rgba(0,0,0,.015);
 }
 .hunt-tray-backdrop.open{display:block}
-body.hunt-tray-open .main{pointer-events:none}
+body.hunt-tray-open .main,
+body.card-effects-locked .main{pointer-events:none}
 body.hunt-tray-open .card,
 body.hunt-tray-open .card:hover,
-body.hunt-tray-open .card:active{
-  transform:none!important;filter:none!important;
+body.hunt-tray-open .card:active,
+body.card-effects-locked .card,
+body.card-effects-locked .card:hover,
+body.card-effects-locked .card:active{
+  transform:none!important;transition:none!important;
+}
+body.hunt-tray-open .card:hover,
+body.hunt-tray-open .card:active,
+body.card-effects-locked .card:hover,
+body.card-effects-locked .card:active{
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.13),
+    inset 0 -14px 18px rgba(0,0,0,.18),
+    0 0 0 1px rgba(0,0,0,.55),
+    0 6px 10px rgba(0,0,0,.4),
+    0 18px 30px rgba(0,0,0,.5)!important;
 }
 .hunt-tray-popin{
   position:fixed;top:calc(var(--header-h) + 10px);right:1rem;width:min(360px,calc(100vw - 2rem));
@@ -1743,6 +1758,7 @@ let restoringHistory = false;
 let suppressCardActivationUntil = 0;
 let huntTrayOpen = false;
 let suppressNextDocumentClick = false;
+let cardEffectsLockTimer = null;
 const SPRITE_FALLBACK = './Assets/icon-192.png';
 const READONLY_PARAM_VALUES = new Set(['1', 'true', 'yes', 'view']);
 const READONLY_SHARE = (() => {
@@ -2385,6 +2401,11 @@ function renderHuntTray() {
 
 function toggleHuntTray() {
   huntTrayOpen = !huntTrayOpen;
+  if (huntTrayOpen && cardEffectsLockTimer) {
+    clearTimeout(cardEffectsLockTimer);
+    cardEffectsLockTimer = null;
+    document.body.classList.remove('card-effects-locked');
+  }
   renderHuntTray();
   const popin = document.getElementById('huntTrayPopin');
   const backdrop = document.getElementById('huntTrayBackdrop');
@@ -2395,11 +2416,22 @@ function toggleHuntTray() {
   button?.setAttribute('aria-expanded', String(huntTrayOpen));
 }
 
+function lockCardEffectsAfterHuntTrayClose(duration = 850) {
+  document.body.classList.add('card-effects-locked');
+  if (cardEffectsLockTimer) clearTimeout(cardEffectsLockTimer);
+  cardEffectsLockTimer = setTimeout(() => {
+    document.body.classList.remove('card-effects-locked');
+    cardEffectsLockTimer = null;
+  }, duration);
+}
+
 function closeHuntTray() {
+  const wasOpen = huntTrayOpen || document.body.classList.contains('hunt-tray-open');
   huntTrayOpen = false;
   document.getElementById('huntTrayPopin')?.classList.remove('open');
   document.getElementById('huntTrayBackdrop')?.classList.remove('open');
   document.body.classList.remove('hunt-tray-open');
+  if (wasOpen) lockCardEffectsAfterHuntTrayClose();
   document.getElementById('huntTrayButton')?.setAttribute('aria-expanded', 'false');
 }
 
@@ -4077,7 +4109,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=199', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=200', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
