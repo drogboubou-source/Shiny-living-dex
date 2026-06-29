@@ -1486,7 +1486,7 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
           <option value="caught">Shinys trouvés</option>
           <option value="method-masuda">Shinys Masuda</option>
           <option value="method-resets">Shinys Resets</option>
-          <option value="method-random">Shinys Overworld</option>
+          <option value="method-random">Shinys Random</option>
           <option value="missing">Manquants</option>
           <option value="perfect">Shinys parfaits</option>
           <option value="legendary">Légendaires</option>
@@ -1942,7 +1942,7 @@ const UNAVAILABLE_POKEMON_IDS = new Set([
 const HUNT_METHODS = {
   masuda: { label: 'Masuda', shortLabel: 'Masuda', odds: 512 },
   resets: { label: 'Resets', shortLabel: 'Resets', odds: 1365 },
-  random: { label: 'Overworld Encounters', shortLabel: 'Overworld', odds: 1365 },
+  random: { label: 'Random Encounters', shortLabel: 'Random', odds: 1365 },
   dynamax: { label: 'Expéditions Dynamax', shortLabel: 'Dynamax', odds: null, stats: 'countOnly' }
 };
 
@@ -2514,7 +2514,7 @@ function renderStats() {
           <div class="stats-method-metric"><strong>${resetStats.avgEncountersText}</strong><span>Moyenne</span></div>
         </div>
         <div class="stats-method" style="--method-accent:#d6ff00">
-          <div class="stats-method-name">Overworld Encounters</div>
+          <div class="stats-method-name">Random Encounters</div>
           <div class="stats-method-metric"><strong>${randomStats.caught}</strong><span>Shinys</span></div>
           <div class="stats-method-metric"><strong>${randomStats.totalEncountersText}</strong><span>Total</span></div>
           <div class="stats-method-metric"><strong>${randomStats.avgEncountersText}</strong><span>Moyenne</span></div>
@@ -2569,7 +2569,7 @@ function renderRegionStatsPanel(stats, color) {
         <strong class="region-method-value">${resetStats.caught}</strong>
       </div>
       <div class="region-method-chip" style="--method-accent:#d6ff00">
-        <span class="region-method-label">Overworld</span>
+        <span class="region-method-label">Random</span>
         <span class="region-method-sub">Moy. ${randomStats.avgEncountersText}</span>
         <strong class="region-method-value">${randomStats.caught}</strong>
       </div>
@@ -4115,7 +4115,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=206', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=207', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
