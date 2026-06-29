@@ -341,39 +341,23 @@ body.hunt-tray-open .card:active{
 .hunt-tray-close{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);color:var(--muted);cursor:pointer;font-size:18px;line-height:1;padding:4px 8px;border-radius:10px}
 .hunt-tray-close:hover{color:#fff;border-color:rgba(255,255,255,.24)}
 .hunt-tray-list{display:grid;grid-template-columns:1fr;gap:8px}
-.hunt-tray-summary{
-  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin-bottom:1px;
-}
-.hunt-tray-summary-pill{
-  display:flex;align-items:center;justify-content:space-between;gap:8px;min-width:0;
-  padding:7px 8px;border-radius:11px;background:rgba(255,255,255,.045);
-  border:1px solid rgba(255,255,255,.09);box-shadow:inset 0 1px 0 rgba(255,255,255,.045);
-}
-.hunt-tray-summary-pill span{color:rgba(255,255,255,.58);font-size:8px;font-weight:900;text-transform:uppercase;white-space:nowrap}
-.hunt-tray-summary-pill strong{color:#fff;font-size:14px;line-height:1;font-variant-numeric:tabular-nums}
-.hunt-tray-summary-pill.active strong{color:#7dd3fc}
-.hunt-tray-summary-pill.captured strong{color:#d4af37}
-.hunt-tray-feature{
-  display:grid;grid-template-columns:62px minmax(0,1fr) auto;grid-template-rows:auto auto auto;align-items:center;gap:2px 10px;
-  min-width:0;padding:9px;border-radius:14px;border:1px solid rgba(212,175,55,.25);
+.hunt-tray-recent-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+.hunt-tray-recent-grid.single{grid-template-columns:1fr}
+.hunt-tray-recent{
+  display:grid;grid-template-columns:50px minmax(0,1fr);align-items:center;gap:8px;
+  min-width:0;padding:8px;border-radius:13px;border:1px solid rgba(212,175,55,.23);
   background:
     linear-gradient(135deg,rgba(212,175,55,.17),rgba(125,211,252,.045) 58%,rgba(255,255,255,.035)),
     rgba(25,24,34,.94);
-  box-shadow:inset 3px 0 0 rgba(212,175,55,.78),0 12px 28px rgba(0,0,0,.26);
+  box-shadow:inset 3px 0 0 rgba(212,175,55,.72),0 10px 22px rgba(0,0,0,.22);
   color:var(--text);cursor:pointer;text-align:left;overflow:hidden;
 }
-.hunt-tray-feature:hover{border-color:rgba(212,175,55,.42);box-shadow:inset 3px 0 0 rgba(212,175,55,.95),0 14px 32px rgba(0,0,0,.32)}
-.hunt-tray-feature img{grid-row:1/4;width:62px;height:62px;object-fit:contain;filter:drop-shadow(0 10px 14px rgba(0,0,0,.42))}
-.hunt-tray-eyebrow{font-size:8px;font-weight:900;text-transform:uppercase;color:#fff1b7;white-space:nowrap}
-.hunt-tray-feature .hunt-tray-name{font-size:15px;color:#fff7c8}
-.hunt-tray-feature .hunt-tray-meta{font-size:9px;color:rgba(255,247,200,.68)}
-.hunt-tray-open-chip{
-  grid-column:3;grid-row:1/4;align-self:center;
-  display:inline-flex;align-items:center;justify-content:center;
-  min-width:36px;height:28px;border-radius:10px;
-  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);
-  color:#fff;font-size:13px;font-weight:900;
-}
+.hunt-tray-recent:hover{border-color:rgba(212,175,55,.42);box-shadow:inset 3px 0 0 rgba(212,175,55,.92),0 12px 26px rgba(0,0,0,.28)}
+.hunt-tray-recent img{width:50px;height:50px;object-fit:contain;filter:drop-shadow(0 8px 12px rgba(0,0,0,.42))}
+.hunt-tray-recent-copy{display:flex;flex-direction:column;min-width:0}
+.hunt-tray-recent-kicker{font-size:7px;font-weight:900;text-transform:uppercase;color:#fff1b7;white-space:nowrap}
+.hunt-tray-recent .hunt-tray-name{margin-top:3px;font-size:11px;color:#fff7c8}
+.hunt-tray-recent .hunt-tray-meta{margin-top:2px;font-size:8px;color:rgba(255,247,200,.68)}
 .hunt-tray-compact-list{display:grid;grid-template-columns:1fr;gap:6px}
 .hunt-tray-card{
   display:grid;grid-template-columns:42px minmax(0,1fr) auto;align-items:center;gap:8px;min-width:0;
@@ -2404,44 +2388,40 @@ function renderHuntTrayItem(item) {
     </button>`;
 }
 
+function renderRecentCaptureCard(item, index) {
+  return `
+    <button class="hunt-tray-recent" type="button" onclick="openModalToCounter(${item.id}); closeHuntTray();">
+      <img src="${getPokemonSpriteUrl(item.id, item.shiny, 'home')}" alt="" width="50" height="50" decoding="async"
+           onerror="handleSpriteError(this, ${item.id}, ${item.shiny})">
+      <span class="hunt-tray-recent-copy">
+        <span class="hunt-tray-recent-kicker">${index === 0 ? 'Dernier' : 'Avant'}</span>
+        <span class="hunt-tray-name">${getPokemonDisplayName(item.id)}</span>
+        <span class="hunt-tray-meta">${getHuntTrayMeta(item)}</span>
+      </span>
+    </button>`;
+}
+
 function renderHuntTray() {
   const list = document.getElementById('huntTrayList');
   const count = document.getElementById('huntTrayCount');
   const button = document.getElementById('huntTrayButton');
-  const items = getHuntTrayItems(5);
-  if (count) count.textContent = String(items.length);
-  if (button) button.classList.toggle('empty', !items.length);
+  const recentCapturedItems = getRecentCapturedIds(2).map(id => ({ id, shiny: true, state: 'captured' }));
+  const activeItems = getActiveHuntIds().slice(0, 4).map(id => ({ id, shiny: false, state: 'active' }));
+  const totalItems = recentCapturedItems.length + activeItems.length;
+  if (count) count.textContent = String(totalItems);
+  if (button) button.classList.toggle('empty', !totalItems);
   if (!list) return;
-  if (!items.length) {
+  if (!totalItems) {
     list.innerHTML = '<div class="hunt-tray-empty">Aucune shasse suivie</div>';
     return;
   }
-  const featured = items.find(item => item.featured) || null;
-  const activeItems = items.filter(item => item.state === 'active');
-  const capturedItems = items.filter(item => item.state === 'captured' && item !== featured);
-  const activeCount = activeItems.length;
-  const capturedCount = items.filter(item => item.state === 'captured').length;
-  const summaryHtml = `
-    <div class="hunt-tray-summary" aria-label="Résumé du suivi">
-      <div class="hunt-tray-summary-pill active"><span>En cours</span><strong>${activeCount}</strong></div>
-      <div class="hunt-tray-summary-pill captured"><span>Capturés</span><strong>${capturedCount}</strong></div>
-    </div>`;
-  const featuredHtml = featured ? `
-    <button class="hunt-tray-feature" type="button" onclick="openModalToCounter(${featured.id}); closeHuntTray();">
-      <img src="${getPokemonSpriteUrl(featured.id, featured.shiny, 'home')}" alt="" width="62" height="62" decoding="async"
-           onerror="handleSpriteError(this, ${featured.id}, ${featured.shiny})">
-      <span class="hunt-tray-eyebrow">Dernier capturé</span>
-      <span class="hunt-tray-name">${getPokemonDisplayName(featured.id)}</span>
-      <span class="hunt-tray-meta">${getHuntTrayMeta(featured)}</span>
-      <span class="hunt-tray-open-chip" aria-hidden="true">&gt;</span>
-    </button>` : '';
+  const recentHtml = recentCapturedItems.length ? `
+    <div class="hunt-tray-section-label">Derniers capturés</div>
+    <div class="hunt-tray-recent-grid ${recentCapturedItems.length === 1 ? 'single' : ''}">${recentCapturedItems.map(renderRecentCaptureCard).join('')}</div>` : '';
   const activeHtml = activeItems.length ? `
     <div class="hunt-tray-section-label">En cours</div>
     <div class="hunt-tray-compact-list">${activeItems.map(renderHuntTrayItem).join('')}</div>` : '';
-  const capturedHtml = capturedItems.length ? `
-    <div class="hunt-tray-section-label">Captures récentes</div>
-    <div class="hunt-tray-compact-list">${capturedItems.map(renderHuntTrayItem).join('')}</div>` : '';
-  list.innerHTML = `${summaryHtml}${featuredHtml}${activeHtml}${capturedHtml}`;
+  list.innerHTML = `${recentHtml}${activeHtml}`;
 }
 
 function toggleHuntTray() {
@@ -4138,7 +4118,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=208', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=209', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
