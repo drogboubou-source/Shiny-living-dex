@@ -265,6 +265,7 @@ body.readonly-share .modal-form-fields select{pointer-events:none}
 .stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .stats-item{display:flex;flex-direction:column;gap:4px;min-width:0;padding:10px;background:rgba(32,32,43,.92);border:1px solid rgba(255,255,255,.1);border-radius:var(--r);font-size:13px;color:var(--muted);box-shadow:inset 0 1px 0 rgba(255,255,255,.045)}
 .stats-item strong{color:var(--text);font-size:15px;font-variant-numeric:tabular-nums}
+.stats-item small{color:rgba(255,255,255,.48);font-size:9px;font-weight:800;line-height:1.1}
 .stats-method-grid{display:grid;grid-template-columns:1fr;gap:8px}
 .stats-method{
   display:grid;grid-template-columns:minmax(0,1.2fr) repeat(3,minmax(0,.9fr));align-items:center;gap:8px;
@@ -1223,7 +1224,8 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
 .hunt-panel{display:none;margin:1.1rem 0 0;padding:1rem;border:1px solid rgba(125,211,252,.22);border-radius:var(--r);background:linear-gradient(180deg,rgba(125,211,252,.08),rgba(125,211,252,.02)),var(--surface2);text-align:center}
 .hunt-panel.open{display:block}
 .hunt-label{font-family:var(--font-logo);font-size:11px;line-height:1.35;color:#7dd3fc;margin-bottom:.75rem}
-.hunt-count{font-family:var(--font);font-size:22px;font-weight:800;line-height:1;color:#fff;text-shadow:0 2px 12px rgba(0,0,0,.45);margin-bottom:.9rem;font-variant-numeric:tabular-nums}
+.hunt-count{font-family:var(--font);font-size:26px;font-weight:900;line-height:1;color:#fff;text-shadow:0 2px 12px rgba(0,0,0,.45);font-variant-numeric:tabular-nums}
+.hunt-count-sub{margin:.35rem 0 .9rem;color:rgba(255,255,255,.58);font-size:10px;font-weight:900;text-transform:uppercase;font-variant-numeric:tabular-nums}
 .hunt-methods{display:grid;grid-template-columns:repeat(auto-fit,minmax(92px,1fr));gap:8px;margin:0 0 .85rem}
 .hunt-method{
   min-height:34px;padding:6px 7px;border-radius:9px;
@@ -1598,8 +1600,9 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
     </div>
 
     <div class="hunt-panel edit-only" id="huntPanel">
-      <div class="hunt-label">Rencontres en cours</div>
+      <div class="hunt-label">Temps de shasse estimé</div>
       <div class="hunt-count" id="huntCount">0</div>
+      <div class="hunt-count-sub" id="huntCountSub">0 rencontre</div>
       <div class="hunt-methods" id="huntMethods"></div>
       <div class="hunt-odds" aria-live="polite">
         <div class="hunt-odds-top">
@@ -1936,9 +1939,9 @@ const UNAVAILABLE_POKEMON_IDS = new Set([
 ]);
 
 const HUNT_METHODS = {
-  masuda: { label: 'Masuda', shortLabel: 'Masuda', odds: 512 },
-  resets: { label: 'Resets', shortLabel: 'Resets', odds: 1365 },
-  random: { label: 'Random Encounters', shortLabel: 'Random', odds: 1365 },
+  masuda: { label: 'Masuda', shortLabel: 'Masuda', odds: 512, secondsPerEncounter: 42 },
+  resets: { label: 'Resets', shortLabel: 'Resets', odds: 1365, secondsPerEncounter: 30 },
+  random: { label: 'Random Encounters', shortLabel: 'Random', odds: 1365, secondsPerEncounter: 22 },
   dynamax: { label: 'Expéditions Dynamax', shortLabel: 'Dynamax', odds: null, stats: 'countOnly' }
 };
 
@@ -1947,6 +1950,25 @@ const TRACKED_ENCOUNTER_METHOD_IDS = Object.keys(HUNT_METHODS).filter(id => HUNT
 
 function normalizeHuntMethod(value) {
   return HUNT_METHODS[value] ? value : 'masuda';
+}
+
+function getEstimatedHuntSeconds(methodId, encounters = 0) {
+  const method = HUNT_METHODS[normalizeHuntMethod(methodId)];
+  if (!method?.secondsPerEncounter) return 0;
+  return (parseInt(encounters) || 0) * method.secondsPerEncounter;
+}
+
+function formatEstimatedTime(seconds = 0) {
+  const totalMinutes = Math.round((parseInt(seconds) || 0) / 60);
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
+  if (hours <= 0 && minutes <= 0) return '0h';
+  if (hours <= 0) return `0h ${minutes}m`;
+  return minutes ? `${hours}h ${minutes}m` : `${hours}h`;
+}
+
+function formatEncounterCount(value = 0) {
+  return (parseInt(value) || 0).toLocaleString('fr-FR');
 }
 
 function isUnavailablePokemon(id) {
@@ -2371,7 +2393,8 @@ function getHuntTrayMeta(item) {
   if (method.stats === 'countOnly') {
     return `${method.shortLabel}${item.state === 'captured' ? dateText : ' · en cours'}`;
   }
-  return `${method.shortLabel} · ${countValue.toLocaleString('fr-FR')} rencontres${item.state === 'captured' ? dateText : ''}`;
+  const timeText = formatEstimatedTime(getEstimatedHuntSeconds(p.huntMethod, countValue));
+  return `${method.shortLabel} · ${timeText} · ${formatEncounterCount(countValue)} renc.${item.state === 'captured' ? dateText : ''}`;
 }
 
 function renderHuntTrayItem(item) {
@@ -2480,8 +2503,8 @@ function renderStats() {
   document.getElementById('statsBar').innerHTML = `
     <div class="tstat"><strong style="color:#7ed660">${stats.caught}/${stats.total}</strong> Shinys</div>
     <div class="tstat"><strong style="color:#d4af37">${stats.perfect}</strong> ${perfectLabel(stats.perfect)}</div>
-    <div class="tstat"><strong>${stats.totalEncountersText}</strong> Méthodes</div>
-    <div class="tstat"><strong>${stats.avgEncountersText}</strong> Moy. méthodes</div>
+    <div class="tstat"><strong>${stats.totalTimeText}</strong> Temps</div>
+    <div class="tstat"><strong>${stats.avgTimeText}</strong> Moy. temps</div>
   `;
   updateHeaderHuntSprite();
   document.getElementById('statsPopinContent').innerHTML = `
@@ -2495,10 +2518,10 @@ function renderStats() {
       </div>
     </div>
     <div class="stats-section" style="--stats-accent:#7dd3fc">
-      <div class="stats-section-title">Rencontres calcul&eacute;es</div>
+      <div class="stats-section-title">Temps estim&eacute;</div>
       <div class="stats-grid">
-        <div class="stats-item"><span>Total méthodes</span><strong>${stats.totalEncountersText}</strong></div>
-        <div class="stats-item"><span>Moyenne méthodes</span><strong>${stats.avgEncountersText}</strong></div>
+        <div class="stats-item"><span>Total méthodes</span><strong>${stats.totalTimeText}</strong><small>${stats.totalEncountersText} rencontres</small></div>
+        <div class="stats-item"><span>Moyenne méthodes</span><strong>${stats.avgTimeText}</strong><small>${stats.avgEncountersText} rencontres</small></div>
       </div>
     </div>
     <div class="stats-section" style="--stats-accent:#7ed660">
@@ -2507,20 +2530,20 @@ function renderStats() {
         <div class="stats-method" style="--method-accent:#00ff9c">
           <div class="stats-method-name">Masuda</div>
           <div class="stats-method-metric"><strong>${masudaStats.caught}</strong><span>Shinys</span></div>
-          <div class="stats-method-metric"><strong>${masudaStats.totalEncountersText}</strong><span>Total</span></div>
-          <div class="stats-method-metric"><strong>${masudaStats.avgEncountersText}</strong><span>Moyenne</span></div>
+          <div class="stats-method-metric"><strong>${masudaStats.totalTimeText}</strong><span>${masudaStats.totalEncountersText} renc.</span></div>
+          <div class="stats-method-metric"><strong>${masudaStats.avgTimeText}</strong><span>Moy. ${masudaStats.avgEncountersText}</span></div>
         </div>
         <div class="stats-method" style="--method-accent:#ff00c8">
           <div class="stats-method-name">Resets</div>
           <div class="stats-method-metric"><strong>${resetStats.caught}</strong><span>Shinys</span></div>
-          <div class="stats-method-metric"><strong>${resetStats.totalEncountersText}</strong><span>Total</span></div>
-          <div class="stats-method-metric"><strong>${resetStats.avgEncountersText}</strong><span>Moyenne</span></div>
+          <div class="stats-method-metric"><strong>${resetStats.totalTimeText}</strong><span>${resetStats.totalEncountersText} renc.</span></div>
+          <div class="stats-method-metric"><strong>${resetStats.avgTimeText}</strong><span>Moy. ${resetStats.avgEncountersText}</span></div>
         </div>
         <div class="stats-method" style="--method-accent:#d6ff00">
           <div class="stats-method-name">Random Encounters</div>
           <div class="stats-method-metric"><strong>${randomStats.caught}</strong><span>Shinys</span></div>
-          <div class="stats-method-metric"><strong>${randomStats.totalEncountersText}</strong><span>Total</span></div>
-          <div class="stats-method-metric"><strong>${randomStats.avgEncountersText}</strong><span>Moyenne</span></div>
+          <div class="stats-method-metric"><strong>${randomStats.totalTimeText}</strong><span>${randomStats.totalEncountersText} renc.</span></div>
+          <div class="stats-method-metric"><strong>${randomStats.avgTimeText}</strong><span>Moy. ${randomStats.avgEncountersText}</span></div>
         </div>
         <div class="stats-method count-only" style="--method-accent:#6366f1">
           <div class="stats-method-name">Exp&eacute;ditions Dynamax</div>
@@ -2556,24 +2579,24 @@ function renderRegionStatsPanel(stats, color) {
     </div>
     <div class="region-detail-row" style="--region-accent:${color}">
       <div class="region-detail-group">
-        <div class="region-detail-chip encounters"><strong>${stats.totalEncountersText}</strong><span>Total méthodes</span></div>
-        <div class="region-detail-chip encounters"><strong>${stats.avgEncountersText}</strong><span>Moy. méthodes</span></div>
+        <div class="region-detail-chip encounters"><strong>${stats.totalTimeText}</strong><span>${stats.totalEncountersText} rencontres</span></div>
+        <div class="region-detail-chip encounters"><strong>${stats.avgTimeText}</strong><span>Moy. ${stats.avgEncountersText} renc.</span></div>
       </div>
     </div>
     <div class="region-method-row">
       <div class="region-method-chip" style="--method-accent:#00ff9c">
         <span class="region-method-label">Masuda</span>
-        <span class="region-method-sub">Moy. ${masudaStats.avgEncountersText}</span>
+        <span class="region-method-sub">Moy. ${masudaStats.avgTimeText}</span>
         <strong class="region-method-value">${masudaStats.caught}</strong>
       </div>
       <div class="region-method-chip" style="--method-accent:#ff00c8">
         <span class="region-method-label">Resets</span>
-        <span class="region-method-sub">Moy. ${resetStats.avgEncountersText}</span>
+        <span class="region-method-sub">Moy. ${resetStats.avgTimeText}</span>
         <strong class="region-method-value">${resetStats.caught}</strong>
       </div>
       <div class="region-method-chip" style="--method-accent:#d6ff00">
         <span class="region-method-label">Random</span>
-        <span class="region-method-sub">Moy. ${randomStats.avgEncountersText}</span>
+        <span class="region-method-sub">Moy. ${randomStats.avgTimeText}</span>
         <strong class="region-method-value">${randomStats.caught}</strong>
       </div>
       <div class="region-method-chip" style="--method-accent:#6366f1">
@@ -2596,12 +2619,12 @@ function getCurrentRegionPerfectCount() {
 function createEmptyMethodStats() {
   return Object.fromEntries(STAT_HUNT_METHOD_IDS.map(id => [
     id,
-    { id, label: HUNT_METHODS[id].label, caught: 0, totalEncounters: 0, avgEncounters: 0 }
+    { id, label: HUNT_METHODS[id].label, caught: 0, totalEncounters: 0, avgEncounters: 0, totalSeconds: 0, avgSeconds: 0 }
   ]));
 }
 
 function formatMethodStatLine(stat) {
-  return `${stat.caught} shiny${stat.caught > 1 ? 's' : ''} · moy. ${stat.avgEncountersText}`;
+  return `${stat.caught} shiny${stat.caught > 1 ? 's' : ''} · moy. ${stat.avgTimeText}`;
 }
 
 function getCurrentStats() {
@@ -2618,7 +2641,9 @@ function getCurrentStats() {
   const caughtEntries = entries.filter(p => p.caught);
   const trackedEntries = caughtEntries.filter(p => TRACKED_ENCOUNTER_METHOD_IDS.includes(normalizeHuntMethod(p.huntMethod)));
   const totalEncounters = trackedEntries.reduce((a,p) => a + (parseInt(p.encounters) || 0), 0);
+  const totalSeconds = trackedEntries.reduce((a,p) => a + getEstimatedHuntSeconds(p.huntMethod, p.encounters), 0);
   const avgEncounters = trackedEntries.length > 0 ? Math.round(totalEncounters / trackedEntries.length) : 0;
+  const avgSeconds = trackedEntries.length > 0 ? Math.round(totalSeconds / trackedEntries.length) : 0;
   const methodStats = createEmptyMethodStats();
   caughtEntries.forEach(p => {
     const methodId = normalizeHuntMethod(p.huntMethod);
@@ -2626,13 +2651,18 @@ function getCurrentStats() {
     if (!stat) return;
     stat.caught++;
     if (HUNT_METHODS[methodId].stats !== 'countOnly') {
-      stat.totalEncounters += parseInt(p.encounters) || 0;
+      const encounters = parseInt(p.encounters) || 0;
+      stat.totalEncounters += encounters;
+      stat.totalSeconds += getEstimatedHuntSeconds(methodId, encounters);
     }
   });
   Object.values(methodStats).forEach(stat => {
     stat.avgEncounters = stat.caught > 0 ? Math.round(stat.totalEncounters / stat.caught) : 0;
-    stat.totalEncountersText = stat.totalEncounters.toLocaleString('fr-FR');
-    stat.avgEncountersText = stat.avgEncounters.toLocaleString('fr-FR');
+    stat.avgSeconds = stat.caught > 0 ? Math.round(stat.totalSeconds / stat.caught) : 0;
+    stat.totalEncountersText = formatEncounterCount(stat.totalEncounters);
+    stat.avgEncountersText = formatEncounterCount(stat.avgEncounters);
+    stat.totalTimeText = formatEstimatedTime(stat.totalSeconds);
+    stat.avgTimeText = formatEstimatedTime(stat.avgSeconds);
     stat.summaryText = formatMethodStatLine(stat);
   });
   const caughtPercent = total > 0 ? caught / total * 100 : 0;
@@ -2643,8 +2673,10 @@ function getCurrentStats() {
     caught,
     missing,
     perfect,
-    totalEncountersText: totalEncounters.toLocaleString('fr-FR'),
-    avgEncountersText: avgEncounters.toLocaleString('fr-FR'),
+    totalEncountersText: formatEncounterCount(totalEncounters),
+    avgEncountersText: formatEncounterCount(avgEncounters),
+    totalTimeText: formatEstimatedTime(totalSeconds),
+    avgTimeText: formatEstimatedTime(avgSeconds),
     methodStats,
     caughtPercent,
     caughtPercentText: formatPercent(caughtPercent),
@@ -3788,7 +3820,7 @@ function renderHuntMethodSelector(methodId) {
   const holder = document.getElementById('huntMethods');
   if (!holder) return;
   const active = normalizeHuntMethod(methodId);
-  const methodSubLabel = method => method.odds ? `1/${method.odds}` : 'Info';
+  const methodSubLabel = method => method.secondsPerEncounter ? `${method.secondsPerEncounter}s / renc.` : 'Info';
   holder.innerHTML = Object.entries(HUNT_METHODS).map(([id, method]) => `
     <button class="hunt-method ${id === active ? 'active' : ''}" type="button" onclick="setHuntMethod('${id}')" aria-pressed="${id === active}">
       <span>${method.shortLabel}</span>
@@ -3810,6 +3842,7 @@ function setHuntMethod(methodId) {
 function renderHuntCounter() {
   const counter = document.getElementById('huntCount');
   if (!counter || !currentPokemon) return;
+  const counterSub = document.getElementById('huntCountSub');
   const p = progress[currentPokemon] || {};
   const count = p.caught ? (parseInt(p.encounters) || 0) : (parseInt(p.huntCount) || 0);
   const oddsMeta = getHuntOddsMeta(currentPokemon);
@@ -3819,7 +3852,10 @@ function renderHuntCounter() {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2
   }) + '%' : 'Info';
-  counter.textContent = count.toLocaleString('fr-FR');
+  const method = HUNT_METHODS[oddsMeta.methodId];
+  const timeText = method?.secondsPerEncounter ? formatEstimatedTime(getEstimatedHuntSeconds(oddsMeta.methodId, count)) : 'Non calculé';
+  counter.textContent = timeText;
+  if (counterSub) counterSub.textContent = `${formatEncounterCount(count)} ${count > 1 ? 'rencontres' : 'rencontre'}`;
   const oddsLabel = document.getElementById('huntOddsLabel');
   const oddsChance = document.getElementById('huntOddsChance');
   const oddsFill = document.getElementById('huntOddsFill');
@@ -4118,7 +4154,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=209', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=210', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
