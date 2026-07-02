@@ -1241,39 +1241,50 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   background:radial-gradient(circle,rgba(125,211,252,.18),transparent 68%);
   pointer-events:none;
 }
-.hunt-count-label{display:block;color:rgba(255,255,255,.55);font-size:8px;font-weight:900;text-transform:uppercase;margin-bottom:6px}
+.hunt-count-label{display:block;color:rgba(255,255,255,.55);font-size:8px;font-weight:900;text-transform:uppercase;margin-bottom:6px;letter-spacing:.06em}
 .hunt-count{
-  position:relative;display:block;height:40px;min-height:40px;overflow:visible;
-  font-family:var(--font);font-size:34px;font-weight:900;line-height:40px;color:#fff;
+  position:relative;display:flex;align-items:center;height:40px;min-height:40px;overflow:hidden;
+  font-family:var(--font);font-size:34px;font-weight:900;color:#fff;
   text-shadow:0 2px 12px rgba(0,0,0,.45);font-variant-numeric:tabular-nums;white-space:nowrap;
+  --digit-h:40px;
 }
-.hunt-count-roll{
-  position:relative;z-index:2;display:inline-block;line-height:40px;will-change:transform,filter;
-  transform:translateZ(0);transform-origin:50% 68%;backface-visibility:hidden;
+.hunt-count-row{display:flex;align-items:flex-start;height:100%}
+.hunt-digit-col{
+  position:relative;overflow:hidden;height:var(--digit-h);width:.64em;flex:none;display:inline-block;
+  mask-image:linear-gradient(180deg,transparent,#000 18%,#000 82%,transparent);
+  -webkit-mask-image:linear-gradient(180deg,transparent,#000 18%,#000 82%,transparent);
 }
-.hunt-count.premium .hunt-count-roll{animation:huntCountPremium .42s cubic-bezier(.17,1.25,.28,1)}
-.hunt-count::before{
-  content:'';position:absolute;z-index:3;left:-8px;top:1px;width:74px;height:38px;border-radius:12px;
-  background:linear-gradient(105deg,transparent 0%,transparent 28%,rgba(255,255,255,.76) 45%,rgba(125,211,252,.36) 55%,transparent 74%,transparent 100%);
-  transform:translateX(-115%) skewX(-16deg);opacity:0;pointer-events:none;mix-blend-mode:screen;
+.hunt-digit-strip{
+  display:flex;flex-direction:column;will-change:transform;
+  transition:transform .58s cubic-bezier(.16,1,.28,1);
 }
-.hunt-count::after{
-  content:'';position:absolute;z-index:1;left:-8px;top:4px;width:72px;height:32px;border-radius:999px;
-  background:radial-gradient(circle,rgba(125,211,252,.36),rgba(125,211,252,.1) 42%,transparent 70%);
-  transform:scale(.7);opacity:0;pointer-events:none;filter:blur(1px);
+.hunt-digit-strip.no-anim{transition:none!important}
+.hunt-digit-strip span{
+  height:var(--digit-h);line-height:var(--digit-h);display:block;text-align:center;
 }
-.hunt-count.premium::before{animation:huntCountShine .48s ease-out}
-.hunt-count.premium::after{animation:huntCountAura .46s ease-out}
-.hunt-count-card.flash{
-  border-color:rgba(125,211,252,.35);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.1),0 12px 28px rgba(0,0,0,.2),0 0 28px rgba(125,211,252,.16);
+.hunt-sep{display:inline-block;width:.32em;flex:none;text-align:center;color:rgba(159,225,255,.55);font-weight:900;transform:translateY(1px)}
+.hunt-cell-enter{animation:huntCellEnter .42s cubic-bezier(.16,1,.3,1)}
+.hunt-cell-exit{animation:huntCellExit .26s ease-in forwards}
+@keyframes huntCellEnter{
+  0%{opacity:0;transform:translateY(-70%) scale(.6)}
+  60%{opacity:1}
+  100%{opacity:1;transform:translateY(0) scale(1)}
 }
+@keyframes huntCellExit{
+  0%{opacity:1;transform:translateY(0) scale(1)}
+  100%{opacity:0;transform:translateY(45%) scale(.5)}
+}
+.hunt-count-card{transition:transform .05s linear}
+.hunt-count-card.flash{animation:huntCardGlowPulse .48s cubic-bezier(.34,1.56,.64,1)}
 .hunt-count-card.flash::before{
-  content:'';position:absolute;inset:0;border-radius:14px;
-  background:
-    radial-gradient(circle at 18% 50%,rgba(125,211,252,.24),transparent 42%),
-    linear-gradient(90deg,transparent,rgba(255,255,255,.12),transparent);
-  animation:huntCountFlash .42s ease-out;pointer-events:none;
+  content:'';position:absolute;inset:-1px;border-radius:14px;
+  background:linear-gradient(100deg,transparent,rgba(247,215,116,.24),rgba(125,211,252,.3),transparent);
+  animation:huntCountFlash .48s ease-out;pointer-events:none;
+}
+@keyframes huntCardGlowPulse{
+  0%{transform:scale(1);box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 10px 22px rgba(0,0,0,.18),0 0 0 rgba(125,211,252,0)}
+  32%{transform:scale(1.035);box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 10px 22px rgba(0,0,0,.18),0 0 26px rgba(125,211,252,.5)}
+  100%{transform:scale(1);box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 10px 22px rgba(0,0,0,.18),0 0 0 rgba(125,211,252,0)}
 }
 .hunt-plus-main{
   position:relative;min-height:74px;border-radius:16px;border:1px solid rgba(125,211,252,.54);
@@ -1298,38 +1309,44 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
 .hunt-plus-main.pulse::after{animation:huntTapRipple .3s ease-out}
 .hunt-plus-main small{display:block;margin-top:4px;color:rgba(255,255,255,.62);font-size:8px;font-weight:900;text-transform:uppercase}
 .hunt-tap-pop{
-  position:fixed;z-index:9999;pointer-events:none;
-  color:#fff;font-family:var(--font);font-size:15px;font-weight:900;
-  padding:4px 7px;border-radius:999px;
-  background:rgba(125,211,252,.16);border:1px solid rgba(125,211,252,.32);
-  box-shadow:0 8px 18px rgba(0,0,0,.25),0 0 18px rgba(125,211,252,.32);
-  text-shadow:0 2px 10px rgba(0,0,0,.5),0 0 12px rgba(125,211,252,.45);
-  animation:huntTapPop .52s cubic-bezier(.18,.86,.22,1) forwards;
+  position:fixed;z-index:9999;pointer-events:none;overflow:hidden;
+  color:#3a2b06;font-family:var(--font);font-size:15px;font-weight:900;
+  padding:4px 11px;border-radius:999px;
+  background:linear-gradient(180deg,#ffe9a8,#f7d774 55%,#e8b923);
+  border:1px solid rgba(255,255,255,.6);
+  box-shadow:0 8px 18px rgba(0,0,0,.3),0 0 20px rgba(247,215,116,.55),inset 0 1px 0 rgba(255,255,255,.75);
+  text-shadow:0 1px 0 rgba(255,255,255,.4);
+  animation:huntTapPop .62s cubic-bezier(.18,.86,.22,1) forwards;
+}
+.hunt-tap-pop::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(120deg,transparent 30%,rgba(255,255,255,.85) 48%,transparent 66%);
+  background-size:240% 100%;background-position:140% 0;
+  animation:huntTapShine .62s ease-out forwards;mix-blend-mode:overlay;pointer-events:none;
+}
+.hunt-tap-sparkle{
+  position:fixed;z-index:9998;pointer-events:none;width:6px;height:6px;border-radius:50%;
+  background:radial-gradient(circle,#fff,rgba(247,215,116,.9) 55%,transparent 75%);
+  box-shadow:0 0 8px rgba(247,215,116,.85);
+  animation:huntSparkleFly .55s ease-out forwards;
+}
+@keyframes huntTapShine{
+  0%{background-position:150% 0}
+  100%{background-position:-40% 0}
+}
+@keyframes huntSparkleFly{
+  0%{transform:translate(-50%,-50%) scale(1);opacity:1}
+  100%{transform:translate(calc(-50% + var(--sx,0)),calc(-50% + var(--sy,0))) scale(0);opacity:0}
 }
 @keyframes huntTapPop{
-  from{transform:translate(-50%,0) translateX(var(--pop-x,0)) scale(.82);opacity:0}
-  18%{opacity:1}
-  to{transform:translate(-50%,-44px) translateX(calc(var(--pop-x,0) * 1.4)) scale(1.1);opacity:0}
+  0%{transform:translate(-50%,0) translateX(var(--pop-x,0)) scale(.72) rotate(-6deg);opacity:0}
+  16%{opacity:1}
+  60%{transform:translate(-50%,-34px) translateX(calc(var(--pop-x,0) * 1.15)) scale(1.16) rotate(2deg);opacity:1}
+  100%{transform:translate(-50%,-54px) translateX(calc(var(--pop-x,0) * 1.4)) scale(1) rotate(0deg);opacity:0}
 }
 @keyframes huntTapRipple{
   from{transform:translate(-50%,-50%) scale(.18);opacity:.85}
   to{transform:translate(-50%,-50%) scale(9);opacity:0}
-}
-@keyframes huntCountPremium{
-  0%{transform:scale(.94);filter:brightness(1);color:#fff;text-shadow:0 2px 12px rgba(0,0,0,.45)}
-  38%{transform:scale(1.13);filter:brightness(1.55);color:#e8fbff;text-shadow:0 0 16px rgba(125,211,252,.62),0 4px 16px rgba(0,0,0,.42)}
-  68%{transform:scale(.985);filter:brightness(1.15);color:#fff}
-  100%{transform:scale(1);filter:brightness(1);color:#fff;text-shadow:0 2px 12px rgba(0,0,0,.45)}
-}
-@keyframes huntCountShine{
-  0%{transform:translateX(-115%) skewX(-16deg);opacity:0}
-  22%{opacity:.9}
-  100%{transform:translateX(88px) skewX(-16deg);opacity:0}
-}
-@keyframes huntCountAura{
-  0%{transform:scale(.65);opacity:0}
-  36%{transform:scale(1);opacity:.8}
-  100%{transform:scale(1.36);opacity:0}
 }
 @keyframes huntCountFlash{
   from{transform:translateX(-100%);opacity:0}
@@ -1495,8 +1512,7 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   .hunt-panel{padding:.8rem}
   .hunt-counter-surface{grid-template-columns:minmax(0,1fr) 108px;gap:7px}
   .hunt-count-card{padding:10px 8px}
-  .hunt-count{height:34px;min-height:34px;font-size:28px;line-height:34px}
-  .hunt-count-roll{line-height:34px}
+  .hunt-count{height:34px;min-height:34px;font-size:28px;--digit-h:34px}
   .hunt-plus-main{min-height:70px;font-size:23px;border-radius:15px}
   .hunt-actions{gap:6px}
   .hunt-actions .btn{min-height:34px;font-size:10px;padding-left:5px;padding-right:5px}
@@ -1730,7 +1746,7 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
       <div class="hunt-counter-surface">
         <div class="hunt-count-card">
           <span class="hunt-count-label">Compteur</span>
-          <div class="hunt-count" id="huntCount"><span class="hunt-count-roll">0</span></div>
+          <div class="hunt-count" id="huntCount"><span class="hunt-count-row"></span></div>
         </div>
         <button class="hunt-plus-main" id="huntPlusMain" type="button" onclick="tapHuntPlus()">
           +1
@@ -3943,27 +3959,114 @@ function setHuntMethod(methodId) {
   renderGrid();
 }
 
+function createHuntDigitCol(value) {
+  const col = document.createElement('span');
+  col.className = 'hunt-digit-col';
+  const strip = document.createElement('span');
+  strip.className = 'hunt-digit-strip no-anim';
+  let html = '';
+  for (let r = 0; r < 3; r++) for (let d = 0; d < 10; d++) html += `<span>${d}</span>`;
+  strip.innerHTML = html;
+  const startPos = 10 + value;
+  strip.dataset.pos = String(startPos);
+  strip.style.transform = `translateY(calc(var(--digit-h) * ${-startPos}))`;
+  col.appendChild(strip);
+  return col;
+}
+
+function createHuntSepEl(ch) {
+  const el = document.createElement('span');
+  el.className = 'hunt-sep';
+  el.textContent = ch;
+  return el;
+}
+
+function updateHuntDigitCol(col, newValue, dir) {
+  const strip = col.querySelector('.hunt-digit-strip');
+  if (!strip) return;
+  const pos = parseInt(strip.dataset.pos, 10) || 10;
+  const curDigit = ((pos % 10) + 10) % 10;
+  if (!dir) {
+    if (curDigit !== newValue) {
+      const newPos = 10 + newValue;
+      strip.classList.add('no-anim');
+      strip.style.transform = `translateY(calc(var(--digit-h) * ${-newPos}))`;
+      strip.dataset.pos = String(newPos);
+      void strip.offsetWidth;
+    }
+    return;
+  }
+  if (curDigit === newValue) return;
+  strip.classList.remove('no-anim');
+  const steps = dir > 0 ? (newValue - curDigit + 10) % 10 : -(((curDigit - newValue) + 10) % 10);
+  const newPos = pos + steps;
+  strip.style.transform = `translateY(calc(var(--digit-h) * ${-newPos}))`;
+  strip.dataset.pos = String(newPos);
+  clearTimeout(strip._normTimer);
+  strip._normTimer = setTimeout(() => {
+    const p = parseInt(strip.dataset.pos, 10) || 10;
+    const d = ((p % 10) + 10) % 10;
+    const target = 10 + d;
+    if (target !== p) {
+      strip.classList.add('no-anim');
+      strip.style.transform = `translateY(calc(var(--digit-h) * ${-target}))`;
+      strip.dataset.pos = String(target);
+      void strip.offsetWidth;
+      strip.classList.remove('no-anim');
+    }
+  }, 620);
+}
+
 function setHuntCountDisplay(value, animate = false) {
   const counter = document.getElementById('huntCount');
   if (!counter) return;
-  const nextText = (Number(value) || 0).toLocaleString('fr-FR');
-  let current = counter.querySelector('.hunt-count-roll');
-  if (!current) {
-    counter.innerHTML = `<span class="hunt-count-roll">${nextText}</span>`;
-    return;
+  let row = counter.querySelector('.hunt-count-row');
+  if (!row) {
+    row = document.createElement('span');
+    row.className = 'hunt-count-row';
+    counter.innerHTML = '';
+    counter.appendChild(row);
   }
-  if (!animate) {
-    current.textContent = nextText;
-    return;
+  const total = Math.max(0, Number(value) || 0);
+  const prevTotal = Number(counter.dataset.total || 0);
+  const dir = animate ? (total > prevTotal ? 1 : (total < prevTotal ? -1 : 0)) : 0;
+  const nextText = total.toLocaleString('fr-FR');
+  const nextCells = Array.from(nextText).map(ch => /\d/.test(ch) ? { type: 'digit', val: Number(ch) } : { type: 'sep', ch });
+  const current = Array.from(row.children);
+  const n = nextCells.length, c = current.length, max = Math.max(n, c);
+  for (let i = 0; i < max; i++) {
+    const nextCell = i < n ? nextCells[n - 1 - i] : null;
+    const currEl = i < c ? current[c - 1 - i] : null;
+    if (nextCell && currEl) {
+      const currIsDigit = currEl.classList.contains('hunt-digit-col');
+      if (nextCell.type === 'digit' && currIsDigit) {
+        updateHuntDigitCol(currEl, nextCell.val, dir);
+      } else if (nextCell.type === 'sep' && !currIsDigit) {
+        currEl.textContent = nextCell.ch;
+      } else {
+        const el = nextCell.type === 'digit' ? createHuntDigitCol(nextCell.val) : createHuntSepEl(nextCell.ch);
+        row.replaceChild(el, currEl);
+      }
+    } else if (nextCell && !currEl) {
+      const el = nextCell.type === 'digit' ? createHuntDigitCol(nextCell.val) : createHuntSepEl(nextCell.ch);
+      if (animate) {
+        el.classList.add('hunt-cell-enter');
+        el.addEventListener('animationend', () => el.classList.remove('hunt-cell-enter'), { once: true });
+      }
+      row.insertBefore(el, row.firstChild);
+    } else if (!nextCell && currEl) {
+      if (animate) {
+        currEl.classList.add('hunt-cell-exit');
+        currEl.addEventListener('animationend', () => currEl.remove(), { once: true });
+      } else {
+        currEl.remove();
+      }
+    }
   }
-  current.textContent = nextText;
-  counter.classList.remove('premium');
-  void counter.offsetWidth;
-  counter.classList.add('premium');
-  setTimeout(() => counter.classList.remove('premium'), 480);
+  counter.dataset.total = String(total);
 }
 
-function renderHuntCounter() {
+function renderHuntCounter(animate = false) {
   const counter = document.getElementById('huntCount');
   if (!counter || !currentPokemon) return;
   const p = progress[currentPokemon] || {};
@@ -3975,7 +4078,16 @@ function renderHuntCounter() {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2
   }) + '%' : 'Info';
-  setHuntCountDisplay(count);
+  setHuntCountDisplay(count, animate);
+  if (animate) {
+    const card = counter.closest('.hunt-count-card');
+    if (card) {
+      card.classList.remove('flash');
+      void card.offsetWidth;
+      card.classList.add('flash');
+      setTimeout(() => card.classList.remove('flash'), 480);
+    }
+  }
   const oddsLabel = document.getElementById('huntOddsLabel');
   const oddsChance = document.getElementById('huntOddsChance');
   const oddsFill = document.getElementById('huntOddsFill');
@@ -3999,43 +4111,49 @@ function adjustHuntCounter(delta) {
     }
   }
   saveProgressEntry(currentPokemon, entry);
-  renderHuntCounter();
+  renderHuntCounter(true);
   renderGrid();
 }
 
 function tapHuntPlus() {
   const entry = getCurrentHuntEntry();
-  const field = entry?.caught ? 'encounters' : 'huntCount';
-  const previousValue = entry ? (parseInt(entry[field]) || 0) : 0;
-  const nextValue = Math.max(0, previousValue + 1);
+  if (!entry) return;
   adjustHuntCounter(1);
   const button = document.getElementById('huntPlusMain');
-  const count = document.getElementById('huntCount');
-  const countCard = count?.closest('.hunt-count-card');
   if (!button) return;
   try { navigator.vibrate?.(12); } catch (_) {}
   button.classList.remove('pulse');
   void button.offsetWidth;
   button.classList.add('pulse');
-  if (count) {
-    setHuntCountDisplay(nextValue, true);
-  }
-  if (countCard) {
-    countCard.classList.remove('flash');
-    void countCard.offsetWidth;
-    countCard.classList.add('flash');
-    setTimeout(() => countCard.classList.remove('flash'), 360);
-  }
+  setTimeout(() => button.classList.remove('pulse'), 260);
+
   const rect = button.getBoundingClientRect();
+  const cx = rect.left + rect.width / 2;
+  const cy = rect.top + rect.height * .4;
+
   const pop = document.createElement('span');
   pop.className = 'hunt-tap-pop';
   pop.textContent = '+1';
-  pop.style.left = `${rect.left + rect.width / 2}px`;
-  pop.style.top = `${rect.top + rect.height * .42}px`;
+  pop.style.left = `${cx}px`;
+  pop.style.top = `${cy}px`;
   pop.style.setProperty('--pop-x', `${Math.round((Math.random() - .5) * 22)}px`);
   document.body.appendChild(pop);
-  setTimeout(() => pop.remove(), 560);
-  setTimeout(() => button.classList.remove('pulse'), 120);
+  setTimeout(() => pop.remove(), 650);
+
+  const sparkleCount = 5;
+  for (let i = 0; i < sparkleCount; i++) {
+    const sp = document.createElement('span');
+    sp.className = 'hunt-tap-sparkle';
+    const angle = (Math.PI * 2 * i / sparkleCount) + (Math.random() * 0.6 - .3);
+    const dist = 24 + Math.random() * 18;
+    sp.style.left = `${cx}px`;
+    sp.style.top = `${cy}px`;
+    sp.style.setProperty('--sx', `${Math.cos(angle) * dist}px`);
+    sp.style.setProperty('--sy', `${Math.sin(angle) * dist - 10}px`);
+    sp.style.animationDelay = `${i * 15}ms`;
+    document.body.appendChild(sp);
+    setTimeout(() => sp.remove(), 650);
+  }
 }
 
 function resetHuntCounter() {
@@ -4049,7 +4167,7 @@ function resetHuntCounter() {
     unregisterHunt(currentPokemon);
   }
   saveProgressEntry(currentPokemon, entry);
-  renderHuntCounter();
+  renderHuntCounter(true);
   renderGrid();
 }
 
@@ -4309,7 +4427,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=221', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=220', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
