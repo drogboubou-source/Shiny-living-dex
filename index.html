@@ -713,7 +713,7 @@ body.hunt-tray-open .card:active{
   margin-top:5px;
 }
 .region-method-chip{
-  position:relative;min-width:0;min-height:38px;padding:5px 6px;border-radius:8px;
+  position:relative;min-width:0;min-height:40px;padding:5px 5px 5px 6px;border-radius:8px;
   display:grid;grid-template-columns:7px minmax(0,1fr) auto;grid-template-rows:auto auto;align-items:center;gap:1px 5px;overflow:hidden;
   background:linear-gradient(180deg,rgba(28,28,39,.78),rgba(15,15,21,.62));
   border:1px solid rgba(255,255,255,.085);
@@ -725,7 +725,7 @@ body.hunt-tray-open .card:active{
 }
 .region-method-label{grid-column:2;min-width:0;color:rgba(255,255,255,.72);font-size:6.5px;font-weight:900;text-transform:uppercase;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .region-method-value{grid-column:3;grid-row:1/3;color:var(--method-accent,var(--region-accent,#7dd3fc));font-family:var(--font);font-size:10.5px;font-weight:900;font-variant-numeric:tabular-nums;white-space:nowrap}
-.region-method-sub{grid-column:2;color:rgba(255,255,255,.48);font-size:5.8px;font-weight:900;text-transform:uppercase;line-height:1.05;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.region-method-sub{grid-column:2;color:rgba(255,255,255,.52);font-size:5.7px;font-weight:900;text-transform:uppercase;line-height:1.08;white-space:nowrap;overflow:visible;text-overflow:clip}
 .home-signature{position:absolute;right:1.1rem;top:.85rem;z-index:2;font-family:'Pacifico',cursive;font-size:14px;line-height:1;color:#fff7c7;text-shadow:0 2px 10px rgba(0,0,0,.72),0 0 18px rgba(192,132,252,.26);transform:rotate(-3deg);pointer-events:none}
 .region-map-mosaic{position:absolute;inset:7px;z-index:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;opacity:.9;filter:saturate(1.12) contrast(1.02) brightness(1.22);border-radius:calc(var(--r-lg) - 5px);overflow:hidden;background:rgba(255,255,255,.08)}
 .region-map-thumb{position:relative;overflow:hidden;background:rgba(255,255,255,.08);border:0}
@@ -2622,17 +2622,17 @@ function renderRegionStatsPanel(stats, color) {
     <div class="region-method-row">
       <div class="region-method-chip" style="--method-accent:#00ff9c">
         <span class="region-method-label">Masuda</span>
-        <span class="region-method-sub">Moy. ${masudaStats.avgTimeText}</span>
+        <span class="region-method-sub">Moy. ${masudaStats.avgEncountersText} renc.</span>
         <strong class="region-method-value">${masudaStats.caught}</strong>
       </div>
       <div class="region-method-chip" style="--method-accent:#ff00c8">
         <span class="region-method-label">Resets</span>
-        <span class="region-method-sub">Moy. ${resetStats.avgTimeText}</span>
+        <span class="region-method-sub">Moy. ${resetStats.avgEncountersText} renc.</span>
         <strong class="region-method-value">${resetStats.caught}</strong>
       </div>
       <div class="region-method-chip" style="--method-accent:#d6ff00">
         <span class="region-method-label">Random</span>
-        <span class="region-method-sub">Moy. ${randomStats.avgTimeText}</span>
+        <span class="region-method-sub">Moy. ${randomStats.avgEncountersText} renc.</span>
         <strong class="region-method-value">${randomStats.caught}</strong>
       </div>
       <div class="region-method-chip" style="--method-accent:#6366f1">
@@ -3945,7 +3945,10 @@ function renderHuntCounter() {
     maximumFractionDigits: 2
   }) + '%' : 'Info';
   const method = HUNT_METHODS[oddsMeta.methodId];
-  const timeText = method?.secondsPerEncounter ? formatEstimatedTime(getEstimatedHuntSeconds(oddsMeta.methodId, count)) : 'Non calculé';
+  const elapsedSeconds = !p.caught && (p.huntTimerRunning || (parseInt(p.huntElapsedSeconds) || 0) > 0)
+    ? getHuntElapsedSeconds(p)
+    : getEstimatedHuntSeconds(oddsMeta.methodId, count);
+  const timeText = method?.secondsPerEncounter ? formatEstimatedTime(elapsedSeconds) : 'Non calculé';
   counter.textContent = timeText;
   if (counterSub) counterSub.textContent = formatEncounterCount(count);
   const oddsLabel = document.getElementById('huntOddsLabel');
@@ -4297,7 +4300,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=213', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=214', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
