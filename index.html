@@ -1254,6 +1254,17 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   mask-image:linear-gradient(180deg,transparent,#000 18%,#000 82%,transparent);
   -webkit-mask-image:linear-gradient(180deg,transparent,#000 18%,#000 82%,transparent);
 }
+.hunt-digit-col::after{
+  content:'';position:absolute;inset:0;pointer-events:none;z-index:2;
+  background:linear-gradient(180deg,rgba(255,255,255,.22),rgba(255,255,255,0) 32%,rgba(255,255,255,0) 66%,rgba(0,0,0,.28));
+  mix-blend-mode:overlay;
+}
+.hunt-digit-col.settle{animation:huntDigitSettle .32s cubic-bezier(.34,1.56,.64,1)}
+@keyframes huntDigitSettle{
+  0%{transform:scaleY(1)}
+  38%{transform:scaleY(.86)}
+  100%{transform:scaleY(1)}
+}
 .hunt-digit-strip{
   display:flex;flex-direction:column;will-change:transform;
   transition:transform .58s cubic-bezier(.16,1,.28,1);
@@ -1286,6 +1297,16 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   32%{transform:scale(1.035);box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 10px 22px rgba(0,0,0,.18),0 0 26px rgba(125,211,252,.5)}
   100%{transform:scale(1);box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 10px 22px rgba(0,0,0,.18),0 0 0 rgba(125,211,252,0)}
 }
+.hunt-milestone-ring{
+  position:fixed;z-index:9997;pointer-events:none;border-radius:16px;box-sizing:border-box;
+  border:2px solid rgba(247,215,116,.85);
+  box-shadow:0 0 24px rgba(247,215,116,.55),inset 0 0 14px rgba(247,215,116,.3);
+  animation:huntMilestoneRing .72s cubic-bezier(.16,1,.3,1) forwards;
+}
+@keyframes huntMilestoneRing{
+  0%{transform:scale(1);opacity:.95}
+  100%{transform:scale(1.16);opacity:0}
+}
 .hunt-plus-main{
   position:relative;min-height:74px;border-radius:16px;border:1px solid rgba(125,211,252,.54);
   background:
@@ -1308,6 +1329,26 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
 .hunt-plus-main:active,.hunt-plus-main.pulse{transform:scale(.955);border-color:rgba(125,211,252,.9);box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 7px 16px rgba(0,0,0,.24),0 0 28px rgba(125,211,252,.32)}
 .hunt-plus-main.pulse::after{animation:huntTapRipple .3s ease-out}
 .hunt-plus-main small{display:block;margin-top:4px;color:rgba(255,255,255,.62);font-size:8px;font-weight:900;text-transform:uppercase}
+.hunt-plus-sheen{position:absolute;inset:0;pointer-events:none;overflow:hidden;border-radius:inherit;z-index:1}
+.hunt-plus-sheen::before{
+  content:'';position:absolute;top:-40%;bottom:-40%;left:-60%;width:36%;
+  background:linear-gradient(100deg,transparent,rgba(255,255,255,.4),transparent);
+  transform:translateX(-140%) skewX(-18deg);
+}
+.hunt-plus-main.pulse .hunt-plus-sheen::before{animation:huntSheenSweep .5s ease-out}
+@keyframes huntSheenSweep{
+  from{transform:translateX(-140%) skewX(-18deg)}
+  to{transform:translateX(360%) skewX(-18deg)}
+}
+.hunt-tap-ring{
+  position:fixed;z-index:9997;pointer-events:none;width:16px;height:16px;border-radius:50%;box-sizing:border-box;
+  border:2px solid rgba(125,211,252,.8);box-shadow:0 0 14px rgba(125,211,252,.5);
+  animation:huntTapRingExpand .5s ease-out forwards;
+}
+@keyframes huntTapRingExpand{
+  0%{transform:translate(-50%,-50%) scale(1);opacity:.9}
+  100%{transform:translate(-50%,-50%) scale(6.5);opacity:0}
+}
 .hunt-tap-pop{
   position:fixed;z-index:9999;pointer-events:none;overflow:hidden;
   color:#3a2b06;font-family:var(--font);font-size:15px;font-weight:900;
@@ -1749,6 +1790,7 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
           <div class="hunt-count" id="huntCount"><span class="hunt-count-row"></span></div>
         </div>
         <button class="hunt-plus-main" id="huntPlusMain" type="button" onclick="tapHuntPlus()">
+          <span class="hunt-plus-sheen"></span>
           +1
           <small>continuer</small>
         </button>
@@ -4002,6 +4044,15 @@ function updateHuntDigitCol(col, newValue, dir) {
   const newPos = pos + steps;
   strip.style.transform = `translateY(calc(var(--digit-h) * ${-newPos}))`;
   strip.dataset.pos = String(newPos);
+  const onLand = (e) => {
+    if (e && e.propertyName && e.propertyName !== 'transform') return;
+    strip.removeEventListener('transitionend', onLand);
+    col.classList.remove('settle');
+    void col.offsetWidth;
+    col.classList.add('settle');
+    setTimeout(() => col.classList.remove('settle'), 340);
+  };
+  strip.addEventListener('transitionend', onLand);
   clearTimeout(strip._normTimer);
   strip._normTimer = setTimeout(() => {
     const p = parseInt(strip.dataset.pos, 10) || 10;
@@ -4119,9 +4170,13 @@ function tapHuntPlus() {
   const entry = getCurrentHuntEntry();
   if (!entry) return;
   adjustHuntCounter(1);
+  const updated = getCurrentHuntEntry();
+  const total = updated.caught ? updated.encounters : updated.huntCount;
+  const isMilestone = total > 0 && total % 10 === 0;
+
   const button = document.getElementById('huntPlusMain');
   if (!button) return;
-  try { navigator.vibrate?.(12); } catch (_) {}
+  try { navigator.vibrate?.(isMilestone ? [14, 30, 20] : 12); } catch (_) {}
   button.classList.remove('pulse');
   void button.offsetWidth;
   button.classList.add('pulse');
@@ -4130,6 +4185,13 @@ function tapHuntPlus() {
   const rect = button.getBoundingClientRect();
   const cx = rect.left + rect.width / 2;
   const cy = rect.top + rect.height * .4;
+
+  const ring = document.createElement('span');
+  ring.className = 'hunt-tap-ring';
+  ring.style.left = `${cx}px`;
+  ring.style.top = `${cy}px`;
+  document.body.appendChild(ring);
+  setTimeout(() => ring.remove(), 520);
 
   const pop = document.createElement('span');
   pop.className = 'hunt-tap-pop';
@@ -4140,12 +4202,12 @@ function tapHuntPlus() {
   document.body.appendChild(pop);
   setTimeout(() => pop.remove(), 650);
 
-  const sparkleCount = 5;
+  const sparkleCount = isMilestone ? 12 : 5;
   for (let i = 0; i < sparkleCount; i++) {
     const sp = document.createElement('span');
     sp.className = 'hunt-tap-sparkle';
     const angle = (Math.PI * 2 * i / sparkleCount) + (Math.random() * 0.6 - .3);
-    const dist = 24 + Math.random() * 18;
+    const dist = (isMilestone ? 34 : 24) + Math.random() * 18;
     sp.style.left = `${cx}px`;
     sp.style.top = `${cy}px`;
     sp.style.setProperty('--sx', `${Math.cos(angle) * dist}px`);
@@ -4153,6 +4215,22 @@ function tapHuntPlus() {
     sp.style.animationDelay = `${i * 15}ms`;
     document.body.appendChild(sp);
     setTimeout(() => sp.remove(), 650);
+  }
+
+  if (isMilestone) {
+    const counter = document.getElementById('huntCount');
+    const card = counter?.closest('.hunt-count-card');
+    if (card) {
+      const r = card.getBoundingClientRect();
+      const mring = document.createElement('span');
+      mring.className = 'hunt-milestone-ring';
+      mring.style.left = `${r.left}px`;
+      mring.style.top = `${r.top}px`;
+      mring.style.width = `${r.width}px`;
+      mring.style.height = `${r.height}px`;
+      document.body.appendChild(mring);
+      setTimeout(() => mring.remove(), 760);
+    }
   }
 }
 
