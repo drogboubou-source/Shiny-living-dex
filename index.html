@@ -1242,8 +1242,17 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   pointer-events:none;
 }
 .hunt-count-card span{display:block;color:rgba(255,255,255,.55);font-size:8px;font-weight:900;text-transform:uppercase;margin-bottom:6px}
-.hunt-count{font-family:var(--font);font-size:32px;font-weight:900;line-height:1;color:#fff;text-shadow:0 2px 12px rgba(0,0,0,.45);font-variant-numeric:tabular-nums;white-space:nowrap}
-.hunt-count.bump{animation:huntCountBump .24s cubic-bezier(.2,1.55,.35,1)}
+.hunt-count{
+  position:relative;display:block;min-height:34px;overflow:hidden;
+  font-family:var(--font);font-size:32px;font-weight:900;line-height:1;color:#fff;
+  text-shadow:0 2px 12px rgba(0,0,0,.45);font-variant-numeric:tabular-nums;white-space:nowrap;
+}
+.hunt-count-roll{position:relative;z-index:1;display:inline-block}
+.hunt-count.roll .hunt-count-roll{animation:huntCountRollIn .26s cubic-bezier(.2,.9,.22,1)}
+.hunt-count-roll-out{
+  position:absolute;z-index:2;left:0;top:0;color:#dff6ff;opacity:.95;pointer-events:none;
+  animation:huntCountRollOut .26s cubic-bezier(.2,.9,.22,1) forwards;
+}
 .hunt-count-card.flash::before{
   content:'';position:absolute;inset:0;border-radius:14px;
   background:linear-gradient(90deg,transparent,rgba(125,211,252,.18),transparent);
@@ -1289,10 +1298,14 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   from{transform:translate(-50%,-50%) scale(.18);opacity:.85}
   to{transform:translate(-50%,-50%) scale(9);opacity:0}
 }
-@keyframes huntCountBump{
-  0%{transform:scale(1);color:#fff;text-shadow:0 2px 12px rgba(0,0,0,.45)}
-  45%{transform:scale(1.16);color:#dff6ff;text-shadow:0 0 16px rgba(125,211,252,.55),0 2px 12px rgba(0,0,0,.45)}
-  100%{transform:scale(1);color:#fff;text-shadow:0 2px 12px rgba(0,0,0,.45)}
+@keyframes huntCountRollIn{
+  from{transform:translateY(105%);opacity:.25;color:#dff6ff;text-shadow:0 0 16px rgba(125,211,252,.5),0 2px 12px rgba(0,0,0,.45)}
+  62%{opacity:1;color:#dff6ff}
+  to{transform:translateY(0);opacity:1;color:#fff;text-shadow:0 2px 12px rgba(0,0,0,.45)}
+}
+@keyframes huntCountRollOut{
+  from{transform:translateY(0);opacity:.95}
+  to{transform:translateY(-105%);opacity:0}
 }
 @keyframes huntCountFlash{
   from{transform:translateX(-100%);opacity:0}
@@ -1692,7 +1705,7 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
       <div class="hunt-counter-surface">
         <div class="hunt-count-card">
           <span>Compteur</span>
-          <div class="hunt-count" id="huntCount">0</div>
+          <div class="hunt-count" id="huntCount"><span class="hunt-count-roll">0</span></div>
         </div>
         <button class="hunt-plus-main" id="huntPlusMain" type="button" onclick="tapHuntPlus()">
           +1
@@ -3905,6 +3918,35 @@ function setHuntMethod(methodId) {
   renderGrid();
 }
 
+function setHuntCountDisplay(value, animate = false, previousText = '') {
+  const counter = document.getElementById('huntCount');
+  if (!counter) return;
+  const nextText = (Number(value) || 0).toLocaleString('fr-FR');
+  let current = counter.querySelector('.hunt-count-roll');
+  if (!current) {
+    counter.innerHTML = `<span class="hunt-count-roll">${nextText}</span>`;
+    return;
+  }
+  if (!animate) {
+    current.textContent = nextText;
+    return;
+  }
+  const outgoingText = previousText || current.textContent;
+  counter.querySelectorAll('.hunt-count-roll-out').forEach(node => node.remove());
+  const outgoing = document.createElement('span');
+  outgoing.className = 'hunt-count-roll-out';
+  outgoing.textContent = outgoingText;
+  counter.appendChild(outgoing);
+  current.textContent = nextText;
+  counter.classList.remove('roll');
+  void counter.offsetWidth;
+  counter.classList.add('roll');
+  setTimeout(() => {
+    outgoing.remove();
+    counter.classList.remove('roll');
+  }, 300);
+}
+
 function renderHuntCounter() {
   const counter = document.getElementById('huntCount');
   if (!counter || !currentPokemon) return;
@@ -3917,7 +3959,7 @@ function renderHuntCounter() {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2
   }) + '%' : 'Info';
-  counter.textContent = count.toLocaleString('fr-FR');
+  setHuntCountDisplay(count);
   const oddsLabel = document.getElementById('huntOddsLabel');
   const oddsChance = document.getElementById('huntOddsChance');
   const oddsFill = document.getElementById('huntOddsFill');
@@ -3946,6 +3988,11 @@ function adjustHuntCounter(delta) {
 }
 
 function tapHuntPlus() {
+  const entry = getCurrentHuntEntry();
+  const field = entry?.caught ? 'encounters' : 'huntCount';
+  const previousValue = entry ? (parseInt(entry[field]) || 0) : 0;
+  const nextValue = Math.max(0, previousValue + 1);
+  const previousText = previousValue.toLocaleString('fr-FR');
   adjustHuntCounter(1);
   const button = document.getElementById('huntPlusMain');
   const count = document.getElementById('huntCount');
@@ -3956,10 +4003,7 @@ function tapHuntPlus() {
   void button.offsetWidth;
   button.classList.add('pulse');
   if (count) {
-    count.classList.remove('bump');
-    void count.offsetWidth;
-    count.classList.add('bump');
-    setTimeout(() => count.classList.remove('bump'), 260);
+    setHuntCountDisplay(nextValue, true, previousText);
   }
   if (countCard) {
     countCard.classList.remove('flash');
@@ -4250,7 +4294,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=218', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=219', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
