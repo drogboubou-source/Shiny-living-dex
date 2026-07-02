@@ -1243,24 +1243,37 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
 }
 .hunt-count-label{display:block;color:rgba(255,255,255,.55);font-size:8px;font-weight:900;text-transform:uppercase;margin-bottom:6px}
 .hunt-count{
-  position:relative;display:block;height:40px;min-height:40px;overflow:hidden;
+  position:relative;display:block;height:40px;min-height:40px;overflow:visible;
   font-family:var(--font);font-size:34px;font-weight:900;line-height:40px;color:#fff;
   text-shadow:0 2px 12px rgba(0,0,0,.45);font-variant-numeric:tabular-nums;white-space:nowrap;
 }
 .hunt-count-roll{
-  position:relative;z-index:1;display:block;line-height:40px;will-change:transform,opacity;
-  transform:translateY(0);backface-visibility:hidden;
+  position:relative;z-index:2;display:inline-block;line-height:40px;will-change:transform,filter;
+  transform:translateZ(0);transform-origin:50% 68%;backface-visibility:hidden;
 }
-.hunt-count.roll .hunt-count-roll{animation:huntCountRollIn .32s cubic-bezier(.16,1,.3,1)}
-.hunt-count-roll-out{
-  position:absolute;z-index:2;left:0;top:0;display:block;line-height:40px;color:#dff6ff;opacity:.95;pointer-events:none;
-  will-change:transform,opacity;backface-visibility:hidden;
-  animation:huntCountRollOut .32s cubic-bezier(.16,1,.3,1) forwards;
+.hunt-count.premium .hunt-count-roll{animation:huntCountPremium .42s cubic-bezier(.17,1.25,.28,1)}
+.hunt-count::before{
+  content:'';position:absolute;z-index:3;left:-8px;top:1px;width:74px;height:38px;border-radius:12px;
+  background:linear-gradient(105deg,transparent 0%,transparent 28%,rgba(255,255,255,.76) 45%,rgba(125,211,252,.36) 55%,transparent 74%,transparent 100%);
+  transform:translateX(-115%) skewX(-16deg);opacity:0;pointer-events:none;mix-blend-mode:screen;
+}
+.hunt-count::after{
+  content:'';position:absolute;z-index:1;left:-8px;top:4px;width:72px;height:32px;border-radius:999px;
+  background:radial-gradient(circle,rgba(125,211,252,.36),rgba(125,211,252,.1) 42%,transparent 70%);
+  transform:scale(.7);opacity:0;pointer-events:none;filter:blur(1px);
+}
+.hunt-count.premium::before{animation:huntCountShine .48s ease-out}
+.hunt-count.premium::after{animation:huntCountAura .46s ease-out}
+.hunt-count-card.flash{
+  border-color:rgba(125,211,252,.35);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.1),0 12px 28px rgba(0,0,0,.2),0 0 28px rgba(125,211,252,.16);
 }
 .hunt-count-card.flash::before{
   content:'';position:absolute;inset:0;border-radius:14px;
-  background:linear-gradient(90deg,transparent,rgba(125,211,252,.18),transparent);
-  animation:huntCountFlash .34s ease-out;pointer-events:none;
+  background:
+    radial-gradient(circle at 18% 50%,rgba(125,211,252,.24),transparent 42%),
+    linear-gradient(90deg,transparent,rgba(255,255,255,.12),transparent);
+  animation:huntCountFlash .42s ease-out;pointer-events:none;
 }
 .hunt-plus-main{
   position:relative;min-height:74px;border-radius:16px;border:1px solid rgba(125,211,252,.54);
@@ -1302,14 +1315,21 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   from{transform:translate(-50%,-50%) scale(.18);opacity:.85}
   to{transform:translate(-50%,-50%) scale(9);opacity:0}
 }
-@keyframes huntCountRollIn{
-  0%{transform:translateY(105%);opacity:.55;color:#dff6ff;text-shadow:0 0 16px rgba(125,211,252,.5),0 2px 12px rgba(0,0,0,.45)}
-  68%{transform:translateY(-6%);opacity:1;color:#dff6ff}
-  100%{transform:translateY(0);opacity:1;color:#fff;text-shadow:0 2px 12px rgba(0,0,0,.45)}
+@keyframes huntCountPremium{
+  0%{transform:scale(.94);filter:brightness(1);color:#fff;text-shadow:0 2px 12px rgba(0,0,0,.45)}
+  38%{transform:scale(1.13);filter:brightness(1.55);color:#e8fbff;text-shadow:0 0 16px rgba(125,211,252,.62),0 4px 16px rgba(0,0,0,.42)}
+  68%{transform:scale(.985);filter:brightness(1.15);color:#fff}
+  100%{transform:scale(1);filter:brightness(1);color:#fff;text-shadow:0 2px 12px rgba(0,0,0,.45)}
 }
-@keyframes huntCountRollOut{
-  0%{transform:translateY(0);opacity:.95}
-  100%{transform:translateY(-105%);opacity:0}
+@keyframes huntCountShine{
+  0%{transform:translateX(-115%) skewX(-16deg);opacity:0}
+  22%{opacity:.9}
+  100%{transform:translateX(88px) skewX(-16deg);opacity:0}
+}
+@keyframes huntCountAura{
+  0%{transform:scale(.65);opacity:0}
+  36%{transform:scale(1);opacity:.8}
+  100%{transform:scale(1.36);opacity:0}
 }
 @keyframes huntCountFlash{
   from{transform:translateX(-100%);opacity:0}
@@ -1476,7 +1496,7 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   .hunt-counter-surface{grid-template-columns:minmax(0,1fr) 108px;gap:7px}
   .hunt-count-card{padding:10px 8px}
   .hunt-count{height:34px;min-height:34px;font-size:28px;line-height:34px}
-  .hunt-count-roll,.hunt-count-roll-out{line-height:34px}
+  .hunt-count-roll{line-height:34px}
   .hunt-plus-main{min-height:70px;font-size:23px;border-radius:15px}
   .hunt-actions{gap:6px}
   .hunt-actions .btn{min-height:34px;font-size:10px;padding-left:5px;padding-right:5px}
@@ -3923,7 +3943,7 @@ function setHuntMethod(methodId) {
   renderGrid();
 }
 
-function setHuntCountDisplay(value, animate = false, previousText = '') {
+function setHuntCountDisplay(value, animate = false) {
   const counter = document.getElementById('huntCount');
   if (!counter) return;
   const nextText = (Number(value) || 0).toLocaleString('fr-FR');
@@ -3936,22 +3956,11 @@ function setHuntCountDisplay(value, animate = false, previousText = '') {
     current.textContent = nextText;
     return;
   }
-  const outgoingText = previousText || current.textContent;
-  counter.querySelectorAll('.hunt-count-roll-out').forEach(node => node.remove());
-  const outgoing = document.createElement('span');
-  outgoing.className = 'hunt-count-roll-out';
-  outgoing.textContent = outgoingText;
-  counter.appendChild(outgoing);
   current.textContent = nextText;
-  counter.classList.remove('roll');
+  counter.classList.remove('premium');
   void counter.offsetWidth;
-  counter.classList.add('roll');
-  const rollId = String(Date.now());
-  counter.dataset.rollId = rollId;
-  setTimeout(() => {
-    outgoing.remove();
-    if (counter.dataset.rollId === rollId) counter.classList.remove('roll');
-  }, 360);
+  counter.classList.add('premium');
+  setTimeout(() => counter.classList.remove('premium'), 480);
 }
 
 function renderHuntCounter() {
@@ -3999,7 +4008,6 @@ function tapHuntPlus() {
   const field = entry?.caught ? 'encounters' : 'huntCount';
   const previousValue = entry ? (parseInt(entry[field]) || 0) : 0;
   const nextValue = Math.max(0, previousValue + 1);
-  const previousText = previousValue.toLocaleString('fr-FR');
   adjustHuntCounter(1);
   const button = document.getElementById('huntPlusMain');
   const count = document.getElementById('huntCount');
@@ -4010,7 +4018,7 @@ function tapHuntPlus() {
   void button.offsetWidth;
   button.classList.add('pulse');
   if (count) {
-    setHuntCountDisplay(nextValue, true, previousText);
+    setHuntCountDisplay(nextValue, true);
   }
   if (countCard) {
     countCard.classList.remove('flash');
@@ -4301,7 +4309,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=220', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=221', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
