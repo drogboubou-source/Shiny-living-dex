@@ -1317,9 +1317,9 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
 .hunt-digit-col.rolling{transform:scaleY(1.06);filter:brightness(1.22) saturate(1.25)}
 .hunt-digit-col.settle{animation:huntDigitSettle .34s cubic-bezier(.34,1.56,.64,1)}
 @keyframes huntDigitSettle{
-  0%{transform:scaleY(1.06);text-shadow:0 2px 12px rgba(0,0,0,.4)}
-  30%{transform:scaleY(.86);text-shadow:0 0 14px rgba(192,132,252,.65),0 0 22px rgba(125,211,252,.55),0 2px 12px rgba(0,0,0,.4)}
-  100%{transform:scaleY(1);text-shadow:0 2px 12px rgba(0,0,0,.4)}
+  0%{transform:scaleY(1.06);text-shadow:0 2px 12px rgba(0,0,0,.4);-webkit-text-stroke:0px rgba(125,211,252,0)}
+  30%{transform:scaleY(.86);text-shadow:0 0 14px rgba(192,132,252,.65),0 0 22px rgba(125,211,252,.55),0 2px 12px rgba(0,0,0,.4);-webkit-text-stroke:.5px rgba(125,211,252,.6)}
+  100%{transform:scaleY(1);text-shadow:0 2px 12px rgba(0,0,0,.4);-webkit-text-stroke:0px rgba(125,211,252,0)}
 }
 .hunt-digit-strip{
   display:flex;flex-direction:column;will-change:transform;
@@ -1465,6 +1465,12 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   background:radial-gradient(circle,#fff,rgba(247,215,116,.9) 55%,transparent 75%);
   box-shadow:0 0 8px rgba(247,215,116,.85);
   animation:huntSparkleFly .55s ease-out forwards;
+}
+.hunt-digit-spark{
+  position:fixed;z-index:9996;pointer-events:none;width:4px;height:4px;border-radius:50%;
+  background:radial-gradient(circle,#fff,rgba(125,211,252,.9) 55%,transparent 75%);
+  box-shadow:0 0 6px rgba(125,211,252,.8);
+  animation:huntSparkleFly .45s ease-out forwards;
 }
 @keyframes huntTapShine{
   0%{background-position:150% 0}
@@ -4139,6 +4145,29 @@ function createHuntSepEl(ch) {
   return el;
 }
 
+function spawnDigitLandSparks(col) {
+  const rect = col.getBoundingClientRect();
+  const cx = rect.left + rect.width / 2;
+  const cy = rect.top + rect.height / 2;
+  const colors = ['#fff', '#7dd3fc', '#c084fc'];
+  const count = 3;
+  for (let i = 0; i < count; i++) {
+    const sp = document.createElement('span');
+    sp.className = 'hunt-digit-spark';
+    const angle = (Math.PI * 2 * i / count) + (Math.random() * 0.5 - .25) - Math.PI / 2;
+    const dist = 10 + Math.random() * 8;
+    const c = colors[i % colors.length];
+    sp.style.left = `${cx}px`;
+    sp.style.top = `${cy}px`;
+    sp.style.setProperty('--sx', `${Math.cos(angle) * dist}px`);
+    sp.style.setProperty('--sy', `${Math.sin(angle) * dist}px`);
+    sp.style.background = `radial-gradient(circle,#fff,${c} 55%,transparent 75%)`;
+    sp.style.boxShadow = `0 0 6px ${c}`;
+    document.body.appendChild(sp);
+    setTimeout(() => sp.remove(), 460);
+  }
+}
+
 function updateHuntDigitCol(col, newValue, dir) {
   const strip = col.querySelector('.hunt-digit-strip');
   if (!strip) return;
@@ -4170,6 +4199,7 @@ function updateHuntDigitCol(col, newValue, dir) {
     void col.offsetWidth;
     col.classList.add('settle');
     setTimeout(() => col.classList.remove('settle'), 340);
+    spawnDigitLandSparks(col);
   };
   strip.addEventListener('transitionend', onLand);
   clearTimeout(strip._normTimer);
