@@ -1312,14 +1312,6 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   position:relative;overflow:hidden;height:var(--digit-h);width:.64em;flex:none;display:inline-block;
   mask-image:linear-gradient(180deg,transparent,#000 18%,#000 82%,transparent);
   -webkit-mask-image:linear-gradient(180deg,transparent,#000 18%,#000 82%,transparent);
-  transition:transform .16s ease-out;
-}
-.hunt-digit-col.rolling{transform:scaleY(1.07)}
-.hunt-digit-col.settle{animation:huntDigitSettle .32s cubic-bezier(.34,1.56,.64,1)}
-@keyframes huntDigitSettle{
-  0%{transform:scale(1,1.07);text-shadow:0 2px 12px rgba(0,0,0,.4)}
-  35%{transform:scale(1.05,.84);text-shadow:0 5px 18px rgba(0,0,0,.55)}
-  100%{transform:scale(1,1);text-shadow:0 2px 12px rgba(0,0,0,.4)}
 }
 .hunt-digit-strip{
   display:flex;flex-direction:column;will-change:transform;
@@ -4177,8 +4169,6 @@ function updateHuntDigitCol(col, newValue, dir) {
   }
   if (curDigit === newValue) return;
   strip.classList.remove('no-anim');
-  col.classList.remove('settle');
-  col.classList.add('rolling');
   const steps = dir > 0 ? (newValue - curDigit + 10) % 10 : -(((curDigit - newValue) + 10) % 10);
   const newPos = pos + steps;
   strip.style.transform = `translateY(calc(var(--digit-h) * ${-newPos}))`;
@@ -4186,11 +4176,6 @@ function updateHuntDigitCol(col, newValue, dir) {
   const onLand = (e) => {
     if (e && e.propertyName && e.propertyName !== 'transform') return;
     strip.removeEventListener('transitionend', onLand);
-    col.classList.remove('rolling');
-    col.classList.remove('settle');
-    void col.offsetWidth;
-    col.classList.add('settle');
-    setTimeout(() => col.classList.remove('settle'), 340);
     spawnDigitLandSparks(col);
   };
   strip.addEventListener('transitionend', onLand);
