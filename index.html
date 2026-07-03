@@ -1307,8 +1307,18 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   background:linear-gradient(180deg,rgba(255,255,255,.22),rgba(255,255,255,0) 32%,rgba(255,255,255,0) 66%,rgba(0,0,0,.28));
   mix-blend-mode:overlay;
 }
-.hunt-digit-col{transition:transform .16s ease-out}
-.hunt-digit-col.rolling{transform:scaleY(1.06)}
+.hunt-digit-col::before{
+  content:'';position:absolute;top:-40%;bottom:-40%;left:-60%;width:36%;z-index:3;
+  background:linear-gradient(100deg,transparent,rgba(255,255,255,.55),transparent);
+  transform:translateX(-160%) skewX(-18deg);pointer-events:none;opacity:0;
+}
+.hunt-digit-col.rolling::before{opacity:1;animation:huntDigitShine .58s ease-out}
+@keyframes huntDigitShine{
+  from{transform:translateX(-160%) skewX(-18deg)}
+  to{transform:translateX(280%) skewX(-18deg)}
+}
+.hunt-digit-col{transition:transform .16s ease-out,box-shadow .18s ease-out}
+.hunt-digit-col.rolling{transform:scaleY(1.06);box-shadow:0 0 14px 2px rgba(192,132,252,.4)}
 .hunt-digit-col.settle{animation:huntDigitSettle .34s cubic-bezier(.34,1.56,.64,1)}
 @keyframes huntDigitSettle{
   0%{transform:scaleY(1.06);text-shadow:0 2px 12px rgba(0,0,0,.45)}
@@ -1317,7 +1327,7 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
 }
 .hunt-digit-strip{
   display:flex;flex-direction:column;will-change:transform;
-  transition:transform .58s cubic-bezier(.16,1,.28,1);
+  transition:transform .6s cubic-bezier(.22,1.18,.36,1);
 }
 .hunt-digit-strip.no-anim{transition:none!important}
 .hunt-digit-strip span{
