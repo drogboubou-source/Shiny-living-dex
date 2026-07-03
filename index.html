@@ -1295,9 +1295,6 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   font-family:var(--font);font-size:34px;font-weight:900;
   text-shadow:0 2px 12px rgba(0,0,0,.45);font-variant-numeric:tabular-nums;white-space:nowrap;
   --digit-h:40px;
-  padding:0 7px;border-radius:9px;
-  background:linear-gradient(180deg,rgba(0,0,0,.32),rgba(0,0,0,.12));
-  box-shadow:inset 0 2px 7px rgba(0,0,0,.55),inset 0 -1px 0 rgba(255,255,255,.05),inset 0 0 0 1px rgba(255,255,255,.04);
 }
 .hunt-count-row{display:flex;align-items:flex-start;height:100%}
 .hunt-digit-col{
@@ -1308,10 +1305,7 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
 .hunt-digit-col::after{
   content:'';position:absolute;inset:0;pointer-events:none;z-index:2;
   background:linear-gradient(180deg,rgba(255,255,255,.22),rgba(255,255,255,0) 32%,rgba(255,255,255,0) 66%,rgba(0,0,0,.28));
-  mix-blend-mode:overlay;transition:background .16s ease-out;
-}
-.hunt-digit-col.rolling::after{
-  background:linear-gradient(180deg,rgba(255,255,255,.4),rgba(255,255,255,0) 32%,rgba(255,255,255,0) 66%,rgba(0,0,0,.2));
+  mix-blend-mode:overlay;
 }
 .hunt-digit-col{transition:transform .16s ease-out}
 .hunt-digit-col.rolling{transform:scaleY(1.06)}
@@ -1644,7 +1638,7 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   .hunt-panel{padding:.8rem}
   .hunt-counter-surface{grid-template-columns:minmax(0,1fr) 108px;gap:7px}
   .hunt-count-card{padding:10px 8px}
-  .hunt-count{height:34px;min-height:34px;font-size:28px;--digit-h:34px;padding:0 5px}
+  .hunt-count{height:34px;min-height:34px;font-size:28px;--digit-h:34px}
   .hunt-plus-main{min-height:70px;font-size:23px;border-radius:15px}
   .hunt-actions{gap:6px}
   .hunt-actions .btn{min-height:34px;font-size:10px;padding-left:5px;padding-right:5px}
