@@ -1248,19 +1248,20 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   margin-bottom:.85rem;
 }
 .hunt-count-card{
-  position:relative;min-width:0;padding:13px 11px;border-radius:14px;text-align:left;overflow:hidden;
+  position:relative;min-width:0;padding:16px 14px 15px;border-radius:18px;text-align:left;overflow:hidden;
   background:
-    radial-gradient(circle at 8% -14%,rgba(125,211,252,.3),transparent 46%),
-    radial-gradient(circle at 55% 128%,rgba(192,132,252,.18),transparent 55%),
-    radial-gradient(circle at 112% 118%,rgba(247,215,116,.22),transparent 52%),
-    linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.018)),
-    rgba(17,17,24,.55);
-  border:1px solid rgba(255,255,255,.105);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 10px 22px rgba(0,0,0,.18);
+    radial-gradient(circle at 22% 12%,rgba(255,255,255,.4),transparent 42%),
+    linear-gradient(155deg,#9199a3 0%,#6d7480 32%,#474d57 68%,#2a2e35 100%);
+  border:1px solid rgba(0,0,0,.4);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.42),
+    inset 0 -7px 11px rgba(0,0,0,.38),
+    inset 0 0 0 1px rgba(255,255,255,.07),
+    0 10px 22px rgba(0,0,0,.32);
 }
 .hunt-count-card::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:2px;z-index:1;
-  background:linear-gradient(90deg,#7dd3fc,#c084fc,#f7d774,#7dd3fc);
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;z-index:1;
+  background:linear-gradient(90deg,#c9a75c,#f4e0a0,#c9a75c);
   background-size:220% 100%;opacity:.9;pointer-events:none;
   animation:huntAccentDrift 5s ease-in-out infinite;
 }
@@ -1269,18 +1270,30 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   50%{background-position:100% 0}
 }
 .hunt-count-card::after{
-  content:'';position:absolute;right:-14px;top:-18px;width:56px;height:56px;border-radius:50%;
-  background:radial-gradient(circle,rgba(125,211,252,.2),transparent 68%);
+  content:'';position:absolute;left:50%;bottom:6px;transform:translateX(-50%);width:9px;height:9px;border-radius:50%;z-index:2;
+  background:radial-gradient(circle at 35% 30%,#4a5560,#20252b 65%);
+  box-shadow:inset 0 1px 2px rgba(0,0,0,.7),0 0 0 1px rgba(0,0,0,.35);
+  transition:background .35s ease,box-shadow .35s ease;
   pointer-events:none;
 }
-.hunt-card-twinkle{
-  position:absolute;width:3px;height:3px;border-radius:50%;background:#fff;z-index:1;
-  box-shadow:0 0 7px 1px rgba(255,255,255,.9);pointer-events:none;
-  animation:huntTwinkle 2.6s ease-in-out infinite;
+.hunt-count-card.running::after{
+  background:radial-gradient(circle at 35% 30%,#d5f0ff,#4aa8e0 55%,#1c4f73 100%);
+  box-shadow:0 0 10px 3px rgba(74,168,224,.8),inset 0 1px 2px rgba(255,255,255,.55);
+  animation:huntTimerPulse 1.6s ease-in-out infinite;
 }
-.hunt-card-twinkle.t1{top:16%;left:76%;animation-delay:0s}
-.hunt-card-twinkle.t2{top:60%;left:88%;animation-delay:.9s;background:#7dd3fc;box-shadow:0 0 7px 1px rgba(125,211,252,.9)}
-.hunt-card-twinkle.t3{top:38%;left:94%;animation-delay:1.7s;background:#f7d774;box-shadow:0 0 7px 1px rgba(247,215,116,.9)}
+@keyframes huntTimerPulse{
+  0%,100%{opacity:1}
+  50%{opacity:.5}
+}
+.hunt-card-twinkle{
+  position:absolute;width:7px;height:7px;border-radius:50%;z-index:1;pointer-events:none;
+  background:radial-gradient(circle at 32% 28%,#eef1f4,#9aa1ab 55%,#5c626c 100%);
+  box-shadow:inset 0 1px 1px rgba(255,255,255,.6),inset 0 -1px 1px rgba(0,0,0,.45),0 1px 2px rgba(0,0,0,.4);
+}
+.hunt-card-twinkle.t1{top:9%;left:8%}
+.hunt-card-twinkle.t2{top:9%;right:8%;left:auto}
+.hunt-card-twinkle.t3{bottom:9%;left:8%}
+.hunt-card-twinkle.t4{bottom:9%;right:8%;left:auto}
 @keyframes huntTwinkle{
   0%,100%{opacity:0;transform:scale(.4)}
   50%{opacity:1;transform:scale(1.35)}
@@ -1291,22 +1304,23 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   background:#7dd3fc;box-shadow:0 0 6px rgba(125,211,252,.75);
 }
 .hunt-count{
-  position:relative;display:flex;align-items:center;height:40px;min-height:40px;overflow:hidden;
-  font-family:var(--font);font-size:34px;font-weight:900;
-  text-shadow:0 -1px 0 rgba(255,255,255,.22),0 2px 12px rgba(0,0,0,.45);font-variant-numeric:tabular-nums;white-space:nowrap;
-  --digit-h:40px;
-  padding:0 8px;border-radius:10px;
-  background:linear-gradient(135deg,rgba(125,211,252,.18),rgba(192,132,252,.13) 48%,rgba(247,215,116,.16));
+  position:relative;display:flex;align-items:center;height:44px;min-height:44px;overflow:hidden;
+  font-family:'Courier New',var(--font),monospace;font-size:32px;font-weight:900;
+  text-shadow:0 1px 0 rgba(255,255,255,.4);font-variant-numeric:tabular-nums;white-space:nowrap;
+  --digit-h:44px;
+  padding:0 10px;border-radius:9px;
+  background:
+    repeating-linear-gradient(115deg,rgba(0,0,0,.045) 0 2px,transparent 2px 6px),
+    linear-gradient(180deg,#f4eeda,#e7ddc0 55%,#dcd0ac);
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.18),
-    inset 0 -1px 0 rgba(0,0,0,.22),
-    inset 0 0 0 1px rgba(255,255,255,.1),
-    0 0 0 1px rgba(125,211,252,.08),
-    0 4px 10px rgba(0,0,0,.16);
+    inset 0 2px 5px rgba(0,0,0,.5),
+    inset 0 -1px 0 rgba(255,255,255,.55),
+    inset 0 0 0 2px rgba(58,48,28,.4),
+    0 1px 0 rgba(255,255,255,.2);
 }
 .hunt-count::before{
   content:'';position:absolute;inset:0;pointer-events:none;z-index:3;border-radius:inherit;
-  background:linear-gradient(125deg,rgba(255,255,255,.2) 0%,transparent 38%);
+  background:linear-gradient(125deg,rgba(255,255,255,.4) 0%,transparent 30%);
 }
 .hunt-count-row{display:flex;align-items:center;height:100%;gap:1px}
 .hunt-digit-col{
@@ -1321,9 +1335,9 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
 .hunt-digit-strip.no-anim{transition:none!important}
 .hunt-digit-strip span{
   height:var(--digit-h);line-height:var(--digit-h);display:block;text-align:center;
-  color:#fff;
+  color:#191510;
 }
-.hunt-sep{display:inline-block;width:.32em;flex:none;text-align:center;color:rgba(159,225,255,.55);font-weight:900;transform:translateY(1px)}
+.hunt-sep{display:inline-block;width:.32em;flex:none;text-align:center;color:#191510;font-weight:900;transform:translateY(1px)}
 .hunt-cell-enter{animation:huntCellEnter .42s cubic-bezier(.16,1,.3,1)}
 .hunt-cell-exit{animation:huntCellExit .26s ease-in forwards}
 @keyframes huntCellEnter{
@@ -1354,13 +1368,13 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   100%{transform:scale(1)}
 }
 @keyframes huntCardIdle{
-  0%,100%{box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 10px 22px rgba(0,0,0,.18),0 0 0 rgba(125,211,252,0)}
-  50%{box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 10px 22px rgba(0,0,0,.18),0 0 13px rgba(125,211,252,.16)}
+  0%,100%{box-shadow:inset 0 1px 0 rgba(255,255,255,.42),inset 0 -7px 11px rgba(0,0,0,.38),0 10px 22px rgba(0,0,0,.32),0 0 0 rgba(217,192,122,0)}
+  50%{box-shadow:inset 0 1px 0 rgba(255,255,255,.42),inset 0 -7px 11px rgba(0,0,0,.38),0 10px 22px rgba(0,0,0,.32),0 0 13px rgba(217,192,122,.28)}
 }
 @keyframes huntCardGlowPulse{
-  0%{transform:scale(1);box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 10px 22px rgba(0,0,0,.18),0 0 0 rgba(125,211,252,0)}
-  32%{transform:scale(1.035);box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 10px 22px rgba(0,0,0,.18),0 0 26px rgba(125,211,252,.5)}
-  100%{transform:scale(1);box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 10px 22px rgba(0,0,0,.18),0 0 0 rgba(125,211,252,0)}
+  0%{transform:scale(1);box-shadow:inset 0 1px 0 rgba(255,255,255,.42),0 10px 22px rgba(0,0,0,.32),0 0 0 rgba(217,192,122,0)}
+  32%{transform:scale(1.035);box-shadow:inset 0 1px 0 rgba(255,255,255,.42),0 10px 22px rgba(0,0,0,.32),0 0 26px rgba(217,192,122,.55)}
+  100%{transform:scale(1);box-shadow:inset 0 1px 0 rgba(255,255,255,.42),0 10px 22px rgba(0,0,0,.32),0 0 0 rgba(217,192,122,0)}
 }
 .hunt-milestone-ring{
   position:fixed;z-index:9997;pointer-events:none;border-radius:16px;box-sizing:border-box;
@@ -1539,6 +1553,44 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   border-color:rgba(212,175,55,.36);color:#fff7c8;font-weight:900;
 }
 .hunt-found:hover{background:linear-gradient(180deg,rgba(212,175,55,.22),rgba(212,175,55,.06)),rgba(27,24,34,.98);border-color:rgba(212,175,55,.5);color:#fff}
+.hunt-mode-tabs{display:flex;gap:6px;margin:0 0 .7rem;justify-content:center}
+.hunt-mode-tab{
+  flex:1;max-width:150px;padding:8px 10px;border-radius:10px;border:1px solid rgba(255,255,255,.14);
+  background:rgba(255,255,255,.04);color:rgba(255,255,255,.58);font-size:11px;font-weight:800;
+  font-family:var(--font);cursor:pointer;transition:.15s;letter-spacing:.02em;
+}
+.hunt-mode-tab.active{
+  background:linear-gradient(180deg,rgba(217,192,122,.3),rgba(217,192,122,.08));
+  border-color:rgba(217,192,122,.55);color:#fff;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.16),0 4px 10px rgba(0,0,0,.2);
+}
+.hunt-mode-tab:hover{color:#fff;border-color:rgba(255,255,255,.28)}
+.hunt-timer-controls{margin:0 0 .35rem}
+.hunt-timer-setup{display:flex;gap:8px;align-items:flex-end;margin-bottom:9px}
+.hunt-timer-duration{display:flex;flex-direction:column;gap:4px;flex:1;font-size:9px;font-weight:900;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.06em;text-align:left}
+.hunt-timer-duration input{
+  font-family:var(--font);font-size:16px;font-weight:800;color:#fff;text-align:center;
+  background:rgba(0,0,0,.28);border:1px solid rgba(255,255,255,.16);border-radius:8px;padding:7px 4px;
+}
+.hunt-timer-duration input.shake{animation:huntTimerShake .35s}
+@keyframes huntTimerShake{
+  0%,100%{transform:translateX(0)}
+  25%{transform:translateX(-4px)}
+  75%{transform:translateX(4px)}
+}
+.hunt-timer-actions{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.hunt-timer-actions .btn{min-height:38px}
+.hunt-timer-btn{
+  background:linear-gradient(180deg,rgba(217,192,122,.26),rgba(217,192,122,.06)),rgba(27,24,34,.98)!important;
+  border-color:rgba(217,192,122,.55)!important;color:#fff!important;
+}
+.hunt-panel.timer-mode .hunt-plus-main,
+.hunt-panel.timer-mode .hunt-methods,
+.hunt-panel.timer-mode .hunt-odds,
+.hunt-panel.timer-mode .hunt-actions,
+.hunt-panel.timer-mode .hunt-found{display:none!important}
+.hunt-panel.timer-mode .hunt-counter-surface{grid-template-columns:minmax(0,1fr)}
+.hunt-panel:not(.timer-mode) .hunt-timer-controls{display:none}
 .modal.hunt-mode .modal-form-fields,.modal.hunt-mode .btn-save{display:none}
 .modal.hunt-mode .modal-footer{margin-top:1rem}
 .btn-counter-modal{
@@ -1886,11 +1938,16 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
 
     <div class="hunt-panel edit-only" id="huntPanel">
       <div class="hunt-label">Rencontres en cours</div>
+      <div class="hunt-mode-tabs" id="huntModeTabs">
+        <button class="hunt-mode-tab active" type="button" data-mode="counter" onclick="setHuntMode('counter')">🔢 Compteur</button>
+        <button class="hunt-mode-tab" type="button" data-mode="timer" onclick="setHuntMode('timer')">⏱ Chrono</button>
+      </div>
       <div class="hunt-counter-surface">
         <div class="hunt-count-card">
           <span class="hunt-card-twinkle t1" aria-hidden="true"></span>
           <span class="hunt-card-twinkle t2" aria-hidden="true"></span>
           <span class="hunt-card-twinkle t3" aria-hidden="true"></span>
+          <span class="hunt-card-twinkle t4" aria-hidden="true"></span>
           <span class="hunt-count-label">Compteur</span>
           <div class="hunt-count" id="huntCount"><span class="hunt-count-row"></span></div>
         </div>
@@ -1899,6 +1956,19 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
           <span class="hunt-plus-label">+1</span>
           <small>continuer</small>
         </button>
+      </div>
+      <div class="hunt-timer-controls" id="huntTimerControls">
+        <div class="hunt-timer-setup">
+          <label class="hunt-timer-duration">
+            <span>Durée (MM:SS)</span>
+            <input type="text" id="huntTimerInput" value="05:00" inputmode="numeric" placeholder="MM:SS">
+          </label>
+          <button class="btn" type="button" onclick="applyHuntTimerDuration()">Définir</button>
+        </div>
+        <div class="hunt-timer-actions">
+          <button class="btn hunt-timer-btn" id="huntTimerStartBtn" type="button" onclick="toggleHuntTimer()">▶ Démarrer</button>
+          <button class="btn" type="button" onclick="resetHuntTimer()">↺ Reset</button>
+        </div>
       </div>
       <div class="hunt-methods" id="huntMethods"></div>
       <div class="hunt-odds" aria-live="polite">
@@ -4028,7 +4098,14 @@ function setModalCounterMode(enabled) {
   if (label) label.textContent = caught ? 'Rencontres avant capture' : 'Rencontres en cours';
   const foundBtn = document.querySelector('#huntPanel .hunt-found');
   if (foundBtn) foundBtn.style.display = caught ? 'none' : '';
-  if (enabled) renderHuntCounter();
+  if (enabled) {
+    huntTimerTarget = null;
+    huntTimerSeconds = 0;
+    pauseHuntTimer();
+    setHuntMode('counter');
+  } else {
+    pauseHuntTimer();
+  }
 }
 
 function toggleModalCounter() {
@@ -4193,8 +4270,8 @@ function updateHuntDigitCol(col, newValue, dir) {
   }, 620);
 }
 
-function setHuntCountDisplay(value, animate = false) {
-  const counter = document.getElementById('huntCount');
+function setDigitRowText(elementId, text, animate, dir) {
+  const counter = document.getElementById(elementId);
   if (!counter) return;
   let row = counter.querySelector('.hunt-count-row');
   if (!row) {
@@ -4203,11 +4280,7 @@ function setHuntCountDisplay(value, animate = false) {
     counter.innerHTML = '';
     counter.appendChild(row);
   }
-  const total = Math.max(0, Number(value) || 0);
-  const prevTotal = Number(counter.dataset.total || 0);
-  const dir = animate ? (total > prevTotal ? 1 : (total < prevTotal ? -1 : 0)) : 0;
-  const nextText = total.toLocaleString('fr-FR');
-  const nextCells = Array.from(nextText).map(ch => /\d/.test(ch) ? { type: 'digit', val: Number(ch) } : { type: 'sep', ch });
+  const nextCells = Array.from(text).map(ch => /\d/.test(ch) ? { type: 'digit', val: Number(ch) } : { type: 'sep', ch });
   const current = Array.from(row.children);
   const n = nextCells.length, c = current.length, max = Math.max(n, c);
   for (let i = 0; i < max; i++) {
@@ -4239,7 +4312,127 @@ function setHuntCountDisplay(value, animate = false) {
       }
     }
   }
+}
+
+function setHuntCountDisplay(value, animate = false) {
+  const counter = document.getElementById('huntCount');
+  if (!counter) return;
+  const total = Math.max(0, Number(value) || 0);
+  const prevTotal = Number(counter.dataset.total || 0);
+  const dir = animate ? (total > prevTotal ? 1 : (total < prevTotal ? -1 : 0)) : 0;
+  const nextText = total.toLocaleString('fr-FR');
+  setDigitRowText('huntCount', nextText, animate, dir);
   counter.dataset.total = String(total);
+}
+
+/* ── Mode Chrono ── */
+let huntMode = 'counter';
+let huntTimerSeconds = 0;
+let huntTimerTarget = null;
+let huntTimerRunning = false;
+let huntTimerInterval = null;
+
+function setHuntMode(mode) {
+  huntMode = mode === 'timer' ? 'timer' : 'counter';
+  const panel = document.getElementById('huntPanel');
+  panel?.classList.toggle('timer-mode', huntMode === 'timer');
+  document.querySelectorAll('#huntModeTabs .hunt-mode-tab').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.mode === huntMode);
+  });
+  const label = document.querySelector('#huntPanel .hunt-label');
+  const countLabel = document.querySelector('#huntPanel .hunt-count-label');
+  const caught = !!progress[currentPokemon]?.caught;
+  if (huntMode === 'timer') {
+    if (label) label.textContent = 'Chronomètre';
+    if (countLabel) countLabel.textContent = 'Chrono';
+    renderHuntTimerDisplay(false);
+  } else {
+    pauseHuntTimer();
+    if (label) label.textContent = caught ? 'Rencontres avant capture' : 'Rencontres en cours';
+    if (countLabel) countLabel.textContent = 'Compteur';
+    renderHuntCounter();
+  }
+}
+
+function formatHuntTimer(totalSeconds) {
+  const s = Math.max(0, Math.round(totalSeconds));
+  const m = Math.floor(s / 60);
+  const sec = s % 60;
+  return String(m).padStart(2, '0') + ':' + String(sec).padStart(2, '0');
+}
+
+function renderHuntTimerDisplay(animate = false, dir = 0) {
+  setDigitRowText('huntCount', formatHuntTimer(huntTimerSeconds), animate, dir);
+}
+
+function applyHuntTimerDuration() {
+  const input = document.getElementById('huntTimerInput');
+  if (!input) return;
+  const match = input.value.trim().match(/^(\d{1,3}):([0-5]?\d)$/);
+  if (!match) {
+    input.classList.remove('shake');
+    void input.offsetWidth;
+    input.classList.add('shake');
+    setTimeout(() => input.classList.remove('shake'), 400);
+    return;
+  }
+  const mins = parseInt(match[1], 10);
+  const secs = parseInt(match[2], 10);
+  huntTimerTarget = mins * 60 + secs;
+  huntTimerSeconds = huntTimerTarget;
+  pauseHuntTimer();
+  renderHuntTimerDisplay(true, -1);
+}
+
+function toggleHuntTimer() {
+  if (huntTimerRunning) pauseHuntTimer();
+  else startHuntTimer();
+}
+
+function startHuntTimer() {
+  if (huntTimerRunning) return;
+  if (huntTimerTarget != null && huntTimerSeconds <= 0) return;
+  huntTimerRunning = true;
+  updateHuntTimerButton();
+  const card = document.getElementById('huntCount')?.closest('.hunt-count-card');
+  card?.classList.add('running');
+  huntTimerInterval = setInterval(() => {
+    if (huntTimerTarget != null) {
+      huntTimerSeconds = Math.max(0, huntTimerSeconds - 1);
+      renderHuntTimerDisplay(true, -1);
+      if (huntTimerSeconds <= 0) {
+        pauseHuntTimer();
+        try { navigator.vibrate?.([20, 40, 20, 40, 20]); } catch (_) {}
+        if (card) {
+          card.classList.add('reset-flash');
+          setTimeout(() => card.classList.remove('reset-flash'), 500);
+        }
+      }
+    } else {
+      huntTimerSeconds += 1;
+      renderHuntTimerDisplay(true, 1);
+    }
+  }, 1000);
+}
+
+function pauseHuntTimer() {
+  huntTimerRunning = false;
+  clearInterval(huntTimerInterval);
+  huntTimerInterval = null;
+  updateHuntTimerButton();
+  document.getElementById('huntCount')?.closest('.hunt-count-card')?.classList.remove('running');
+}
+
+function resetHuntTimer() {
+  pauseHuntTimer();
+  huntTimerSeconds = huntTimerTarget != null ? huntTimerTarget : 0;
+  renderHuntTimerDisplay(true, 0);
+}
+
+function updateHuntTimerButton() {
+  const btn = document.getElementById('huntTimerStartBtn');
+  if (!btn) return;
+  btn.innerHTML = huntTimerRunning ? '⏸ Pause' : '▶ Démarrer';
 }
 
 function renderHuntCounter(animate = false, kind = 'flash') {
