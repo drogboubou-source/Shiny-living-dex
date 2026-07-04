@@ -1478,53 +1478,6 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   35%{opacity:1}
   to{transform:translateX(100%);opacity:0}
 }
-.hunt-cry-card{
-  position:relative;margin:0 0 .85rem;padding:10px 12px;border-radius:12px;
-  background:linear-gradient(135deg,rgba(125,211,252,.09),rgba(192,132,252,.07));
-  border:1px solid rgba(255,255,255,.09);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 6px 14px rgba(0,0,0,.14);
-  text-align:left;transition:box-shadow .2s ease;
-}
-.hunt-cry-card.detect{animation:huntCryDetect .42s ease-out}
-@keyframes huntCryDetect{
-  0%{box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 6px 14px rgba(0,0,0,.14),0 0 0 rgba(125,211,252,0)}
-  35%{box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 6px 14px rgba(0,0,0,.14),0 0 20px rgba(125,211,252,.5)}
-  100%{box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 6px 14px rgba(0,0,0,.14),0 0 0 rgba(125,211,252,0)}
-}
-.hunt-cry-top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
-.hunt-cry-label{display:flex;align-items:center;gap:6px;font-size:9px;font-weight:900;color:rgba(255,255,255,.72);text-transform:uppercase;letter-spacing:.05em}
-.hunt-cry-icon{color:#7dd3fc;flex:none}
-.hunt-cry-preview{
-  border:1px solid rgba(255,255,255,.14);border-radius:999px;padding:4px 10px;
-  background:rgba(255,255,255,.06);color:rgba(255,255,255,.75);font-family:var(--font);font-size:9px;font-weight:900;
-  cursor:pointer;text-transform:uppercase;letter-spacing:.03em;
-}
-.hunt-cry-body{display:flex;flex-direction:column;gap:8px}
-.hunt-cry-meter{position:relative;height:8px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden;box-shadow:inset 0 1px 3px rgba(0,0,0,.35)}
-.hunt-cry-meter-fill{
-  position:absolute;left:0;top:0;bottom:0;width:0%;border-radius:999px;
-  background:linear-gradient(90deg,#7dd3fc,#c084fc,#f7d774);
-  transition:width .05s linear;
-}
-.hunt-cry-threshold{
-  position:absolute;top:-2px;bottom:-2px;width:2px;background:rgba(255,255,255,.85);
-  box-shadow:0 0 6px rgba(255,255,255,.8);left:55%;
-  transition:left .15s ease;
-}
-.hunt-cry-row{display:flex;align-items:center;justify-content:space-between;gap:10px}
-.hunt-cry-status{font-size:9px;font-weight:800;color:rgba(255,255,255,.5);white-space:nowrap;transition:color .15s}
-.hunt-cry-status.detect{color:#7dd3fc}
-.hunt-cry-sens{display:flex;align-items:center;gap:6px;font-size:8px;font-weight:800;color:rgba(255,255,255,.42);text-transform:uppercase;letter-spacing:.04em;white-space:nowrap}
-.hunt-cry-sens input[type=range]{width:66px;accent-color:#7dd3fc}
-.hunt-cry-toggle{
-  width:100%;border:1px solid rgba(125,211,252,.5);border-radius:10px;padding:8px;
-  background:rgba(125,211,252,.12);color:#7dd3fc;font-family:var(--font);font-size:10px;font-weight:900;
-  cursor:pointer;text-transform:uppercase;letter-spacing:.04em;transition:background .15s,color .15s,border-color .15s,box-shadow .15s;
-}
-.hunt-cry-toggle.on{
-  background:linear-gradient(180deg,#7dd3fc,#4fb8ef);color:#062233;border-color:rgba(125,211,252,.9);
-  box-shadow:0 0 14px rgba(125,211,252,.4);
-}
 .hunt-methods{display:grid;grid-template-columns:repeat(auto-fit,minmax(92px,1fr));gap:8px;margin:0 0 .75rem}
 .hunt-method{
   min-height:34px;padding:6px 7px;border-radius:9px;position:relative;
@@ -1946,33 +1899,6 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
           <span class="hunt-plus-label">+1</span>
           <small>continuer</small>
         </button>
-      </div>
-      <div class="hunt-cry-card" id="huntCryCard">
-        <div class="hunt-cry-top">
-          <span class="hunt-cry-label">
-            <svg class="hunt-cry-icon" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M11 5 6 9H2v6h4l5 4V5z"></path>
-              <path d="M15.5 8.5a5 5 0 0 1 0 7"></path>
-              <path d="M18.5 5.5a9 9 0 0 1 0 13"></path>
-            </svg>
-            Cri automatique
-          </span>
-          <button class="hunt-cry-preview" type="button" onclick="playPokemonCry(currentPokemon)">&#9654; Écouter</button>
-        </div>
-        <div class="hunt-cry-body">
-          <div class="hunt-cry-meter">
-            <div class="hunt-cry-meter-fill" id="huntCryMeterFill"></div>
-            <div class="hunt-cry-threshold" id="huntCryThreshold"></div>
-          </div>
-          <div class="hunt-cry-row">
-            <span class="hunt-cry-status" id="huntCryStatus">Micro inactif</span>
-            <label class="hunt-cry-sens">
-              Sensibilité
-              <input type="range" id="huntCrySensitivity" min="1" max="100" value="55" oninput="setHuntCrySensitivity(this.value)">
-            </label>
-          </div>
-          <button class="hunt-cry-toggle" id="huntCryToggle" type="button" onclick="toggleHuntCry()">Activer l'écoute du cri</button>
-        </div>
       </div>
       <div class="hunt-methods" id="huntMethods"></div>
       <div class="hunt-odds" aria-live="polite">
@@ -4103,7 +4029,6 @@ function setModalCounterMode(enabled) {
   const foundBtn = document.querySelector('#huntPanel .hunt-found');
   if (foundBtn) foundBtn.style.display = caught ? 'none' : '';
   if (enabled) renderHuntCounter();
-  if (!enabled) stopHuntCry();
 }
 
 function toggleModalCounter() {
@@ -4444,204 +4369,9 @@ function resetHuntCounter() {
   const entry = getCurrentHuntEntry();
   if (!entry) return;
   const field = entry.caught ? 'encounters' : 'huntCount';
-  entry[field] = 0;
-  if (!entry.caught) {
-    entry.hunting = false;
-    unregisterHunt(currentPokemon);
-  }
   saveProgressEntry(currentPokemon, entry);
   renderHuntCounter(true, 'reset');
   renderGrid();
-}
-
-let huntCryStream = null;
-let huntCryAudioCtx = null;
-let huntCryAnalyser = null;
-let huntCryData = null;
-let huntCryRAF = null;
-let huntCryActive = false;
-let huntCrySensitivity = 55;
-let huntCryNoiseFloor = 0.015;
-let huntCryCooldownUntil = 0;
-let huntCryTemplate = null;
-let huntCryTemplateLen = 0;
-let huntCryRing = [];
-let huntCryLastFrameAt = 0;
-
-const HUNT_CRY_FRAME_MS = 30;
-
-function setHuntCrySensitivity(val) {
-  huntCrySensitivity = Number(val) || 55;
-}
-
-function setHuntCryStatus(text, isDetect = false) {
-  const el = document.getElementById('huntCryStatus');
-  if (!el) return;
-  el.textContent = text;
-  el.classList.toggle('detect', isDetect);
-}
-
-async function fetchHuntCryTemplate(id) {
-  const url = `${POKEMON_CRY_BASE}/${id}.ogg`;
-  const res = await fetch(url);
-  if (!res.ok) throw new Error('cry fetch failed');
-  const buf = await res.arrayBuffer();
-  const decoded = await huntCryAudioCtx.decodeAudioData(buf.slice(0));
-  const channel = decoded.getChannelData(0);
-  const sr = decoded.sampleRate;
-  const frameSize = Math.max(1, Math.round(sr * HUNT_CRY_FRAME_MS / 1000));
-  const frames = Math.max(4, Math.floor(channel.length / frameSize));
-  const envelope = [];
-  for (let f = 0; f < frames; f++) {
-    let sum = 0;
-    const start = f * frameSize;
-    const end = Math.min(channel.length, start + frameSize);
-    for (let i = start; i < end; i++) sum += channel[i] * channel[i];
-    envelope.push(Math.sqrt(sum / (end - start)));
-  }
-  const max = Math.max(...envelope, 1e-6);
-  huntCryTemplate = envelope.map(v => v / max);
-  huntCryTemplateLen = huntCryTemplate.length;
-  return decoded.duration;
-}
-
-async function toggleHuntCry() {
-  if (huntCryActive) {
-    stopHuntCry();
-    return;
-  }
-  if (!currentPokemon) return;
-  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-    setHuntCryStatus('Micro indisponible (HTTPS requis)');
-    return;
-  }
-  huntCryAudioCtx = huntCryAudioCtx || new (window.AudioContext || window.webkitAudioContext)();
-  setHuntCryStatus('Chargement du cri\u2026');
-  try {
-    const duration = await fetchHuntCryTemplate(currentPokemon);
-    setHuntCryStatus(`Cri chargé (${duration.toFixed(2)}s)\u2026`);
-  } catch (err) {
-    setHuntCryStatus('Cri introuvable pour ce Pokémon');
-    return;
-  }
-  setHuntCryStatus('Demande d\u2019accès au micro\u2026');
-  try {
-    huntCryStream = await navigator.mediaDevices.getUserMedia({ audio: true });
-  } catch (err) {
-    setHuntCryStatus('Accès micro refusé');
-    return;
-  }
-  try {
-    const source = huntCryAudioCtx.createMediaStreamSource(huntCryStream);
-    huntCryAnalyser = huntCryAudioCtx.createAnalyser();
-    huntCryAnalyser.fftSize = 1024;
-    source.connect(huntCryAnalyser);
-    huntCryData = new Float32Array(huntCryAnalyser.fftSize);
-  } catch (err) {
-    setHuntCryStatus('Erreur audio');
-    huntCryStream.getTracks().forEach(t => t.stop());
-    huntCryStream = null;
-    return;
-  }
-  huntCryNoiseFloor = 0.015;
-  huntCryCooldownUntil = 0;
-  huntCryRing = [];
-  huntCryLastFrameAt = 0;
-  huntCryActive = true;
-  const toggleBtn = document.getElementById('huntCryToggle');
-  if (toggleBtn) { toggleBtn.textContent = 'Désactiver l\u2019écoute'; toggleBtn.classList.add('on'); }
-  setHuntCryStatus('Écoute en cours\u2026');
-  huntCryLoop();
-}
-
-function huntCryComputeRms() {
-  huntCryAnalyser.getFloatTimeDomainData(huntCryData);
-  let sum = 0;
-  for (let i = 0; i < huntCryData.length; i++) sum += huntCryData[i] * huntCryData[i];
-  return Math.sqrt(sum / huntCryData.length);
-}
-
-function huntCryLoop() {
-  if (!huntCryActive || !huntCryAnalyser) return;
-  const rms = huntCryComputeRms();
-  const now = performance.now();
-
-  const meterFill = document.getElementById('huntCryMeterFill');
-  if (meterFill) meterFill.style.width = `${Math.min(100, rms * 400)}%`;
-
-  if (now - huntCryLastFrameAt >= HUNT_CRY_FRAME_MS) {
-    huntCryLastFrameAt = now;
-    const maxLen = huntCryTemplateLen || 20;
-    huntCryRing.push(rms);
-    if (huntCryRing.length > maxLen) huntCryRing.shift();
-
-    if (rms < huntCryNoiseFloor + 0.01) {
-      huntCryNoiseFloor = huntCryNoiseFloor * 0.98 + rms * 0.02;
-    }
-
-    const thresholdEl = document.getElementById('huntCryThreshold');
-    if (huntCryTemplate && huntCryRing.length === maxLen) {
-      const score = huntCryCompareToTemplate(huntCryRing, huntCryTemplate);
-      const threshold = 0.58 + ((100 - huntCrySensitivity) / 100) * 0.36;
-      if (thresholdEl) thresholdEl.style.left = `${Math.min(100, threshold * 100)}%`;
-      const loudEnough = Math.max(...huntCryRing) > huntCryNoiseFloor + 0.02;
-      if (score > threshold && loudEnough && now > huntCryCooldownUntil) {
-        huntCryCooldownUntil = now + Math.max(1200, maxLen * HUNT_CRY_FRAME_MS + 500);
-        huntCryTrigger();
-      }
-    }
-  }
-
-  huntCryRAF = requestAnimationFrame(huntCryLoop);
-}
-
-function huntCryCompareToTemplate(ring, template) {
-  const n = template.length;
-  const maxRing = Math.max(...ring, 1e-6);
-  let dot = 0, na = 0, nb = 0;
-  for (let i = 0; i < n; i++) {
-    const v = ring[i] / maxRing;
-    dot += v * template[i];
-    na += v * v;
-    nb += template[i] * template[i];
-  }
-  if (na === 0 || nb === 0) return 0;
-  return dot / (Math.sqrt(na) * Math.sqrt(nb));
-}
-
-function huntCryTrigger() {
-  setHuntCryStatus('Cri détecté \u00b7 +1', true);
-  clearTimeout(huntCryTrigger._resetTimer);
-  huntCryTrigger._resetTimer = setTimeout(() => setHuntCryStatus('Écoute en cours\u2026'), 1000);
-  const card = document.getElementById('huntCryCard');
-  if (card) {
-    card.classList.remove('detect');
-    void card.offsetWidth;
-    card.classList.add('detect');
-    setTimeout(() => card.classList.remove('detect'), 420);
-  }
-  tapHuntPlus();
-}
-
-function stopHuntCry() {
-  if (!huntCryActive && !huntCryStream) return;
-  huntCryActive = false;
-  if (huntCryRAF) cancelAnimationFrame(huntCryRAF);
-  huntCryRAF = null;
-  if (huntCryStream) {
-    huntCryStream.getTracks().forEach(t => t.stop());
-    huntCryStream = null;
-  }
-  if (huntCryAudioCtx) {
-    huntCryAudioCtx.close();
-    huntCryAudioCtx = null;
-  }
-  huntCryAnalyser = null;
-  const toggleBtn = document.getElementById('huntCryToggle');
-  if (toggleBtn) { toggleBtn.textContent = "Activer l'écoute du cri"; toggleBtn.classList.remove('on'); }
-  setHuntCryStatus('Micro inactif');
-  const meterFill = document.getElementById('huntCryMeterFill');
-  if (meterFill) meterFill.style.width = '0%';
 }
 
 function markHuntFound() {
@@ -4663,7 +4393,6 @@ function markHuntFound() {
    MODAL
 ══════════════════════════════════════ */
 function openModal(id, options = {}) {
-  stopHuntCry();
   currentPokemon = id;
   initModalChoiceLists();
   const form = getRegionalFormById(id);
@@ -4730,7 +4459,6 @@ function closeModal(options = {}) {
   modal?.classList.remove('hunt-mode');
   document.getElementById('huntPanel')?.classList.remove('open');
   if (modal) modal.scrollTop = 0;
-  stopHuntCry();
   currentPokemon = null;
   if (!options.skipHistory) updateAppHistory('push');
 }
