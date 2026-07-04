@@ -1478,60 +1478,52 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   35%{opacity:1}
   to{transform:translateX(100%);opacity:0}
 }
-.hunt-mic-card{
+.hunt-cry-card{
   position:relative;margin:0 0 .85rem;padding:10px 12px;border-radius:12px;
   background:linear-gradient(135deg,rgba(125,211,252,.09),rgba(192,132,252,.07));
   border:1px solid rgba(255,255,255,.09);
   box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 6px 14px rgba(0,0,0,.14);
   text-align:left;transition:box-shadow .2s ease;
 }
-.hunt-mic-card.detect{animation:huntMicDetect .42s ease-out}
-@keyframes huntMicDetect{
+.hunt-cry-card.detect{animation:huntCryDetect .42s ease-out}
+@keyframes huntCryDetect{
   0%{box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 6px 14px rgba(0,0,0,.14),0 0 0 rgba(125,211,252,0)}
   35%{box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 6px 14px rgba(0,0,0,.14),0 0 20px rgba(125,211,252,.5)}
   100%{box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 6px 14px rgba(0,0,0,.14),0 0 0 rgba(125,211,252,0)}
 }
-.hunt-mic-top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
-.hunt-mic-label{display:flex;align-items:center;gap:6px;font-size:9px;font-weight:900;color:rgba(255,255,255,.72);text-transform:uppercase;letter-spacing:.05em}
-.hunt-mic-icon{color:#7dd3fc;flex:none}
-.hunt-mic-toggle{
-  border:1px solid rgba(125,211,252,.5);border-radius:999px;padding:5px 12px;
-  background:rgba(125,211,252,.12);color:#7dd3fc;font-family:var(--font);font-size:9px;font-weight:900;
-  cursor:pointer;text-transform:uppercase;letter-spacing:.04em;transition:background .15s,color .15s,border-color .15s,box-shadow .15s;
+.hunt-cry-top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
+.hunt-cry-label{display:flex;align-items:center;gap:6px;font-size:9px;font-weight:900;color:rgba(255,255,255,.72);text-transform:uppercase;letter-spacing:.05em}
+.hunt-cry-icon{color:#7dd3fc;flex:none}
+.hunt-cry-preview{
+  border:1px solid rgba(255,255,255,.14);border-radius:999px;padding:4px 10px;
+  background:rgba(255,255,255,.06);color:rgba(255,255,255,.75);font-family:var(--font);font-size:9px;font-weight:900;
+  cursor:pointer;text-transform:uppercase;letter-spacing:.03em;
 }
-.hunt-mic-toggle.on{
-  background:linear-gradient(180deg,#7dd3fc,#4fb8ef);color:#062233;border-color:rgba(125,211,252,.9);
-  box-shadow:0 0 14px rgba(125,211,252,.4);
-}
-.hunt-mic-body{display:flex;flex-direction:column;gap:7px}
-.hunt-mic-meter{position:relative;height:8px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden;box-shadow:inset 0 1px 3px rgba(0,0,0,.35)}
-.hunt-mic-meter-fill{
+.hunt-cry-body{display:flex;flex-direction:column;gap:8px}
+.hunt-cry-meter{position:relative;height:8px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden;box-shadow:inset 0 1px 3px rgba(0,0,0,.35)}
+.hunt-cry-meter-fill{
   position:absolute;left:0;top:0;bottom:0;width:0%;border-radius:999px;
   background:linear-gradient(90deg,#7dd3fc,#c084fc,#f7d774);
   transition:width .05s linear;
 }
-.hunt-mic-threshold{
+.hunt-cry-threshold{
   position:absolute;top:-2px;bottom:-2px;width:2px;background:rgba(255,255,255,.85);
   box-shadow:0 0 6px rgba(255,255,255,.8);left:55%;
   transition:left .15s ease;
 }
-.hunt-mic-row{display:flex;align-items:center;justify-content:space-between;gap:10px}
-.hunt-mic-template-row{padding-top:6px;border-top:1px solid rgba(255,255,255,.08)}
-.hunt-mic-status{font-size:9px;font-weight:800;color:rgba(255,255,255,.5);white-space:nowrap;transition:color .15s}
-.hunt-mic-status.detect{color:#7dd3fc}
-.hunt-mic-sens{display:flex;align-items:center;gap:6px;font-size:8px;font-weight:800;color:rgba(255,255,255,.42);text-transform:uppercase;letter-spacing:.04em;white-space:nowrap}
-.hunt-mic-sens input[type=range]{width:66px;accent-color:#7dd3fc}
-.hunt-mic-template-actions{display:flex;align-items:center;gap:8px;flex:none}
-.hunt-mic-record-btn{
-  border:1px solid rgba(192,132,252,.5);border-radius:999px;padding:4px 10px;
-  background:rgba(192,132,252,.12);color:#c084fc;font-family:var(--font);font-size:8px;font-weight:900;
-  cursor:pointer;text-transform:uppercase;letter-spacing:.03em;white-space:nowrap;
-  transition:opacity .15s,background .15s;
+.hunt-cry-row{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.hunt-cry-status{font-size:9px;font-weight:800;color:rgba(255,255,255,.5);white-space:nowrap;transition:color .15s}
+.hunt-cry-status.detect{color:#7dd3fc}
+.hunt-cry-sens{display:flex;align-items:center;gap:6px;font-size:8px;font-weight:800;color:rgba(255,255,255,.42);text-transform:uppercase;letter-spacing:.04em;white-space:nowrap}
+.hunt-cry-sens input[type=range]{width:66px;accent-color:#7dd3fc}
+.hunt-cry-toggle{
+  width:100%;border:1px solid rgba(125,211,252,.5);border-radius:10px;padding:8px;
+  background:rgba(125,211,252,.12);color:#7dd3fc;font-family:var(--font);font-size:10px;font-weight:900;
+  cursor:pointer;text-transform:uppercase;letter-spacing:.04em;transition:background .15s,color .15s,border-color .15s,box-shadow .15s;
 }
-.hunt-mic-record-btn:disabled{opacity:.4;cursor:not-allowed}
-.hunt-mic-clear-btn{
-  border:none;background:none;color:rgba(255,255,255,.4);font-family:var(--font);font-size:8px;font-weight:800;
-  text-decoration:underline;cursor:pointer;white-space:nowrap;
+.hunt-cry-toggle.on{
+  background:linear-gradient(180deg,#7dd3fc,#4fb8ef);color:#062233;border-color:rgba(125,211,252,.9);
+  box-shadow:0 0 14px rgba(125,211,252,.4);
 }
 .hunt-methods{display:grid;grid-template-columns:repeat(auto-fit,minmax(92px,1fr));gap:8px;margin:0 0 .75rem}
 .hunt-method{
@@ -1955,38 +1947,31 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
           <small>continuer</small>
         </button>
       </div>
-      <div class="hunt-mic-card" id="huntMicCard">
-        <div class="hunt-mic-top">
-          <span class="hunt-mic-label">
-            <svg class="hunt-mic-icon" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
-              <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
-              <line x1="12" y1="19" x2="12" y2="23"></line>
-              <line x1="8" y1="23" x2="16" y2="23"></line>
+      <div class="hunt-cry-card" id="huntCryCard">
+        <div class="hunt-cry-top">
+          <span class="hunt-cry-label">
+            <svg class="hunt-cry-icon" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M11 5 6 9H2v6h4l5 4V5z"></path>
+              <path d="M15.5 8.5a5 5 0 0 1 0 7"></path>
+              <path d="M18.5 5.5a9 9 0 0 1 0 13"></path>
             </svg>
-            Détection sonore
+            Cri automatique
           </span>
-          <button class="hunt-mic-toggle" id="huntMicToggle" type="button" onclick="toggleHuntMic()">Activer</button>
+          <button class="hunt-cry-preview" type="button" onclick="playPokemonCry(currentPokemon)">&#9654; Écouter</button>
         </div>
-        <div class="hunt-mic-body">
-          <div class="hunt-mic-meter">
-            <div class="hunt-mic-meter-fill" id="huntMicMeterFill"></div>
-            <div class="hunt-mic-threshold" id="huntMicThreshold"></div>
+        <div class="hunt-cry-body">
+          <div class="hunt-cry-meter">
+            <div class="hunt-cry-meter-fill" id="huntCryMeterFill"></div>
+            <div class="hunt-cry-threshold" id="huntCryThreshold"></div>
           </div>
-          <div class="hunt-mic-row">
-            <span class="hunt-mic-status" id="huntMicStatus">Micro inactif</span>
-            <label class="hunt-mic-sens">
+          <div class="hunt-cry-row">
+            <span class="hunt-cry-status" id="huntCryStatus">Micro inactif</span>
+            <label class="hunt-cry-sens">
               Sensibilité
-              <input type="range" id="huntMicSensitivity" min="1" max="100" value="55" oninput="setHuntMicSensitivity(this.value)">
+              <input type="range" id="huntCrySensitivity" min="1" max="100" value="55" oninput="setHuntCrySensitivity(this.value)">
             </label>
           </div>
-          <div class="hunt-mic-row hunt-mic-template-row">
-            <span class="hunt-mic-status" id="huntMicTemplateStatus">Aucun modèle &middot; détection générique</span>
-            <span class="hunt-mic-template-actions">
-              <button class="hunt-mic-record-btn" id="huntMicRecordBtn" type="button" onclick="startHuntMicRecording()" disabled>Enregistrer le son</button>
-              <button class="hunt-mic-clear-btn" id="huntMicClearTemplate" type="button" onclick="clearHuntMicTemplate()" style="display:none">Effacer</button>
-            </span>
-          </div>
+          <button class="hunt-cry-toggle" id="huntCryToggle" type="button" onclick="toggleHuntCry()">Activer l'écoute du cri</button>
         </div>
       </div>
       <div class="hunt-methods" id="huntMethods"></div>
@@ -4118,7 +4103,7 @@ function setModalCounterMode(enabled) {
   const foundBtn = document.querySelector('#huntPanel .hunt-found');
   if (foundBtn) foundBtn.style.display = caught ? 'none' : '';
   if (enabled) renderHuntCounter();
-  if (!enabled) stopHuntMic();
+  if (!enabled) stopHuntCry();
 }
 
 function toggleModalCounter() {
@@ -4469,161 +4454,148 @@ function resetHuntCounter() {
   renderGrid();
 }
 
-let huntMicStream = null;
-let huntMicAudioCtx = null;
-let huntMicAnalyser = null;
-let huntMicData = null;
-let huntMicRAF = null;
-let huntMicActive = false;
-let huntMicSensitivity = 55;
-let huntMicNoiseFloor = 0.015;
-let huntMicCooldownUntil = 0;
+let huntCryStream = null;
+let huntCryAudioCtx = null;
+let huntCryAnalyser = null;
+let huntCryData = null;
+let huntCryRAF = null;
+let huntCryActive = false;
+let huntCrySensitivity = 55;
+let huntCryNoiseFloor = 0.015;
+let huntCryCooldownUntil = 0;
+let huntCryTemplate = null;
+let huntCryTemplateLen = 0;
+let huntCryRing = [];
+let huntCryLastFrameAt = 0;
 
-const HUNT_MIC_FRAME_MS = 40;
-const HUNT_MIC_TEMPLATE_LEN = 45; // ~1.8s at 40ms/frame
-let huntMicTemplate = null;       // normalized 0..1 shape envelope, length HUNT_MIC_TEMPLATE_LEN
-let huntMicRing = [];             // rolling raw rms values, same length
-let huntMicLastFrameAt = 0;
-let huntMicRecording = false;
-let huntMicRecordBuffer = [];
-let huntMicRecordStartAt = 0;
+const HUNT_CRY_FRAME_MS = 30;
 
-function loadHuntMicTemplate() {
-  try {
-    const raw = localStorage.getItem('huntMicTemplate');
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed) && parsed.length > 4) huntMicTemplate = parsed;
-    }
-  } catch (_) {}
-  updateHuntMicTemplateUI();
+function setHuntCrySensitivity(val) {
+  huntCrySensitivity = Number(val) || 55;
 }
 
-function updateHuntMicTemplateUI() {
-  const status = document.getElementById('huntMicTemplateStatus');
-  const clearBtn = document.getElementById('huntMicClearTemplate');
-  if (status) status.textContent = huntMicTemplate ? 'Modèle enregistré \u2713' : 'Aucun modèle \u00b7 détection générique';
-  if (clearBtn) clearBtn.style.display = huntMicTemplate ? '' : 'none';
+function setHuntCryStatus(text, isDetect = false) {
+  const el = document.getElementById('huntCryStatus');
+  if (!el) return;
+  el.textContent = text;
+  el.classList.toggle('detect', isDetect);
 }
 
-function clearHuntMicTemplate() {
-  huntMicTemplate = null;
-  try { localStorage.removeItem('huntMicTemplate'); } catch (_) {}
-  updateHuntMicTemplateUI();
+async function fetchHuntCryTemplate(id) {
+  const url = `${POKEMON_CRY_BASE}/${id}.ogg`;
+  const res = await fetch(url);
+  if (!res.ok) throw new Error('cry fetch failed');
+  const buf = await res.arrayBuffer();
+  const decoded = await huntCryAudioCtx.decodeAudioData(buf.slice(0));
+  const channel = decoded.getChannelData(0);
+  const sr = decoded.sampleRate;
+  const frameSize = Math.max(1, Math.round(sr * HUNT_CRY_FRAME_MS / 1000));
+  const frames = Math.max(4, Math.floor(channel.length / frameSize));
+  const envelope = [];
+  for (let f = 0; f < frames; f++) {
+    let sum = 0;
+    const start = f * frameSize;
+    const end = Math.min(channel.length, start + frameSize);
+    for (let i = start; i < end; i++) sum += channel[i] * channel[i];
+    envelope.push(Math.sqrt(sum / (end - start)));
+  }
+  const max = Math.max(...envelope, 1e-6);
+  huntCryTemplate = envelope.map(v => v / max);
+  huntCryTemplateLen = huntCryTemplate.length;
+  return decoded.duration;
 }
 
-function setHuntMicSensitivity(val) {
-  huntMicSensitivity = Number(val) || 55;
-}
-
-function setHuntMicStatus(text, isDetect = false) {
-  const statusEl = document.getElementById('huntMicStatus');
-  if (!statusEl) return;
-  statusEl.textContent = text;
-  statusEl.classList.toggle('detect', isDetect);
-}
-
-async function toggleHuntMic() {
-  if (huntMicActive) {
-    stopHuntMic();
+async function toggleHuntCry() {
+  if (huntCryActive) {
+    stopHuntCry();
     return;
   }
+  if (!currentPokemon) return;
   if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-    setHuntMicStatus('Micro indisponible (HTTPS requis)');
+    setHuntCryStatus('Micro indisponible (HTTPS requis)');
     return;
   }
-  setHuntMicStatus('Demande d\u2019accès au micro…');
+  huntCryAudioCtx = huntCryAudioCtx || new (window.AudioContext || window.webkitAudioContext)();
+  setHuntCryStatus('Chargement du cri\u2026');
   try {
-    huntMicStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    const duration = await fetchHuntCryTemplate(currentPokemon);
+    setHuntCryStatus(`Cri chargé (${duration.toFixed(2)}s)\u2026`);
   } catch (err) {
-    setHuntMicStatus('Accès micro refusé');
+    setHuntCryStatus('Cri introuvable pour ce Pokémon');
+    return;
+  }
+  setHuntCryStatus('Demande d\u2019accès au micro\u2026');
+  try {
+    huntCryStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+  } catch (err) {
+    setHuntCryStatus('Accès micro refusé');
     return;
   }
   try {
-    huntMicAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    const source = huntMicAudioCtx.createMediaStreamSource(huntMicStream);
-    huntMicAnalyser = huntMicAudioCtx.createAnalyser();
-    huntMicAnalyser.fftSize = 1024;
-    source.connect(huntMicAnalyser);
-    huntMicData = new Float32Array(huntMicAnalyser.fftSize);
+    const source = huntCryAudioCtx.createMediaStreamSource(huntCryStream);
+    huntCryAnalyser = huntCryAudioCtx.createAnalyser();
+    huntCryAnalyser.fftSize = 1024;
+    source.connect(huntCryAnalyser);
+    huntCryData = new Float32Array(huntCryAnalyser.fftSize);
   } catch (err) {
-    setHuntMicStatus('Erreur audio');
-    huntMicStream.getTracks().forEach(t => t.stop());
-    huntMicStream = null;
+    setHuntCryStatus('Erreur audio');
+    huntCryStream.getTracks().forEach(t => t.stop());
+    huntCryStream = null;
     return;
   }
-  huntMicNoiseFloor = 0.015;
-  huntMicCooldownUntil = 0;
-  huntMicRing = [];
-  huntMicLastFrameAt = 0;
-  huntMicActive = true;
-  const toggleBtn = document.getElementById('huntMicToggle');
-  if (toggleBtn) { toggleBtn.textContent = 'Désactiver'; toggleBtn.classList.add('on'); }
-  const recordBtn = document.getElementById('huntMicRecordBtn');
-  if (recordBtn) recordBtn.disabled = false;
-  setHuntMicStatus('Écoute en cours…');
-  huntMicLoop();
+  huntCryNoiseFloor = 0.015;
+  huntCryCooldownUntil = 0;
+  huntCryRing = [];
+  huntCryLastFrameAt = 0;
+  huntCryActive = true;
+  const toggleBtn = document.getElementById('huntCryToggle');
+  if (toggleBtn) { toggleBtn.textContent = 'Désactiver l\u2019écoute'; toggleBtn.classList.add('on'); }
+  setHuntCryStatus('Écoute en cours\u2026');
+  huntCryLoop();
 }
 
-function huntMicComputeRms() {
-  huntMicAnalyser.getFloatTimeDomainData(huntMicData);
+function huntCryComputeRms() {
+  huntCryAnalyser.getFloatTimeDomainData(huntCryData);
   let sum = 0;
-  for (let i = 0; i < huntMicData.length; i++) sum += huntMicData[i] * huntMicData[i];
-  return Math.sqrt(sum / huntMicData.length);
+  for (let i = 0; i < huntCryData.length; i++) sum += huntCryData[i] * huntCryData[i];
+  return Math.sqrt(sum / huntCryData.length);
 }
 
-function huntMicLoop() {
-  if (!huntMicActive || !huntMicAnalyser) return;
-  const rms = huntMicComputeRms();
+function huntCryLoop() {
+  if (!huntCryActive || !huntCryAnalyser) return;
+  const rms = huntCryComputeRms();
   const now = performance.now();
 
-  const meterFill = document.getElementById('huntMicMeterFill');
+  const meterFill = document.getElementById('huntCryMeterFill');
   if (meterFill) meterFill.style.width = `${Math.min(100, rms * 400)}%`;
 
-  if (huntMicRecording) {
-    huntMicRecordBuffer.push(rms);
-    const remaining = Math.max(0, 1.8 - (now - huntMicRecordStartAt) / 1000);
-    setHuntMicStatus(`Enregistrement\u2026 ${remaining.toFixed(1)}s`);
-    if (remaining <= 0) finishHuntMicRecording();
-    huntMicRAF = requestAnimationFrame(huntMicLoop);
-    return;
-  }
+  if (now - huntCryLastFrameAt >= HUNT_CRY_FRAME_MS) {
+    huntCryLastFrameAt = now;
+    const maxLen = huntCryTemplateLen || 20;
+    huntCryRing.push(rms);
+    if (huntCryRing.length > maxLen) huntCryRing.shift();
 
-  if (now - huntMicLastFrameAt >= HUNT_MIC_FRAME_MS) {
-    huntMicLastFrameAt = now;
-    huntMicRing.push(rms);
-    if (huntMicRing.length > HUNT_MIC_TEMPLATE_LEN) huntMicRing.shift();
-
-    if (rms < huntMicNoiseFloor + 0.01) {
-      huntMicNoiseFloor = huntMicNoiseFloor * 0.98 + rms * 0.02;
+    if (rms < huntCryNoiseFloor + 0.01) {
+      huntCryNoiseFloor = huntCryNoiseFloor * 0.98 + rms * 0.02;
     }
 
-    const thresholdEl = document.getElementById('huntMicThreshold');
-
-    if (huntMicTemplate && huntMicRing.length === HUNT_MIC_TEMPLATE_LEN) {
-      const score = huntMicCompareToTemplate(huntMicRing, huntMicTemplate);
-      const threshold = 0.6 + ((100 - huntMicSensitivity) / 100) * 0.34;
+    const thresholdEl = document.getElementById('huntCryThreshold');
+    if (huntCryTemplate && huntCryRing.length === maxLen) {
+      const score = huntCryCompareToTemplate(huntCryRing, huntCryTemplate);
+      const threshold = 0.58 + ((100 - huntCrySensitivity) / 100) * 0.36;
       if (thresholdEl) thresholdEl.style.left = `${Math.min(100, threshold * 100)}%`;
-      const loudEnough = Math.max(...huntMicRing) > huntMicNoiseFloor + 0.02;
-      if (score > threshold && loudEnough && now > huntMicCooldownUntil) {
-        huntMicCooldownUntil = now + 2200;
-        huntMicTrigger();
-      }
-    } else {
-      const sensFactor = ((100 - huntMicSensitivity) / 100) * 0.35 + 0.025;
-      const threshold = huntMicNoiseFloor + sensFactor;
-      if (thresholdEl) thresholdEl.style.left = `${Math.min(100, threshold * 400)}%`;
-      if (rms > threshold && now > huntMicCooldownUntil) {
-        huntMicCooldownUntil = now + 900;
-        huntMicTrigger();
+      const loudEnough = Math.max(...huntCryRing) > huntCryNoiseFloor + 0.02;
+      if (score > threshold && loudEnough && now > huntCryCooldownUntil) {
+        huntCryCooldownUntil = now + Math.max(1200, maxLen * HUNT_CRY_FRAME_MS + 500);
+        huntCryTrigger();
       }
     }
   }
 
-  huntMicRAF = requestAnimationFrame(huntMicLoop);
+  huntCryRAF = requestAnimationFrame(huntCryLoop);
 }
 
-function huntMicCompareToTemplate(ring, template) {
+function huntCryCompareToTemplate(ring, template) {
   const n = template.length;
   const maxRing = Math.max(...ring, 1e-6);
   let dot = 0, na = 0, nb = 0;
@@ -4637,11 +4609,11 @@ function huntMicCompareToTemplate(ring, template) {
   return dot / (Math.sqrt(na) * Math.sqrt(nb));
 }
 
-function huntMicTrigger() {
-  setHuntMicStatus('Son détecté \u00b7 +1', true);
-  clearTimeout(huntMicTrigger._resetTimer);
-  huntMicTrigger._resetTimer = setTimeout(() => setHuntMicStatus('Écoute en cours…'), 1000);
-  const card = document.getElementById('huntMicCard');
+function huntCryTrigger() {
+  setHuntCryStatus('Cri détecté \u00b7 +1', true);
+  clearTimeout(huntCryTrigger._resetTimer);
+  huntCryTrigger._resetTimer = setTimeout(() => setHuntCryStatus('Écoute en cours\u2026'), 1000);
+  const card = document.getElementById('huntCryCard');
   if (card) {
     card.classList.remove('detect');
     void card.offsetWidth;
@@ -4651,58 +4623,24 @@ function huntMicTrigger() {
   tapHuntPlus();
 }
 
-function startHuntMicRecording() {
-  if (!huntMicActive || huntMicRecording) return;
-  huntMicRecording = true;
-  huntMicRecordBuffer = [];
-  huntMicRecordStartAt = performance.now();
-  const recordBtn = document.getElementById('huntMicRecordBtn');
-  if (recordBtn) recordBtn.disabled = true;
-  setHuntMicStatus('Enregistrement\u2026 1.8s');
-}
-
-function finishHuntMicRecording() {
-  huntMicRecording = false;
-  const recordBtn = document.getElementById('huntMicRecordBtn');
-  if (recordBtn) recordBtn.disabled = false;
-  const src = huntMicRecordBuffer;
-  if (src.length < 5) {
-    setHuntMicStatus('Trop court, réessaie');
-    return;
+function stopHuntCry() {
+  if (!huntCryActive && !huntCryStream) return;
+  huntCryActive = false;
+  if (huntCryRAF) cancelAnimationFrame(huntCryRAF);
+  huntCryRAF = null;
+  if (huntCryStream) {
+    huntCryStream.getTracks().forEach(t => t.stop());
+    huntCryStream = null;
   }
-  const resampled = [];
-  for (let i = 0; i < HUNT_MIC_TEMPLATE_LEN; i++) {
-    const srcIdx = Math.min(src.length - 1, Math.floor(i * src.length / HUNT_MIC_TEMPLATE_LEN));
-    resampled.push(src[srcIdx]);
+  if (huntCryAudioCtx) {
+    huntCryAudioCtx.close();
+    huntCryAudioCtx = null;
   }
-  const max = Math.max(...resampled, 1e-6);
-  huntMicTemplate = resampled.map(v => v / max);
-  try { localStorage.setItem('huntMicTemplate', JSON.stringify(huntMicTemplate)); } catch (_) {}
-  updateHuntMicTemplateUI();
-  setHuntMicStatus('Modèle enregistré \u2713');
-}
-
-function stopHuntMic() {
-  if (!huntMicActive && !huntMicStream) return;
-  huntMicActive = false;
-  huntMicRecording = false;
-  if (huntMicRAF) cancelAnimationFrame(huntMicRAF);
-  huntMicRAF = null;
-  if (huntMicStream) {
-    huntMicStream.getTracks().forEach(t => t.stop());
-    huntMicStream = null;
-  }
-  if (huntMicAudioCtx) {
-    huntMicAudioCtx.close();
-    huntMicAudioCtx = null;
-  }
-  huntMicAnalyser = null;
-  const toggleBtn = document.getElementById('huntMicToggle');
-  if (toggleBtn) { toggleBtn.textContent = 'Activer'; toggleBtn.classList.remove('on'); }
-  const recordBtn = document.getElementById('huntMicRecordBtn');
-  if (recordBtn) recordBtn.disabled = true;
-  setHuntMicStatus('Micro inactif');
-  const meterFill = document.getElementById('huntMicMeterFill');
+  huntCryAnalyser = null;
+  const toggleBtn = document.getElementById('huntCryToggle');
+  if (toggleBtn) { toggleBtn.textContent = "Activer l'écoute du cri"; toggleBtn.classList.remove('on'); }
+  setHuntCryStatus('Micro inactif');
+  const meterFill = document.getElementById('huntCryMeterFill');
   if (meterFill) meterFill.style.width = '0%';
 }
 
@@ -4725,6 +4663,7 @@ function markHuntFound() {
    MODAL
 ══════════════════════════════════════ */
 function openModal(id, options = {}) {
+  stopHuntCry();
   currentPokemon = id;
   initModalChoiceLists();
   const form = getRegionalFormById(id);
@@ -4791,7 +4730,7 @@ function closeModal(options = {}) {
   modal?.classList.remove('hunt-mode');
   document.getElementById('huntPanel')?.classList.remove('open');
   if (modal) modal.scrollTop = 0;
-  stopHuntMic();
+  stopHuntCry();
   currentPokemon = null;
   if (!options.skipHistory) updateAppHistory('push');
 }
@@ -4955,7 +4894,6 @@ function lockPortraitOrientation() {
 
 /* ══ START ══ */
 init();
-loadHuntMicTemplate();
 initSidebarSwipe();
 initPullToRefresh();
 initModalSwipe();
