@@ -1832,7 +1832,7 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   <div class="topbar-actions">
     <label class="topbar-search" aria-label="Rechercher un Pokémon" onclick="document.getElementById('searchInput')?.focus()">
       <span class="topbar-search-icon" aria-hidden="true"></span>
-      <input type="text" id="searchInput" placeholder="Rechercher" oninput="renderGrid()">
+      <input type="text" id="searchInput" placeholder="Rechercher" oninput="onSearchInput(this.value)">
     </label>
     <button class="hunt-tray-button" id="huntTrayButton" type="button" onclick="toggleHuntTray()" title="Ouvrir le suivi de shasse" aria-label="Ouvrir le suivi de shasse" aria-expanded="false">
       <span class="hunt-tray-pokeball" aria-hidden="true"></span>
@@ -3714,15 +3714,22 @@ const STATUS_FILTER_LABELS = {
   'method-dynamax': 'Expéditions Dynamax'
 };
 
+function onSearchInput(value) {
+  renderGrid();
+  if (value.trim().length === 1) {
+    requestAnimationFrame(() => {
+      document.getElementById('grid')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  }
+}
+
 function applyStatusFilter(mode) {
   currentStatusFilter = mode;
   closeStatsPopin();
   document.getElementById('searchInput').value = '';
   renderGrid();
   renderStatusFilterChip();
-  requestAnimationFrame(() => {
-    document.getElementById('grid')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  });
+  requestAnimationFrame(scrollMainToTop);
 }
 
 function clearStatusFilter() {
