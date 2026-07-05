@@ -1618,25 +1618,24 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   35%{opacity:1}
   to{transform:translateX(100%);opacity:0}
 }
-.hunt-methods{display:grid;grid-template-columns:repeat(auto-fit,minmax(92px,1fr));gap:8px;margin:0 0 .75rem}
-.hunt-method{
-  min-height:34px;padding:6px 7px;border-radius:9px;position:relative;
-  border:1px solid rgba(255,255,255,.1);
-  background:rgba(255,255,255,.045);color:rgba(255,255,255,.68);
-  font-family:var(--font);font-size:10px;font-weight:900;line-height:1.15;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
-  cursor:pointer;box-shadow:inset 0 1px 0 rgba(255,255,255,.045);
+.hunt-method-picker{
+  display:flex;align-items:center;gap:9px;margin:0 0 .75rem;padding:8px 12px;border-radius:12px;
+  border:1px solid rgba(125,211,252,.3);
+  background:linear-gradient(180deg,rgba(125,211,252,.14),rgba(125,211,252,.04)),#1b2430;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 6px 14px rgba(0,0,0,.16);
 }
-.hunt-method small{font-size:8px;color:rgba(255,255,255,.45);font-weight:800}
-.hunt-method.active{
-  color:#fff;background:linear-gradient(180deg,rgba(125,211,252,.2),rgba(125,211,252,.07)),#1b2430;
-  border-color:rgba(125,211,252,.55);box-shadow:inset 0 1px 0 rgba(255,255,255,.09),0 0 12px rgba(125,211,252,.18);
+.hunt-method-picker-icon{
+  width:8px;height:8px;border-radius:50%;flex:none;
+  background:#7dd3fc;box-shadow:0 0 7px rgba(125,211,252,.85);
 }
-.hunt-method.active::after{
-  content:'';position:absolute;top:5px;right:5px;width:5px;height:5px;border-radius:50%;
-  background:#7dd3fc;box-shadow:0 0 6px rgba(125,211,252,.85);
+.hunt-method-picker select{
+  flex:1;min-width:0;background:transparent;border:0;outline:none;cursor:pointer;
+  color:#fff;font-family:var(--font);font-size:12.5px;font-weight:800;
+  appearance:none;-webkit-appearance:none;
+  background-image:url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%237dd3fc'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right center;padding-right:18px;
 }
-.hunt-method.active small{color:#7dd3fc}
+.hunt-method-picker select option{color:#000}
 .hunt-odds{
   margin:0 0 .9rem;padding:9px;border-radius:var(--r);
   background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.014)),rgba(17,17,24,.5);
@@ -2130,7 +2129,7 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
           <small>continuer</small>
         </button>
       </div>
-      <div class="hunt-methods" id="huntMethods"></div>
+      <div class="hunt-method-picker" id="huntMethods"></div>
       <div class="hunt-odds" aria-live="polite">
         <div class="hunt-odds-top">
           <span class="hunt-odds-label" id="huntOddsLabel">Taux 1/512</span>
@@ -2504,11 +2503,19 @@ const HUNT_METHODS = {
   dynamax: { label: 'Expéditions Dynamax', shortLabel: 'Dynamax', odds: null, stats: 'countOnly' }
 };
 
+// Méthodes disponibles uniquement dans le menu déroulant du compteur,
+// volontairement exclues des statistiques (Masuda/Resets/Random/Dynamax).
+const EXTRA_HUNT_METHODS = {
+  fullodds: { label: 'Full Odds', shortLabel: 'Full Odds', odds: 4096 }
+};
+
+const ALL_HUNT_METHODS = { ...HUNT_METHODS, ...EXTRA_HUNT_METHODS };
+
 const STAT_HUNT_METHOD_IDS = Object.keys(HUNT_METHODS);
 const TRACKED_ENCOUNTER_METHOD_IDS = Object.keys(HUNT_METHODS).filter(id => HUNT_METHODS[id].stats !== 'countOnly');
 
 function normalizeHuntMethod(value) {
-  return HUNT_METHODS[value] ? value : 'masuda';
+  return ALL_HUNT_METHODS[value] ? value : 'masuda';
 }
 
 function isUnavailablePokemon(id) {
@@ -2552,7 +2559,7 @@ function getCurrentRegionScope() {
 function getHuntOddsMeta(id) {
   const p = progress[id] || {};
   const methodId = normalizeHuntMethod(p.huntMethod);
-  const method = HUNT_METHODS[methodId];
+  const method = ALL_HUNT_METHODS[methodId];
   if (!method.odds) return { methodId, odds: null, label: `${method.label} · info` };
   return { methodId, odds: method.odds, label: `${method.label} · 1/${method.odds}` };
 }
@@ -2931,7 +2938,7 @@ function updateHeaderHuntSprite() {
 
 function getHuntTrayMeta(item) {
   const p = progress[item.id] || {};
-  const method = HUNT_METHODS[normalizeHuntMethod(p.huntMethod)];
+  const method = ALL_HUNT_METHODS[normalizeHuntMethod(p.huntMethod)];
   const countValue = item.state === 'captured' ? (parseInt(p.encounters) || 0) : (parseInt(p.huntCount) || 0);
   const dateText = p.date ? ` · ${p.date}` : '';
   if (method.stats === 'countOnly') {
@@ -3814,7 +3821,7 @@ function getVisiblePokemonIds() {
 
 function getCardStatusHtml(p, isHuntingCard = false) {
   if (isHuntingCard) return '<span>En cours</span>';
-  const method = p.caught ? HUNT_METHODS[normalizeHuntMethod(p.huntMethod)] : null;
+  const method = p.caught ? ALL_HUNT_METHODS[normalizeHuntMethod(p.huntMethod)] : null;
   const methodHtml = method ? `<span class="status-method">${method.shortLabel}</span>` : '';
   if (p.caught && p.perfect) {
     return `<span class="status-perfect">Parfait</span>${methodHtml}`;
@@ -4401,12 +4408,15 @@ function renderHuntMethodSelector(methodId) {
   if (!holder) return;
   const active = normalizeHuntMethod(methodId);
   const methodSubLabel = method => method.odds ? `1/${method.odds}` : 'Info';
-  holder.innerHTML = Object.entries(HUNT_METHODS).map(([id, method]) => `
-    <button class="hunt-method ${id === active ? 'active' : ''}" type="button" onclick="setHuntMethod('${id}')" aria-pressed="${id === active}">
-      <span>${method.shortLabel}</span>
-      <small>${methodSubLabel(method)}</small>
-    </button>
-  `).join('');
+  const options = [...Object.entries(HUNT_METHODS), ...Object.entries(EXTRA_HUNT_METHODS)];
+  holder.innerHTML = `
+    <span class="hunt-method-picker-icon" aria-hidden="true"></span>
+    <select onchange="setHuntMethod(this.value)">
+      ${options.map(([id, method]) => `
+        <option value="${id}" ${id === active ? 'selected' : ''}>${method.shortLabel} · ${methodSubLabel(method)}</option>
+      `).join('')}
+    </select>
+  `;
 }
 
 function setHuntMethod(methodId) {
@@ -4846,7 +4856,7 @@ function exportJSON() {
       'Nombre de rencontres': p.encounters || '',
       'En cours':             p.hunting ? 'oui' : '',
       'Compteur en cours':    p.huntCount || '',
-      'Méthode':              p.huntMethod ? HUNT_METHODS[normalizeHuntMethod(p.huntMethod)].label : '',
+      'Méthode':              p.huntMethod ? ALL_HUNT_METHODS[normalizeHuntMethod(p.huntMethod)].label : '',
       'Date de capture':     p.date        || '',
       'Lien YouTube':        p.youtube     || '',
       'Contexte de capture': p.context     || '',
