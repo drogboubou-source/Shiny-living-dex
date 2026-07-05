@@ -1154,22 +1154,22 @@ body.hunt-tray-open .card:active{
 
 /* ── MODAL ── */
 .overlay{
-  position:fixed;inset:0;background:rgba(0,0,0,.84);
+  position:fixed;inset:0;background:rgba(0,0,0,.76);
   display:none;align-items:center;justify-content:center;
-  backdrop-filter:blur(7px);
+  backdrop-filter:blur(5px);
   z-index:200;padding:1rem;overflow:hidden;
 }
 .overlay.open{display:flex}
 .modal{
   background:
-    linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.02)),
-    radial-gradient(circle at 14% -8%,rgba(192,132,252,.14),transparent 34%),
-    #14141b;
-  border:1px solid rgba(255,255,255,.16);
-  border-radius:var(--r-lg);width:min(560px,calc(100vw - 2rem));max-width:calc(100vw - 2rem);
-  max-height:90vh;overflow-y:auto;overflow-x:hidden;padding:2rem;position:relative;
+    linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.018)),
+    radial-gradient(circle at 14% -8%,rgba(192,132,252,.16),transparent 34%),
+    #171720;
+  border:1px solid rgba(255,255,255,.13);
+  border-radius:var(--r-lg);width:min(500px,calc(100vw - 2rem));max-width:calc(100vw - 2rem);
+  max-height:90vh;overflow-y:auto;overflow-x:hidden;padding:1.75rem;position:relative;
   min-width:0;overscroll-behavior:contain;
-  box-shadow:0 32px 90px rgba(0,0,0,.7),inset 0 1px 0 rgba(255,255,255,.09);
+  box-shadow:0 28px 80px rgba(0,0,0,.64),inset 0 1px 0 rgba(255,255,255,.08);
 }
 .modal::before{
   content:'';position:absolute;left:0;right:0;top:0;height:3px;
@@ -1244,7 +1244,7 @@ body.hunt-tray-open .card:active{
   box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 0 0 1px rgba(192,132,252,.14),0 0 14px rgba(192,132,252,.2);
 }
 .caught-toggle input{width:16px;height:16px;cursor:pointer;accent-color:#c084fc;flex:none}
-.caught-toggle span{font-size:14px;font-weight:650;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.caught-toggle span{font-size:13px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .caught-toggle:has(input:checked) span{color:#c084fc}
 .shiny-perfect{
   display:flex;align-items:center;gap:9px;min-width:0;
@@ -1260,55 +1260,54 @@ body.hunt-tray-open .card:active{
   box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 0 0 1px rgba(212,175,55,.14),0 0 14px rgba(212,175,55,.2);
 }
 .shiny-perfect input{width:16px;height:16px;cursor:pointer;accent-color:#d4af37;flex:none}
-.shiny-perfect span{font-size:14px;font-weight:650;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.shiny-perfect span{font-size:13px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .shiny-perfect:has(input:checked) span{color:#d4af37}
 .form-section{
-  position:relative;margin-bottom:1.15rem;padding:15px 15px 5px;border-radius:var(--r);overflow:hidden;min-width:0;
+  position:relative;margin-bottom:1.15rem;padding:14px 14px 4px;border-radius:var(--r);overflow:hidden;min-width:0;
   background:
-    radial-gradient(circle at 14% -25%,rgba(125,211,252,.11),transparent 55%),
-    linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.01)),
-    rgba(255,255,255,.02);
-  border:1px solid rgba(255,255,255,.11);
+    radial-gradient(circle at 14% -25%,var(--section-glow,rgba(125,211,252,.09)),transparent 55%),
+    linear-gradient(180deg,rgba(255,255,255,.036),rgba(255,255,255,.008)),
+    rgba(255,255,255,.016);
+  border:1px solid var(--section-line,rgba(125,211,252,.16));
 }
 .form-section-title{
-  display:flex;align-items:center;gap:7px;font-size:11.5px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;
-  color:rgba(255,255,255,.78);margin-bottom:.95rem;
+  display:flex;align-items:center;gap:7px;font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;
+  color:rgba(255,255,255,.66);margin-bottom:.9rem;
 }
 .form-section-title::before{
   content:'';width:5px;height:5px;border-radius:50%;flex:none;
-  background:#7dd3fc;box-shadow:0 0 6px rgba(125,211,252,.75);
+  background:var(--section-dot,#7dd3fc);box-shadow:0 0 7px var(--section-dot,#7dd3fc);
 }
-.form-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:10px;min-width:0;align-items:end;margin-bottom:1.1rem}
+.form-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:10px;min-width:0;align-items:end;margin-bottom:1rem}
 .form-grid-2 .form-row{display:flex;flex-direction:column;margin-bottom:0}
 .form-grid-2 .form-row label{min-height:28px;display:flex;align-items:flex-end}
 hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
-.form-row{margin-bottom:1.1rem;min-width:0}
+.form-row{margin-bottom:1rem;min-width:0}
 .form-row:last-child{margin-bottom:0}
-.form-row label{display:block;font-size:12px;color:#a7a7ba;font-weight:700;margin-bottom:6px;text-transform:uppercase;letter-spacing:.045em}
+.form-row label{display:block;font-size:11px;color:#9a9ac4;margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px}
 .form-row input[type=text],.form-row input[type=date],.form-row input[type=url],.form-row select,.form-row textarea{
-  width:100%;min-width:0;padding:11px 13px;
-  background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.015)),var(--surface2);
-  border:1px solid rgba(255,255,255,.14);
+  width:100%;min-width:0;padding:9px 12px;
+  background:linear-gradient(160deg,rgba(192,132,252,.055),rgba(125,211,252,.035)),var(--surface2);
+  border:1px solid rgba(255,255,255,.1);
   border-radius:var(--r);color:var(--text);
-  font-family:var(--font);font-size:14.5px;outline:none;
+  font-family:var(--font);font-size:13px;outline:none;
   transition:border-color .16s ease,box-shadow .16s ease;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.05);
 }
 .form-row select{
   appearance:none;-webkit-appearance:none;cursor:pointer;
   background-image:
-    linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.015)),
+    linear-gradient(160deg,rgba(192,132,252,.055),rgba(125,211,252,.035)),
     url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%237dd3fc'/%3E%3C/svg%3E");
   background-color:var(--surface2);
   background-repeat:no-repeat,no-repeat;
-  background-position:0 0,right 13px center;
-  padding-right:32px;
+  background-position:0 0,right 12px center;
+  padding-right:30px;
 }
 .form-row input:focus,.form-row select:focus,.form-row textarea:focus{
-  border-color:rgba(125,211,252,.55);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 0 0 3px rgba(125,211,252,.16);
+  border-color:rgba(125,211,252,.5);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 0 0 3px rgba(125,211,252,.13);
 }
-.form-row input::placeholder,.form-row textarea::placeholder{color:rgba(232,232,240,.38)}
 .form-row textarea{resize:vertical;min-height:60px}
 .hunt-panel{
   display:none;margin:1.1rem 0 0;padding:1rem .9rem .9rem;border:1px solid rgba(125,211,252,.22);border-radius:var(--r);
@@ -1984,7 +1983,7 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
       </label>
     </div>
 
-    <div class="form-section">
+    <div class="form-section" style="--section-glow:rgba(192,132,252,.16);--section-line:rgba(192,132,252,.24);--section-dot:#c084fc">
       <div class="form-section-title">Détails de la capture</div>
       <div class="form-grid-2">
         <div class="form-row">
@@ -2078,7 +2077,7 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
       </div>
     </div>
 
-    <div class="form-section">
+    <div class="form-section" style="--section-glow:rgba(126,214,96,.16);--section-line:rgba(126,214,96,.24);--section-dot:#7ed660">
       <div class="form-section-title">Génétique &amp; apparence</div>
       <div class="form-row">
         <label>IVs parfaits</label>
