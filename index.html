@@ -1530,13 +1530,12 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   box-shadow:0 0 8px rgba(247,215,116,.85);
   animation:huntSparkleFly .55s ease-out forwards;
 }
-.hunt-digit-glyph{display:block;transform-origin:center 60%;will-change:transform}
-.hunt-digit-glyph.landed{animation:huntDigitLand .42s cubic-bezier(.34,1.56,.64,1)}
+.hunt-digit-glyph{display:block;transform-origin:center;will-change:transform}
+.hunt-digit-glyph.landed{animation:huntDigitLand .38s cubic-bezier(.34,1.56,.64,1)}
 @keyframes huntDigitLand{
-  0%{transform:scale(1,1);filter:drop-shadow(0 0 0 rgba(125,211,252,0))}
-  35%{transform:scale(1.1,.84);filter:drop-shadow(0 0 9px rgba(125,211,252,.85))}
-  65%{transform:scale(.95,1.06);filter:drop-shadow(0 0 4px rgba(125,211,252,.4))}
-  100%{transform:scale(1,1);filter:drop-shadow(0 0 0 rgba(125,211,252,0))}
+  0%{transform:scale(1)}
+  40%{transform:scale(1.14)}
+  100%{transform:scale(1)}
 }
 @keyframes huntTapShine{
   0%{background-position:150% 0}
