@@ -1557,8 +1557,20 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
     inset 0 1px 0 rgba(255,255,255,.16),inset 0 -1px 0 rgba(0,0,0,.32),
     0 14px 30px rgba(0,0,0,.3),0 0 0 1px rgba(125,211,252,.22),0 0 20px rgba(125,211,252,.26);
 }
-.hunt-plus-main:active,.hunt-plus-main.pulse{
-  transform:scale(.94) translateZ(0);border-color:rgba(125,211,252,.98);
+.hunt-plus-main:focus{outline:none}
+.hunt-plus-main:focus-visible{outline:2px solid rgba(125,211,252,.7);outline-offset:2px}
+.hunt-plus-main:active{transform:scale(.94) translateZ(0);border-color:rgba(125,211,252,.98)}
+.hunt-plus-main.pulse{
+  border-color:rgba(125,211,252,.98);
+  animation:huntPlusShake .26s ease-in-out;
+}
+@keyframes huntPlusShake{
+  0%{transform:scale(.94) translateZ(0) translateX(0)}
+  22%{transform:scale(.95) translateZ(0) translateX(-3px)}
+  44%{transform:scale(.96) translateZ(0) translateX(3px)}
+  66%{transform:scale(.98) translateZ(0) translateX(-2px)}
+  86%{transform:scale(.99) translateZ(0) translateX(1px)}
+  100%{transform:scale(1) translateZ(0) translateX(0)}
 }
 .hunt-plus-main.pulse::after{animation:huntTapRipple .3s ease-out}
 .hunt-plus-main small{display:block;margin-top:5px;color:rgba(255,255,255,.65);font-size:8px;font-weight:900;text-transform:uppercase;letter-spacing:.1em;position:relative;z-index:2}
@@ -4618,6 +4630,7 @@ function tapHuntPlus() {
   const button = document.getElementById('huntPlusMain');
   if (!button) return;
   try { navigator.vibrate?.(isMilestone ? [14, 30, 20] : 12); } catch (_) {}
+  button.blur();
   button.classList.remove('pulse');
   void button.offsetWidth;
   button.classList.add('pulse');
