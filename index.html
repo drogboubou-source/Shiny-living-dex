@@ -1371,31 +1371,37 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   content:'';position:absolute;inset:0;pointer-events:none;z-index:3;border-radius:inherit;
   background:linear-gradient(125deg,rgba(255,255,255,.22) 0%,transparent 38%);
 }
-.hunt-count-row{display:flex;align-items:center;height:100%;gap:1px}
+.hunt-count-row{display:flex;align-items:center;height:100%;gap:2px}
 .hunt-digit-col{
-  position:relative;overflow:hidden;height:var(--digit-h);width:.64em;flex:none;display:inline-block;
-  border-radius:3px;
+  position:relative;height:var(--digit-h);width:.64em;flex:none;display:inline-block;
+  border-radius:3px;perspective:240px;
   background:linear-gradient(180deg,rgba(255,255,255,.07) 0%,rgba(255,255,255,.01) 48%,rgba(0,0,0,.12) 52%,rgba(0,0,0,.22) 100%);
-  mask-image:linear-gradient(180deg,transparent,#000 18%,#000 82%,transparent);
-  -webkit-mask-image:linear-gradient(180deg,transparent,#000 18%,#000 82%,transparent);
 }
 .hunt-digit-col::before{
-  content:'';position:absolute;left:0;right:0;top:calc(50% - .5px);height:1px;z-index:2;pointer-events:none;
-  background:rgba(0,0,0,.45);box-shadow:0 1px 0 rgba(255,255,255,.07);
+  content:'';position:absolute;left:0;right:0;top:calc(50% - .5px);height:1px;z-index:3;pointer-events:none;
+  background:rgba(0,0,0,.5);box-shadow:0 1px 0 rgba(255,255,255,.08);
 }
 .hunt-digit-col::after{
-  content:'';position:absolute;inset:0;z-index:2;pointer-events:none;border-radius:3px;
+  content:'';position:absolute;inset:0;z-index:3;pointer-events:none;border-radius:3px;
   box-shadow:inset 1px 0 0 rgba(255,255,255,.05),inset -1px 0 0 rgba(0,0,0,.22);
 }
-.hunt-digit-strip{
-  display:flex;flex-direction:column;will-change:transform;
-  transition:transform .58s cubic-bezier(.16,1,.28,1);
+.flip-half{position:absolute;left:0;right:0;height:calc(var(--digit-h) / 2);overflow:hidden;z-index:1}
+.flip-half-top{top:0;border-radius:3px 3px 0 0}
+.flip-half-bottom{bottom:0;border-radius:0 0 3px 3px}
+.flip-glyph{
+  position:absolute;left:0;right:0;top:0;height:var(--digit-h);line-height:var(--digit-h);
+  text-align:center;color:#fff;font-weight:900;
 }
-.hunt-digit-strip.no-anim{transition:none!important}
-.hunt-digit-strip span{
-  height:var(--digit-h);line-height:var(--digit-h);display:block;text-align:center;
-  color:#fff;
+.flip-half-bottom .flip-glyph{top:calc(var(--digit-h) / -2)}
+.flip-flap{
+  position:absolute;left:0;right:0;top:0;height:calc(var(--digit-h) / 2);overflow:hidden;z-index:4;
+  transform-origin:bottom;backface-visibility:hidden;border-radius:3px 3px 0 0;
+  transform:rotateX(0deg);
+  background:linear-gradient(180deg,rgba(255,255,255,.05) 0%,transparent 60%,rgba(0,0,0,.16) 100%);
 }
+.flip-flap .flip-glyph{position:absolute;left:0;right:0;top:0;height:var(--digit-h);line-height:var(--digit-h);text-align:center;color:#fff;font-weight:900}
+.flip-flap.flipping{transition:transform .32s cubic-bezier(.5,0,.35,1)}
+.flip-flap.flip-hidden{visibility:hidden}
 .hunt-sep{display:inline-block;width:.32em;flex:none;text-align:center;color:rgba(159,225,255,.55);font-weight:900;transform:translateY(1px)}
 .hunt-cell-enter{animation:huntCellEnter .42s cubic-bezier(.16,1,.3,1)}
 .hunt-cell-exit{animation:huntCellExit .26s ease-in forwards}
@@ -4194,18 +4200,29 @@ function setHuntMethod(methodId) {
   renderGrid();
 }
 
+function buildFlipHalf(kind, value) {
+  const half = document.createElement('span');
+  half.className = 'flip-half flip-half-' + kind;
+  const glyph = document.createElement('span');
+  glyph.className = 'flip-glyph';
+  glyph.textContent = String(value);
+  half.appendChild(glyph);
+  return half;
+}
+
 function createHuntDigitCol(value) {
   const col = document.createElement('span');
   col.className = 'hunt-digit-col';
-  const strip = document.createElement('span');
-  strip.className = 'hunt-digit-strip no-anim';
-  let html = '';
-  for (let r = 0; r < 3; r++) for (let d = 0; d < 10; d++) html += `<span>${d}</span>`;
-  strip.innerHTML = html;
-  const startPos = 10 + value;
-  strip.dataset.pos = String(startPos);
-  strip.style.transform = `translateY(calc(var(--digit-h) * ${-startPos}))`;
-  col.appendChild(strip);
+  col.dataset.value = String(value);
+  col.appendChild(buildFlipHalf('top', value));
+  col.appendChild(buildFlipHalf('bottom', value));
+  const flap = document.createElement('span');
+  flap.className = 'flip-flap flip-hidden';
+  const flapGlyph = document.createElement('span');
+  flapGlyph.className = 'flip-glyph';
+  flapGlyph.textContent = String(value);
+  flap.appendChild(flapGlyph);
+  col.appendChild(flap);
   return col;
 }
 
@@ -4240,45 +4257,53 @@ function spawnDigitLandSparks(col) {
 }
 
 function updateHuntDigitCol(col, newValue, dir) {
-  const strip = col.querySelector('.hunt-digit-strip');
-  if (!strip) return;
-  const pos = parseInt(strip.dataset.pos, 10) || 10;
-  const curDigit = ((pos % 10) + 10) % 10;
+  const oldValue = parseInt(col.dataset.value, 10);
+  if (Number.isNaN(oldValue)) { col.dataset.value = String(newValue); }
+  const topGlyph = col.querySelector('.flip-half-top .flip-glyph');
+  const bottomGlyph = col.querySelector('.flip-half-bottom .flip-glyph');
+  const flap = col.querySelector('.flip-flap');
+  const flapGlyph = flap.querySelector('.flip-glyph');
+
   if (!dir) {
-    if (curDigit !== newValue) {
-      const newPos = 10 + newValue;
-      strip.classList.add('no-anim');
-      strip.style.transform = `translateY(calc(var(--digit-h) * ${-newPos}))`;
-      strip.dataset.pos = String(newPos);
-      void strip.offsetWidth;
-    }
+    col.dataset.value = String(newValue);
+    topGlyph.textContent = String(newValue);
+    bottomGlyph.textContent = String(newValue);
+    flapGlyph.textContent = String(newValue);
+    flap.classList.remove('flipping');
+    flap.classList.add('flip-hidden');
+    flap.style.transform = 'rotateX(0deg)';
     return;
   }
-  if (curDigit === newValue) return;
-  strip.classList.remove('no-anim');
-  const steps = dir > 0 ? (newValue - curDigit + 10) % 10 : -(((curDigit - newValue) + 10) % 10);
-  const newPos = pos + steps;
-  strip.style.transform = `translateY(calc(var(--digit-h) * ${-newPos}))`;
-  strip.dataset.pos = String(newPos);
-  const onLand = (e) => {
+  if (oldValue === newValue) return;
+
+  clearTimeout(col._flapTimer);
+  flap.classList.remove('flipping');
+  flap.style.transform = 'rotateX(0deg)';
+
+  flapGlyph.textContent = String(oldValue);
+  flap.classList.remove('flip-hidden');
+  void flap.offsetWidth;
+
+  col.dataset.value = String(newValue);
+  topGlyph.textContent = String(newValue);
+  bottomGlyph.textContent = String(newValue);
+
+  requestAnimationFrame(() => {
+    flap.classList.add('flipping');
+    flap.style.transform = 'rotateX(-100deg)';
+  });
+
+  const onDone = (e) => {
     if (e && e.propertyName && e.propertyName !== 'transform') return;
-    strip.removeEventListener('transitionend', onLand);
+    flap.removeEventListener('transitionend', onDone);
+    flap.classList.remove('flipping');
+    flap.classList.add('flip-hidden');
+    flap.style.transform = 'rotateX(0deg)';
+    flapGlyph.textContent = String(newValue);
     spawnDigitLandSparks(col);
   };
-  strip.addEventListener('transitionend', onLand);
-  clearTimeout(strip._normTimer);
-  strip._normTimer = setTimeout(() => {
-    const p = parseInt(strip.dataset.pos, 10) || 10;
-    const d = ((p % 10) + 10) % 10;
-    const target = 10 + d;
-    if (target !== p) {
-      strip.classList.add('no-anim');
-      strip.style.transform = `translateY(calc(var(--digit-h) * ${-target}))`;
-      strip.dataset.pos = String(target);
-      void strip.offsetWidth;
-      strip.classList.remove('no-anim');
-    }
-  }, 620);
+  flap.addEventListener('transitionend', onDone);
+  col._flapTimer = setTimeout(onDone, 340);
 }
 
 function setHuntCountDisplay(value, animate = false) {
