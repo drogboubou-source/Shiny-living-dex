@@ -3716,9 +3716,10 @@ const STATUS_FILTER_LABELS = {
 
 function onSearchInput(value) {
   renderGrid();
-  if (value.trim().length === 1) {
+  const trimmed = value.trim();
+  if (trimmed.length > 0) {
     requestAnimationFrame(() => {
-      document.getElementById('grid')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      document.getElementById('grid')?.scrollIntoView({ behavior: trimmed.length === 1 ? 'smooth' : 'auto', block: 'start' });
     });
   }
 }
