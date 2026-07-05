@@ -1374,7 +1374,7 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
 .hunt-count-row{display:flex;align-items:center;height:100%;gap:2px}
 .hunt-digit-col{
   position:relative;height:var(--digit-h);width:.64em;flex:none;display:inline-block;
-  border-radius:3px;perspective:240px;
+  border-radius:3px;perspective:160px;
   background:linear-gradient(180deg,rgba(255,255,255,.07) 0%,rgba(255,255,255,.01) 48%,rgba(0,0,0,.12) 52%,rgba(0,0,0,.22) 100%);
 }
 .hunt-digit-col::before{
@@ -1394,13 +1394,20 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
 }
 .flip-half-bottom .flip-glyph{top:calc(var(--digit-h) / -2)}
 .flip-flap{
-  position:absolute;left:0;right:0;top:0;height:calc(var(--digit-h) / 2);overflow:hidden;z-index:4;
-  transform-origin:bottom;backface-visibility:hidden;border-radius:3px 3px 0 0;
-  transform:rotateX(0deg);
-  background:linear-gradient(180deg,rgba(255,255,255,.05) 0%,transparent 60%,rgba(0,0,0,.16) 100%);
+  position:absolute;left:0;right:0;top:0;height:calc(var(--digit-h) / 2);z-index:4;
+  transform-origin:bottom;transform:rotateX(0deg) translateZ(0);will-change:transform;
 }
-.flip-flap .flip-glyph{position:absolute;left:0;right:0;top:0;height:var(--digit-h);line-height:var(--digit-h);text-align:center;color:#fff;font-weight:900}
-.flip-flap.flipping{transition:transform .32s cubic-bezier(.5,0,.35,1)}
+.flip-flap-face{
+  position:absolute;inset:0;overflow:hidden;border-radius:3px 3px 0 0;backface-visibility:hidden;
+  background:linear-gradient(180deg,rgba(255,255,255,.06) 0%,transparent 55%,rgba(0,0,0,.2) 100%);
+}
+.flip-flap-face .flip-glyph{position:absolute;left:0;right:0;top:0;height:var(--digit-h);line-height:var(--digit-h);text-align:center;color:#fff;font-weight:900}
+.flip-flap.flipping{animation:huntFlapFlip .34s cubic-bezier(.45,0,.4,1) forwards}
+@keyframes huntFlapFlip{
+  0%{transform:rotateX(0deg) translateZ(0);filter:drop-shadow(0 1px 2px rgba(0,0,0,.35))}
+  38%{transform:rotateX(-58deg) translateZ(7px);filter:drop-shadow(0 10px 11px rgba(0,0,0,.55))}
+  100%{transform:rotateX(-100deg) translateZ(0);filter:drop-shadow(0 2px 3px rgba(0,0,0,.15))}
+}
 .flip-flap.flip-hidden{visibility:hidden}
 .hunt-sep{display:inline-block;width:.32em;flex:none;text-align:center;color:rgba(159,225,255,.55);font-weight:900;transform:translateY(1px)}
 .hunt-cell-enter{animation:huntCellEnter .42s cubic-bezier(.16,1,.3,1)}
@@ -4218,10 +4225,13 @@ function createHuntDigitCol(value) {
   col.appendChild(buildFlipHalf('bottom', value));
   const flap = document.createElement('span');
   flap.className = 'flip-flap flip-hidden';
+  const face = document.createElement('span');
+  face.className = 'flip-flap-face';
   const flapGlyph = document.createElement('span');
   flapGlyph.className = 'flip-glyph';
   flapGlyph.textContent = String(value);
-  flap.appendChild(flapGlyph);
+  face.appendChild(flapGlyph);
+  flap.appendChild(face);
   col.appendChild(flap);
   return col;
 }
@@ -4271,14 +4281,13 @@ function updateHuntDigitCol(col, newValue, dir) {
     flapGlyph.textContent = String(newValue);
     flap.classList.remove('flipping');
     flap.classList.add('flip-hidden');
-    flap.style.transform = 'rotateX(0deg)';
     return;
   }
   if (oldValue === newValue) return;
 
   clearTimeout(col._flapTimer);
   flap.classList.remove('flipping');
-  flap.style.transform = 'rotateX(0deg)';
+  void flap.offsetWidth;
 
   flapGlyph.textContent = String(oldValue);
   flap.classList.remove('flip-hidden');
@@ -4290,20 +4299,17 @@ function updateHuntDigitCol(col, newValue, dir) {
 
   requestAnimationFrame(() => {
     flap.classList.add('flipping');
-    flap.style.transform = 'rotateX(-100deg)';
   });
 
-  const onDone = (e) => {
-    if (e && e.propertyName && e.propertyName !== 'transform') return;
-    flap.removeEventListener('transitionend', onDone);
+  const onDone = () => {
+    flap.removeEventListener('animationend', onDone);
     flap.classList.remove('flipping');
     flap.classList.add('flip-hidden');
-    flap.style.transform = 'rotateX(0deg)';
     flapGlyph.textContent = String(newValue);
     spawnDigitLandSparks(col);
   };
-  flap.addEventListener('transitionend', onDone);
-  col._flapTimer = setTimeout(onDone, 340);
+  flap.addEventListener('animationend', onDone);
+  col._flapTimer = setTimeout(onDone, 380);
 }
 
 function setHuntCountDisplay(value, animate = false) {
