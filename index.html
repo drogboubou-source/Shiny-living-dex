@@ -576,6 +576,7 @@ body.hunt-tray-open .card:active{
   .type-row{gap:3px;margin:1px 0 3px;padding:0}
   .type-pill,.type-pill img{width:40px;height:10px}
   .two-col{grid-template-columns:1fr}
+  .form-grid-2{grid-template-columns:1fr}
   .iv-grid{grid-template-columns:1fr 1fr}
   .modal{padding:1.35rem;max-height:92vh}
   .modal-hero{display:grid;grid-template-columns:1fr;justify-items:center;text-align:center;gap:.85rem}
@@ -1207,43 +1208,83 @@ body.hunt-tray-open .card:active{
   border:1px solid rgba(125,211,252,.28);cursor:pointer;
 }
 .regional-form-link.visible{display:inline-flex}
+.form-toggles-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:1.15rem;min-width:0}
 .caught-toggle{
-  display:flex;align-items:center;gap:10px;
+  display:flex;align-items:center;gap:9px;min-width:0;
   background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.014)),var(--surface2);
   border:1px solid rgba(255,255,255,.105);
-  border-radius:var(--r);padding:10px 14px;cursor:pointer;
-  transition:border-color .15s,background .15s;margin-bottom:1.25rem;
+  border-radius:var(--r);padding:10px 12px;cursor:pointer;
+  transition:border-color .16s ease,background .16s ease,transform .16s cubic-bezier(.34,1.56,.64,1),box-shadow .16s ease;
   box-shadow:inset 0 1px 0 rgba(255,255,255,.055);
 }
-.caught-toggle:has(input:checked){border-color:#c084fc;background:#1b102c}
-.caught-toggle input{width:16px;height:16px;cursor:pointer;accent-color:#c084fc}
-.caught-toggle span{font-size:14px;font-weight:500}
+.caught-toggle:hover{transform:translateY(-1px)}
+.caught-toggle:has(input:checked){
+  border-color:#c084fc;background:linear-gradient(180deg,rgba(192,132,252,.2),rgba(192,132,252,.05)),#1b102c;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 0 0 1px rgba(192,132,252,.14),0 0 14px rgba(192,132,252,.2);
+}
+.caught-toggle input{width:16px;height:16px;cursor:pointer;accent-color:#c084fc;flex:none}
+.caught-toggle span{font-size:13px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .caught-toggle:has(input:checked) span{color:#c084fc}
 .shiny-perfect{
-  display:flex;align-items:center;gap:10px;
+  display:flex;align-items:center;gap:9px;min-width:0;
   background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.014)),var(--surface2);
   border:1px solid rgba(255,255,255,.105);
-  border-radius:var(--r);padding:10px 14px;cursor:pointer;
-  transition:border-color .15s,background .15s;margin-bottom:1.25rem;
+  border-radius:var(--r);padding:10px 12px;cursor:pointer;
+  transition:border-color .16s ease,background .16s ease,transform .16s cubic-bezier(.34,1.56,.64,1),box-shadow .16s ease;
   box-shadow:inset 0 1px 0 rgba(255,255,255,.055);
 }
-.shiny-perfect:has(input:checked){border-color:#d4af37;background:#211803}
-.shiny-perfect input{width:16px;height:16px;cursor:pointer;accent-color:#d4af37}
-.shiny-perfect span{font-size:14px;font-weight:500}
+.shiny-perfect:hover{transform:translateY(-1px)}
+.shiny-perfect:has(input:checked){
+  border-color:#d4af37;background:linear-gradient(180deg,rgba(212,175,55,.2),rgba(212,175,55,.05)),#211803;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 0 0 1px rgba(212,175,55,.14),0 0 14px rgba(212,175,55,.2);
+}
+.shiny-perfect input{width:16px;height:16px;cursor:pointer;accent-color:#d4af37;flex:none}
+.shiny-perfect span{font-size:13px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .shiny-perfect:has(input:checked) span{color:#d4af37}
+.form-section{
+  position:relative;margin-bottom:1.15rem;padding:14px 14px 4px;border-radius:var(--r);overflow:hidden;min-width:0;
+  background:
+    radial-gradient(circle at 14% -25%,rgba(125,211,252,.09),transparent 55%),
+    linear-gradient(180deg,rgba(255,255,255,.032),rgba(255,255,255,.006)),
+    rgba(255,255,255,.014);
+  border:1px solid rgba(255,255,255,.075);
+}
+.form-section-title{
+  display:flex;align-items:center;gap:7px;font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;
+  color:rgba(255,255,255,.58);margin-bottom:.9rem;
+}
+.form-section-title::before{
+  content:'';width:5px;height:5px;border-radius:50%;flex:none;
+  background:#7dd3fc;box-shadow:0 0 6px rgba(125,211,252,.75);
+}
+.form-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:10px;min-width:0}
 hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
 .form-row{margin-bottom:1rem;min-width:0}
+.form-row:last-child{margin-bottom:0}
 .form-row label{display:block;font-size:11px;color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px}
-.form-row input[type=text],.form-row input[type=date],.form-row input[type=url],.form-row textarea{
-  width:100%;min-width:0;padding:8px 12px;
-  background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.012)),var(--surface2);
-  border:1px solid rgba(255,255,255,.095);
+.form-row input[type=text],.form-row input[type=date],.form-row input[type=url],.form-row select,.form-row textarea{
+  width:100%;min-width:0;padding:9px 12px;
+  background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.012)),var(--surface2);
+  border:1px solid rgba(255,255,255,.1);
   border-radius:var(--r);color:var(--text);
   font-family:var(--font);font-size:13px;outline:none;
-  transition:border-color .15s;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.045);
+  transition:border-color .16s ease,box-shadow .16s ease;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.05);
 }
-.form-row input:focus,.form-row textarea:focus{border-color:rgba(255,255,255,.22)}
+.form-row select{
+  appearance:none;-webkit-appearance:none;cursor:pointer;
+  background-image:
+    linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.012)),
+    url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%237dd3fc'/%3E%3C/svg%3E");
+  background-color:var(--surface2);
+  background-repeat:no-repeat,no-repeat;
+  background-position:0 0,right 12px center;
+  padding-right:30px;
+}
+.form-row input:focus,.form-row select:focus,.form-row textarea:focus{
+  border-color:rgba(125,211,252,.5);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 0 0 3px rgba(125,211,252,.13);
+}
 .form-row textarea{resize:vertical;min-height:60px}
 .hunt-panel{
   display:none;margin:1.1rem 0 0;padding:1rem .9rem .9rem;border:1px solid rgba(125,211,252,.22);border-radius:var(--r);
@@ -1631,13 +1672,15 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:10px;min-width:0;
 }
 .capture-details.single{grid-template-columns:1fr}
-.capture-details.capture-final{margin-top:.9rem;gap:9px}
+.capture-details.capture-final{margin-top:.7rem;gap:9px}
 .capture-control{
   display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:9px;
   min-width:0;padding:8px;border-radius:var(--r);
   background:linear-gradient(180deg,rgba(255,255,255,.065),rgba(255,255,255,.016)),rgba(34,34,48,.92);
   border:1px solid rgba(255,255,255,.11);box-shadow:inset 0 1px 0 rgba(255,255,255,.055),0 7px 16px rgba(0,0,0,.12);
+  transition:border-color .16s ease,box-shadow .16s ease;
 }
+.capture-control:has(select:focus){border-color:rgba(125,211,252,.5);box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 7px 16px rgba(0,0,0,.14),0 0 0 3px rgba(125,211,252,.12)}
 .capture-control.nature{grid-template-columns:minmax(0,1fr)}
 .ball-preview{
   position:relative;width:42px;height:42px;display:grid;place-items:center;flex:0 0 auto;
@@ -1661,21 +1704,25 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
 .capture-control select{
   width:100%;min-width:0;height:28px;padding:4px 0;
   background:transparent;border:0;color:var(--text);font-family:var(--font);font-size:13px;font-weight:800;
-  outline:none;box-shadow:none;
+  outline:none;box-shadow:none;cursor:pointer;
 }
 .capture-control select:focus{outline:none}
-.iv-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;min-width:0}
+.iv-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;min-width:0}
 .iv-item{
-  display:flex;align-items:center;gap:8px;
+  display:flex;align-items:center;justify-content:center;gap:6px;
   background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.012)),var(--surface2);
   border:1px solid rgba(255,255,255,.095);
-  border-radius:var(--r);padding:7px 10px;
-  font-size:13px;cursor:pointer;transition:border-color .15s,background .15s;
+  border-radius:10px;padding:8px 6px;
+  font-size:12.5px;font-weight:700;cursor:pointer;transition:border-color .16s ease,background .16s ease,transform .16s cubic-bezier(.34,1.56,.64,1),box-shadow .16s ease;
   min-width:0;overflow-wrap:anywhere;
   box-shadow:inset 0 1px 0 rgba(255,255,255,.04);
 }
-.iv-item:has(input:checked){border-color:#3a7d2a;background:#0d2010;color:#7ed660}
-.iv-item input{width:14px;height:14px;cursor:pointer;accent-color:#5ab840}
+.iv-item:hover{transform:translateY(-1px)}
+.iv-item:has(input:checked){
+  border-color:#3a7d2a;background:linear-gradient(180deg,rgba(90,184,64,.2),rgba(90,184,64,.05)),#0d2010;color:#8bea70;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 0 10px rgba(90,184,64,.2);
+}
+.iv-item input{width:14px;height:14px;cursor:pointer;accent-color:#5ab840;flex:none}
 .modal-footer{display:flex;gap:8px;justify-content:flex-end;margin-top:1.5rem;min-width:0}
 .btn-save{
   font-family:var(--font);font-size:13px;font-weight:600;
@@ -1898,130 +1945,141 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
     </div>
 
     <div class="modal-form-fields" id="modalFormFields">
-    <label class="caught-toggle">
-      <input type="checkbox" id="fCaught">
-      <span>✦ Shiny capturé !</span>
-    </label>
-    <label class="shiny-perfect">
-      <input type="checkbox" id="fPerfect">
-      <span>⬡ Shiny parfait</span>
-    </label>
-
-    <div class="form-row">
-      <label>Surnom</label>
-      <input type="text" id="fNickname" placeholder="Aucun surnom">
-    </div>
-    <div class="form-row">
-      <label>Nombre de rencontres</label>
-      <input type="text" id="fEncounters" placeholder="ex: 849">
-    </div>
-    <div class="form-row">
-      <label>Date de capture</label>
-      <input type="date" id="fDate">
-    </div>
-    <div class="form-row">
-      <label>Jeu</label>
-      <select id="fGame" onchange="updateLocationField()">
-        <option value="">Non renseigné</option>
-        <optgroup label="Génération 8">
-          <option value="epee">Épée</option>
-          <option value="bouclier">Bouclier</option>
-          <option value="diamant-etincelant">Diamant Étincelant</option>
-          <option value="perle-scintillante">Perle Scintillante</option>
-          <option value="legendes-arceus">Légendes Pokémon : Arceus</option>
-        </optgroup>
-        <optgroup label="Génération 9">
-          <option value="ecarlate">Écarlate</option>
-          <option value="violet">Violet</option>
-        </optgroup>
-        <optgroup label="Génération 7">
-          <option value="soleil">Soleil</option>
-          <option value="lune">Lune</option>
-          <option value="ultra-soleil">Ultra-Soleil</option>
-          <option value="ultra-lune">Ultra-Lune</option>
-        </optgroup>
-        <optgroup label="Génération 6">
-          <option value="x">X</option>
-          <option value="y">Y</option>
-          <option value="rubis-omega">Rubis Oméga</option>
-          <option value="saphir-alpha">Saphir Alpha</option>
-        </optgroup>
-        <optgroup label="Génération 5">
-          <option value="noir">Noir</option>
-          <option value="blanc">Blanc</option>
-          <option value="noir-2">Noir 2</option>
-          <option value="blanc-2">Blanc 2</option>
-        </optgroup>
-        <optgroup label="Génération 4">
-          <option value="diamant">Diamant</option>
-          <option value="perle">Perle</option>
-          <option value="platine">Platine</option>
-          <option value="heartgold">Or HeartGold</option>
-          <option value="soulsilver">Argent SoulSilver</option>
-        </optgroup>
-        <optgroup label="Génération 3">
-          <option value="rubis">Rubis</option>
-          <option value="saphir">Saphir</option>
-          <option value="emeraude">Émeraude</option>
-          <option value="rouge-feu">Rouge Feu</option>
-          <option value="vert-feuille">Vert Feuille</option>
-        </optgroup>
-        <optgroup label="Génération 2">
-          <option value="or">Or</option>
-          <option value="argent">Argent</option>
-          <option value="cristal">Cristal</option>
-        </optgroup>
-        <optgroup label="Génération 1">
-          <option value="rouge">Rouge</option>
-          <option value="bleu">Bleu</option>
-          <option value="jaune">Jaune</option>
-        </optgroup>
-      </select>
-    </div>
-    <div class="form-row" id="fLocationRow">
-      <label>Lieu de capture</label>
-      <select id="fLocationSelect" style="display:none">
-        <option value="">Non renseigné</option>
-      </select>
-      <input type="text" id="fLocationText" placeholder="ex: Route 3">
-    </div>
-    <div class="form-row">
-      <label>Contexte de capture</label>
-      <input type="text" id="fContext" placeholder="ex: Stream Bruce">
-    </div>
-    <div class="form-row">
-      <label>Lien YouTube</label>
-      <input type="url" id="fYoutube" placeholder="https://youtu.be/...">
+    <div class="form-toggles-row">
+      <label class="caught-toggle">
+        <input type="checkbox" id="fCaught">
+        <span>✦ Shiny capturé !</span>
+      </label>
+      <label class="shiny-perfect">
+        <input type="checkbox" id="fPerfect">
+        <span>⬡ Shiny parfait</span>
+      </label>
     </div>
 
-    <hr class="div">
-    <div class="form-row">
-      <label>IVs parfaits</label>
-      <div class="iv-grid">
-        <label class="iv-item"><input type="checkbox" id="ivHP"> PV</label>
-        <label class="iv-item"><input type="checkbox" id="ivAtk"> Atq</label>
-        <label class="iv-item"><input type="checkbox" id="ivDef"> Déf</label>
-        <label class="iv-item"><input type="checkbox" id="ivSpa"> Atq Spé</label>
-        <label class="iv-item"><input type="checkbox" id="ivSpd"> Déf Spé</label>
-        <label class="iv-item"><input type="checkbox" id="ivSpe"> Vitesse</label>
+    <div class="form-section">
+      <div class="form-section-title">Détails de la capture</div>
+      <div class="form-grid-2">
+        <div class="form-row">
+          <label>Surnom</label>
+          <input type="text" id="fNickname" placeholder="Aucun surnom">
+        </div>
+        <div class="form-row">
+          <label>Nombre de rencontres</label>
+          <input type="text" id="fEncounters" placeholder="ex: 849">
+        </div>
+      </div>
+      <div class="form-grid-2">
+        <div class="form-row">
+          <label>Date de capture</label>
+          <input type="date" id="fDate">
+        </div>
+        <div class="form-row">
+          <label>Jeu</label>
+          <select id="fGame" onchange="updateLocationField()">
+            <option value="">Non renseigné</option>
+            <optgroup label="Génération 8">
+              <option value="epee">Épée</option>
+              <option value="bouclier">Bouclier</option>
+              <option value="diamant-etincelant">Diamant Étincelant</option>
+              <option value="perle-scintillante">Perle Scintillante</option>
+              <option value="legendes-arceus">Légendes Pokémon : Arceus</option>
+            </optgroup>
+            <optgroup label="Génération 9">
+              <option value="ecarlate">Écarlate</option>
+              <option value="violet">Violet</option>
+            </optgroup>
+            <optgroup label="Génération 7">
+              <option value="soleil">Soleil</option>
+              <option value="lune">Lune</option>
+              <option value="ultra-soleil">Ultra-Soleil</option>
+              <option value="ultra-lune">Ultra-Lune</option>
+            </optgroup>
+            <optgroup label="Génération 6">
+              <option value="x">X</option>
+              <option value="y">Y</option>
+              <option value="rubis-omega">Rubis Oméga</option>
+              <option value="saphir-alpha">Saphir Alpha</option>
+            </optgroup>
+            <optgroup label="Génération 5">
+              <option value="noir">Noir</option>
+              <option value="blanc">Blanc</option>
+              <option value="noir-2">Noir 2</option>
+              <option value="blanc-2">Blanc 2</option>
+            </optgroup>
+            <optgroup label="Génération 4">
+              <option value="diamant">Diamant</option>
+              <option value="perle">Perle</option>
+              <option value="platine">Platine</option>
+              <option value="heartgold">Or HeartGold</option>
+              <option value="soulsilver">Argent SoulSilver</option>
+            </optgroup>
+            <optgroup label="Génération 3">
+              <option value="rubis">Rubis</option>
+              <option value="saphir">Saphir</option>
+              <option value="emeraude">Émeraude</option>
+              <option value="rouge-feu">Rouge Feu</option>
+              <option value="vert-feuille">Vert Feuille</option>
+            </optgroup>
+            <optgroup label="Génération 2">
+              <option value="or">Or</option>
+              <option value="argent">Argent</option>
+              <option value="cristal">Cristal</option>
+            </optgroup>
+            <optgroup label="Génération 1">
+              <option value="rouge">Rouge</option>
+              <option value="bleu">Bleu</option>
+              <option value="jaune">Jaune</option>
+            </optgroup>
+          </select>
+        </div>
+      </div>
+      <div class="form-row" id="fLocationRow">
+        <label>Lieu de capture</label>
+        <select id="fLocationSelect" style="display:none">
+          <option value="">Non renseigné</option>
+        </select>
+        <input type="text" id="fLocationText" placeholder="ex: Route 3">
+      </div>
+      <div class="form-row">
+        <label>Contexte de capture</label>
+        <input type="text" id="fContext" placeholder="ex: Stream Bruce">
+      </div>
+      <div class="form-row">
+        <label>Lien YouTube</label>
+        <input type="url" id="fYoutube" placeholder="https://youtu.be/...">
       </div>
     </div>
 
-    <div class="capture-details single capture-final">
-      <div class="capture-control nature">
-        <span class="capture-select-stack">
-          <span class="capture-kicker">Nature</span>
-          <select id="fNature"></select>
-        </span>
+    <div class="form-section">
+      <div class="form-section-title">Génétique &amp; apparence</div>
+      <div class="form-row">
+        <label>IVs parfaits</label>
+        <div class="iv-grid">
+          <label class="iv-item"><input type="checkbox" id="ivHP"> PV</label>
+          <label class="iv-item"><input type="checkbox" id="ivAtk"> Atq</label>
+          <label class="iv-item"><input type="checkbox" id="ivDef"> Déf</label>
+          <label class="iv-item"><input type="checkbox" id="ivSpa"> Atq Spé</label>
+          <label class="iv-item"><input type="checkbox" id="ivSpd"> Déf Spé</label>
+          <label class="iv-item"><input type="checkbox" id="ivSpe"> Vitesse</label>
+        </div>
       </div>
-    </div>
-    <div class="capture-details single capture-final">
-      <div class="capture-control">
-        <span class="ball-preview"><img id="fPokeballPreview" src="" alt=""></span>
-        <span class="capture-select-stack">
-          <span class="capture-kicker">Pokéball</span>
-          <select id="fPokeball" onchange="updatePokeballPreview()"></select>
-        </span>
+
+      <div class="capture-details single capture-final">
+        <div class="capture-control nature">
+          <span class="capture-select-stack">
+            <span class="capture-kicker">Nature</span>
+            <select id="fNature"></select>
+          </span>
+        </div>
+      </div>
+      <div class="capture-details single capture-final">
+        <div class="capture-control">
+          <span class="ball-preview"><img id="fPokeballPreview" src="" alt=""></span>
+          <span class="capture-select-stack">
+            <span class="capture-kicker">Pokéball</span>
+            <select id="fPokeball" onchange="updatePokeballPreview()"></select>
+          </span>
+        </div>
       </div>
     </div>
     </div>
