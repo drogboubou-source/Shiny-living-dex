@@ -218,6 +218,9 @@ body.readonly-share .modal-form-fields select{pointer-events:none}
   display:flex;align-items:center;gap:6px;
 }
 .tstat strong{color:var(--text);font-size:14px}
+.clickable-stat{cursor:pointer;transition:border-color .16s ease,transform .16s cubic-bezier(.34,1.56,.64,1),background .16s ease}
+.clickable-stat:hover{border-color:rgba(125,211,252,.5);transform:translateY(-1px)}
+.clickable-stat:active{transform:translateY(0) scale(.97)}
 .topbar-btns{display:flex;gap:6px;flex-shrink:0}
 .stats-popin{
   position:fixed;top:calc(var(--header-h) + 10px);left:1.25rem;
@@ -767,6 +770,24 @@ body.hunt-tray-open .card:active{
   min-height:38px;height:38px;padding:9px 12px;border-radius:var(--r);
   background:rgba(212,175,55,.08);border:1px solid rgba(212,175,55,.32);
   color:#d4af37;font-family:var(--font);font-size:13px;font-weight:800;white-space:nowrap;cursor:pointer;
+}
+.status-filter-chip{
+  display:flex;align-items:center;gap:8px;min-height:38px;height:38px;padding:0 8px 0 13px;border-radius:var(--r);
+  background:linear-gradient(180deg,rgba(125,211,252,.2),rgba(125,211,252,.06)),#16202b;
+  border:1px solid rgba(125,211,252,.5);color:#eafaff;font-family:var(--font);font-size:12px;font-weight:800;
+  white-space:nowrap;cursor:pointer;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.1),0 7px 16px rgba(0,0,0,.16);
+  transition:border-color .16s ease,transform .16s cubic-bezier(.34,1.56,.64,1);
+  animation:statusChipIn .22s cubic-bezier(.34,1.56,.64,1);
+}
+.status-filter-chip:hover{border-color:rgba(125,211,252,.8);transform:translateY(-1px)}
+.status-filter-chip span:last-child{
+  display:grid;place-items:center;width:18px;height:18px;border-radius:50%;flex:none;
+  background:rgba(255,255,255,.08);color:#eafaff;font-size:10px;
+}
+@keyframes statusChipIn{
+  0%{opacity:0;transform:scale(.85)}
+  100%{opacity:1;transform:scale(1)}
 }
 .perfect-summary{
   background:linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.022)),#1b1b25;
@@ -1910,6 +1931,10 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
       </label>
       <button class="counter-button edit-only" id="counterButton" type="button" onclick="toggleCounterMode()" onpointerup="this.blur()" ontouchend="this.blur()"></button>
       <button class="perfect-summary" id="perfectSummary" type="button" onclick="toggleSpriteMode()" onpointerup="this.blur()" ontouchend="this.blur()"></button>
+      <button class="status-filter-chip" id="statusFilterChip" type="button" onclick="clearStatusFilter()" style="display:none">
+        <span id="statusFilterChipLabel"></span>
+        <span aria-hidden="true">✕</span>
+      </button>
     </div>
     <div class="grid" id="grid"></div>
     <div class="scroll-end" aria-hidden="true"></div>
@@ -2279,6 +2304,7 @@ let sidebarOpen = false;
 let spriteMode = 'pixel';
 let counterMode = false;
 let currentGameFilter = '';
+let currentStatusFilter = 'all';
 let restoringHistory = false;
 let suppressCardActivationUntil = 0;
 let huntTrayOpen = false;
@@ -3016,8 +3042,8 @@ function renderStats() {
     scopeLabel.style.color = scope.color;
   }
   document.getElementById('statsBar').innerHTML = `
-    <div class="tstat"><strong style="color:#7ed660">${stats.caught}/${stats.total}</strong> Shinys</div>
-    <div class="tstat"><strong style="color:#d4af37">${stats.perfect}</strong> ${perfectLabel(stats.perfect)}</div>
+    <div class="tstat clickable-stat" role="button" tabindex="0" onclick="applyStatusFilter('caught')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();applyStatusFilter('caught')}"><strong style="color:#7ed660">${stats.caught}/${stats.total}</strong> Shinys</div>
+    <div class="tstat clickable-stat" role="button" tabindex="0" onclick="applyStatusFilter('perfect')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();applyStatusFilter('perfect')}"><strong style="color:#d4af37">${stats.perfect}</strong> ${perfectLabel(stats.perfect)}</div>
     <div class="tstat"><strong>${stats.totalEncountersText}</strong> Méthodes</div>
     <div class="tstat"><strong>${stats.avgEncountersText}</strong> Moy. méthodes</div>
   `;
@@ -3027,9 +3053,9 @@ function renderStats() {
       <div class="stats-section-title">Progression</div>
       <div class="stats-highlight-grid">
         <div class="stats-highlight shiny"><span>Compl&eacute;tion</span><strong>${stats.caughtPercentText}</strong></div>
-        <div class="stats-highlight caught"><span>Shinys captur&eacute;s</span><strong>${stats.caught}<small>/ ${stats.total}</small></strong></div>
-        <div class="stats-highlight missing"><span>Shinys manquants</span><strong>${stats.missing}</strong></div>
-        <div class="stats-highlight perfect"><span>${perfectLabel(stats.perfect)}</span><strong>${stats.perfect}</strong></div>
+        <div class="stats-highlight caught clickable-stat" role="button" tabindex="0" onclick="applyStatusFilter('caught')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();applyStatusFilter('caught')}"><span>Shinys captur&eacute;s</span><strong>${stats.caught}<small>/ ${stats.total}</small></strong></div>
+        <div class="stats-highlight missing clickable-stat" role="button" tabindex="0" onclick="applyStatusFilter('missing')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();applyStatusFilter('missing')}"><span>Shinys manquants</span><strong>${stats.missing}</strong></div>
+        <div class="stats-highlight perfect clickable-stat" role="button" tabindex="0" onclick="applyStatusFilter('perfect')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();applyStatusFilter('perfect')}"><span>${perfectLabel(stats.perfect)}</span><strong>${stats.perfect}</strong></div>
       </div>
     </div>
     <div class="stats-section" style="--stats-accent:#7dd3fc">
@@ -3042,25 +3068,25 @@ function renderStats() {
     <div class="stats-section" style="--stats-accent:#7ed660">
       <div class="stats-section-title">M&eacute;thodes de shasse</div>
       <div class="stats-method-grid">
-        <div class="stats-method" style="--method-accent:#00ff9c">
+        <div class="stats-method clickable-stat" role="button" tabindex="0" style="--method-accent:#00ff9c" onclick="applyStatusFilter('method-masuda')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();applyStatusFilter('method-masuda')}">
           <div class="stats-method-name">Masuda</div>
           <div class="stats-method-metric"><strong>${masudaStats.caught}</strong><span>Shinys</span></div>
           <div class="stats-method-metric"><strong>${masudaStats.totalEncountersText}</strong><span>Total</span></div>
           <div class="stats-method-metric"><strong>${masudaStats.avgEncountersText}</strong><span>Moyenne</span></div>
         </div>
-        <div class="stats-method" style="--method-accent:#ff00c8">
+        <div class="stats-method clickable-stat" role="button" tabindex="0" style="--method-accent:#ff00c8" onclick="applyStatusFilter('method-resets')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();applyStatusFilter('method-resets')}">
           <div class="stats-method-name">Resets</div>
           <div class="stats-method-metric"><strong>${resetStats.caught}</strong><span>Shinys</span></div>
           <div class="stats-method-metric"><strong>${resetStats.totalEncountersText}</strong><span>Total</span></div>
           <div class="stats-method-metric"><strong>${resetStats.avgEncountersText}</strong><span>Moyenne</span></div>
         </div>
-        <div class="stats-method" style="--method-accent:#d6ff00">
+        <div class="stats-method clickable-stat" role="button" tabindex="0" style="--method-accent:#d6ff00" onclick="applyStatusFilter('method-random')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();applyStatusFilter('method-random')}">
           <div class="stats-method-name">Random Encounters</div>
           <div class="stats-method-metric"><strong>${randomStats.caught}</strong><span>Shinys</span></div>
           <div class="stats-method-metric"><strong>${randomStats.totalEncountersText}</strong><span>Total</span></div>
           <div class="stats-method-metric"><strong>${randomStats.avgEncountersText}</strong><span>Moyenne</span></div>
         </div>
-        <div class="stats-method count-only" style="--method-accent:#6366f1">
+        <div class="stats-method count-only clickable-stat" role="button" tabindex="0" style="--method-accent:#6366f1" onclick="applyStatusFilter('method-dynamax')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();applyStatusFilter('method-dynamax')}">
           <div class="stats-method-name">Exp&eacute;ditions Dynamax</div>
           <div class="stats-method-count-pill"><strong>${dynamaxStats.caught}</strong><span>Shinys</span></div>
         </div>
@@ -3081,9 +3107,9 @@ function renderRegionStatsPanel(stats, color) {
   return `
     <div class="region-stat-row primary">
       <div class="region-stat-main">
-        <div class="region-stat"><strong>${stats.caught}<small>/ ${stats.total}</small></strong><span>Capturés</span></div>
-        <div class="region-stat missing"><strong>${stats.missing}</strong><span>Manquants</span></div>
-        <div class="region-stat perfect"><strong>${stats.perfect}</strong><span>${perfectLabel(stats.perfect)}</span></div>
+        <div class="region-stat clickable-stat" role="button" tabindex="0" onclick="applyStatusFilter('caught')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();applyStatusFilter('caught')}"><strong>${stats.caught}<small>/ ${stats.total}</small></strong><span>Capturés</span></div>
+        <div class="region-stat missing clickable-stat" role="button" tabindex="0" onclick="applyStatusFilter('missing')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();applyStatusFilter('missing')}"><strong>${stats.missing}</strong><span>Manquants</span></div>
+        <div class="region-stat perfect clickable-stat" role="button" tabindex="0" onclick="applyStatusFilter('perfect')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();applyStatusFilter('perfect')}"><strong>${stats.perfect}</strong><span>${perfectLabel(stats.perfect)}</span></div>
         <div class="region-stat completion"><strong>${stats.caughtPercentText}</strong><span>Complété</span></div>
       </div>
       <div class="progress-wrap">
@@ -3099,22 +3125,22 @@ function renderRegionStatsPanel(stats, color) {
       </div>
     </div>
     <div class="region-method-row">
-      <div class="region-method-chip" style="--method-accent:#00ff9c">
+      <div class="region-method-chip clickable-stat" role="button" tabindex="0" style="--method-accent:#00ff9c" onclick="applyStatusFilter('method-masuda')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();applyStatusFilter('method-masuda')}">
         <span class="region-method-label">Masuda</span>
         <span class="region-method-sub">Moy. ${masudaStats.avgEncountersText}</span>
         <strong class="region-method-value">${masudaStats.caught}</strong>
       </div>
-      <div class="region-method-chip" style="--method-accent:#ff00c8">
+      <div class="region-method-chip clickable-stat" role="button" tabindex="0" style="--method-accent:#ff00c8" onclick="applyStatusFilter('method-resets')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();applyStatusFilter('method-resets')}">
         <span class="region-method-label">Resets</span>
         <span class="region-method-sub">Moy. ${resetStats.avgEncountersText}</span>
         <strong class="region-method-value">${resetStats.caught}</strong>
       </div>
-      <div class="region-method-chip" style="--method-accent:#d6ff00">
+      <div class="region-method-chip clickable-stat" role="button" tabindex="0" style="--method-accent:#d6ff00" onclick="applyStatusFilter('method-random')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();applyStatusFilter('method-random')}">
         <span class="region-method-label">Random</span>
         <span class="region-method-sub">Moy. ${randomStats.avgEncountersText}</span>
         <strong class="region-method-value">${randomStats.caught}</strong>
       </div>
-      <div class="region-method-chip" style="--method-accent:#6366f1">
+      <div class="region-method-chip clickable-stat" role="button" tabindex="0" style="--method-accent:#6366f1" onclick="applyStatusFilter('method-dynamax')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();applyStatusFilter('method-dynamax')}">
         <span class="region-method-label">Dynamax</span>
         <span class="region-method-sub">Total</span>
         <strong class="region-method-value">${dynamaxStats.caught}</strong>
@@ -3679,6 +3705,44 @@ function initGameFilterSelect() {
   select.dataset.ready = 'true';
 }
 
+const STATUS_FILTER_LABELS = {
+  caught: 'Shinys capturés',
+  perfect: 'Shinys parfaits',
+  'method-masuda': 'Méthode Masuda',
+  'method-resets': 'Méthode Resets',
+  'method-random': 'Méthode Random',
+  'method-dynamax': 'Expéditions Dynamax'
+};
+
+function applyStatusFilter(mode) {
+  currentStatusFilter = mode;
+  closeStatsPopin();
+  document.getElementById('searchInput').value = '';
+  renderGrid();
+  renderStatusFilterChip();
+  requestAnimationFrame(() => {
+    document.getElementById('grid')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+}
+
+function clearStatusFilter() {
+  currentStatusFilter = 'all';
+  renderGrid();
+  renderStatusFilterChip();
+}
+
+function renderStatusFilterChip() {
+  const chip = document.getElementById('statusFilterChip');
+  const label = document.getElementById('statusFilterChipLabel');
+  if (!chip || !label) return;
+  if (currentStatusFilter && currentStatusFilter !== 'all') {
+    label.textContent = STATUS_FILTER_LABELS[currentStatusFilter] || currentStatusFilter;
+    chip.style.display = '';
+  } else {
+    chip.style.display = 'none';
+  }
+}
+
 function setGameFilter(value) {
   currentGameFilter = GAME_FILTER_BY_ID[value] ? value : '';
   localStorage.setItem(GAME_FILTER_KEY, currentGameFilter);
@@ -3694,7 +3758,7 @@ function getActiveGameFilter() {
 function getVisiblePokemonIds() {
   const r = getCurrentRegionScope();
   const search = document.getElementById('searchInput')?.value.toLowerCase() || '';
-  const filter = document.getElementById('filterSelect')?.value || 'all';
+  const filter = currentStatusFilter || 'all';
   const sort = document.getElementById('sortSelect')?.value || 'number';
   const activeGame = getActiveGameFilter();
   const baseIds = currentRegion === TARGET_REGION_ID
@@ -3718,6 +3782,7 @@ function getVisiblePokemonIds() {
     if (filter === 'caught' && !p.caught) continue;
     if (filter === 'missing' && p.caught) continue;
     if (filter === 'perfect' && (!p.caught || !p.perfect)) continue;
+    if (filter.startsWith('method-') && (!p.caught || normalizeHuntMethod(p.huntMethod) !== filter.slice(7))) continue;
     ids.push(id);
   }
 
@@ -3895,6 +3960,7 @@ function renderGrid() {
   if (ids.length === 0) {
     grid.innerHTML = `<div class="empty">${currentRegion === TARGET_REGION_ID ? 'Aucune cible ajoutée.' : `Aucun Pokémon trouvé${activeGame ? ' pour ce jeu' : ''}.`}</div>`;
   }
+  renderStatusFilterChip();
 }
 
 /* ══════════════════════════════════════
@@ -4190,8 +4256,7 @@ function switchRegion(i) {
   sessionStorage.setItem(REGION_SESSION_KEY, String(i));
   scrollMainToTop();
   document.getElementById('searchInput').value = '';
-  const filterSelect = document.getElementById('filterSelect');
-  if (filterSelect) filterSelect.value = 'all';
+  currentStatusFilter = 'all';
   renderSidebar();
   renderStats();
   renderRegion();
@@ -4222,8 +4287,7 @@ function goHomeFromLogo() {
   currentPokemon = null;
   sessionStorage.setItem(REGION_SESSION_KEY, 'all');
   document.getElementById('searchInput').value = '';
-  const filterSelect = document.getElementById('filterSelect');
-  if (filterSelect) filterSelect.value = 'all';
+  currentStatusFilter = 'all';
   const sortSelect = document.getElementById('sortSelect');
   if (sortSelect) sortSelect.value = 'number';
   closeModal({ skipHistory: true });
