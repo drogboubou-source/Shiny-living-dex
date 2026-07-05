@@ -1273,33 +1273,58 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   margin-bottom:.85rem;
 }
 .hunt-count-card{
-  position:relative;min-width:0;padding:13px 11px;border-radius:14px;text-align:left;overflow:hidden;
+  position:relative;min-width:0;padding:13px 11px;border-radius:14px;text-align:left;overflow:hidden;isolation:isolate;
   background:
-    radial-gradient(circle at 8% -14%,rgba(125,211,252,.3),transparent 46%),
-    radial-gradient(circle at 55% 128%,rgba(192,132,252,.18),transparent 55%),
-    radial-gradient(circle at 112% 118%,rgba(247,215,116,.22),transparent 52%),
-    linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.018)),
-    rgba(17,17,24,.55);
-  border:1px solid rgba(255,255,255,.105);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 10px 22px rgba(0,0,0,.18);
+    radial-gradient(ellipse 120% 90% at 12% -20%,rgba(125,211,252,.36),transparent 52%),
+    radial-gradient(ellipse 110% 90% at 58% 132%,rgba(192,132,252,.24),transparent 58%),
+    radial-gradient(ellipse 100% 90% at 118% 112%,rgba(247,215,116,.3),transparent 55%),
+    linear-gradient(155deg,rgba(255,255,255,.11) 0%,rgba(255,255,255,.02) 42%,rgba(255,255,255,.05) 100%),
+    #101018;
+  border:1px solid rgba(255,255,255,.13);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.09),
+    inset 0 -16px 26px -20px rgba(0,0,0,.68),
+    0 10px 24px rgba(0,0,0,.22),
+    0 0 0 1px rgba(255,255,255,.02);
+  transform:translateZ(0);
 }
 .hunt-count-card::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:2px;z-index:1;
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;z-index:2;
   background:linear-gradient(90deg,#7dd3fc,#c084fc,#f7d774,#7dd3fc);
   background-size:220% 100%;opacity:.9;pointer-events:none;
-  animation:huntAccentDrift 5s ease-in-out infinite;
+  animation:huntAccentDrift 6s ease-in-out infinite;
 }
 @keyframes huntAccentDrift{
   0%,100%{background-position:0% 0}
   50%{background-position:100% 0}
 }
 .hunt-count-card::after{
-  content:'';position:absolute;right:-14px;top:-18px;width:56px;height:56px;border-radius:50%;
+  content:'';position:absolute;right:-14px;top:-18px;width:56px;height:56px;border-radius:50%;z-index:1;
   background:radial-gradient(circle,rgba(125,211,252,.2),transparent 68%);
   pointer-events:none;
 }
+.hunt-count-glow{
+  position:absolute;inset:-45%;z-index:0;pointer-events:none;border-radius:50%;
+  background:radial-gradient(circle,rgba(125,211,252,.45),rgba(192,132,252,.18) 45%,transparent 68%);
+  opacity:.2;will-change:opacity,transform;
+  animation:huntCountGlowBreathe 4.5s ease-in-out infinite;
+}
+@keyframes huntCountGlowBreathe{
+  0%,100%{opacity:.15;transform:scale(.9)}
+  50%{opacity:.32;transform:scale(1.06)}
+}
+.hunt-count-foil{
+  position:absolute;inset:-25%;z-index:1;pointer-events:none;
+  background:linear-gradient(112deg,transparent 32%,rgba(255,255,255,.15) 45%,rgba(125,211,252,.35) 50%,rgba(255,255,255,.15) 55%,transparent 68%);
+  mix-blend-mode:screen;will-change:transform;
+  animation:huntFoilSweep 7s ease-in-out infinite;
+}
+@keyframes huntFoilSweep{
+  0%,100%{transform:translateX(-30%)}
+  50%{transform:translateX(18%)}
+}
 .hunt-card-twinkle{
-  position:absolute;width:3px;height:3px;border-radius:50%;background:#fff;z-index:1;
+  position:absolute;width:3px;height:3px;border-radius:50%;background:#fff;z-index:2;
   box-shadow:0 0 7px 1px rgba(255,255,255,.9);pointer-events:none;
   animation:huntTwinkle 2.6s ease-in-out infinite;
 }
@@ -1310,28 +1335,31 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   0%,100%{opacity:0;transform:scale(.4)}
   50%{opacity:1;transform:scale(1.35)}
 }
-.hunt-count-label{display:flex;align-items:center;gap:5px;color:rgba(255,255,255,.55);font-size:8px;font-weight:900;text-transform:uppercase;margin-bottom:7px;letter-spacing:.08em}
+.hunt-count-label{position:relative;z-index:3;display:flex;align-items:center;gap:5px;color:rgba(255,255,255,.55);font-size:8px;font-weight:900;text-transform:uppercase;margin-bottom:7px;letter-spacing:.08em}
 .hunt-count-label::before{
   content:'';width:4px;height:4px;flex:none;border-radius:50%;
   background:#7dd3fc;box-shadow:0 0 6px rgba(125,211,252,.75);
 }
 .hunt-count{
-  position:relative;display:flex;align-items:center;height:40px;min-height:40px;overflow:hidden;
+  position:relative;z-index:3;display:flex;align-items:center;height:40px;min-height:40px;overflow:hidden;
   font-family:var(--font);font-size:34px;font-weight:900;
-  text-shadow:0 -1px 0 rgba(255,255,255,.22),0 2px 12px rgba(0,0,0,.45);font-variant-numeric:tabular-nums;white-space:nowrap;
+  text-shadow:0 -1px 0 rgba(255,255,255,.24),0 2px 12px rgba(0,0,0,.48);font-variant-numeric:tabular-nums;white-space:nowrap;
   --digit-h:40px;
-  padding:0 8px;border-radius:10px;
-  background:linear-gradient(135deg,rgba(125,211,252,.18),rgba(192,132,252,.13) 48%,rgba(247,215,116,.16));
+  padding:0 9px;border-radius:10px;
+  background:
+    linear-gradient(135deg,rgba(125,211,252,.24),rgba(192,132,252,.17) 46%,rgba(247,215,116,.22) 100%),
+    linear-gradient(180deg,rgba(255,255,255,.06),transparent 45%),
+    #14141d;
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.18),
-    inset 0 -1px 0 rgba(0,0,0,.22),
-    inset 0 0 0 1px rgba(255,255,255,.1),
-    0 0 0 1px rgba(125,211,252,.08),
-    0 4px 10px rgba(0,0,0,.16);
+    inset 0 1px 0 rgba(255,255,255,.22),
+    inset 0 -1px 0 rgba(0,0,0,.28),
+    inset 0 0 0 1px rgba(255,255,255,.11),
+    0 0 0 1px rgba(125,211,252,.12),
+    0 4px 12px rgba(0,0,0,.2);
 }
 .hunt-count::before{
   content:'';position:absolute;inset:0;pointer-events:none;z-index:3;border-radius:inherit;
-  background:linear-gradient(125deg,rgba(255,255,255,.2) 0%,transparent 38%);
+  background:linear-gradient(125deg,rgba(255,255,255,.22) 0%,transparent 38%);
 }
 .hunt-count-row{display:flex;align-items:center;height:100%;gap:1px}
 .hunt-digit-col{
@@ -1360,13 +1388,13 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   0%{opacity:1;transform:translateY(0) scale(1)}
   100%{opacity:0;transform:translateY(45%) scale(.5)}
 }
-.hunt-count-card{transition:transform .05s linear;animation:huntCardIdle 4.5s ease-in-out infinite}
 .hunt-count-card.flash{animation:huntCardGlowPulse .48s cubic-bezier(.34,1.56,.64,1)}
 .hunt-count-card.flash::before{
   content:'';position:absolute;inset:-1px;border-radius:14px;
   background:linear-gradient(100deg,transparent,rgba(247,215,116,.24),rgba(125,211,252,.3),transparent);
   animation:huntCountFlash .48s ease-out;pointer-events:none;
 }
+.hunt-count-card.flash .hunt-count-glow{animation-play-state:paused;opacity:.5}
 .hunt-count-card.reset-flash{animation:huntCardResetPulse .5s cubic-bezier(.34,1.56,.64,1)}
 .hunt-count-card.reset-flash::before{
   content:'';position:absolute;inset:-1px;border-radius:14px;
@@ -1378,14 +1406,10 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   30%{transform:scale(.965)}
   100%{transform:scale(1)}
 }
-@keyframes huntCardIdle{
-  0%,100%{box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 10px 22px rgba(0,0,0,.18),0 0 0 rgba(125,211,252,0)}
-  50%{box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 10px 22px rgba(0,0,0,.18),0 0 13px rgba(125,211,252,.16)}
-}
 @keyframes huntCardGlowPulse{
-  0%{transform:scale(1);box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 10px 22px rgba(0,0,0,.18),0 0 0 rgba(125,211,252,0)}
-  32%{transform:scale(1.035);box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 10px 22px rgba(0,0,0,.18),0 0 26px rgba(125,211,252,.5)}
-  100%{transform:scale(1);box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 10px 22px rgba(0,0,0,.18),0 0 0 rgba(125,211,252,0)}
+  0%{transform:scale(1)}
+  32%{transform:scale(1.035)}
+  100%{transform:scale(1)}
 }
 .hunt-milestone-ring{
   position:fixed;z-index:9997;pointer-events:none;border-radius:16px;box-sizing:border-box;
@@ -1923,6 +1947,8 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
       <div class="hunt-label">Rencontres en cours</div>
       <div class="hunt-counter-surface">
         <div class="hunt-count-card">
+          <span class="hunt-count-glow" aria-hidden="true"></span>
+          <span class="hunt-count-foil" aria-hidden="true"></span>
           <span class="hunt-card-twinkle t1" aria-hidden="true"></span>
           <span class="hunt-card-twinkle t2" aria-hidden="true"></span>
           <span class="hunt-card-twinkle t3" aria-hidden="true"></span>
