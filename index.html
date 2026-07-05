@@ -1907,7 +1907,7 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
     <div class="filters">
       <label class="sort-control">
         <span>Trier</span>
-        <select id="sortSelect" onchange="renderGrid()">
+        <select id="sortSelect" onchange="renderGrid()" autocomplete="off">
           <option value="target">Cibles</option>
           <option value="date-asc">Date croissante</option>
           <option value="date-desc">Date décroissante</option>
@@ -2643,6 +2643,8 @@ function init() {
   } catch(e) { progress = {}; }
 
   // Affichage initial avec les données locales déjà disponibles
+  const sortSelect = document.getElementById('sortSelect');
+  if (sortSelect) sortSelect.value = 'number';
   initGameFilterSelect();
   renderAll();
 }
