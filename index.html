@@ -1455,6 +1455,28 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   content:'';position:absolute;left:50%;top:50%;width:16px;height:16px;border-radius:50%;z-index:3;
   transform:translate(-50%,-50%) scale(0);background:rgba(255,255,255,.3);opacity:0;pointer-events:none;
 }
+.hunt-plus-invite-glow{
+  position:absolute;inset:-45%;z-index:0;pointer-events:none;border-radius:50%;
+  background:radial-gradient(circle,rgba(125,211,252,.5),rgba(192,132,252,.14) 45%,transparent 68%);
+  opacity:.18;will-change:opacity,transform;
+  animation:huntInviteGlow 2.6s ease-in-out infinite;
+}
+@keyframes huntInviteGlow{
+  0%,100%{opacity:.14;transform:scale(.9)}
+  50%{opacity:.4;transform:scale(1.06)}
+}
+.hunt-plus-invite-ring{
+  position:absolute;inset:-4px;z-index:0;pointer-events:none;border-radius:19px;
+  border:1.5px solid rgba(125,211,252,.55);opacity:0;will-change:opacity,transform;
+  animation:huntInvitePing 3.4s ease-out infinite;
+}
+@keyframes huntInvitePing{
+  0%,58%{opacity:0;transform:scale(1)}
+  68%{opacity:.6}
+  100%{opacity:0;transform:scale(1.09)}
+}
+.hunt-plus-main:hover .hunt-plus-invite-glow,.hunt-plus-main:active .hunt-plus-invite-glow,.hunt-plus-main.pulse .hunt-plus-invite-glow{animation-play-state:paused;opacity:.42}
+.hunt-plus-main:hover .hunt-plus-invite-ring,.hunt-plus-main:active .hunt-plus-invite-ring,.hunt-plus-main.pulse .hunt-plus-invite-ring{animation-play-state:paused;opacity:0}
 .hunt-plus-main:hover{
   transform:translateY(-1px) translateZ(0);border-color:rgba(125,211,252,.78);
   box-shadow:
@@ -1476,6 +1498,11 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   background:linear-gradient(100deg,transparent,rgba(255,255,255,.4),transparent);
   transform:translateX(-140%) skewX(-18deg);
   will-change:transform;
+  animation:huntIdleSheen 4.2s ease-in-out infinite;
+}
+@keyframes huntIdleSheen{
+  0%,55%,100%{transform:translateX(-140%) skewX(-18deg)}
+  75%{transform:translateX(360%) skewX(-18deg)}
 }
 .hunt-plus-main.pulse .hunt-plus-sheen::before{animation:huntSheenSweep .5s ease-out}
 @keyframes huntSheenSweep{
@@ -1961,6 +1988,8 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
           <div class="hunt-count" id="huntCount"><span class="hunt-count-row"></span></div>
         </div>
         <button class="hunt-plus-main" id="huntPlusMain" type="button" onclick="tapHuntPlus()">
+          <span class="hunt-plus-invite-glow" aria-hidden="true"></span>
+          <span class="hunt-plus-invite-ring" aria-hidden="true"></span>
           <span class="hunt-plus-sheen"></span>
           <span class="hunt-plus-label">+1</span>
           <small>continuer</small>
