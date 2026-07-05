@@ -1530,21 +1530,13 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   box-shadow:0 0 8px rgba(247,215,116,.85);
   animation:huntSparkleFly .55s ease-out forwards;
 }
-.hunt-digit-spark{
-  position:fixed;z-index:9996;pointer-events:none;width:4px;height:4px;border-radius:50%;
-  background:radial-gradient(circle,#fff,rgba(125,211,252,.9) 55%,transparent 75%);
-  box-shadow:0 0 6px rgba(125,211,252,.8);
-  animation:huntSparkleFly .45s ease-out forwards;
-}
-.hunt-digit-flash{
-  position:fixed;z-index:9995;pointer-events:none;width:10px;height:10px;border-radius:50%;
-  transform:translate(-50%,-50%) scale(0);
-  background:radial-gradient(circle,rgba(255,255,255,.95),rgba(125,211,252,.5) 55%,transparent 75%);
-  animation:huntDigitFlash .35s ease-out forwards;
-}
-@keyframes huntDigitFlash{
-  0%{transform:translate(-50%,-50%) scale(.2);opacity:1}
-  100%{transform:translate(-50%,-50%) scale(3.2);opacity:0}
+.hunt-digit-glyph{display:block;transform-origin:center 60%;will-change:transform}
+.hunt-digit-glyph.landed{animation:huntDigitLand .42s cubic-bezier(.34,1.56,.64,1)}
+@keyframes huntDigitLand{
+  0%{transform:scale(1,1);filter:drop-shadow(0 0 0 rgba(125,211,252,0))}
+  35%{transform:scale(1.1,.84);filter:drop-shadow(0 0 9px rgba(125,211,252,.85))}
+  65%{transform:scale(.95,1.06);filter:drop-shadow(0 0 4px rgba(125,211,252,.4))}
+  100%{transform:scale(1,1);filter:drop-shadow(0 0 0 rgba(125,211,252,0))}
 }
 @keyframes huntTapShine{
   0%{background-position:150% 0}
@@ -4206,7 +4198,10 @@ function createHuntDigitCol(value) {
   col.dataset.value = String(value);
   const val = document.createElement('span');
   val.className = 'hunt-digit-val';
-  val.textContent = String(value);
+  const glyph = document.createElement('span');
+  glyph.className = 'hunt-digit-glyph';
+  glyph.textContent = String(value);
+  val.appendChild(glyph);
   col.appendChild(val);
   return col;
 }
@@ -4218,53 +4213,36 @@ function createHuntSepEl(ch) {
   return el;
 }
 
-function spawnDigitExplosion(col) {
-  const rect = col.getBoundingClientRect();
-  const cx = rect.left + rect.width / 2;
-  const cy = rect.top + rect.height / 2;
-
-  const flash = document.createElement('span');
-  flash.className = 'hunt-digit-flash';
-  flash.style.left = `${cx}px`;
-  flash.style.top = `${cy}px`;
-  document.body.appendChild(flash);
-  setTimeout(() => flash.remove(), 380);
-
-  const colors = ['#fff', '#7dd3fc', '#c084fc', '#f7d774'];
-  const count = 6;
-  for (let i = 0; i < count; i++) {
-    const sp = document.createElement('span');
-    sp.className = 'hunt-digit-spark';
-    const angle = (Math.PI * 2 * i / count) + (Math.random() * 0.4 - .2);
-    const dist = 14 + Math.random() * 12;
-    const c = colors[i % colors.length];
-    sp.style.left = `${cx}px`;
-    sp.style.top = `${cy}px`;
-    sp.style.setProperty('--sx', `${Math.cos(angle) * dist}px`);
-    sp.style.setProperty('--sy', `${Math.sin(angle) * dist}px`);
-    sp.style.background = `radial-gradient(circle,#fff,${c} 55%,transparent 75%)`;
-    sp.style.boxShadow = `0 0 6px ${c}`;
-    document.body.appendChild(sp);
-    setTimeout(() => sp.remove(), 500);
-  }
+function playDigitLandEffect(valEl) {
+  const glyph = valEl.querySelector('.hunt-digit-glyph');
+  if (!glyph) return;
+  glyph.classList.remove('landed');
+  void glyph.offsetWidth;
+  glyph.classList.add('landed');
+  glyph.addEventListener('animationend', () => glyph.classList.remove('landed'), { once: true });
 }
 
 function updateHuntDigitCol(col, newValue, dir) {
   const oldValue = parseInt(col.dataset.value, 10);
-  if (Number.isNaN(oldValue)) { col.dataset.value = String(newValue); }
-  const curEl = col.querySelector('.hunt-digit-val');
+
+  // Always keep only the most recently appended value element as "current";
+  // purge any stale ones left over from a fast previous update.
+  const allVals = Array.from(col.querySelectorAll('.hunt-digit-val'));
+  const curEl = allVals[allVals.length - 1] || null;
+  allVals.slice(0, -1).forEach(el => el.remove());
+
+  if (!curEl) return;
 
   if (!dir) {
     col.dataset.value = String(newValue);
-    curEl.textContent = String(newValue);
+    const glyph = curEl.querySelector('.hunt-digit-glyph');
+    if (glyph) glyph.textContent = String(newValue);
     curEl.classList.remove('hunt-digit-val-enter', 'hunt-digit-val-leave', 'hunt-digit-val-enter-top', 'hunt-digit-val-leave-bottom');
     return;
   }
-  if (oldValue === newValue) return;
+  if (Number.isNaN(oldValue) || oldValue === newValue) return;
 
   clearTimeout(col._flapTimer);
-  col.querySelectorAll('.hunt-digit-val-leave, .hunt-digit-val-leave-bottom').forEach(el => el.remove());
-
   col.dataset.value = String(newValue);
 
   const goingDown = dir < 0;
@@ -4273,7 +4251,10 @@ function updateHuntDigitCol(col, newValue, dir) {
 
   const nextEl = document.createElement('span');
   nextEl.className = 'hunt-digit-val ' + enterClass;
-  nextEl.textContent = String(newValue);
+  const nextGlyph = document.createElement('span');
+  nextGlyph.className = 'hunt-digit-glyph';
+  nextGlyph.textContent = String(newValue);
+  nextEl.appendChild(nextGlyph);
   col.appendChild(nextEl);
 
   curEl.classList.add(leaveClass);
@@ -4290,7 +4271,7 @@ function updateHuntDigitCol(col, newValue, dir) {
     nextEl.removeEventListener('transitionend', finish);
     curEl.removeEventListener('transitionend', finish);
     if (curEl.parentNode) curEl.remove();
-    spawnDigitExplosion(col);
+    playDigitLandEffect(nextEl);
   };
   nextEl.addEventListener('transitionend', finish);
   curEl.addEventListener('transitionend', finish);
