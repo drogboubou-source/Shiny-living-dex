@@ -1385,30 +1385,31 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   content:'';position:absolute;inset:0;z-index:3;pointer-events:none;border-radius:3px;
   box-shadow:inset 1px 0 0 rgba(255,255,255,.05),inset -1px 0 0 rgba(0,0,0,.22);
 }
-.flip-half{position:absolute;left:0;right:0;height:calc(var(--digit-h) / 2);overflow:hidden;z-index:1}
-.flip-half-top{top:0;border-radius:3px 3px 0 0}
-.flip-half-bottom{bottom:0;border-radius:0 0 3px 3px}
+.rotor-static{position:absolute;left:0;right:0;height:calc(var(--digit-h) / 2);overflow:hidden;z-index:1}
+.rotor-top{top:0;border-radius:3px 3px 0 0}
+.rotor-bottom{bottom:0;border-radius:0 0 3px 3px}
 .flip-glyph{
   position:absolute;left:0;right:0;top:0;height:var(--digit-h);line-height:var(--digit-h);
   text-align:center;color:#fff;font-weight:900;
 }
-.flip-half-bottom .flip-glyph{top:calc(var(--digit-h) / -2)}
-.flip-flap{
+.rotor-bottom .flip-glyph{top:calc(var(--digit-h) / -2)}
+.rotor-leaf{
   position:absolute;left:0;right:0;bottom:0;height:calc(var(--digit-h) / 2);z-index:4;
-  transform-origin:top;transform:rotateX(0deg) translateZ(0);will-change:transform;
+  transform-origin:top;transform-style:preserve-3d;transform:rotateX(0deg);
 }
-.flip-flap-face{
-  position:absolute;inset:0;overflow:hidden;border-radius:0 0 3px 3px;backface-visibility:hidden;
-  background:linear-gradient(180deg,rgba(255,255,255,.08) 0%,transparent 45%,rgba(0,0,0,.22) 100%);
-}
-.flip-flap-face .flip-glyph{position:absolute;left:0;right:0;top:calc(var(--digit-h) / -2);height:var(--digit-h);line-height:var(--digit-h);text-align:center;color:#fff;font-weight:900}
-.flip-flap.flipping{animation:huntFlapFlip 1.6s cubic-bezier(.65,0,.35,1) forwards}
+.rotor-leaf.flipping{animation:huntFlapFlip 1.6s cubic-bezier(.65,0,.35,1) forwards}
 @keyframes huntFlapFlip{
   0%{transform:rotateX(0deg) translateZ(0);filter:drop-shadow(0 -1px 2px rgba(0,0,0,.35))}
-  38%{transform:rotateX(58deg) translateZ(7px);filter:drop-shadow(0 -10px 11px rgba(0,0,0,.55))}
-  100%{transform:rotateX(100deg) translateZ(0);filter:drop-shadow(0 -2px 3px rgba(0,0,0,.15))}
+  45%{transform:rotateX(82deg) translateZ(6px);filter:drop-shadow(0 -9px 11px rgba(0,0,0,.5))}
+  100%{transform:rotateX(180deg) translateZ(0);filter:drop-shadow(0 -1px 2px rgba(0,0,0,.2))}
 }
-.flip-flap.flip-hidden{visibility:hidden}
+.rotor-leaf-front,.rotor-leaf-rear{
+  position:absolute;inset:0;overflow:hidden;backface-visibility:hidden;border-radius:0 0 3px 3px;
+  background:linear-gradient(180deg,rgba(255,255,255,.08) 0%,transparent 45%,rgba(0,0,0,.22) 100%);
+}
+.rotor-leaf-front{transform:rotateX(0deg)}
+.rotor-leaf-rear{transform:rotateX(180deg)}
+.rotor-leaf-front .flip-glyph,.rotor-leaf-rear .flip-glyph{top:calc(var(--digit-h) / -2)}
 .hunt-sep{display:inline-block;width:.32em;flex:none;text-align:center;color:rgba(159,225,255,.55);font-weight:900;transform:translateY(1px)}
 .hunt-cell-enter{animation:huntCellEnter .42s cubic-bezier(.16,1,.3,1)}
 .hunt-cell-exit{animation:huntCellExit .26s ease-in forwards}
@@ -4207,32 +4208,37 @@ function setHuntMethod(methodId) {
   renderGrid();
 }
 
-function buildFlipHalf(kind, value) {
-  const half = document.createElement('span');
-  half.className = 'flip-half flip-half-' + kind;
+function buildRotorStatic(kind, value) {
+  const el = document.createElement('span');
+  el.className = 'rotor-static rotor-' + kind;
   const glyph = document.createElement('span');
   glyph.className = 'flip-glyph';
   glyph.textContent = String(value);
-  half.appendChild(glyph);
-  return half;
+  el.appendChild(glyph);
+  return el;
+}
+
+function buildRotorFace(kind, value) {
+  const el = document.createElement('span');
+  el.className = 'rotor-leaf-' + kind;
+  const glyph = document.createElement('span');
+  glyph.className = 'flip-glyph';
+  glyph.textContent = String(value);
+  el.appendChild(glyph);
+  return el;
 }
 
 function createHuntDigitCol(value) {
   const col = document.createElement('span');
   col.className = 'hunt-digit-col';
   col.dataset.value = String(value);
-  col.appendChild(buildFlipHalf('top', value));
-  col.appendChild(buildFlipHalf('bottom', value));
-  const flap = document.createElement('span');
-  flap.className = 'flip-flap flip-hidden';
-  const face = document.createElement('span');
-  face.className = 'flip-flap-face';
-  const flapGlyph = document.createElement('span');
-  flapGlyph.className = 'flip-glyph';
-  flapGlyph.textContent = String(value);
-  face.appendChild(flapGlyph);
-  flap.appendChild(face);
-  col.appendChild(flap);
+  col.appendChild(buildRotorStatic('top', value));
+  col.appendChild(buildRotorStatic('bottom', value));
+  const leaf = document.createElement('span');
+  leaf.className = 'rotor-leaf';
+  leaf.appendChild(buildRotorFace('front', value));
+  leaf.appendChild(buildRotorFace('rear', value));
+  col.appendChild(leaf);
   return col;
 }
 
@@ -4269,46 +4275,48 @@ function spawnDigitLandSparks(col) {
 function updateHuntDigitCol(col, newValue, dir) {
   const oldValue = parseInt(col.dataset.value, 10);
   if (Number.isNaN(oldValue)) { col.dataset.value = String(newValue); }
-  const topGlyph = col.querySelector('.flip-half-top .flip-glyph');
-  const bottomGlyph = col.querySelector('.flip-half-bottom .flip-glyph');
-  const flap = col.querySelector('.flip-flap');
-  const flapGlyph = flap.querySelector('.flip-glyph');
+  const topGlyph = col.querySelector('.rotor-top .flip-glyph');
+  const bottomGlyph = col.querySelector('.rotor-bottom .flip-glyph');
+  const leaf = col.querySelector('.rotor-leaf');
+  const frontGlyph = leaf.querySelector('.rotor-leaf-front .flip-glyph');
+  const rearGlyph = leaf.querySelector('.rotor-leaf-rear .flip-glyph');
 
   if (!dir) {
     col.dataset.value = String(newValue);
     topGlyph.textContent = String(newValue);
     bottomGlyph.textContent = String(newValue);
-    flapGlyph.textContent = String(newValue);
-    flap.classList.remove('flipping');
-    flap.classList.add('flip-hidden');
+    frontGlyph.textContent = String(newValue);
+    rearGlyph.textContent = String(newValue);
+    leaf.classList.remove('flipping');
+    leaf.style.transform = 'rotateX(0deg)';
     return;
   }
   if (oldValue === newValue) return;
 
   clearTimeout(col._flapTimer);
-  flap.classList.remove('flipping');
-  void flap.offsetWidth;
+  leaf.classList.remove('flipping');
+  leaf.style.transform = 'rotateX(0deg)';
+  void leaf.offsetWidth;
 
-  flapGlyph.textContent = String(oldValue);
-  flap.classList.remove('flip-hidden');
-  void flap.offsetWidth;
+  frontGlyph.textContent = String(oldValue);
+  rearGlyph.textContent = String(newValue);
 
   col.dataset.value = String(newValue);
   topGlyph.textContent = String(newValue);
   bottomGlyph.textContent = String(newValue);
 
   requestAnimationFrame(() => {
-    flap.classList.add('flipping');
+    leaf.classList.add('flipping');
   });
 
   const onDone = () => {
-    flap.removeEventListener('animationend', onDone);
-    flap.classList.remove('flipping');
-    flap.classList.add('flip-hidden');
-    flapGlyph.textContent = String(newValue);
+    leaf.removeEventListener('animationend', onDone);
+    leaf.classList.remove('flipping');
+    leaf.style.transform = 'rotateX(0deg)';
+    frontGlyph.textContent = String(newValue);
     spawnDigitLandSparks(col);
   };
-  flap.addEventListener('animationend', onDone);
+  leaf.addEventListener('animationend', onDone);
   col._flapTimer = setTimeout(onDone, 1650);
 }
 
