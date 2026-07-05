@@ -1530,13 +1530,7 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   box-shadow:0 0 8px rgba(247,215,116,.85);
   animation:huntSparkleFly .55s ease-out forwards;
 }
-.hunt-digit-glyph{display:block;transform-origin:center;will-change:transform}
-.hunt-digit-glyph.landed{animation:huntDigitLand .38s cubic-bezier(.34,1.56,.64,1)}
-@keyframes huntDigitLand{
-  0%{transform:scale(1)}
-  40%{transform:scale(1.14)}
-  100%{transform:scale(1)}
-}
+.hunt-digit-glyph{display:block}
 @keyframes huntTapShine{
   0%{background-position:150% 0}
   100%{background-position:-40% 0}
@@ -1924,6 +1918,72 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
     <div class="form-row">
       <label>Date de capture</label>
       <input type="date" id="fDate">
+    </div>
+    <div class="form-row">
+      <label>Jeu</label>
+      <select id="fGame" onchange="updateLocationField()">
+        <option value="">Non renseigné</option>
+        <optgroup label="Génération 8">
+          <option value="epee">Épée</option>
+          <option value="bouclier">Bouclier</option>
+          <option value="diamant-etincelant">Diamant Étincelant</option>
+          <option value="perle-scintillante">Perle Scintillante</option>
+          <option value="legendes-arceus">Légendes Pokémon : Arceus</option>
+        </optgroup>
+        <optgroup label="Génération 9">
+          <option value="ecarlate">Écarlate</option>
+          <option value="violet">Violet</option>
+        </optgroup>
+        <optgroup label="Génération 7">
+          <option value="soleil">Soleil</option>
+          <option value="lune">Lune</option>
+          <option value="ultra-soleil">Ultra-Soleil</option>
+          <option value="ultra-lune">Ultra-Lune</option>
+        </optgroup>
+        <optgroup label="Génération 6">
+          <option value="x">X</option>
+          <option value="y">Y</option>
+          <option value="rubis-omega">Rubis Oméga</option>
+          <option value="saphir-alpha">Saphir Alpha</option>
+        </optgroup>
+        <optgroup label="Génération 5">
+          <option value="noir">Noir</option>
+          <option value="blanc">Blanc</option>
+          <option value="noir-2">Noir 2</option>
+          <option value="blanc-2">Blanc 2</option>
+        </optgroup>
+        <optgroup label="Génération 4">
+          <option value="diamant">Diamant</option>
+          <option value="perle">Perle</option>
+          <option value="platine">Platine</option>
+          <option value="heartgold">Or HeartGold</option>
+          <option value="soulsilver">Argent SoulSilver</option>
+        </optgroup>
+        <optgroup label="Génération 3">
+          <option value="rubis">Rubis</option>
+          <option value="saphir">Saphir</option>
+          <option value="emeraude">Émeraude</option>
+          <option value="rouge-feu">Rouge Feu</option>
+          <option value="vert-feuille">Vert Feuille</option>
+        </optgroup>
+        <optgroup label="Génération 2">
+          <option value="or">Or</option>
+          <option value="argent">Argent</option>
+          <option value="cristal">Cristal</option>
+        </optgroup>
+        <optgroup label="Génération 1">
+          <option value="rouge">Rouge</option>
+          <option value="bleu">Bleu</option>
+          <option value="jaune">Jaune</option>
+        </optgroup>
+      </select>
+    </div>
+    <div class="form-row" id="fLocationRow">
+      <label>Lieu de capture</label>
+      <select id="fLocationSelect" style="display:none">
+        <option value="">Non renseigné</option>
+      </select>
+      <input type="text" id="fLocationText" placeholder="ex: Route 3">
     </div>
     <div class="form-row">
       <label>Contexte de capture</label>
@@ -2319,6 +2379,38 @@ const UNAVAILABLE_POKEMON_IDS = new Set([
   10169,10170,10171
 ]);
 
+const GAME_LOCATIONS = {
+  epee: {
+    'Routes': ['Route 1','Route 2','Route 3','Route 4','Route 5','Route 6','Route 7','Route 8','Route 9','Route 10'],
+    'Villes': ['Paddoxton','Brasswick','Greenbury','Motorby','Old Chister','Skifford','Ludester','Corrifey','Kickenham','Smashings','Winscor'],
+    'Lieux importants': ['Abords de Motorby','Forêt de Lumirinth','Forêt de Sleepwood','Mine de Galar','Mine de Galar n°2','Sentier de la Gare','Tunnel de la Route 9'],
+    'Terres Sauvages': ['Berges de Motorby','Bois de Clairjour','Coiffe du Géant','Fosse des Sables','Lac Coupenotte Est','Lac Coupenotte Ouest','Lac Milobellus Nord','Lac Milobellus Sud','Lac Ouragan','Miroir du Géant','Oeil du Lac','Plaine Rocheuse','Plaine Verdoyante','Plateau de Kickenham','Prairie Entre-Ponts','Siège du Géant','Tour en ruines']
+  }
+};
+GAME_LOCATIONS.bouclier = GAME_LOCATIONS.epee;
+
+function updateLocationField(selectedLocation) {
+  const game = document.getElementById('fGame').value;
+  const select = document.getElementById('fLocationSelect');
+  const text = document.getElementById('fLocationText');
+  const groups = GAME_LOCATIONS[game];
+
+  if (groups) {
+    select.innerHTML = '<option value="">Non renseigné</option>' + Object.entries(groups).map(([groupLabel, places]) => `
+      <optgroup label="${groupLabel}">
+        ${places.map(place => `<option value="${place}">${place}</option>`).join('')}
+      </optgroup>
+    `).join('');
+    select.style.display = '';
+    text.style.display = 'none';
+    if (selectedLocation) select.value = selectedLocation;
+  } else {
+    select.style.display = 'none';
+    text.style.display = '';
+    if (selectedLocation !== undefined) text.value = selectedLocation || '';
+  }
+}
+
 const HUNT_METHODS = {
   masuda: { label: 'Masuda', shortLabel: 'Masuda', odds: 512 },
   resets: { label: 'Resets', shortLabel: 'Resets', odds: 1365 },
@@ -2486,6 +2578,8 @@ function hasUserData(p) {
     p.youtube ||
     p.pokeball ||
     p.nature ||
+    p.game ||
+    p.location ||
     ivs.hp || ivs.atk || ivs.def || ivs.spa || ivs.spd || ivs.spe
   );
 }
@@ -4128,7 +4222,7 @@ function saveProgressEntry(id, entry) {
   if (isReadOnlyShare()) return;
   const hasIvs = entry.ivs && Object.values(entry.ivs).some(Boolean);
   const hasCustomHuntMethod = entry.huntMethod && entry.huntMethod !== 'masuda';
-  const isEmpty = !entry.caught && !entry.perfect && !entry.target && !entry.hunting && !entry.huntCount && !hasCustomHuntMethod && !entry.nickname && !entry.encounters && !entry.eggs && !entry.date && !entry.context && !entry.youtube && !entry.pokeball && !entry.nature && !hasIvs;
+  const isEmpty = !entry.caught && !entry.perfect && !entry.target && !entry.hunting && !entry.huntCount && !hasCustomHuntMethod && !entry.nickname && !entry.encounters && !entry.eggs && !entry.date && !entry.context && !entry.youtube && !entry.pokeball && !entry.nature && !entry.game && !entry.location && !hasIvs;
   if (isEmpty) delete progress[id];
   else progress[id] = entry;
   localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
@@ -4212,15 +4306,6 @@ function createHuntSepEl(ch) {
   return el;
 }
 
-function playDigitLandEffect(valEl) {
-  const glyph = valEl.querySelector('.hunt-digit-glyph');
-  if (!glyph) return;
-  glyph.classList.remove('landed');
-  void glyph.offsetWidth;
-  glyph.classList.add('landed');
-  glyph.addEventListener('animationend', () => glyph.classList.remove('landed'), { once: true });
-}
-
 function updateHuntDigitCol(col, newValue, dir) {
   const oldValue = parseInt(col.dataset.value, 10);
 
@@ -4270,7 +4355,6 @@ function updateHuntDigitCol(col, newValue, dir) {
     nextEl.removeEventListener('transitionend', finish);
     curEl.removeEventListener('transitionend', finish);
     if (curEl.parentNode) curEl.remove();
-    playDigitLandEffect(nextEl);
   };
   nextEl.addEventListener('transitionend', finish);
   curEl.addEventListener('transitionend', finish);
@@ -4509,6 +4593,8 @@ function openModal(id, options = {}) {
   document.getElementById('fDate').value       = p.date       || '';
   document.getElementById('fContext').value    = p.context    || '';
   document.getElementById('fYoutube').value    = p.youtube    || '';
+  document.getElementById('fGame').value       = p.game       || '';
+  updateLocationField(p.location || '');
 
   const ivs = p.ivs || {};
   document.getElementById('ivHP').checked  = !!ivs.hp;
@@ -4565,6 +4651,10 @@ function saveModal() {
     date:      document.getElementById('fDate').value,
     context:   document.getElementById('fContext').value.trim(),
     youtube:   document.getElementById('fYoutube').value.trim(),
+    game:      document.getElementById('fGame').value,
+    location:  (document.getElementById('fLocationSelect').style.display !== 'none'
+                 ? document.getElementById('fLocationSelect').value
+                 : document.getElementById('fLocationText').value.trim()),
     pokeball:  document.getElementById('fPokeball').value,
     nature:    document.getElementById('fNature').value,
     ivs: {
