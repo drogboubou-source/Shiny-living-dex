@@ -774,21 +774,40 @@ body.hunt-tray-open .card:active{
   justify-content:center;overflow:hidden;padding:6px 8px;
 }
 .counter-button{
-  position:relative;overflow:hidden;
+  position:relative;overflow:hidden;isolation:isolate;
   justify-content:center;
-  background:linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.022)),#1b1b25;
-  border-color:rgba(255,255,255,.13);color:#eceaf6;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 7px 16px rgba(0,0,0,.14);
-  transition:transform .12s,border-color .15s,background .15s,box-shadow .15s,color .15s;
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.09),rgba(255,255,255,.02) 55%),
+    #1b1b25;
+  border-color:rgba(255,255,255,.14);color:#eceaf6;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.07),inset 0 -1px 0 rgba(0,0,0,.22),0 8px 18px rgba(0,0,0,.18);
+  transition:transform .18s cubic-bezier(.34,1.56,.64,1),border-color .16s ease,background .16s ease,box-shadow .16s ease,color .16s ease;
+  transform:translateZ(0);
 }
+.counter-button::before{
+  content:'';position:absolute;top:0;left:10%;right:10%;height:1px;pointer-events:none;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.55),transparent);
+  opacity:.5;
+}
+.counter-button::after{
+  content:'';position:absolute;right:-22px;top:-26px;width:72px;height:72px;border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle,rgba(125,211,252,.22),transparent 70%);
+  opacity:0;transition:opacity .25s ease;
+}
+.counter-button.active::after{opacity:1}
 .counter-button.active{
-  background:linear-gradient(180deg,rgba(125,211,252,.18),rgba(125,211,252,.055)),#1b2430;
-  border-color:rgba(125,211,252,.52);color:#dff6ff;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.09),0 9px 20px rgba(0,0,0,.2),0 0 0 1px rgba(125,211,252,.14);
+  background:
+    radial-gradient(circle at 18% -10%,rgba(125,211,252,.28),transparent 55%),
+    linear-gradient(180deg,rgba(125,211,252,.2),rgba(125,211,252,.06)),
+    #16202b;
+  border-color:rgba(125,211,252,.58);color:#eafaff;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.12),inset 0 -1px 0 rgba(0,0,0,.28),
+    0 10px 22px rgba(0,0,0,.24),0 0 0 1px rgba(125,211,252,.16),0 0 16px rgba(125,211,252,.2);
 }
 .perfect-summary strong,.counter-button strong{font-family:var(--font);font-size:14px;color:#f7d774}
 .perfect-summary strong{color:inherit;font-size:13px;font-weight:800}
-.counter-button strong{color:inherit;font-size:13px;font-weight:800}
+.counter-button strong{color:inherit;font-size:13px;font-weight:800;letter-spacing:.01em;position:relative;z-index:1}
 .sprite-switch{
   display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:2px;
   width:100%;height:26px;padding:2px;border-radius:8px;
@@ -806,38 +825,44 @@ body.hunt-tray-open .card:active{
 }
 .sprite-switch-option:not(.active){opacity:.74}
 .counter-icon{
-  display:grid;place-items:center;width:20px;height:20px;border-radius:7px;flex:0 0 auto;
-  background:linear-gradient(180deg,rgba(125,211,252,.2),rgba(125,211,252,.07));
-  border:1px solid rgba(255,255,255,.12);color:#dff6ff;font-size:12px;line-height:1;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.12);
+  position:relative;display:grid;place-items:center;width:22px;height:22px;border-radius:8px;flex:0 0 auto;
+  background:linear-gradient(160deg,rgba(125,211,252,.3),rgba(192,132,252,.12));
+  border:1px solid rgba(255,255,255,.16);color:#dff6ff;font-size:12px;line-height:1;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.16),inset 0 -1px 2px rgba(0,0,0,.18);
+  transition:background .16s ease,border-color .16s ease,transform .18s cubic-bezier(.34,1.56,.64,1);
+  z-index:1;
 }
 .counter-icon svg{width:13px;height:13px;display:block}
-.counter-label{display:inline-flex;align-items:center;gap:7px;min-width:0}
-.counter-button.active .counter-icon{background:linear-gradient(180deg,rgba(125,211,252,.32),rgba(125,211,252,.13));border-color:rgba(125,211,252,.42);color:#fff}
+.counter-label{display:inline-flex;align-items:center;gap:7px;min-width:0;position:relative;z-index:1}
+.counter-button.active .counter-icon{
+  background:linear-gradient(160deg,rgba(125,211,252,.46),rgba(192,132,252,.22));
+  border-color:rgba(125,211,252,.55);color:#fff;transform:scale(1.06);
+}
 .perfect-summary:hover{
   background:linear-gradient(180deg,rgba(212,175,55,.105),rgba(255,255,255,.022)),#1d1b24;
   border-color:rgba(212,175,55,.32);
 }
 .counter-button:hover{
-  transform:none;
-  background:linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.022)),#1b1b25;
-  border-color:rgba(255,255,255,.13);
+  transform:translateY(-1px) translateZ(0);
+  border-color:rgba(255,255,255,.24);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.09),inset 0 -1px 0 rgba(0,0,0,.24),0 11px 22px rgba(0,0,0,.22);
 }
+.counter-button:hover .counter-icon{transform:translateY(-1px)}
 .counter-button.active:hover{
-  background:linear-gradient(180deg,rgba(125,211,252,.18),rgba(125,211,252,.055)),#1b2430;
-  border-color:rgba(125,211,252,.52);
+  border-color:rgba(125,211,252,.78);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.14),inset 0 -1px 0 rgba(0,0,0,.3),
+    0 13px 26px rgba(0,0,0,.28),0 0 0 1px rgba(125,211,252,.22),0 0 20px rgba(125,211,252,.26);
 }
+.counter-button.active:hover .counter-icon{transform:translateY(-1px) scale(1.06)}
 .counter-button:focus,.perfect-summary:focus{outline:none}
 .counter-button:focus-visible,.perfect-summary:focus-visible{outline:none;box-shadow:inherit}
-.counter-button:active,.perfect-summary:active{transform:none}
+.perfect-summary:active{transform:none}
 .counter-button:active{
-  background:linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.022)),#1b1b25;
-  border-color:rgba(255,255,255,.13);
+  transform:scale(.96) translateZ(0);
+  transition-duration:.08s;
 }
-.counter-button.active:active{
-  background:linear-gradient(180deg,rgba(125,211,252,.18),rgba(125,211,252,.055)),#1b2430;
-  border-color:rgba(125,211,252,.52);
-}
+.counter-button.active:active{transform:scale(.96) translateZ(0)}
 .perfect-summary:active{
   background:linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.022)),#1b1b25;
   border-color:rgba(255,255,255,.13);
@@ -1373,98 +1398,61 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   100%{transform:scale(1.16);opacity:0;border-color:#f7d774;box-shadow:0 0 24px rgba(247,215,116,.4)}
 }
 .hunt-plus-main{
-  position:relative;min-height:74px;border-radius:16px;border:1px solid rgba(125,211,252,.54);
+  position:relative;min-height:74px;border-radius:16px;border:1px solid rgba(125,211,252,.56);
   background:
-    radial-gradient(circle at 50% 14%,rgba(255,255,255,.22),transparent 30%),
-    linear-gradient(160deg,rgba(125,211,252,.36),rgba(192,132,252,.14) 55%,rgba(125,211,252,.08)),
+    radial-gradient(circle at 50% 12%,rgba(255,255,255,.26),transparent 32%),
+    linear-gradient(160deg,rgba(125,211,252,.4),rgba(192,132,252,.16) 52%,rgba(125,211,252,.1)),
     #1b2430;
-  color:#fff;cursor:pointer;font-family:var(--font);overflow:hidden;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.16),inset 0 -4px 8px rgba(0,0,0,.26),0 12px 26px rgba(0,0,0,.24),0 0 0 1px rgba(125,211,252,.08),0 0 22px rgba(125,211,252,.12);
-  transition:transform .08s ease,border-color .12s,box-shadow .12s;
+  color:#fff;cursor:pointer;font-family:var(--font);overflow:hidden;isolation:isolate;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.18),inset 0 -4px 8px rgba(0,0,0,.28),
+    0 12px 26px rgba(0,0,0,.26),0 0 0 1px rgba(125,211,252,.1);
+  transition:transform .14s cubic-bezier(.34,1.56,.64,1),border-color .14s ease;
   touch-action:manipulation;
-  animation:huntPlusIdle 2.4s ease-in-out infinite;
-}
-@keyframes huntPlusIdle{
-  0%,100%{box-shadow:inset 0 1px 0 rgba(255,255,255,.16),inset 0 -4px 8px rgba(0,0,0,.26),0 12px 26px rgba(0,0,0,.24),0 0 0 1px rgba(125,211,252,.08),0 0 20px rgba(125,211,252,.14)}
-  50%{box-shadow:inset 0 1px 0 rgba(255,255,255,.16),inset 0 -4px 8px rgba(0,0,0,.26),0 12px 26px rgba(0,0,0,.24),0 0 0 1px rgba(125,211,252,.22),0 0 34px rgba(125,211,252,.34)}
+  transform:translateZ(0);
+  will-change:transform;
 }
 .hunt-plus-main::before{
-  content:'';position:absolute;inset:6px;border-radius:12px;border:1px solid rgba(255,255,255,.08);
-  pointer-events:none;
+  content:'';position:absolute;inset:6px;border-radius:12px;border:1px solid rgba(255,255,255,.09);
+  pointer-events:none;z-index:1;
+}
+.hunt-plus-glow{
+  content:'';position:absolute;inset:-35%;border-radius:50%;z-index:0;pointer-events:none;
+  background:radial-gradient(circle,rgba(125,211,252,.55),transparent 62%);
+  opacity:.3;will-change:opacity,transform;
+  animation:huntGlowBreathe 2.6s ease-in-out infinite;
+}
+@keyframes huntGlowBreathe{
+  0%,100%{opacity:.22;transform:scale(.9)}
+  50%{opacity:.5;transform:scale(1.04)}
 }
 .hunt-plus-main::after{
-  content:'';position:absolute;left:50%;top:50%;width:16px;height:16px;border-radius:50%;
-  transform:translate(-50%,-50%) scale(0);background:rgba(255,255,255,.26);opacity:0;pointer-events:none;
+  content:'';position:absolute;left:50%;top:50%;width:16px;height:16px;border-radius:50%;z-index:1;
+  transform:translate(-50%,-50%) scale(0);background:rgba(255,255,255,.28);opacity:0;pointer-events:none;
 }
 .hunt-plus-main:active,.hunt-plus-main.pulse{
-  animation:none;transform:scale(.94);border-color:rgba(125,211,252,.95);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.2),inset 0 -2px 5px rgba(0,0,0,.22),0 7px 16px rgba(0,0,0,.24),0 0 34px rgba(125,211,252,.4);
+  transform:scale(.94) translateZ(0);border-color:rgba(125,211,252,.98);
 }
+.hunt-plus-main:active .hunt-plus-glow,.hunt-plus-main.pulse .hunt-plus-glow{animation-play-state:paused;opacity:.6}
 .hunt-plus-main.pulse::after{animation:huntTapRipple .3s ease-out}
-.hunt-plus-main small{display:block;margin-top:5px;color:rgba(255,255,255,.62);font-size:8px;font-weight:900;text-transform:uppercase;letter-spacing:.08em}
+.hunt-plus-main small{display:block;margin-top:5px;color:rgba(255,255,255,.65);font-size:8px;font-weight:900;text-transform:uppercase;letter-spacing:.1em;position:relative;z-index:2}
 .hunt-plus-label{
   display:block;font-size:25px;font-weight:900;letter-spacing:.01em;
-  color:#fff;
-  text-shadow:0 -1px 0 rgba(255,255,255,.22),0 2px 10px rgba(0,0,0,.4);
+  color:#fff;position:relative;z-index:2;
+  text-shadow:0 -1px 0 rgba(255,255,255,.24),0 2px 10px rgba(0,0,0,.42);
 }
 .hunt-plus-sheen{position:absolute;inset:0;pointer-events:none;overflow:hidden;border-radius:inherit;z-index:1}
 .hunt-plus-sheen::before{
   content:'';position:absolute;top:-40%;bottom:-40%;left:-60%;width:36%;
-  background:linear-gradient(100deg,transparent,rgba(255,255,255,.4),transparent);
+  background:linear-gradient(100deg,transparent,rgba(255,255,255,.42),transparent);
   transform:translateX(-140%) skewX(-18deg);
+  will-change:transform;
 }
 .hunt-plus-main.pulse .hunt-plus-sheen::before{animation:huntSheenSweep .5s ease-out}
 @keyframes huntSheenSweep{
   from{transform:translateX(-140%) skewX(-18deg)}
   to{transform:translateX(360%) skewX(-18deg)}
 }
-.hunt-expand-btn{
-  position:relative;min-height:74px;border-radius:16px;border:1px solid rgba(125,211,252,.4);
-  background:linear-gradient(160deg,rgba(125,211,252,.16),rgba(192,132,252,.08) 55%,rgba(125,211,252,.05)),#1b2430;
-  color:#7dd3fc;cursor:pointer;font-family:var(--font);display:flex;flex-direction:column;align-items:center;
-  justify-content:center;gap:4px;transition:transform .08s ease,border-color .12s,box-shadow .12s;touch-action:manipulation;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.1),0 8px 18px rgba(0,0,0,.2);
-}
-.hunt-expand-btn:active{transform:scale(.94);border-color:rgba(125,211,252,.8)}
-.hunt-expand-btn small{font-size:8px;font-weight:900;text-transform:uppercase;letter-spacing:.06em;color:rgba(255,255,255,.7)}
-.hunt-big-overlay{
-  display:none;position:fixed;inset:0;z-index:9998;background:rgba(6,7,12,.82);backdrop-filter:blur(4px);
-  align-items:center;justify-content:center;padding:1.2rem;
-}
-.hunt-big-overlay.open{display:flex}
-.hunt-big-box{
-  position:relative;width:min(92vw,380px);padding:2rem 1.4rem 1.6rem;border-radius:22px;text-align:center;
-  border:1px solid rgba(125,211,252,.28);
-  background:
-    radial-gradient(circle at 88% 0%,rgba(247,215,116,.1),transparent 42%),
-    linear-gradient(180deg,rgba(125,211,252,.1),rgba(125,211,252,.02)),
-    var(--surface2);
-  box-shadow:0 20px 50px rgba(0,0,0,.4);
-}
-.hunt-big-close{
-  position:absolute;top:12px;right:12px;width:32px;height:32px;border-radius:50%;border:1px solid rgba(255,255,255,.14);
-  background:rgba(255,255,255,.06);color:#fff;font-size:14px;line-height:1;cursor:pointer;
-}
-.hunt-big-label{
-  font-family:var(--font-logo);font-size:11px;line-height:1.35;color:#7dd3fc;margin-bottom:1.1rem;letter-spacing:.02em;
-}
-.hunt-big-count{
-  position:relative;display:flex;align-items:center;justify-content:center;width:100%;height:110px;overflow:hidden;
-  font-family:var(--font);font-size:74px;font-weight:900;color:#fff;border:none;cursor:pointer;
-  text-shadow:0 -1px 0 rgba(255,255,255,.22),0 2px 16px rgba(0,0,0,.5);font-variant-numeric:tabular-nums;white-space:nowrap;
-  --digit-h:110px;padding:0 8px;border-radius:16px;touch-action:manipulation;
-  background:linear-gradient(135deg,rgba(125,211,252,.2),rgba(192,132,252,.15) 48%,rgba(247,215,116,.18));
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.18),
-    inset 0 -1px 0 rgba(0,0,0,.22),
-    inset 0 0 0 1px rgba(255,255,255,.1),
-    0 4px 14px rgba(0,0,0,.2);
-  transition:transform .08s ease;
-  animation:huntPlusIdle 2.4s ease-in-out infinite;
-}
-.hunt-big-count:active,.hunt-big-count.pulse{transform:scale(.96)}
-.hunt-big-hint{margin-top:.8rem;font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:rgba(255,255,255,.5)}
-.hunt-big-odds{margin-top:1.2rem}
 .hunt-tap-ring{
   position:fixed;z-index:9997;pointer-events:none;width:16px;height:16px;border-radius:50%;box-sizing:border-box;
   border:2px solid rgba(125,211,252,.8);box-shadow:0 0 14px rgba(125,211,252,.5);
@@ -1704,8 +1692,6 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   .hunt-count-card{padding:10px 8px}
   .hunt-count{height:34px;min-height:34px;font-size:28px;--digit-h:34px;padding:0 5px}
   .hunt-plus-main{min-height:70px;font-size:23px;border-radius:15px}
-  .hunt-expand-btn{min-height:70px;border-radius:15px}
-  .hunt-big-count{height:92px;font-size:58px;--digit-h:92px}
   .hunt-actions{gap:6px}
   .hunt-actions .btn{min-height:34px;font-size:10px;padding-left:5px;padding-right:5px}
   .region-stat-row.primary{grid-template-columns:1fr;padding:8px 9px 7px}
@@ -1943,14 +1929,11 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
           <span class="hunt-count-label">Compteur</span>
           <div class="hunt-count" id="huntCount"><span class="hunt-count-row"></span></div>
         </div>
-        <button class="hunt-expand-btn" id="huntExpandBtn" type="button" onclick="openHuntBigCounter()" aria-label="Agrandir le compteur">
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M8 3H5a2 2 0 0 0-2 2v3"></path>
-            <path d="M16 3h3a2 2 0 0 1 2 2v3"></path>
-            <path d="M8 21H5a2 2 0 0 1-2-2v-3"></path>
-            <path d="M16 21h3a2 2 0 0 0 2-2v-3"></path>
-          </svg>
-          <small>Agrandir</small>
+        <button class="hunt-plus-main" id="huntPlusMain" type="button" onclick="tapHuntPlus()">
+          <span class="hunt-plus-glow" aria-hidden="true"></span>
+          <span class="hunt-plus-sheen"></span>
+          <span class="hunt-plus-label">+1</span>
+          <small>continuer</small>
         </button>
       </div>
       <div class="hunt-methods" id="huntMethods"></div>
@@ -1975,27 +1958,6 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
       <button class="btn" onclick="closeModal()">Annuler</button>
       <button class="btn btn-counter-modal edit-only" id="modalCounterBtn" type="button" onclick="toggleModalCounter()">Compteur</button>
       <button class="btn-save edit-only" id="saveBtn" onclick="saveModal()">✦ Sauvegarder</button>
-    </div>
-  </div>
-</div>
-
-<!-- GROS COMPTEUR -->
-<div class="hunt-big-overlay" id="huntBigOverlay" onclick="if(event.target===this) closeHuntBigCounter()">
-  <div class="hunt-big-box">
-    <button class="hunt-big-close" type="button" onclick="closeHuntBigCounter()" aria-label="Fermer">✕</button>
-    <div class="hunt-big-label" id="huntBigLabel">Rencontres en cours</div>
-    <button class="hunt-big-count" id="huntCountBig" type="button" onclick="tapHuntBig(event)">
-      <span class="hunt-count-row"></span>
-    </button>
-    <div class="hunt-big-hint">Touche le chiffre pour +1</div>
-    <div class="hunt-big-odds" aria-live="polite">
-      <div class="hunt-odds-top">
-        <span class="hunt-odds-label" id="huntOddsLabelBig">Taux 1/512</span>
-        <strong class="hunt-odds-chance" id="huntOddsChanceBig">0%</strong>
-      </div>
-      <div class="hunt-odds-track">
-        <div class="hunt-odds-fill" id="huntOddsFillBig"></div>
-      </div>
     </div>
   </div>
 </div>
@@ -4103,7 +4065,6 @@ function setModalCounterMode(enabled) {
   const foundBtn = document.querySelector('#huntPanel .hunt-found');
   if (foundBtn) foundBtn.style.display = caught ? 'none' : '';
   if (enabled) renderHuntCounter();
-  else closeHuntBigCounter();
 }
 
 function toggleModalCounter() {
@@ -4268,8 +4229,8 @@ function updateHuntDigitCol(col, newValue, dir) {
   }, 620);
 }
 
-function setHuntCountDisplay(value, animate = false, counterId = 'huntCount') {
-  const counter = document.getElementById(counterId);
+function setHuntCountDisplay(value, animate = false) {
+  const counter = document.getElementById('huntCount');
   if (!counter) return;
   let row = counter.querySelector('.hunt-count-row');
   if (!row) {
@@ -4329,8 +4290,7 @@ function renderHuntCounter(animate = false, kind = 'flash') {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2
   }) + '%' : 'Info';
-  setHuntCountDisplay(count, animate, 'huntCount');
-  setHuntCountDisplay(count, animate, 'huntCountBig');
+  setHuntCountDisplay(count, animate);
   if (animate) {
     const card = counter.closest('.hunt-count-card');
     if (card) {
@@ -4347,14 +4307,6 @@ function renderHuntCounter(animate = false, kind = 'flash') {
   if (oddsLabel) oddsLabel.textContent = oddsMeta.label;
   if (oddsChance) oddsChance.textContent = chanceText;
   if (oddsFill) oddsFill.style.width = oddsMeta.odds ? `${Math.min(100, chance)}%` : '0%';
-  const oddsLabelBig = document.getElementById('huntOddsLabelBig');
-  const oddsChanceBig = document.getElementById('huntOddsChanceBig');
-  const oddsFillBig = document.getElementById('huntOddsFillBig');
-  if (oddsLabelBig) oddsLabelBig.textContent = oddsMeta.label;
-  if (oddsChanceBig) oddsChanceBig.textContent = chanceText;
-  if (oddsFillBig) oddsFillBig.style.width = oddsMeta.odds ? `${Math.min(100, chance)}%` : '0%';
-  const bigLabel = document.getElementById('huntBigLabel');
-  if (bigLabel) bigLabel.textContent = p.caught ? 'Rencontres avant capture' : 'Rencontres en cours';
 }
 
 function adjustHuntCounter(delta) {
@@ -4376,7 +4328,15 @@ function adjustHuntCounter(delta) {
   renderGrid();
 }
 
-function playHuntTapEffects(button, isMilestone, anchorY = .4) {
+function tapHuntPlus() {
+  const entry = getCurrentHuntEntry();
+  if (!entry) return;
+  adjustHuntCounter(1);
+  const updated = getCurrentHuntEntry();
+  const total = updated.caught ? updated.encounters : updated.huntCount;
+  const isMilestone = total > 0 && total % 10 === 0;
+
+  const button = document.getElementById('huntPlusMain');
   if (!button) return;
   try { navigator.vibrate?.(isMilestone ? [14, 30, 20] : 12); } catch (_) {}
   button.classList.remove('pulse');
@@ -4386,7 +4346,7 @@ function playHuntTapEffects(button, isMilestone, anchorY = .4) {
 
   const rect = button.getBoundingClientRect();
   const cx = rect.left + rect.width / 2;
-  const cy = rect.top + rect.height * anchorY;
+  const cy = rect.top + rect.height * .4;
 
   const ring = document.createElement('span');
   ring.className = 'hunt-tap-ring';
@@ -4424,38 +4384,20 @@ function playHuntTapEffects(button, isMilestone, anchorY = .4) {
   }
 
   if (isMilestone) {
-    const card = button.closest('.hunt-count-card') || button;
-    const r = card.getBoundingClientRect();
-    const mring = document.createElement('span');
-    mring.className = 'hunt-milestone-ring';
-    mring.style.left = `${r.left}px`;
-    mring.style.top = `${r.top}px`;
-    mring.style.width = `${r.width}px`;
-    mring.style.height = `${r.height}px`;
-    document.body.appendChild(mring);
-    setTimeout(() => mring.remove(), 760);
+    const counter = document.getElementById('huntCount');
+    const card = counter?.closest('.hunt-count-card');
+    if (card) {
+      const r = card.getBoundingClientRect();
+      const mring = document.createElement('span');
+      mring.className = 'hunt-milestone-ring';
+      mring.style.left = `${r.left}px`;
+      mring.style.top = `${r.top}px`;
+      mring.style.width = `${r.width}px`;
+      mring.style.height = `${r.height}px`;
+      document.body.appendChild(mring);
+      setTimeout(() => mring.remove(), 760);
+    }
   }
-}
-
-function tapHuntBig(event) {
-  const entry = getCurrentHuntEntry();
-  if (!entry) return;
-  adjustHuntCounter(1);
-  const updated = getCurrentHuntEntry();
-  const total = updated.caught ? updated.encounters : updated.huntCount;
-  const isMilestone = total > 0 && total % 10 === 0;
-  const button = (event && event.currentTarget) || document.getElementById('huntCountBig');
-  playHuntTapEffects(button, isMilestone, .5);
-}
-
-function openHuntBigCounter() {
-  if (!currentPokemon) return;
-  document.getElementById('huntBigOverlay')?.classList.add('open');
-  renderHuntCounter();
-}
-
-function closeHuntBigCounter() {
-  document.getElementById('huntBigOverlay')?.classList.remove('open');
 }
 
 function resetHuntCounter() {
@@ -4552,7 +4494,6 @@ function closeModal(options = {}) {
   document.getElementById('overlay').classList.remove('open');
   modal?.classList.remove('hunt-mode');
   document.getElementById('huntPanel')?.classList.remove('open');
-  closeHuntBigCounter();
   if (modal) modal.scrollTop = 0;
   currentPokemon = null;
   if (!options.skipHistory) updateAppHistory('push');
