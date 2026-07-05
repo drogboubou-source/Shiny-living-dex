@@ -4588,7 +4588,6 @@ function adjustHuntCounter(delta) {
   }
   saveProgressEntry(currentPokemon, entry);
   renderHuntCounter(true);
-  renderGrid();
 }
 
 function tapHuntPlus() {
@@ -4670,7 +4669,6 @@ function resetHuntCounter() {
   const field = entry.caught ? 'encounters' : 'huntCount';
   saveProgressEntry(currentPokemon, entry);
   renderHuntCounter(true, 'reset');
-  renderGrid();
 }
 
 function markHuntFound() {
@@ -4756,11 +4754,13 @@ function overlayClick(e) {
 }
 function closeModal(options = {}) {
   const modal = document.querySelector('#overlay .modal');
+  const wasOpen = document.getElementById('overlay').classList.contains('open');
   document.getElementById('overlay').classList.remove('open');
   modal?.classList.remove('hunt-mode');
   document.getElementById('huntPanel')?.classList.remove('open');
   if (modal) modal.scrollTop = 0;
   currentPokemon = null;
+  if (wasOpen) renderGrid();
   if (!options.skipHistory) updateAppHistory('push');
 }
 
