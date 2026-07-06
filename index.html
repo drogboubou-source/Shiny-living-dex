@@ -3933,7 +3933,7 @@ function getVisiblePokemonIds() {
     if (search && !name.toLowerCase().includes(search) && !String(id).includes(search)) continue;
     if (counterMode && (p.caught || (parseInt(p.huntCount) || 0) < 1)) continue;
     if (sort === 'legendary' && !LEGENDARY_ODDS_BASE_IDS.has(id)) continue;
-    if (unavailable) continue;
+    if (unavailable && counterMode) continue;
     if (!pokemonMatchesSortMode(p, sort)) continue;
     if (filter === 'caught' && !p.caught) continue;
     if (filter === 'missing' && p.caught) continue;
