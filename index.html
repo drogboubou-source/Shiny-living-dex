@@ -141,8 +141,10 @@ body.readonly-share .modal-form-fields select{pointer-events:none}
     linear-gradient(180deg,rgba(255,255,255,.085),rgba(255,255,255,.018)),
     rgba(24,24,31,.94);
   box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 8px 18px rgba(0,0,0,.18);
-  overflow:hidden;
+  overflow:hidden;cursor:pointer;color:var(--text);text-align:left;
 }
+.topbar-search-label{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:var(--font);font-size:12px;color:rgba(255,255,255,.68);padding-right:11px}
+.topbar-search.has-value .topbar-search-label{color:#fff}
 .topbar-search-icon{
   position:relative;display:grid;place-items:center;width:32px;height:100%;color:#dff6ff;
 }
@@ -159,7 +161,7 @@ body.readonly-share .modal-form-fields select{pointer-events:none}
   font-family:var(--font);font-size:12px;padding:0 11px 0 0;
 }
 .topbar-search input::placeholder{color:rgba(255,255,255,.44)}
-.topbar-search:focus-within{
+.topbar-search:focus-visible,.topbar-search[aria-expanded="true"]{
   border-color:rgba(125,211,252,.46);
   background:
     radial-gradient(circle at 18% 20%,rgba(125,211,252,.22),transparent 42%),
@@ -386,6 +388,55 @@ body.hunt-tray-open .card:active{
 }
 .hunt-tray-section-label::after{content:'';height:1px;flex:1;background:linear-gradient(90deg,rgba(255,255,255,.18),transparent)}
 .hunt-tray-empty{padding:1rem;text-align:center;color:var(--muted);font-size:12px}
+.search-popin{
+  position:fixed;top:calc(var(--header-h) + 10px);right:1rem;width:min(390px,calc(100vw - 2rem));
+  max-height:min(430px,calc(100dvh - var(--header-h) - 22px));
+  padding:.72rem;border-radius:16px;z-index:181;display:none;overflow:hidden;
+  background:
+    radial-gradient(circle at 16% 0%,rgba(125,211,252,.18),transparent 34%),
+    radial-gradient(circle at 100% 18%,rgba(192,132,252,.13),transparent 32%),
+    linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.018)),
+    #171720;
+  border:1px solid rgba(255,255,255,.15);
+  box-shadow:0 24px 70px rgba(0,0,0,.64),inset 0 1px 0 rgba(255,255,255,.08);
+}
+.search-popin.open{display:block}
+.search-popin::before{
+  content:'';position:absolute;left:0;right:0;top:0;height:2px;
+  background:linear-gradient(90deg,#7dd3fc,#c084fc,#d4af37);
+  opacity:.9;
+}
+.search-field{
+  display:grid;grid-template-columns:32px minmax(0,1fr);align-items:center;
+  margin:0 2px 9px;border-radius:13px;border:1px solid rgba(125,211,252,.28);
+  background:linear-gradient(180deg,rgba(125,211,252,.1),rgba(255,255,255,.018)),rgba(24,24,31,.95);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08);
+}
+.search-field .topbar-search-icon{height:40px}
+.search-field input{
+  width:100%;height:40px;min-width:0;border:0;outline:none;background:transparent;color:var(--text);
+  font-family:var(--font);font-size:13px;padding:0 12px 0 0;
+}
+.search-results{display:grid;grid-template-columns:1fr;gap:7px;max-height:calc(min(430px,100dvh - var(--header-h) - 22px) - 106px);overflow:auto;padding-right:2px}
+.search-result-card{
+  display:grid;grid-template-columns:44px minmax(0,1fr) auto;align-items:center;gap:8px;
+  min-width:0;padding:7px 8px;border-radius:12px;border:1px solid rgba(255,255,255,.095);
+  background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.016)),rgba(25,25,36,.88);
+  cursor:pointer;text-align:left;color:var(--text);
+}
+.search-result-card:hover{border-color:rgba(125,211,252,.24);background:linear-gradient(180deg,rgba(125,211,252,.075),rgba(255,255,255,.018)),rgba(25,25,36,.92)}
+.search-result-card img{width:44px;height:44px;object-fit:contain;filter:drop-shadow(0 7px 10px rgba(0,0,0,.38))}
+.search-result-copy{display:flex;flex-direction:column;min-width:0}
+.search-result-name{font-size:12px;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.search-result-meta{margin-top:3px;color:rgba(255,255,255,.56);font-size:9px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.search-result-state{
+  display:inline-flex;align-items:center;padding:5px 7px;border-radius:999px;
+  font-size:8px;font-weight:900;text-transform:uppercase;white-space:nowrap;
+  background:rgba(125,211,252,.12);border:1px solid rgba(125,211,252,.26);color:#dff6ff;
+}
+.search-result-state.caught{background:rgba(212,175,55,.12);border-color:rgba(212,175,55,.3);color:#fff7c8}
+.search-result-state.hunting{background:rgba(192,132,252,.13);border-color:rgba(192,132,252,.3);color:#f0ddff}
+.search-empty{padding:.9rem;text-align:center;color:var(--muted);font-size:12px}
 .pull-refresh{
   position:fixed;left:50%;top:calc(var(--header-h) + 10px);z-index:170;
   transform:translate(-50%,-18px);opacity:0;pointer-events:none;
@@ -490,12 +541,10 @@ body.hunt-tray-open .card:active{
   .logo-icon{width:30px;height:30px;border-radius:8px}
   .logo-subline{font-size:8px}
   .topbar-actions{gap:6px}
-  .topbar-search{width:40px;height:38px;border-radius:13px;grid-template-columns:38px 1px;transition:width .16s ease,grid-template-columns .16s ease}
-  .topbar-search:focus-within{width:min(118px,calc(100vw - 250px));grid-template-columns:28px minmax(0,1fr)}
+  .topbar-search{width:40px;height:38px;border-radius:13px;grid-template-columns:38px 0;transition:border-color .16s ease,background .16s ease}
   .topbar-search-icon{width:38px}
-  .topbar-search:focus-within .topbar-search-icon{width:28px}
-  .topbar-search input{opacity:0;padding:0;transition:opacity .12s ease}
-  .topbar-search:focus-within input{opacity:1;padding:0 9px 0 0}
+  .topbar-search-label{display:none}
+  .search-popin{right:.75rem;top:calc(var(--header-h) + 8px);width:calc(100vw - 1.5rem)}
   .hunt-tray-button{width:38px;height:38px;border-radius:13px;padding:4px}
   .hunt-tray-pokeball{width:29px;height:29px}
   .hunt-tray-count{right:-2px;top:-3px}
@@ -1849,10 +1898,10 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
     </button>
   </div>
   <div class="topbar-actions">
-    <label class="topbar-search" aria-label="Rechercher un Pokémon" onclick="document.getElementById('searchInput')?.focus()">
+    <button class="topbar-search" id="searchButton" type="button" onclick="toggleSearchPopin()" title="Rechercher un Pokémon" aria-label="Rechercher un Pokémon" aria-expanded="false">
       <span class="topbar-search-icon" aria-hidden="true"></span>
-      <input type="text" id="searchInput" placeholder="Rechercher" oninput="onSearchInput(this.value)">
-    </label>
+      <span class="topbar-search-label" id="searchButtonLabel">Rechercher</span>
+    </button>
     <button class="hunt-tray-button" id="huntTrayButton" type="button" onclick="toggleHuntTray()" title="Ouvrir le suivi de shasse" aria-label="Ouvrir le suivi de shasse" aria-expanded="false">
       <span class="hunt-tray-pokeball" aria-hidden="true"></span>
       <span class="hunt-tray-count" id="huntTrayCount">0</span>
@@ -1871,6 +1920,22 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
     <button class="hunt-tray-close" onclick="closeHuntTray()" aria-label="Fermer">&times;</button>
   </div>
   <div class="hunt-tray-list" id="huntTrayList"></div>
+</div>
+
+<div class="hunt-tray-backdrop" id="searchBackdrop" onclick="closeSearchPopin()" aria-hidden="true"></div>
+<div class="search-popin" id="searchPopin" role="dialog" aria-labelledby="searchPopinTitle">
+  <div class="hunt-tray-head">
+    <div>
+      <div class="hunt-tray-title" id="searchPopinTitle">Recherche</div>
+      <div class="hunt-tray-subtitle">Pokémon visibles pendant la saisie</div>
+    </div>
+    <button class="hunt-tray-close" onclick="closeSearchPopin()" aria-label="Fermer">&times;</button>
+  </div>
+  <label class="search-field" aria-label="Rechercher un Pokémon">
+    <span class="topbar-search-icon" aria-hidden="true"></span>
+    <input type="text" id="searchInput" placeholder="Nom ou numéro" oninput="onSearchInput(this.value)" onkeydown="if(event.key==='Escape') closeSearchPopin()">
+  </label>
+  <div class="search-results" id="searchResults"></div>
 </div>
 
 <div class="stats-popin" id="statsPopin" role="dialog" aria-labelledby="statsPopinTitle">
@@ -2327,6 +2392,7 @@ let currentStatusFilter = 'all';
 let restoringHistory = false;
 let suppressCardActivationUntil = 0;
 let huntTrayOpen = false;
+let searchPopinOpen = false;
 let suppressNextDocumentClick = false;
 const SPRITE_FALLBACK = './Assets/icon-192.png';
 const READONLY_PARAM_VALUES = new Set(['1', 'true', 'yes', 'view']);
@@ -2758,6 +2824,7 @@ function rowHuntMethod(p) {
 // Au chargement de la page, on tente de récupérer le fichier pokemon.json
 document.addEventListener('DOMContentLoaded', () => {
   document.addEventListener('pointerdown', closeHuntTrayOnOutsidePointer, true);
+  document.addEventListener('pointerdown', closeSearchPopinOnOutsidePointer, true);
   document.addEventListener('click', blockClickAfterHuntTrayClose, true);
   fetch('pokemon.json', { cache: 'no-store' })
     .then(response => {
@@ -3020,6 +3087,7 @@ function renderHuntTray() {
 function toggleHuntTray() {
   huntTrayOpen = !huntTrayOpen;
   renderHuntTray();
+  if (huntTrayOpen) closeSearchPopin();
   const popin = document.getElementById('huntTrayPopin');
   const backdrop = document.getElementById('huntTrayBackdrop');
   const button = document.getElementById('huntTrayButton');
@@ -3041,12 +3109,115 @@ function closeHuntTrayOnOutsidePointer(e) {
   if (!huntTrayOpen) return;
   const popin = document.getElementById('huntTrayPopin');
   const button = document.getElementById('huntTrayButton');
+  const searchButton = document.getElementById('searchButton');
   if (popin?.contains(e.target) || button?.contains(e.target)) return;
+  if (searchButton?.contains(e.target)) {
+    closeHuntTray();
+    return;
+  }
   e.preventDefault();
   e.stopPropagation();
   suppressNextDocumentClick = true;
   suppressCardActivationUntil = Date.now() + 90;
   closeHuntTray();
+}
+
+function getSearchResultState(id) {
+  const p = progress[id] || {};
+  if (p.caught) return { label: 'Capturé', cls: 'caught' };
+  if (p.hunting || (parseInt(p.huntCount) || 0) > 0) return { label: 'En cours', cls: 'hunting' };
+  return { label: 'À shasser', cls: '' };
+}
+
+function renderSearchResultItem(id) {
+  const p = progress[id] || {};
+  const state = getSearchResultState(id);
+  const count = parseInt(p.huntCount) || parseInt(p.encounters) || 0;
+  const meta = count > 0 ? `#${id} · ${count.toLocaleString('fr-FR')} rencontres` : `#${id}`;
+  return `
+    <button class="search-result-card" type="button" onclick="openModal(${id}); closeSearchPopin();">
+      <img src="${getPokemonSpriteUrl(id, !!p.caught, 'home')}" alt="" width="44" height="44" decoding="async"
+           onerror="handleSpriteError(this, ${id}, ${!!p.caught})">
+      <span class="search-result-copy">
+        <span class="search-result-name">${getPokemonDisplayName(id)}</span>
+        <span class="search-result-meta">${meta}</span>
+      </span>
+      <span class="search-result-state ${state.cls}">${state.label}</span>
+    </button>`;
+}
+
+function updateSearchButtonState() {
+  const input = document.getElementById('searchInput');
+  const button = document.getElementById('searchButton');
+  const label = document.getElementById('searchButtonLabel');
+  const value = input?.value.trim() || '';
+  button?.classList.toggle('has-value', !!value);
+  if (label) label.textContent = value || 'Rechercher';
+}
+
+function clearSearchInput() {
+  const input = document.getElementById('searchInput');
+  if (input) input.value = '';
+  renderSearchResults();
+}
+
+function renderSearchResults() {
+  const results = document.getElementById('searchResults');
+  const input = document.getElementById('searchInput');
+  if (!results || !input) return;
+  updateSearchButtonState();
+  const query = input.value.trim();
+  if (!query) {
+    results.innerHTML = '<div class="search-empty">Tape un nom ou un numéro.</div>';
+    return;
+  }
+  const ids = getVisiblePokemonIds().slice(0, 8);
+  if (!ids.length) {
+    results.innerHTML = '<div class="search-empty">Aucun Pokémon trouvé.</div>';
+    return;
+  }
+  results.innerHTML = ids.map(renderSearchResultItem).join('');
+}
+
+function toggleSearchPopin() {
+  searchPopinOpen = !searchPopinOpen;
+  if (searchPopinOpen) {
+    closeHuntTray();
+    closeStatsPopin();
+  }
+  const popin = document.getElementById('searchPopin');
+  const backdrop = document.getElementById('searchBackdrop');
+  const button = document.getElementById('searchButton');
+  popin?.classList.toggle('open', searchPopinOpen);
+  backdrop?.classList.toggle('open', searchPopinOpen);
+  button?.setAttribute('aria-expanded', String(searchPopinOpen));
+  renderSearchResults();
+  if (searchPopinOpen) requestAnimationFrame(() => document.getElementById('searchInput')?.focus());
+}
+
+function closeSearchPopin() {
+  searchPopinOpen = false;
+  document.getElementById('searchPopin')?.classList.remove('open');
+  document.getElementById('searchBackdrop')?.classList.remove('open');
+  document.getElementById('searchButton')?.setAttribute('aria-expanded', 'false');
+  document.getElementById('searchInput')?.blur();
+}
+
+function closeSearchPopinOnOutsidePointer(e) {
+  if (!searchPopinOpen) return;
+  const popin = document.getElementById('searchPopin');
+  const button = document.getElementById('searchButton');
+  const huntButton = document.getElementById('huntTrayButton');
+  if (popin?.contains(e.target) || button?.contains(e.target)) return;
+  if (huntButton?.contains(e.target)) {
+    closeSearchPopin();
+    return;
+  }
+  e.preventDefault();
+  e.stopPropagation();
+  suppressNextDocumentClick = true;
+  suppressCardActivationUntil = Date.now() + 90;
+  closeSearchPopin();
 }
 
 function blockClickAfterHuntTrayClose(e) {
@@ -3745,8 +3916,9 @@ const STATUS_FILTER_LABELS = {
 
 function onSearchInput(value) {
   renderGrid();
+  renderSearchResults();
   const trimmed = value.trim();
-  if (trimmed.length > 0) {
+  if (trimmed.length > 0 && !searchPopinOpen) {
     requestAnimationFrame(() => {
       document.getElementById('grid')?.scrollIntoView({ behavior: trimmed.length === 1 ? 'smooth' : 'auto', block: 'start' });
     });
@@ -3756,7 +3928,7 @@ function onSearchInput(value) {
 function applyStatusFilter(mode) {
   currentStatusFilter = mode;
   closeStatsPopin();
-  document.getElementById('searchInput').value = '';
+  clearSearchInput();
   renderGrid();
   renderStatusFilterChip();
   requestAnimationFrame(scrollMainToTop);
@@ -3930,7 +4102,7 @@ function renderRegionalFormsGrid(range, search, grid) {
 
 function renderGrid() {
   const r      = getCurrentRegionScope();
-  const search = document.getElementById('searchInput').value.toLowerCase();
+  const search = document.getElementById('searchInput')?.value.toLowerCase() || '';
   const sort   = document.getElementById('sortSelect')?.value || 'number';
   const activeGame = getActiveGameFilter();
   const isHuntingView = counterMode;
@@ -4292,7 +4464,7 @@ function switchRegion(i) {
   currentPokemon = null;
   sessionStorage.setItem(REGION_SESSION_KEY, String(i));
   scrollMainToTop();
-  document.getElementById('searchInput').value = '';
+  clearSearchInput();
   currentStatusFilter = 'all';
   renderSidebar();
   renderStats();
@@ -4323,7 +4495,7 @@ function goHomeFromLogo() {
   currentRegion = 'all';
   currentPokemon = null;
   sessionStorage.setItem(REGION_SESSION_KEY, 'all');
-  document.getElementById('searchInput').value = '';
+  clearSearchInput();
   currentStatusFilter = 'all';
   const sortSelect = document.getElementById('sortSelect');
   if (sortSelect) sortSelect.value = 'number';
@@ -4704,8 +4876,12 @@ function resetHuntCounter() {
   const entry = getCurrentHuntEntry();
   if (!entry) return;
   const field = entry.caught ? 'encounters' : 'huntCount';
+  entry[field] = 0;
+  if (!entry.caught) entry.hunting = false;
   saveProgressEntry(currentPokemon, entry);
   renderHuntCounter(true, 'reset');
+  renderHuntTray();
+  renderSearchResults();
 }
 
 function markHuntFound() {
@@ -4972,7 +5148,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=220', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=222', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
