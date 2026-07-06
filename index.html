@@ -647,6 +647,8 @@ body.card-interaction-suppressed .card:active{
   .iv-grid{grid-template-columns:1fr 1fr}
   .modal{padding:1.35rem;max-height:92vh}
   .modal-hero{display:grid;grid-template-columns:1fr;justify-items:center;text-align:center;gap:.85rem}
+  .modal-details,.modal-num,.modal-name,.modal-region{text-align:center}
+  .modal-name-row{justify-content:center}
   .modal-visual{grid-template-columns:48px auto 48px;gap:12px}
   .modal-nav-card{width:48px;min-height:70px}
   .modal-nav-card img{width:30px;height:30px}
@@ -1230,8 +1232,8 @@ body.card-interaction-suppressed .card:active{
     radial-gradient(circle at 14% -8%,rgba(192,132,252,.16),transparent 34%),
     #171720;
   border:1px solid rgba(255,255,255,.13);
-  border-radius:var(--r-lg);width:min(500px,calc(100vw - 2rem));max-width:calc(100vw - 2rem);
-  max-height:90vh;overflow-y:auto;overflow-x:hidden;padding:1.75rem;position:relative;
+  border-radius:18px;width:min(590px,calc(100vw - 2rem));max-width:calc(100vw - 2rem);
+  max-height:90vh;overflow-y:auto;overflow-x:hidden;padding:1.35rem;position:relative;
   min-width:0;overscroll-behavior:contain;
   box-shadow:0 28px 80px rgba(0,0,0,.64),inset 0 1px 0 rgba(255,255,255,.08);
 }
@@ -1247,9 +1249,17 @@ body.card-interaction-suppressed .card:active{
   border-radius:6px;transition:color .12s;
 }
 .modal-close:hover{color:var(--text)}
-.modal-hero{display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem;min-width:0}
+.modal-hero{
+  display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:1rem;margin-bottom:1rem;min-width:0;
+  padding:12px;border-radius:15px;border:1px solid rgba(255,255,255,.11);
+  background:
+    radial-gradient(circle at 18% 8%,rgba(125,211,252,.12),transparent 38%),
+    linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.014)),
+    rgba(24,24,31,.72);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.065),0 12px 28px rgba(0,0,0,.18);
+}
 .modal-hero > div{min-width:0}
-.modal-details{flex:1;text-align:center}
+.modal-details{text-align:left}
 .modal-visual{display:grid;grid-template-columns:54px auto 54px;align-items:center;gap:18px;flex:0 0 auto}
 .modal-nav-card{
   min-width:0;width:54px;min-height:78px;padding:5px 4px;border-radius:12px;
@@ -1279,12 +1289,12 @@ body.card-interaction-suppressed .card:active{
 }
 .sprite-pair{display:flex;gap:8px}
 .sprite-label{font-size:10px;color:var(--muted);text-align:center;margin-top:3px}
-.modal-num{font-family:var(--font);font-size:12px;color:var(--muted);text-align:center}
-.modal-name{font-family:var(--font);font-size:22px;color:#fff;overflow-wrap:anywhere;text-align:center}
-.modal-name-row{display:flex;align-items:center;gap:8px;justify-content:center;min-width:0;flex-wrap:wrap}
+.modal-num{font-family:var(--font);font-size:11px;color:rgba(255,255,255,.56);text-align:left;margin-bottom:3px}
+.modal-name{font-family:var(--font);font-size:23px;line-height:1.12;color:#fff;overflow-wrap:anywhere;text-align:left}
+.modal-name-row{display:flex;align-items:center;gap:8px;justify-content:flex-start;min-width:0;flex-wrap:wrap}
 .modal-ball-icon{width:24px;height:24px;object-fit:contain;filter:drop-shadow(0 3px 6px rgba(0,0,0,.36));display:none;flex:0 0 auto}
 .modal-ball-icon.visible{display:block}
-.modal-region{font-size:12px;margin-top:4px;text-align:center}
+.modal-region{font-size:12px;margin-top:5px;text-align:left;color:rgba(255,255,255,.58)}
 .regional-form-link{
   display:none;align-items:center;justify-content:center;gap:5px;
   min-height:24px;padding:4px 8px;border-radius:999px;
@@ -1293,12 +1303,13 @@ body.card-interaction-suppressed .card:active{
   border:1px solid rgba(125,211,252,.28);cursor:pointer;
 }
 .regional-form-link.visible{display:inline-flex}
-.form-toggles-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:1.15rem;min-width:0}
+.modal-form-fields{display:grid;gap:12px;min-width:0}
+.form-toggles-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:0;min-width:0}
 .caught-toggle{
   display:flex;align-items:center;gap:9px;min-width:0;
   background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.014)),var(--surface2);
   border:1px solid rgba(255,255,255,.105);
-  border-radius:var(--r);padding:10px 12px;cursor:pointer;
+  border-radius:13px;padding:11px 12px;cursor:pointer;
   transition:border-color .16s ease,background .16s ease,transform .16s cubic-bezier(.34,1.56,.64,1),box-shadow .16s ease;
   box-shadow:inset 0 1px 0 rgba(255,255,255,.055);
 }
@@ -1308,13 +1319,13 @@ body.card-interaction-suppressed .card:active{
   box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 0 0 1px rgba(192,132,252,.14),0 0 14px rgba(192,132,252,.2);
 }
 .caught-toggle input{width:16px;height:16px;cursor:pointer;accent-color:#c084fc;flex:none}
-.caught-toggle span{font-size:13px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.caught-toggle span{font-size:13px;font-weight:900;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .caught-toggle:has(input:checked) span{color:#c084fc}
 .shiny-perfect{
   display:flex;align-items:center;gap:9px;min-width:0;
   background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.014)),var(--surface2);
   border:1px solid rgba(255,255,255,.105);
-  border-radius:var(--r);padding:10px 12px;cursor:pointer;
+  border-radius:13px;padding:11px 12px;cursor:pointer;
   transition:border-color .16s ease,background .16s ease,transform .16s cubic-bezier(.34,1.56,.64,1),box-shadow .16s ease;
   box-shadow:inset 0 1px 0 rgba(255,255,255,.055);
 }
@@ -1324,10 +1335,10 @@ body.card-interaction-suppressed .card:active{
   box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 0 0 1px rgba(212,175,55,.14),0 0 14px rgba(212,175,55,.2);
 }
 .shiny-perfect input{width:16px;height:16px;cursor:pointer;accent-color:#d4af37;flex:none}
-.shiny-perfect span{font-size:13px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.shiny-perfect span{font-size:13px;font-weight:900;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .shiny-perfect:has(input:checked) span{color:#d4af37}
 .form-section{
-  position:relative;margin-bottom:1.15rem;padding:14px 14px 4px;border-radius:var(--r);overflow:hidden;min-width:0;
+  position:relative;margin-bottom:0;padding:14px;border-radius:15px;overflow:hidden;min-width:0;
   background:
     radial-gradient(circle at 14% -25%,var(--section-glow,rgba(125,211,252,.09)),transparent 55%),
     linear-gradient(180deg,rgba(255,255,255,.036),rgba(255,255,255,.008)),
@@ -1336,25 +1347,25 @@ body.card-interaction-suppressed .card:active{
 }
 .form-section-title{
   display:flex;align-items:center;gap:7px;font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;
-  color:rgba(255,255,255,.66);margin-bottom:.9rem;
+  color:rgba(255,255,255,.72);margin-bottom:.85rem;
 }
 .form-section-title::before{
   content:'';width:5px;height:5px;border-radius:50%;flex:none;
   background:var(--section-dot,#7dd3fc);box-shadow:0 0 7px var(--section-dot,#7dd3fc);
 }
-.form-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:10px;min-width:0;align-items:end;margin-bottom:1rem}
+.form-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:10px;min-width:0;align-items:end;margin-bottom:10px}
 .form-grid-2 .form-row{display:flex;flex-direction:column;margin-bottom:0}
 .form-grid-2 .form-row label{min-height:28px;display:flex;align-items:flex-end}
 hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
-.form-row{margin-bottom:1rem;min-width:0}
+.form-row{margin-bottom:10px;min-width:0}
 .form-row:last-child{margin-bottom:0}
-.form-row label{display:block;font-size:11px;color:#9a9ac4;margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px}
+.form-row label{display:block;font-size:10px;color:rgba(255,255,255,.62);margin-bottom:5px;text-transform:uppercase;letter-spacing:.04em;font-weight:900}
 .form-row input[type=text],.form-row input[type=date],.form-row input[type=url],.form-row select,.form-row textarea{
-  width:100%;min-width:0;padding:9px 12px;
+  width:100%;min-width:0;min-height:42px;padding:10px 12px;
   background:linear-gradient(160deg,rgba(192,132,252,.055),rgba(125,211,252,.035)),var(--surface2);
   border:1px solid rgba(255,255,255,.1);
   border-radius:var(--r);color:var(--text);
-  font-family:var(--font);font-size:13px;outline:none;
+  font-family:var(--font);font-size:13px;line-height:1.25;outline:none;
   transition:border-color .16s ease,box-shadow .16s ease;
   box-shadow:inset 0 1px 0 rgba(255,255,255,.05);
 }
@@ -1372,7 +1383,7 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   border-color:rgba(125,211,252,.5);
   box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 0 0 3px rgba(125,211,252,.13);
 }
-.form-row textarea{resize:vertical;min-height:60px}
+.form-row textarea{resize:vertical;min-height:72px}
 .hunt-panel{
   display:none;margin:1.1rem 0 0;padding:1rem .9rem .9rem;border:1px solid rgba(125,211,252,.22);border-radius:var(--r);
   background:
@@ -1875,6 +1886,8 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   .type-row{gap:3px;margin:1px 0 3px;padding:0}
   .type-pill,.type-pill img{width:40px;height:10px}
   .modal-hero{display:grid;grid-template-columns:1fr;justify-items:center;text-align:center;gap:.85rem}
+  .modal-details,.modal-num,.modal-name,.modal-region{text-align:center}
+  .modal-name-row{justify-content:center}
   .modal-visual{grid-template-columns:48px auto 48px;gap:12px}
   .modal-nav-card{width:48px;min-height:70px}
   .modal-nav-card img{width:30px;height:30px}
@@ -2074,11 +2087,11 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
     <div class="form-toggles-row">
       <label class="caught-toggle">
         <input type="checkbox" id="fCaught">
-        <span>✦ Shiny capturé !</span>
+        <span>Capturé</span>
       </label>
       <label class="shiny-perfect">
         <input type="checkbox" id="fPerfect">
-        <span>⬡ Shiny parfait</span>
+        <span>Parfait</span>
       </label>
     </div>
 
@@ -5176,7 +5189,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=223', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=224', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
