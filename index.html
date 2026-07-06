@@ -632,6 +632,7 @@ body.card-interaction-suppressed .card:active{
   .generation-divider strong{font-size:8px}
   .card{min-height:152px;padding:9px 6px 8px}
   .card-sprite{width:56px;height:56px}
+  .card-sprite-row .card-sprite{width:38px;height:38px}
   .card .pname{font-size:12px;min-height:auto;padding:0}
   .card .num{font-size:8px;padding:3px 6px 2px;margin-left:2px}
   .card .status{font-size:7px;padding:3px 6px}
@@ -1020,6 +1021,15 @@ body.card-interaction-suppressed .card:active{
   object-fit:contain;filter:drop-shadow(0 4px 8px rgba(0,0,0,.4));
 }
 .card.unavailable .card-sprite{filter:grayscale(1) drop-shadow(0 4px 8px rgba(0,0,0,.4))}
+.card-sprite-row{
+  order:2;margin:1px 0 2px;display:flex;align-items:flex-end;justify-content:center;gap:6px;width:100%;
+}
+.card-sprite-row .card-sprite{width:52px;height:52px;margin:0}
+.card-sprite-row .sprite-shiny{filter:drop-shadow(0 4px 8px rgba(0,0,0,.4)) drop-shadow(0 0 6px rgba(192,132,252,.45))}
+.card.unavailable .card-sprite-row .card-sprite{filter:grayscale(1) drop-shadow(0 4px 8px rgba(0,0,0,.4))}
+.sprite-pair{display:flex;flex-direction:column;align-items:center;gap:2px}
+.sprite-pair-label{font-size:6px;font-weight:900;text-transform:uppercase;letter-spacing:.4px;color:rgba(255,255,255,.5)}
+.sprite-pair.is-shiny .sprite-pair-label{color:#c084fc}
 .card.caught,.card.perfect,.card.hunting{border-color:transparent}
 .card.caught{
   --card-accent:#c084fc;
@@ -1843,6 +1853,7 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   .generation-divider strong{font-size:8px}
   .card{min-height:152px;padding:9px 6px 8px}
   .card-sprite{width:56px;height:56px}
+  .card-sprite-row .card-sprite{width:38px;height:38px}
   .card .pname{font-size:12px;min-height:auto;padding:0}
   .card .num{font-size:8px;padding:3px 6px 2px;margin-left:2px}
   .card .status{font-size:7px;padding:3px 6px}
@@ -3418,6 +3429,16 @@ function handlePokemonSpriteError(img, id, shiny) {
   img.src = SPRITE_FALLBACK;
 }
 
+function renderSpriteRowHtml(id, name) {
+  const normalUrl = getPokemonSpriteUrl(id, false);
+  const shinyUrl = getPokemonSpriteUrl(id, true);
+  return `
+    <div class="card-sprite-row">
+      <img class="card-sprite sprite-normal" src="${normalUrl}" alt="${name} (normal)" loading="lazy" onerror="handlePokemonSpriteError(this, ${id}, false)">
+      <img class="card-sprite sprite-shiny" src="${shinyUrl}" alt="${name} (shiny)" loading="lazy" onerror="handlePokemonSpriteError(this, ${id}, true)">
+    </div>`;
+}
+
 function initModalChoiceLists() {
   const ballSelect = document.getElementById('fPokeball');
   if (ballSelect && !ballSelect.dataset.ready) {
@@ -3997,13 +4018,11 @@ function createRegionalOriginalCard(id) {
       activatePokemonCard(card, id);
     }
   };
-  const useShinySprite = !!p.caught;
-  const spriteUrl = getPokemonSpriteUrl(id, useShinySprite);
   card.innerHTML = `
     <div class="form-tag">Base</div>
     <div class="card-watermark" aria-hidden="true">${String(id).padStart(3,'0')}</div>
     <div class="num">#${String(id).padStart(4,'0')}</div>
-    <img class="card-sprite" src="${spriteUrl}" alt="${name}" loading="lazy" onerror="handlePokemonSpriteError(this, ${id}, ${useShinySprite})">
+    ${renderSpriteRowHtml(id, name)}
     <div class="pname">${name}</div>
     <div class="type-row">${renderTypeBadges(id)}</div>
     <div class="status">${statusHtml}</div>
@@ -4029,13 +4048,11 @@ function createRegionalFormCard(form) {
       if (!unavailable) activatePokemonCard(card, form.formId);
     }
   };
-  const useShinySprite = !!p.caught && !unavailable;
-  const spriteUrl = getPokemonSpriteUrl(form.baseId, useShinySprite);
   card.innerHTML = `
     <div class="form-tag">${form.region}</div>
     <div class="card-watermark" aria-hidden="true">${String(form.baseId).padStart(3,'0')}</div>
     <div class="num">#${String(form.baseId).padStart(4,'0')}</div>
-    <img class="card-sprite" src="${spriteUrl}" alt="${form.label}" loading="lazy" onerror="handlePokemonSpriteError(this, ${form.baseId}, ${useShinySprite})">
+    ${renderSpriteRowHtml(form.baseId, form.label)}
     <div class="pname">${form.label}</div>
     <div class="type-row">${renderTypeBadgesForTypes(form.types)}</div>
     <div class="status">${statusHtml}</div>
@@ -4103,13 +4120,11 @@ function renderGrid() {
 
     const typeBadges = renderTypeBadges(id);
     const statusHtml = unavailable ? 'Indisponible' : getCardStatusHtml(p, isHuntingCard);
-    const useShinySprite = !!p.caught && !unavailable;
-    const spriteUrl = getPokemonSpriteUrl(id, useShinySprite);
 
     card.innerHTML = `
       <div class="card-watermark" aria-hidden="true">${String(id).padStart(3,'0')}</div>
       <div class="num">#${String(id).padStart(4,'0')}</div>
-      <img class="card-sprite" src="${spriteUrl}" alt="${name}" loading="lazy" onerror="handlePokemonSpriteError(this, ${id}, ${useShinySprite})">
+      ${renderSpriteRowHtml(id, name)}
       <div class="pname">${name}</div>
       <div class="type-row">${typeBadges}</div>
       <div class="status">${statusHtml}</div>
