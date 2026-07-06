@@ -1,5 +1,5 @@
-const CACHE_NAME = 'shiny-living-dex-v224';
-const RUNTIME_CACHE = 'shiny-living-dex-runtime-v224';
+const CACHE_NAME = 'shiny-living-dex-v225';
+const RUNTIME_CACHE = 'shiny-living-dex-runtime-v225';
 const OFFLINE_URL = './index.html';
 const APP_SHELL = [
   './',
@@ -86,8 +86,10 @@ self.addEventListener('fetch', event => {
     event.respondWith(
       caches.match(event.request)
         .then(cached => cached || fetch(event.request).then(response => {
-          const copy = response.clone();
-          caches.open(RUNTIME_CACHE).then(cache => cache.put(event.request, copy));
+          if (response.ok) {
+            const copy = response.clone();
+            caches.open(RUNTIME_CACHE).then(cache => cache.put(event.request, copy));
+          }
           return response;
         }))
         .catch(() => caches.match('./Assets/icon-192.png'))
@@ -99,8 +101,10 @@ self.addEventListener('fetch', event => {
     caches.match(event.request)
       .then(cached => cached || fetch(event.request)
       .then(response => {
-        const copy = response.clone();
-        caches.open(RUNTIME_CACHE).then(cache => cache.put(event.request, copy));
+        if (response.ok) {
+          const copy = response.clone();
+          caches.open(RUNTIME_CACHE).then(cache => cache.put(event.request, copy));
+        }
         return response;
       }))
       .catch(() => caches.match(event.request))

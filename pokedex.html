@@ -1058,6 +1058,20 @@ function getPokemonSpriteUrl(id, shiny = false, mode = spriteMode) {
 }
 
 function handleSpriteError(img, id, shiny = false) {
+  // Une 1re erreur peut être un simple 429 (rate-limit GitHub) plutôt qu'un sprite
+  // manquant : on retente une fois la même URL après un court délai avant
+  // de basculer définitivement sur une image de secours.
+  if (!img.dataset.retried) {
+    img.dataset.retried = '1';
+    const originalSrc = img.src;
+    const delay = 800 + Math.random() * 1200;
+    setTimeout(() => {
+      img.onerror = () => handleSpriteError(img, id, shiny);
+      img.src = originalSrc.includes('?') ? `${originalSrc}&retry=1` : `${originalSrc}?retry=1`;
+    }, delay);
+    return;
+  }
+
   const fallback = isHomeSpriteMode()
     ? (shiny ? getPokemonSpriteUrl(id, false, 'home') : getPokemonSpriteUrl(id, false, 'pixel'))
     : (shiny ? getPokemonSpriteUrl(id, false, 'pixel') : SPRITE_FALLBACK);
