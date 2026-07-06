@@ -3465,27 +3465,6 @@ function getPokemonSpriteUrl(id, shiny = false, mode = spriteMode) {
   return `${base}/${shiny ? 'shiny/' : ''}${id}.png`;
 }
 
-function getPokemonSpriteFallbacks(id, shiny = false) {
-  const preferredMode = isHomeSpriteMode() ? 'home' : 'pixel';
-  const secondaryMode = preferredMode === 'home' ? 'pixel' : 'home';
-  const candidates = [
-    getPokemonSpriteUrl(id, shiny, preferredMode),
-    shiny ? getPokemonSpriteUrl(id, false, preferredMode) : '',
-    getPokemonSpriteUrl(id, shiny, secondaryMode),
-    shiny ? getPokemonSpriteUrl(id, false, secondaryMode) : '',
-    SPRITE_FALLBACK
-  ].filter(Boolean);
-  return [...new Set(candidates)];
-}
-
-function sameSpriteUrl(a, b) {
-  try {
-    return new URL(a, location.href).href === new URL(b, location.href).href;
-  } catch (_) {
-    return a === b;
-  }
-}
-
 function getPokeballSpriteUrl(ballId) {
   return ballId ? `${ITEM_SPRITE_BASE}/${ballId}.png` : '';
 }
@@ -3569,18 +3548,11 @@ function activatePokemonCard(card, id) {
 }
 
 function handleSpriteError(img, id, shiny = false) {
-  const candidates = getPokemonSpriteFallbacks(id, shiny);
-  const tried = (img.dataset.spriteTried || '').split('|').filter(Boolean);
-  const current = img.currentSrc || img.src || '';
-  if (current) tried.push(current);
-  img.dataset.spriteTried = [...new Set(tried)].join('|');
-  const next = candidates.find(url => !tried.some(done => sameSpriteUrl(done, url)) && !sameSpriteUrl(current, url));
-  if (!next) {
-    img.onerror = null;
-    img.src = SPRITE_FALLBACK;
-    return;
-  }
-  img.src = next;
+  const fallback = isHomeSpriteMode()
+    ? getPokemonSpriteUrl(id, shiny, 'home')
+    : getPokemonSpriteUrl(id, shiny, 'pixel');
+  img.onerror = () => { img.onerror = null; img.src = SPRITE_FALLBACK; };
+  img.src = fallback;
 }
 
 function toggleSpriteMode() {
@@ -4983,8 +4955,6 @@ function openModal(id, options = {}) {
 
   const normalSprite = document.getElementById('mSprite');
   const shinySprite = document.getElementById('mSpriteShiny');
-  delete normalSprite.dataset.spriteTried;
-  delete shinySprite.dataset.spriteTried;
   normalSprite.onerror = () => handleSpriteError(normalSprite, id, false);
   shinySprite.onerror = () => handleSpriteError(shinySprite, id, true);
   normalSprite.src = getPokemonModalSpriteUrl(id, false);
@@ -5219,7 +5189,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=225', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=226', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
