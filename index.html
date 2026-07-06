@@ -318,6 +318,21 @@ body.hunt-tray-open .card:active{
     0 6px 10px rgba(0,0,0,.4),
     0 18px 30px rgba(0,0,0,.5)!important;
 }
+body.card-interaction-suppressed .card,
+body.card-interaction-suppressed .card:hover,
+body.card-interaction-suppressed .card:active{
+  transform:none!important;
+  transition:none!important;
+}
+body.card-interaction-suppressed .card:hover,
+body.card-interaction-suppressed .card:active{
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.13),
+    inset 0 -14px 18px rgba(0,0,0,.18),
+    0 0 0 1px rgba(0,0,0,.55),
+    0 6px 10px rgba(0,0,0,.4),
+    0 18px 30px rgba(0,0,0,.5)!important;
+}
 .hunt-tray-popin{
   position:fixed;top:calc(var(--header-h) + 10px);right:1rem;width:min(370px,calc(100vw - 2rem));
   padding:.72rem;border-radius:16px;z-index:181;display:none;overflow:hidden;
@@ -2394,6 +2409,7 @@ let suppressCardActivationUntil = 0;
 let huntTrayOpen = false;
 let searchPopinOpen = false;
 let suppressNextDocumentClick = false;
+let cardInteractionSuppressTimer = null;
 const SPRITE_FALLBACK = './Assets/icon-192.png';
 const READONLY_PARAM_VALUES = new Set(['1', 'true', 'yes', 'view']);
 const READONLY_SHARE = (() => {
@@ -3105,6 +3121,15 @@ function closeHuntTray() {
   document.getElementById('huntTrayButton')?.setAttribute('aria-expanded', 'false');
 }
 
+function suppressCardInteraction(duration = 360) {
+  suppressCardActivationUntil = Date.now() + duration;
+  document.body.classList.add('card-interaction-suppressed');
+  clearTimeout(cardInteractionSuppressTimer);
+  cardInteractionSuppressTimer = setTimeout(() => {
+    document.body.classList.remove('card-interaction-suppressed');
+  }, duration);
+}
+
 function closeHuntTrayOnOutsidePointer(e) {
   if (!huntTrayOpen) return;
   const popin = document.getElementById('huntTrayPopin');
@@ -3112,13 +3137,14 @@ function closeHuntTrayOnOutsidePointer(e) {
   const searchButton = document.getElementById('searchButton');
   if (popin?.contains(e.target) || button?.contains(e.target)) return;
   if (searchButton?.contains(e.target)) {
+    suppressCardInteraction();
     closeHuntTray();
     return;
   }
   e.preventDefault();
   e.stopPropagation();
   suppressNextDocumentClick = true;
-  suppressCardActivationUntil = Date.now() + 90;
+  suppressCardInteraction();
   closeHuntTray();
 }
 
@@ -3210,13 +3236,14 @@ function closeSearchPopinOnOutsidePointer(e) {
   const huntButton = document.getElementById('huntTrayButton');
   if (popin?.contains(e.target) || button?.contains(e.target)) return;
   if (huntButton?.contains(e.target)) {
+    suppressCardInteraction();
     closeSearchPopin();
     return;
   }
   e.preventDefault();
   e.stopPropagation();
   suppressNextDocumentClick = true;
-  suppressCardActivationUntil = Date.now() + 90;
+  suppressCardInteraction();
   closeSearchPopin();
 }
 
@@ -3503,6 +3530,7 @@ function playPokemonCry(id) {
 
 function activatePokemonCard(card, id) {
   if (Date.now() < suppressCardActivationUntil) return;
+  if (document.body.classList.contains('card-interaction-suppressed')) return;
   openModal(id);
 }
 
@@ -5148,7 +5176,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=222', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=223', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
