@@ -2424,6 +2424,7 @@ let searchPopinOpen = false;
 let suppressNextDocumentClick = false;
 let cardInteractionSuppressTimer = null;
 const SPRITE_FALLBACK = './Assets/icon-192.png';
+const SPRITE_ASSET_VERSION = '228';
 const READONLY_PARAM_VALUES = new Set(['1', 'true', 'yes', 'view']);
 const READONLY_SHARE = (() => {
   const params = new URLSearchParams(location.search);
@@ -3461,8 +3462,10 @@ function isHomeSpriteMode() {
 
 function getPokemonSpriteUrl(id, shiny = false, mode = spriteMode) {
   const base = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon';
-  if (mode === 'home') return `${base}/other/home/${shiny ? 'shiny/' : ''}${id}.png`;
-  return `${base}/${shiny ? 'shiny/' : ''}${id}.png`;
+  const path = mode === 'home'
+    ? `${base}/other/home/${shiny ? 'shiny/' : ''}${id}.png`
+    : `${base}/${shiny ? 'shiny/' : ''}${id}.png`;
+  return `${path}?v=${SPRITE_ASSET_VERSION}`;
 }
 
 function getPokeballSpriteUrl(ballId) {
@@ -3516,7 +3519,7 @@ function toggleFormTarget() {
 
 function getPokemonAnimatedSpriteUrl(id, shiny = false) {
   const base = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated';
-  return `${base}/${shiny ? 'shiny/' : ''}${id}.gif`;
+  return `${base}/${shiny ? 'shiny/' : ''}${id}.gif?v=${SPRITE_ASSET_VERSION}`;
 }
 
 function hasPokemonAnimatedSprite(id) {
@@ -3548,11 +3551,22 @@ function activatePokemonCard(card, id) {
 }
 
 function handleSpriteError(img, id, shiny = false) {
-  const fallback = isHomeSpriteMode()
-    ? getPokemonSpriteUrl(id, shiny, 'home')
-    : getPokemonSpriteUrl(id, shiny, 'pixel');
-  img.onerror = () => { img.onerror = null; img.src = SPRITE_FALLBACK; };
-  img.src = fallback;
+  const current = img.currentSrc || img.src || '';
+  const step = Number(img.dataset.spriteFallbackStep || 0);
+  img.dataset.spriteFallbackStep = String(step + 1);
+
+  if (step === 0 && current.includes('/other/home/')) {
+    img.src = getPokemonSpriteUrl(id, shiny, 'pixel');
+    return;
+  }
+
+  if (step <= 1 && shiny) {
+    img.src = getPokemonSpriteUrl(id, false, current.includes('/other/home/') ? 'home' : 'pixel');
+    return;
+  }
+
+  img.onerror = null;
+  img.src = SPRITE_FALLBACK;
 }
 
 function toggleSpriteMode() {
@@ -4955,6 +4969,8 @@ function openModal(id, options = {}) {
 
   const normalSprite = document.getElementById('mSprite');
   const shinySprite = document.getElementById('mSpriteShiny');
+  delete normalSprite.dataset.spriteFallbackStep;
+  delete shinySprite.dataset.spriteFallbackStep;
   normalSprite.onerror = () => handleSpriteError(normalSprite, id, false);
   shinySprite.onerror = () => handleSpriteError(shinySprite, id, true);
   normalSprite.src = getPokemonModalSpriteUrl(id, false);
@@ -5189,7 +5205,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=227', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=228', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});

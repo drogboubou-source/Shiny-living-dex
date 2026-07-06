@@ -1,5 +1,5 @@
-const CACHE_NAME = 'shiny-living-dex-v227';
-const RUNTIME_CACHE = 'shiny-living-dex-runtime-v227';
+const CACHE_NAME = 'shiny-living-dex-v228';
+const RUNTIME_CACHE = 'shiny-living-dex-runtime-v228';
 const OFFLINE_URL = './index.html';
 const APP_SHELL = [
   './',
@@ -55,6 +55,7 @@ self.addEventListener('message', event => {
 
 self.addEventListener('fetch', event => {
   if (event.request.method !== 'GET') return;
+  const requestUrl = new URL(event.request.url);
 
   if (event.request.mode === 'navigate') {
     event.respondWith(
@@ -69,7 +70,9 @@ self.addEventListener('fetch', event => {
     return;
   }
 
-  if (new URL(event.request.url).pathname.endsWith('/pokemon.json')) {
+  if (requestUrl.origin !== self.location.origin) return;
+
+  if (requestUrl.pathname.endsWith('/pokemon.json')) {
     event.respondWith(
       fetch(event.request, { cache: 'no-store' })
         .then(response => {
@@ -78,21 +81,6 @@ self.addEventListener('fetch', event => {
           return response;
         })
         .catch(() => caches.match(event.request))
-    );
-    return;
-  }
-
-  if (event.request.url.includes('raw.githubusercontent.com/PokeAPI/sprites/')) {
-    event.respondWith(
-      fetch(event.request)
-        .then(response => {
-          if (response.ok) {
-            const copy = response.clone();
-            caches.open(RUNTIME_CACHE).then(cache => cache.put(event.request, copy));
-          }
-          return response;
-        })
-        .catch(() => caches.match(event.request).then(cached => cached || caches.match('./Assets/icon-192.png')))
     );
     return;
   }
