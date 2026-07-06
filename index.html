@@ -632,7 +632,6 @@ body.card-interaction-suppressed .card:active{
   .generation-divider strong{font-size:8px}
   .card{min-height:152px;padding:9px 6px 8px}
   .card-sprite{width:56px;height:56px}
-  .card-sprite-row .card-sprite{width:38px;height:38px}
   .card .pname{font-size:12px;min-height:auto;padding:0}
   .card .num{font-size:8px;padding:3px 6px 2px;margin-left:2px}
   .card .status{font-size:7px;padding:3px 6px}
@@ -646,6 +645,7 @@ body.card-interaction-suppressed .card:active{
   .modal-hero{grid-template-columns:32px minmax(0,1fr) 32px;gap:.5rem}
   .modal-details,.modal-num,.modal-name,.modal-region{text-align:center}
   .modal-sprite{width:54px;height:54px}
+  .modal-sprite-group .modal-sprite{width:40px;height:40px}
   .modal-name-row{justify-content:center}
   .modal-nav-arrow{width:32px;height:32px;font-size:18px}
   .modal-dex-badge{font-size:44px}
@@ -1021,15 +1021,6 @@ body.card-interaction-suppressed .card:active{
   object-fit:contain;filter:drop-shadow(0 4px 8px rgba(0,0,0,.4));
 }
 .card.unavailable .card-sprite{filter:grayscale(1) drop-shadow(0 4px 8px rgba(0,0,0,.4))}
-.card-sprite-row{
-  order:2;margin:1px 0 2px;display:flex;align-items:flex-end;justify-content:center;gap:6px;width:100%;
-}
-.card-sprite-row .card-sprite{width:52px;height:52px;margin:0}
-.card-sprite-row .sprite-shiny{filter:drop-shadow(0 4px 8px rgba(0,0,0,.4)) drop-shadow(0 0 6px rgba(192,132,252,.45))}
-.card.unavailable .card-sprite-row .card-sprite{filter:grayscale(1) drop-shadow(0 4px 8px rgba(0,0,0,.4))}
-.sprite-pair{display:flex;flex-direction:column;align-items:center;gap:2px}
-.sprite-pair-label{font-size:6px;font-weight:900;text-transform:uppercase;letter-spacing:.4px;color:rgba(255,255,255,.5)}
-.sprite-pair.is-shiny .sprite-pair-label{color:#c084fc}
 .card.caught,.card.perfect,.card.hunting{border-color:transparent}
 .card.caught{
   --card-accent:#c084fc;
@@ -1246,6 +1237,9 @@ body.card-interaction-suppressed .card:active{
   filter:drop-shadow(0 6px 14px rgba(0,0,0,.45));
   image-rendering:auto;
 }
+.modal-sprite-group{display:flex;align-items:center;gap:4px;flex:0 0 auto}
+.modal-sprite-group .modal-sprite{width:58px;height:58px}
+.modal-sprite-group #mSpriteShiny{filter:drop-shadow(0 6px 14px rgba(0,0,0,.45)) drop-shadow(0 0 8px rgba(192,132,252,.5))}
 .modal-nav-arrow{
   width:40px;height:40px;border-radius:50%;flex:0 0 auto;
   display:grid;place-items:center;
@@ -1853,7 +1847,6 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   .generation-divider strong{font-size:8px}
   .card{min-height:152px;padding:9px 6px 8px}
   .card-sprite{width:56px;height:56px}
-  .card-sprite-row .card-sprite{width:38px;height:38px}
   .card .pname{font-size:12px;min-height:auto;padding:0}
   .card .num{font-size:8px;padding:3px 6px 2px;margin-left:2px}
   .card .status{font-size:7px;padding:3px 6px}
@@ -1863,6 +1856,7 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   .modal-hero{grid-template-columns:32px minmax(0,1fr) 32px;gap:.5rem}
   .modal-details,.modal-num,.modal-name,.modal-region{text-align:center}
   .modal-sprite{width:54px;height:54px}
+  .modal-sprite-group .modal-sprite{width:40px;height:40px}
   .modal-name-row{justify-content:center}
   .modal-nav-arrow{width:32px;height:32px;font-size:18px}
   .modal-dex-badge{font-size:44px}
@@ -2042,7 +2036,10 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
           <div class="modal-region" id="mRegion"></div>
           <button class="target-toggle-btn edit-only" id="fTargetBtn" type="button" onclick="toggleFormTarget()" aria-pressed="false">Cible</button>
         </div>
-        <img class="modal-sprite" id="mSprite" src="" alt="" onerror="handlePokemonSpriteError(this, parseInt(this.dataset.pokeId), this.dataset.shiny === '1')">
+        <div class="modal-sprite-group">
+          <img class="modal-sprite" id="mSpriteNormal" src="" alt="" onerror="handlePokemonSpriteError(this, parseInt(this.dataset.pokeId), false)">
+          <img class="modal-sprite" id="mSpriteShiny" src="" alt="" onerror="handlePokemonSpriteError(this, parseInt(this.dataset.pokeId), true)">
+        </div>
       </div>
       <button class="modal-nav-arrow" id="modalNextCard" type="button" onclick="goToAdjacentModal(1)" aria-label="Pokémon suivant">›</button>
     </div>
@@ -3429,16 +3426,6 @@ function handlePokemonSpriteError(img, id, shiny) {
   img.src = SPRITE_FALLBACK;
 }
 
-function renderSpriteRowHtml(id, name) {
-  const normalUrl = getPokemonSpriteUrl(id, false);
-  const shinyUrl = getPokemonSpriteUrl(id, true);
-  return `
-    <div class="card-sprite-row">
-      <img class="card-sprite sprite-normal" src="${normalUrl}" alt="${name} (normal)" loading="lazy" onerror="handlePokemonSpriteError(this, ${id}, false)">
-      <img class="card-sprite sprite-shiny" src="${shinyUrl}" alt="${name} (shiny)" loading="lazy" onerror="handlePokemonSpriteError(this, ${id}, true)">
-    </div>`;
-}
-
 function initModalChoiceLists() {
   const ballSelect = document.getElementById('fPokeball');
   if (ballSelect && !ballSelect.dataset.ready) {
@@ -4018,11 +4005,13 @@ function createRegionalOriginalCard(id) {
       activatePokemonCard(card, id);
     }
   };
+  const useShinySprite = !!p.caught;
+  const spriteUrl = getPokemonSpriteUrl(id, useShinySprite);
   card.innerHTML = `
     <div class="form-tag">Base</div>
     <div class="card-watermark" aria-hidden="true">${String(id).padStart(3,'0')}</div>
     <div class="num">#${String(id).padStart(4,'0')}</div>
-    ${renderSpriteRowHtml(id, name)}
+    <img class="card-sprite" src="${spriteUrl}" alt="${name}" loading="lazy" onerror="handlePokemonSpriteError(this, ${id}, ${useShinySprite})">
     <div class="pname">${name}</div>
     <div class="type-row">${renderTypeBadges(id)}</div>
     <div class="status">${statusHtml}</div>
@@ -4048,11 +4037,13 @@ function createRegionalFormCard(form) {
       if (!unavailable) activatePokemonCard(card, form.formId);
     }
   };
+  const useShinySprite = !!p.caught && !unavailable;
+  const spriteUrl = getPokemonSpriteUrl(form.baseId, useShinySprite);
   card.innerHTML = `
     <div class="form-tag">${form.region}</div>
     <div class="card-watermark" aria-hidden="true">${String(form.baseId).padStart(3,'0')}</div>
     <div class="num">#${String(form.baseId).padStart(4,'0')}</div>
-    ${renderSpriteRowHtml(form.baseId, form.label)}
+    <img class="card-sprite" src="${spriteUrl}" alt="${form.label}" loading="lazy" onerror="handlePokemonSpriteError(this, ${form.baseId}, ${useShinySprite})">
     <div class="pname">${form.label}</div>
     <div class="type-row">${renderTypeBadgesForTypes(form.types)}</div>
     <div class="status">${statusHtml}</div>
@@ -4120,11 +4111,13 @@ function renderGrid() {
 
     const typeBadges = renderTypeBadges(id);
     const statusHtml = unavailable ? 'Indisponible' : getCardStatusHtml(p, isHuntingCard);
+    const useShinySprite = !!p.caught && !unavailable;
+    const spriteUrl = getPokemonSpriteUrl(id, useShinySprite);
 
     card.innerHTML = `
       <div class="card-watermark" aria-hidden="true">${String(id).padStart(3,'0')}</div>
       <div class="num">#${String(id).padStart(4,'0')}</div>
-      ${renderSpriteRowHtml(id, name)}
+      <img class="card-sprite" src="${spriteUrl}" alt="${name}" loading="lazy" onerror="handlePokemonSpriteError(this, ${id}, ${useShinySprite})">
       <div class="pname">${name}</div>
       <div class="type-row">${typeBadges}</div>
       <div class="status">${statusHtml}</div>
@@ -4880,12 +4873,17 @@ function openModal(id, options = {}) {
   }
   document.getElementById('mNum').textContent = `#${String(baseId).padStart(4,'0')}`;
   document.getElementById('mName').textContent = name;
-  const mSprite = document.getElementById('mSprite');
-  if (mSprite) {
-    mSprite.dataset.pokeId = String(baseId);
-    mSprite.dataset.shiny = p.caught ? '1' : '0';
-    mSprite.src = getPokemonSpriteUrl(baseId, !!p.caught);
-    mSprite.alt = name;
+  const mSpriteNormal = document.getElementById('mSpriteNormal');
+  if (mSpriteNormal) {
+    mSpriteNormal.dataset.pokeId = String(baseId);
+    mSpriteNormal.src = getPokemonSpriteUrl(baseId, false);
+    mSpriteNormal.alt = `${name} (normal)`;
+  }
+  const mSpriteShiny = document.getElementById('mSpriteShiny');
+  if (mSpriteShiny) {
+    mSpriteShiny.dataset.pokeId = String(baseId);
+    mSpriteShiny.src = getPokemonSpriteUrl(baseId, true);
+    mSpriteShiny.alt = `${name} (shiny)`;
   }
   document.getElementById('mRegion').innerHTML = `<span style="color:${r.color};font-family:var(--font-logo);font-size:10px;line-height:1.45">${r.name} · Génération ${r.gen}</span>`;
   updateModalNavigation(id);
