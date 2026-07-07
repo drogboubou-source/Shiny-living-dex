@@ -1251,8 +1251,8 @@ body.card-interaction-suppressed .card:active{
 .sprite-slot{display:flex;flex-direction:column;align-items:center;gap:6px}
 .sprite-pedestal{
   width:132px;height:132px;border-radius:27px;display:grid;place-items:center;position:relative;
-  background:radial-gradient(circle at 50% 32%,rgba(255,255,255,.2),rgba(255,255,255,.06) 68%),rgba(255,255,255,.065);
-  border:1px solid rgba(255,255,255,.16);
+  background:radial-gradient(circle at 50% 30%,rgba(125,211,252,.28),rgba(125,211,252,.05) 68%),rgba(125,211,252,.07);
+  border:1px solid rgba(125,211,252,.32);
   box-shadow:inset 0 1px 0 rgba(255,255,255,.12),inset 0 -14px 20px rgba(0,0,0,.26),0 6px 16px rgba(0,0,0,.24);
   transition:transform .16s cubic-bezier(.34,1.56,.64,1);
 }
@@ -1263,21 +1263,21 @@ body.card-interaction-suppressed .card:active{
 }
 .sprite-slot:hover .sprite-pedestal{transform:translateY(-2px)}
 .sprite-slot-shiny .sprite-pedestal{
-  background:radial-gradient(circle at 50% 28%,rgba(192,132,252,.4),rgba(192,132,252,.08) 70%),rgba(192,132,252,.09);
-  border-color:rgba(192,132,252,.48);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.14),inset 0 -14px 22px rgba(0,0,0,.26),0 0 26px rgba(192,132,252,.3),0 6px 16px rgba(0,0,0,.24);
+  background:radial-gradient(circle at 50% 28%,rgba(212,175,55,.36),rgba(212,175,55,.07) 70%),rgba(212,175,55,.09);
+  border-color:rgba(212,175,55,.48);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.14),inset 0 -14px 22px rgba(0,0,0,.26),0 0 26px rgba(212,175,55,.3),0 6px 16px rgba(0,0,0,.24);
 }
 .sprite-slot-shiny .sprite-pedestal::after{
   content:'✦';position:absolute;top:9px;right:12px;font-size:15px;line-height:1;
   color:#fff1b7;text-shadow:0 0 7px rgba(246,229,141,.85);
 }
 .modal-sprite-group .modal-sprite{width:112px;height:112px}
-.modal-sprite-group #mSpriteShiny{filter:drop-shadow(0 6px 14px rgba(0,0,0,.45)) drop-shadow(0 0 9px rgba(192,132,252,.55))}
+.modal-sprite-group #mSpriteShiny{filter:drop-shadow(0 6px 14px rgba(0,0,0,.45)) drop-shadow(0 0 9px rgba(212,175,55,.55))}
 .sprite-slot-label{
   font-family:var(--font-logo);font-size:8px;font-weight:400;letter-spacing:.5px;
   text-transform:uppercase;color:rgba(255,255,255,.4);
 }
-.sprite-slot-shiny .sprite-slot-label{color:#c084fc}
+.sprite-slot-shiny .sprite-slot-label{color:#d4af37}
 .modal-nav-arrow{
   width:52px;min-height:62px;border-radius:14px;flex:0 0 auto;
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:6px 4px;
@@ -1308,7 +1308,13 @@ body.card-interaction-suppressed .card:active{
 .modal-name-row{display:flex;align-items:center;gap:8px;justify-content:center;min-width:0;flex-wrap:wrap}
 .modal-ball-icon{width:24px;height:24px;object-fit:contain;filter:drop-shadow(0 3px 6px rgba(0,0,0,.36));display:none;flex:0 0 auto}
 .modal-ball-icon.visible{display:block}
-.modal-region{font-size:12px;margin-top:5px;text-align:center;color:rgba(255,255,255,.58)}
+.modal-region{font-size:12px;margin-top:6px;text-align:center;color:rgba(255,255,255,.58);display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap}
+.modal-region-badge,.modal-gen-badge{
+  display:inline-flex;align-items:center;padding:3px 9px;border-radius:999px;
+  font-family:var(--font-logo);font-size:10px;line-height:1.3;font-weight:400;
+  border:1px solid;white-space:nowrap;
+}
+.modal-gen-badge{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.14);color:rgba(255,255,255,.62)}
 .regional-form-link{
   display:none;align-items:center;justify-content:center;gap:5px;
   min-height:24px;padding:4px 8px;border-radius:999px;
@@ -4957,7 +4963,7 @@ function openModal(id, options = {}) {
     mSpriteShiny.src = getPokemonSpriteUrl(id, true);
     mSpriteShiny.alt = `${name} (shiny)`;
   }
-  document.getElementById('mRegion').innerHTML = `<span style="color:${r.color};font-family:var(--font-logo);font-size:10px;line-height:1.45">${r.name} · Génération ${r.gen}</span>`;
+  document.getElementById('mRegion').innerHTML = `<span class="modal-region-badge" style="color:${r.color};border-color:${r.color}66;background:${r.color}1a">${r.name}</span><span class="modal-gen-badge">Génération ${r.gen}</span>`;
   updateModalNavigation(id);
   document.getElementById('fPokeball').value = p.pokeball || '';
   document.getElementById('fNature').value = p.nature || '';
