@@ -1251,28 +1251,12 @@ body.card-interaction-suppressed .card:active{
 .sprite-slot{display:flex;flex-direction:column;align-items:center;gap:6px}
 .sprite-pedestal{
   width:132px;height:132px;border-radius:27px;display:grid;place-items:center;position:relative;
-  background:radial-gradient(circle at 50% 30%,rgba(125,211,252,.28),rgba(125,211,252,.05) 68%),rgba(125,211,252,.07);
-  border:1px solid rgba(125,211,252,.32);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.12),inset 0 -14px 20px rgba(0,0,0,.26),0 6px 16px rgba(0,0,0,.24);
+  background:rgba(255,255,255,.035);
+  border:1px solid rgba(255,255,255,.08);
   transition:transform .16s cubic-bezier(.34,1.56,.64,1);
 }
-.sprite-pedestal::before{
-  content:'';position:absolute;left:50%;bottom:15px;width:52%;height:10px;transform:translateX(-50%);
-  background:radial-gradient(ellipse at center,rgba(0,0,0,.4),transparent 72%);
-  filter:blur(.5px);pointer-events:none;
-}
 .sprite-slot:hover .sprite-pedestal{transform:translateY(-2px)}
-.sprite-slot-shiny .sprite-pedestal{
-  background:radial-gradient(circle at 50% 30%,rgba(125,211,252,.28),rgba(125,211,252,.05) 68%),rgba(125,211,252,.07);
-  border-color:rgba(125,211,252,.32);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.12),inset 0 -14px 20px rgba(0,0,0,.26),0 6px 16px rgba(0,0,0,.24);
-}
-.sprite-slot-shiny .sprite-pedestal::after{
-  content:'✦';position:absolute;top:9px;right:12px;font-size:15px;line-height:1;
-  color:#fff1b7;text-shadow:0 0 7px rgba(246,229,141,.85);
-}
-.modal-sprite-group .modal-sprite{width:112px;height:112px}
-.modal-sprite-group #mSpriteShiny{filter:drop-shadow(0 6px 14px rgba(0,0,0,.45)) drop-shadow(0 0 9px rgba(212,175,55,.55))}
+.modal-sprite-group .modal-sprite{width:112px;height:112px;filter:drop-shadow(0 3px 6px rgba(0,0,0,.3))}
 .sprite-slot-label{
   font-family:var(--font-logo);font-size:8px;font-weight:400;letter-spacing:.5px;
   text-transform:uppercase;color:rgba(255,255,255,.4);
