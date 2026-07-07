@@ -840,7 +840,8 @@ body.card-interaction-suppressed .card:active{
   background:rgba(212,175,55,.08);border:1px solid rgba(212,175,55,.32);
   color:#d4af37;font-family:var(--font);font-size:13px;font-weight:800;white-space:nowrap;cursor:pointer;
 }
-.status-filter-chip{
+.sprite-mode-button{color:#7dd3fc}
+.sprite-mode-button .counter-icon{color:#7dd3fc}
   display:flex;align-items:center;gap:8px;min-height:38px;height:38px;padding:0 8px 0 13px;border-radius:var(--r);
   background:linear-gradient(180deg,rgba(125,211,252,.2),rgba(125,211,252,.06)),#16202b;
   border:1px solid rgba(125,211,252,.5);color:#eafaff;font-family:var(--font);font-size:12px;font-weight:800;
@@ -2046,6 +2047,7 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
           <option value="">Tous jeux</option>
         </select>
       </label>
+      <button class="counter-button sprite-mode-button" id="spriteModeButton" type="button" onclick="toggleSpriteMode()" onpointerup="this.blur()" ontouchend="this.blur()"></button>
       <button class="counter-button edit-only" id="counterButton" type="button" onclick="toggleCounterMode()" onpointerup="this.blur()" ontouchend="this.blur()"></button>
       <button class="status-filter-chip" id="statusFilterChip" type="button" onclick="clearStatusFilter()" style="display:none">
         <span id="statusFilterChipLabel"></span>
@@ -2430,6 +2432,7 @@ let currentRegion = 'all';
 let currentPokemon = null;
 let sidebarOpen = false;
 let counterMode = false;
+let spriteMode = 'home';
 let currentGameFilter = '';
 let currentStatusFilter = 'all';
 let restoringHistory = false;
@@ -2450,6 +2453,7 @@ const STORAGE_KEY = 'shiny_dex_v4';
 const LEGACY_STORAGE_KEY = 'shiny_dex_v3';
 const REGION_SESSION_KEY = 'shiny_dex_session_region';
 const COUNTER_MODE_KEY = 'shiny_dex_counter_mode';
+const SPRITE_MODE_KEY = 'shiny_dex_sprite_mode';
 const GAME_FILTER_KEY = 'shiny_dex_game_filter';
 const HUNT_ORDER_KEY = 'shiny_dex_hunt_order';
 const HUNT_CAPTURED_KEY = 'shiny_dex_hunt_captured';
@@ -2759,9 +2763,11 @@ function init() {
   try {
     const sessionRegion = sessionStorage.getItem(REGION_SESSION_KEY);
     const savedCounterMode = localStorage.getItem(COUNTER_MODE_KEY);
+    const savedSpriteMode = localStorage.getItem(SPRITE_MODE_KEY);
     const savedGameFilter = localStorage.getItem(GAME_FILTER_KEY) || '';
     currentRegion = normalizeRegionKey(sessionRegion);
     counterMode = isReadOnlyShare() ? false : savedCounterMode === 'true';
+    spriteMode = savedSpriteMode === 'pixel' ? 'pixel' : 'home';
     currentGameFilter = GAME_FILTER_BY_ID[savedGameFilter] ? savedGameFilter : '';
     if (!isReadOnlyShare()) {
       const raw = localStorage.getItem(STORAGE_KEY);
@@ -2942,6 +2948,7 @@ function renderAll() {
   renderStats();
   renderSidebar();
   renderRegion();
+  updateSpriteModeButton();
 }
 
 function getAppHistoryState(extra = {}) {
@@ -3465,11 +3472,17 @@ function getPokeballSpriteUrl(ballId) {
 }
 
 const SPRITE_FALLBACK = './Assets/icon-192.png';
-function getPokemonSpriteUrl(id, shiny = false) {
+function isHomeSpriteMode() {
+  return spriteMode !== 'pixel';
+}
+function getPokemonSpriteUrl(id, shiny = false, mode = spriteMode) {
+  const pixelBase = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon';
+  if (mode === 'pixel') {
+    return `${pixelBase}/${shiny ? 'shiny/' : ''}${id}.png`;
+  }
   const file = SPRITE_FILES[id];
   if (file) return `./sprites/3d/${shiny ? 'shiny' : 'normal'}/${file}.png`;
-  const base = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home';
-  return `${base}/${shiny ? 'shiny/' : ''}${id}.png`;
+  return `${pixelBase}/other/home/${shiny ? 'shiny/' : ''}${id}.png`;
 }
 function handlePokemonSpriteError(img, id, shiny) {
   if (shiny && !img.dataset.fellBackToNormal) {
@@ -3477,8 +3490,38 @@ function handlePokemonSpriteError(img, id, shiny) {
     img.src = getPokemonSpriteUrl(id, false);
     return;
   }
+  if (!img.dataset.fellBackToOtherMode) {
+    img.dataset.fellBackToOtherMode = '1';
+    img.src = getPokemonSpriteUrl(id, shiny, isHomeSpriteMode() ? 'pixel' : 'home');
+    return;
+  }
   img.onerror = null;
   img.src = SPRITE_FALLBACK;
+}
+function toggleSpriteMode() {
+  spriteMode = isHomeSpriteMode() ? 'pixel' : 'home';
+  localStorage.setItem(SPRITE_MODE_KEY, spriteMode);
+  updateSpriteModeButton();
+  renderRegion();
+  if (currentPokemon) openModal(currentPokemon);
+  document.getElementById('spriteModeButton')?.blur();
+}
+function updateSpriteModeButton() {
+  const button = document.getElementById('spriteModeButton');
+  if (!button) return;
+  button.innerHTML = `
+    <span class="counter-label">
+      <span class="counter-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none">
+          <path d="M4 8l8-4 8 4-8 4-8-4z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+          <path d="M4 8v8l8 4 8-4V8" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+          <path d="M12 12v8" stroke="currentColor" stroke-width="2"/>
+        </svg>
+      </span>
+      <strong>${isHomeSpriteMode() ? 'Sprites 3D' : 'Sprites 2D'}</strong>
+    </span>`;
+  button.setAttribute('aria-pressed', String(isHomeSpriteMode()));
+  button.setAttribute('aria-label', isHomeSpriteMode() ? 'Afficher les sprites 2D pixel' : 'Afficher les sprites 3D');
 }
 
 function initModalChoiceLists() {
