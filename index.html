@@ -657,7 +657,6 @@ body.card-interaction-suppressed .card:active{
   .modal-name-row{justify-content:center}
   .modal-nav-arrow{width:44px;min-height:52px;font-size:16px}
   .modal-nav-thumb{width:24px;height:24px}
-  .modal-dex-badge{font-size:44px}
   .modal-footer{position:sticky;bottom:-1.35rem;margin-left:-1.35rem;margin-right:-1.35rem;padding:1rem 1.35rem;background:linear-gradient(180deg,rgba(24,24,31,.72),var(--surface) 34%);border-top:1px solid var(--border)}
   .btn-save{flex:1}
 }
@@ -1277,11 +1276,6 @@ body.card-interaction-suppressed .card:active{
 .modal-nav-arrow[disabled] .modal-nav-thumb{visibility:hidden}
 .modal-nav-arrow:hover{transform:translateY(-1px);border-color:rgba(125,211,252,.4);box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 10px 22px rgba(0,0,0,.24)}
 .modal-nav-arrow[disabled]{opacity:.22;cursor:default;transform:none}
-.modal-dex-badge{
-  position:absolute;z-index:0;top:50%;left:14px;transform:translateY(-48%);
-  font-family:var(--font-logo);font-size:64px;line-height:1;font-weight:400;
-  color:rgba(255,255,255,.5);opacity:.08;pointer-events:none;white-space:nowrap;user-select:none;
-}
 .modal-num{font-family:var(--font);font-size:11px;color:rgba(255,255,255,.56);text-align:center;margin-bottom:3px}
 .modal-name{font-family:var(--font);font-size:23px;line-height:1.12;color:#fff;overflow-wrap:anywhere;text-align:center}
 .modal-name-row{display:flex;align-items:center;gap:8px;justify-content:center;min-width:0;flex-wrap:wrap}
@@ -1892,7 +1886,6 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   .modal-name-row{justify-content:center}
   .modal-nav-arrow{width:44px;min-height:52px;font-size:16px}
   .modal-nav-thumb{width:24px;height:24px}
-  .modal-dex-badge{font-size:44px}
   .capture-details{grid-template-columns:1fr}
   .hunt-panel{padding:.8rem}
   .hunt-counter-surface{grid-template-columns:minmax(0,1fr) 108px;gap:7px}
@@ -2062,7 +2055,6 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
         <span class="modal-nav-arrow-icon" aria-hidden="true">‹</span>
       </button>
       <div class="modal-details">
-        <div class="modal-dex-badge" id="mDexBadge" aria-hidden="true"></div>
         <div class="modal-sprite-group">
           <div class="sprite-slot">
             <div class="sprite-pedestal">
@@ -4962,11 +4954,6 @@ function openModal(id, options = {}) {
   const r    = REGIONS.find(r => baseId >= r.start && baseId <= r.end) || getAllRegionStats();
   const huntMode = isHuntingMode() && !p.caught;
 
-  const dexBadge = document.getElementById('mDexBadge');
-  if (dexBadge) {
-    dexBadge.textContent = String(baseId).padStart(3,'0');
-    dexBadge.style.color = r.color;
-  }
   document.getElementById('mNum').textContent = `#${String(baseId).padStart(4,'0')}`;
   document.getElementById('mName').textContent = name;
   const mSpriteNormal = document.getElementById('mSpriteNormal');
