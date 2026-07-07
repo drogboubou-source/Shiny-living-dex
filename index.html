@@ -621,10 +621,11 @@ body.card-interaction-suppressed .card:active{
   .region-map-mosaic{inset:6px;opacity:.9;filter:saturate(1.12) contrast(1.04) brightness(1.18)}
   .region-name{font-size:11px}
   .filters{
-    display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) 42px 74px;
+    display:grid;grid-template-columns:1fr 1fr;
     gap:6px;margin-bottom:.9rem;align-items:center;
   }
-  .filters select,.sort-control,.counter-button{width:100%;min-width:0}
+  .filters select,.sort-control{width:100%;min-width:0}
+  .sprite-mode-switch,.counter-button,.status-filter-chip{grid-column:1/-1}
   .sort-control{height:34px;min-height:34px;padding:0 7px}
   .sort-control span{display:none}
   .sort-control select{width:100%;font-size:10px;padding:0;min-width:0}
@@ -640,7 +641,6 @@ body.card-interaction-suppressed .card:active{
   .card .pname{font-size:12px;min-height:auto;padding:0}
   .card .num{font-size:8px;padding:3px 6px 2px;margin-left:2px}
   .card .status{font-size:7px;padding:3px 6px}
-  .card-watermark{font-size:38px}
   .type-row{gap:3px;margin:1px 0 3px;padding:0}
   .type-pill,.type-pill img{width:40px;height:10px}
   .two-col{grid-template-columns:1fr}
@@ -812,7 +812,7 @@ body.card-interaction-suppressed .card:active{
 .progress-label{display:flex;justify-content:flex-start;gap:8px;font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums}
 
 /* filters */
-.filters{display:grid;grid-template-columns:minmax(150px,190px) minmax(170px,230px) auto auto;gap:8px;margin-bottom:1.25rem;align-items:center}
+.filters{display:grid;grid-template-columns:minmax(150px,190px) minmax(170px,230px) auto auto auto;gap:8px;margin-bottom:1.25rem;align-items:center}
 .filters input,.filters select{
   background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.014)),rgba(24,24,31,.94);
   border:1px solid rgba(255,255,255,.105);
@@ -840,8 +840,25 @@ body.card-interaction-suppressed .card:active{
   background:rgba(212,175,55,.08);border:1px solid rgba(212,175,55,.32);
   color:#d4af37;font-family:var(--font);font-size:13px;font-weight:800;white-space:nowrap;cursor:pointer;
 }
-.sprite-mode-button{color:#7dd3fc}
-.sprite-mode-button .counter-icon{color:#7dd3fc}
+.sprite-mode-switch{
+  display:flex;align-items:center;gap:2px;padding:3px;border-radius:var(--r);
+  background:#1b1b25;border:1px solid rgba(255,255,255,.14);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06),inset 0 -1px 0 rgba(0,0,0,.22),0 8px 18px rgba(0,0,0,.18);
+  min-height:38px;height:38px;
+}
+.sprite-mode-option{
+  flex:1;min-width:0;display:flex;align-items:center;justify-content:center;gap:6px;
+  border:0;border-radius:calc(var(--r) - 3px);padding:0 10px;height:30px;
+  background:transparent;color:rgba(255,255,255,.5);font-family:var(--font);font-size:12px;font-weight:800;
+  cursor:pointer;transition:background .15s ease,color .15s ease,box-shadow .15s ease,transform .15s ease;
+}
+.sprite-mode-option svg{width:14px;height:14px;flex:0 0 auto}
+.sprite-mode-option:hover:not(.active){color:#eceaf6}
+.sprite-mode-option.active{
+  background:linear-gradient(180deg,rgba(125,211,252,.3),rgba(125,211,252,.14));
+  color:#eafaff;box-shadow:inset 0 1px 0 rgba(255,255,255,.16),0 0 0 1px rgba(125,211,252,.42),0 0 12px rgba(125,211,252,.22);
+}
+.sprite-mode-option:active{transform:scale(.94)}
   display:flex;align-items:center;gap:8px;min-height:38px;height:38px;padding:0 8px 0 13px;border-radius:var(--r);
   background:linear-gradient(180deg,rgba(125,211,252,.2),rgba(125,211,252,.06)),#16202b;
   border:1px solid rgba(125,211,252,.5);color:#eafaff;font-family:var(--font);font-size:12px;font-weight:800;
@@ -1011,12 +1028,6 @@ body.card-interaction-suppressed .card:active{
     0 24px 38px rgba(0,0,0,.55);
 }
 .card > *{position:relative;z-index:1}
-.card-watermark{
-  position:absolute;z-index:0;top:50%;left:50%;transform:translate(-50%,-46%);
-  font-family:var(--font-logo);font-size:46px;line-height:1;font-weight:400;
-  color:var(--card-accent);opacity:.1;letter-spacing:0;pointer-events:none;
-  white-space:nowrap;user-select:none;
-}
 .card .num{
   align-self:flex-start;font-size:9px;font-weight:800;color:var(--card-accent);order:0;letter-spacing:.6px;
   font-variant-numeric:tabular-nums;border-bottom:1px solid var(--card-accent);padding-bottom:3px;
@@ -1866,10 +1877,11 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   .region-header.map-hero,.region-header.all-hero{min-height:170px;padding:.95rem}
   .region-header.all-hero .all-hero-copy{width:100%;padding:0}
   .filters{
-    display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) 42px 74px;
+    display:grid;grid-template-columns:1fr 1fr;
     gap:6px;margin-bottom:.9rem;align-items:center;
   }
-  .filters select,.sort-control,.counter-button{width:100%;min-width:0}
+  .filters select,.sort-control{width:100%;min-width:0}
+  .sprite-mode-switch,.counter-button,.status-filter-chip{grid-column:1/-1}
   .sort-control{height:34px;min-height:34px;padding:0 7px}
   .sort-control span{display:none}
   .sort-control select{width:100%;font-size:10px;padding:0;min-width:0}
@@ -1885,7 +1897,6 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   .card .pname{font-size:12px;min-height:auto;padding:0}
   .card .num{font-size:8px;padding:3px 6px 2px;margin-left:2px}
   .card .status{font-size:7px;padding:3px 6px}
-  .card-watermark{font-size:38px}
   .type-row{gap:3px;margin:1px 0 3px;padding:0}
   .type-pill,.type-pill img{width:40px;height:10px}
   .modal-hero{grid-template-columns:46px minmax(0,1fr) 46px;gap:.5rem}
@@ -2047,8 +2058,17 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
           <option value="">Tous jeux</option>
         </select>
       </label>
-      <button class="counter-button sprite-mode-button" id="spriteModeButton" type="button" onclick="toggleSpriteMode()" onpointerup="this.blur()" ontouchend="this.blur()"></button>
-      <button class="counter-button edit-only" id="counterButton" type="button" onclick="toggleCounterMode()" onpointerup="this.blur()" ontouchend="this.blur()"></button>
+      <div class="sprite-mode-switch" id="spriteModeSwitch" role="group" aria-label="Type de sprite">
+        <button type="button" class="sprite-mode-option" data-mode="home" onclick="setSpriteMode('home')">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 8l8-4 8 4-8 4-8-4z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M4 8v8l8 4 8-4V8" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M12 12v8" stroke="currentColor" stroke-width="2"/></svg>
+          <span>3D</span>
+        </button>
+        <button type="button" class="sprite-mode-option" data-mode="pixel" onclick="setSpriteMode('pixel')">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="4" y="4" width="4" height="4" fill="currentColor"/><rect x="10" y="4" width="4" height="4" fill="currentColor"/><rect x="16" y="8" width="4" height="4" fill="currentColor"/><rect x="4" y="10" width="4" height="4" fill="currentColor"/><rect x="10" y="14" width="4" height="4" fill="currentColor"/><rect x="4" y="16" width="4" height="4" fill="currentColor"/></svg>
+          <span>2D</span>
+        </button>
+      </div>
+      <button class="counter-button edit-only" id="counterButton" type="button" title="N'afficher que les chasses en cours" onclick="toggleCounterMode()" onpointerup="this.blur()" ontouchend="this.blur()"></button>
       <button class="status-filter-chip" id="statusFilterChip" type="button" onclick="clearStatusFilter()" style="display:none">
         <span id="statusFilterChipLabel"></span>
         <span aria-hidden="true">✕</span>
@@ -2948,7 +2968,7 @@ function renderAll() {
   renderStats();
   renderSidebar();
   renderRegion();
-  updateSpriteModeButton();
+  updateSpriteModeSwitch();
 }
 
 function getAppHistoryState(extra = {}) {
@@ -3498,30 +3518,22 @@ function handlePokemonSpriteError(img, id, shiny) {
   img.onerror = null;
   img.src = SPRITE_FALLBACK;
 }
-function toggleSpriteMode() {
-  spriteMode = isHomeSpriteMode() ? 'pixel' : 'home';
+function setSpriteMode(mode) {
+  if (mode !== 'home' && mode !== 'pixel') return;
+  spriteMode = mode;
   localStorage.setItem(SPRITE_MODE_KEY, spriteMode);
-  updateSpriteModeButton();
+  updateSpriteModeSwitch();
   renderRegion();
   if (currentPokemon) openModal(currentPokemon);
-  document.getElementById('spriteModeButton')?.blur();
 }
-function updateSpriteModeButton() {
-  const button = document.getElementById('spriteModeButton');
-  if (!button) return;
-  button.innerHTML = `
-    <span class="counter-label">
-      <span class="counter-icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none">
-          <path d="M4 8l8-4 8 4-8 4-8-4z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
-          <path d="M4 8v8l8 4 8-4V8" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
-          <path d="M12 12v8" stroke="currentColor" stroke-width="2"/>
-        </svg>
-      </span>
-      <strong>${isHomeSpriteMode() ? 'Sprites 3D' : 'Sprites 2D'}</strong>
-    </span>`;
-  button.setAttribute('aria-pressed', String(isHomeSpriteMode()));
-  button.setAttribute('aria-label', isHomeSpriteMode() ? 'Afficher les sprites 2D pixel' : 'Afficher les sprites 3D');
+function updateSpriteModeSwitch() {
+  const switchEl = document.getElementById('spriteModeSwitch');
+  if (!switchEl) return;
+  switchEl.querySelectorAll('.sprite-mode-option').forEach(btn => {
+    const active = btn.dataset.mode === spriteMode;
+    btn.classList.toggle('active', active);
+    btn.setAttribute('aria-pressed', String(active));
+  });
 }
 
 function initModalChoiceLists() {
@@ -4107,7 +4119,6 @@ function createRegionalOriginalCard(id) {
   const spriteUrl = getPokemonSpriteUrl(id, useShinySprite);
   card.innerHTML = `
     <div class="form-tag">Base</div>
-    <div class="card-watermark" aria-hidden="true">${String(id).padStart(3,'0')}</div>
     <div class="num">#${String(id).padStart(4,'0')}</div>
     <img class="card-sprite" src="${spriteUrl}" alt="${name}" loading="lazy" onerror="handlePokemonSpriteError(this, ${id}, ${useShinySprite})">
     <div class="pname">${name}</div>
@@ -4139,7 +4150,6 @@ function createRegionalFormCard(form) {
   const spriteUrl = getPokemonSpriteUrl(form.formId, useShinySprite);
   card.innerHTML = `
     <div class="form-tag">${form.region}</div>
-    <div class="card-watermark" aria-hidden="true">${String(form.baseId).padStart(3,'0')}</div>
     <div class="num">#${String(form.baseId).padStart(4,'0')}</div>
     <img class="card-sprite" src="${spriteUrl}" alt="${form.label}" loading="lazy" onerror="handlePokemonSpriteError(this, ${form.formId}, ${useShinySprite})">
     <div class="pname">${form.label}</div>
@@ -4213,7 +4223,6 @@ function renderGrid() {
     const spriteUrl = getPokemonSpriteUrl(id, useShinySprite);
 
     card.innerHTML = `
-      <div class="card-watermark" aria-hidden="true">${String(id).padStart(3,'0')}</div>
       <div class="num">#${String(id).padStart(4,'0')}</div>
       <img class="card-sprite" src="${spriteUrl}" alt="${name}" loading="lazy" onerror="handlePokemonSpriteError(this, ${id}, ${useShinySprite})">
       <div class="pname">${name}</div>
