@@ -621,18 +621,18 @@ body.card-interaction-suppressed .card:active{
   .region-map-mosaic{inset:6px;opacity:.9;filter:saturate(1.12) contrast(1.04) brightness(1.18)}
   .region-name{font-size:11px}
   .filters{
-    display:grid;grid-template-columns:1fr 1fr;
+    display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto auto;
     gap:6px;margin-bottom:.9rem;align-items:center;
   }
   .filters select,.sort-control{width:100%;min-width:0}
-  .counter-button,.status-filter-chip{grid-column:1/-1}
+  .status-filter-chip{grid-column:1/-1}
   .sort-control{height:34px;min-height:34px;padding:0 7px}
   .sort-control span{display:none}
   .sort-control select{width:100%;font-size:10px;padding:0;min-width:0}
-  .counter-button{height:34px;min-height:34px;padding:5px}
+  .counter-button{height:34px;min-height:34px;width:34px;padding:0}
   .counter-label strong{display:none}
   .counter-label{gap:0}
-  .counter-icon{width:22px;height:22px}
+  .counter-icon{width:18px;height:18px}
   .grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;padding:6px;border-radius:14px}
   .generation-divider{min-height:26px;margin:4px 0 -2px;font-size:9px;gap:7px;padding:3px 7px 3px 8px;top:0}
   .generation-divider strong{font-size:8px}
@@ -1860,18 +1860,18 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   .region-header.map-hero,.region-header.all-hero{min-height:170px;padding:.95rem}
   .region-header.all-hero .all-hero-copy{width:100%;padding:0}
   .filters{
-    display:grid;grid-template-columns:1fr 1fr;
+    display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto auto;
     gap:6px;margin-bottom:.9rem;align-items:center;
   }
   .filters select,.sort-control{width:100%;min-width:0}
-  .counter-button,.status-filter-chip{grid-column:1/-1}
+  .status-filter-chip{grid-column:1/-1}
   .sort-control{height:34px;min-height:34px;padding:0 7px}
   .sort-control span{display:none}
   .sort-control select{width:100%;font-size:10px;padding:0;min-width:0}
-  .counter-button{height:34px;min-height:34px;padding:5px}
+  .counter-button{height:34px;min-height:34px;width:34px;padding:0}
   .counter-label strong{display:none}
   .counter-label{gap:0}
-  .counter-icon{width:22px;height:22px}
+  .counter-icon{width:18px;height:18px}
   .grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;padding:6px;border-radius:14px}
   .generation-divider{min-height:26px;margin:4px 0 -2px;font-size:9px;gap:7px;padding:3px 7px 3px 8px;top:6px}
   .generation-divider strong{font-size:8px}
