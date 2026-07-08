@@ -3084,12 +3084,29 @@ function renderHuntTrayItem(item) {
     </button>`;
 }
 
+function getRecentCaptureKicker(item) {
+  const p = progress[item.id] || {};
+  if (!p.date) return 'Capturé';
+  const d = new Date(`${p.date}T00:00:00`);
+  if (isNaN(d.getTime())) return 'Capturé';
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const diffDays = Math.round((today - d) / 86400000);
+  if (diffDays <= 0) return "Aujourd'hui";
+  if (diffDays === 1) return 'Hier';
+  if (diffDays < 7) return `Il y a ${diffDays} j`;
+  if (diffDays < 30) return `Il y a ${Math.floor(diffDays / 7)} sem.`;
+  if (diffDays < 365) return `Il y a ${Math.floor(diffDays / 30)} mois`;
+  const years = Math.floor(diffDays / 365);
+  return `Il y a ${years} an${years > 1 ? 's' : ''}`;
+}
+
 function renderRecentCaptureCard(item, index) {
   return `
     <button class="hunt-tray-recent" type="button" onclick="openModalToCounter(${item.id}); closeHuntTray();">
       <img class="hunt-tray-sprite hunt-tray-sprite-shiny" src="${getPokemonSpriteUrl(item.id, true, 'home')}" alt="" loading="lazy" onerror="handlePokemonSpriteError(this, ${item.id}, true)">
       <span class="hunt-tray-recent-copy">
-        <span class="hunt-tray-recent-kicker">${index === 0 ? 'Dernier' : 'Avant'}</span>
+        <span class="hunt-tray-recent-kicker">${getRecentCaptureKicker(item)}</span>
         <span class="hunt-tray-name">${getPokemonDisplayName(item.id)}</span>
         <span class="hunt-tray-meta">${getHuntTrayMeta(item)}</span>
       </span>
