@@ -385,6 +385,12 @@ body.card-interaction-suppressed .card:active{
   cursor:pointer;text-align:left;color:var(--text);transition:border-color .12s,background .12s,box-shadow .12s;
 }
 .hunt-tray-card:hover{border-color:rgba(125,211,252,.24);background:linear-gradient(180deg,rgba(125,211,252,.075),rgba(255,255,255,.018)),rgba(25,25,36,.92);box-shadow:inset 3px 0 0 rgba(125,211,252,.34)}
+.hunt-tray-compact-list.single .hunt-tray-card{
+  grid-template-columns:56px minmax(0,1fr) auto;padding:14px 16px;border-radius:14px;gap:14px;
+}
+.hunt-tray-compact-list.single .hunt-tray-sprite{width:56px;height:56px;border-radius:13px}
+.hunt-tray-compact-list.single .hunt-tray-name{font-size:15px}
+.hunt-tray-compact-list.single .hunt-tray-meta{font-size:10px;margin-top:4px}
 .hunt-tray-sprite{
   width:34px;height:34px;object-fit:contain;flex:0 0 auto;border-radius:9px;
   background:radial-gradient(circle at 50% 32%,rgba(255,255,255,.16),rgba(255,255,255,.03) 70%),rgba(255,255,255,.04);
@@ -3071,7 +3077,7 @@ function renderHuntTrayItem(item) {
   const stateLabel = item.state === 'captured' ? 'Capturé' : 'En cours';
   return `
     <button class="hunt-tray-card" type="button" onclick="openModalToCounter(${item.id}); closeHuntTray();">
-      <img class="hunt-tray-sprite" src="${getPokemonSpriteUrl(item.id, false)}" alt="" loading="lazy" onerror="handlePokemonSpriteError(this, ${item.id}, false)">
+      <img class="hunt-tray-sprite" src="${getPokemonSpriteUrl(item.id, false, 'home')}" alt="" loading="lazy" onerror="handlePokemonSpriteError(this, ${item.id}, false)">
       <span class="hunt-tray-copy">
         <span class="hunt-tray-name">${getPokemonDisplayName(item.id)}</span>
         <span class="hunt-tray-meta">${getHuntTrayMeta(item)}</span>
@@ -3083,7 +3089,7 @@ function renderHuntTrayItem(item) {
 function renderRecentCaptureCard(item, index) {
   return `
     <button class="hunt-tray-recent" type="button" onclick="openModalToCounter(${item.id}); closeHuntTray();">
-      <img class="hunt-tray-sprite hunt-tray-sprite-shiny" src="${getPokemonSpriteUrl(item.id, true)}" alt="" loading="lazy" onerror="handlePokemonSpriteError(this, ${item.id}, true)">
+      <img class="hunt-tray-sprite hunt-tray-sprite-shiny" src="${getPokemonSpriteUrl(item.id, true, 'home')}" alt="" loading="lazy" onerror="handlePokemonSpriteError(this, ${item.id}, true)">
       <span class="hunt-tray-recent-copy">
         <span class="hunt-tray-recent-kicker">${index === 0 ? 'Dernier' : 'Avant'}</span>
         <span class="hunt-tray-name">${getPokemonDisplayName(item.id)}</span>
@@ -3096,7 +3102,7 @@ function renderHuntTray() {
   const list = document.getElementById('huntTrayList');
   const count = document.getElementById('huntTrayCount');
   const button = document.getElementById('huntTrayButton');
-  const recentCapturedItems = getRecentCapturedIds(2).map(id => ({ id, shiny: true, state: 'captured' }));
+  const recentCapturedItems = getRecentCapturedIds(4).map(id => ({ id, shiny: true, state: 'captured' }));
   const activeItems = getActiveHuntIds().slice(0, 4).map(id => ({ id, shiny: false, state: 'active' }));
   const totalItems = recentCapturedItems.length + activeItems.length;
   if (count) count.textContent = String(totalItems);
@@ -3111,7 +3117,7 @@ function renderHuntTray() {
     <div class="hunt-tray-recent-grid ${recentCapturedItems.length === 1 ? 'single' : ''}">${recentCapturedItems.map(renderRecentCaptureCard).join('')}</div>` : '';
   const activeHtml = activeItems.length ? `
     <div class="hunt-tray-section-label">En cours</div>
-    <div class="hunt-tray-compact-list">${activeItems.map(renderHuntTrayItem).join('')}</div>` : '';
+    <div class="hunt-tray-compact-list ${activeItems.length === 1 ? 'single' : ''}">${activeItems.map(renderHuntTrayItem).join('')}</div>` : '';
   list.innerHTML = `${recentHtml}${activeHtml}`;
 }
 
