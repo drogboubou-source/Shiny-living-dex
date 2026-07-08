@@ -397,6 +397,7 @@ body.card-interaction-suppressed .card:active{
 .hunt-tray-copy{display:flex;flex-direction:column;min-width:0}
 .hunt-tray-name{font-size:12px;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .hunt-tray-meta{margin-top:3px;color:rgba(255,255,255,.56);font-size:9px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hunt-tray-date{display:block;margin-top:2px;color:rgba(255,255,255,.44);font-size:8px;font-weight:700;white-space:normal;overflow:visible;text-overflow:clip}
 .hunt-tray-state{
   display:inline-flex;align-items:center;gap:5px;padding:5px 7px;border-radius:999px;
   font-size:8px;font-weight:900;text-transform:uppercase;white-space:nowrap;
@@ -3063,33 +3064,40 @@ function getHuntTrayMeta(item) {
   const p = progress[item.id] || {};
   const method = ALL_HUNT_METHODS[normalizeHuntMethod(p.huntMethod)];
   const countValue = item.state === 'captured' ? (parseInt(p.encounters) || 0) : (parseInt(p.huntCount) || 0);
-  const dateText = p.date ? ` · ${p.date}` : '';
   if (method.stats === 'countOnly') {
-    return `${method.shortLabel}${item.state === 'captured' ? dateText : ' · en cours'}`;
+    return `${method.shortLabel}${item.state === 'captured' ? '' : ' · en cours'}`;
   }
-  return `${method.shortLabel} · ${countValue.toLocaleString('fr-FR')} rencontres${item.state === 'captured' ? dateText : ''}`;
+  return `${method.shortLabel} · ${countValue.toLocaleString('fr-FR')} rencontres`;
+}
+function getHuntTrayDate(item) {
+  const p = progress[item.id] || {};
+  return item.state === 'captured' && p.date ? p.date : '';
 }
 
 function renderHuntTrayItem(item) {
   const stateLabel = item.state === 'captured' ? 'Capturé' : 'En cours';
+  const dateText = getHuntTrayDate(item);
   return `
     <button class="hunt-tray-card" type="button" onclick="openModalToCounter(${item.id}); closeHuntTray();">
       <img class="hunt-tray-sprite" src="${getPokemonSpriteUrl(item.id, false, 'home')}" alt="" loading="lazy" onerror="handlePokemonSpriteError(this, ${item.id}, false)">
       <span class="hunt-tray-copy">
         <span class="hunt-tray-name">${getPokemonDisplayName(item.id)}</span>
         <span class="hunt-tray-meta">${getHuntTrayMeta(item)}</span>
+        ${dateText ? `<span class="hunt-tray-date">${dateText}</span>` : ''}
       </span>
       <span class="hunt-tray-state ${item.state === 'captured' ? 'captured' : ''}">${stateLabel}</span>
     </button>`;
 }
 
 function renderRecentCaptureCard(item, index) {
+  const dateText = getHuntTrayDate(item);
   return `
     <button class="hunt-tray-recent" type="button" onclick="openModalToCounter(${item.id}); closeHuntTray();">
       <img class="hunt-tray-sprite hunt-tray-sprite-shiny" src="${getPokemonSpriteUrl(item.id, true, 'home')}" alt="" loading="lazy" onerror="handlePokemonSpriteError(this, ${item.id}, true)">
       <span class="hunt-tray-recent-copy">
         <span class="hunt-tray-name">${getPokemonDisplayName(item.id)}</span>
         <span class="hunt-tray-meta">${getHuntTrayMeta(item)}</span>
+        ${dateText ? `<span class="hunt-tray-date">${dateText}</span>` : ''}
       </span>
     </button>`;
 }
