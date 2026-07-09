@@ -1260,6 +1260,13 @@ body.card-interaction-suppressed .card:active{
   text-transform:uppercase;color:rgba(255,255,255,.4);
 }
 .sprite-slot-shiny .sprite-slot-label{color:#d4af37}
+.sprite-ball-badge{
+  position:absolute;bottom:-8px;right:-8px;width:38px;height:38px;object-fit:contain;
+  display:none;filter:drop-shadow(0 4px 8px rgba(0,0,0,.45));
+  background:rgba(20,20,28,.92);border:1px solid rgba(255,255,255,.16);border-radius:50%;
+  padding:5px;box-shadow:inset 0 1px 0 rgba(255,255,255,.08);
+}
+.sprite-ball-badge.visible{display:block}
 .modal-nav-arrow{
   width:52px;min-height:62px;border-radius:14px;flex:0 0 auto;
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:6px 4px;
@@ -1797,17 +1804,17 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
 .capture-control:has(select:focus){border-color:rgba(125,211,252,.5);box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 7px 16px rgba(0,0,0,.14),0 0 0 3px rgba(125,211,252,.12)}
 .capture-control.nature{grid-template-columns:minmax(0,1fr)}
 .ball-preview{
-  position:relative;width:42px;height:42px;display:grid;place-items:center;flex:0 0 auto;
+  position:relative;width:58px;height:58px;display:grid;place-items:center;flex:0 0 auto;
   background:radial-gradient(circle at 50% 42%,rgba(255,255,255,.08),rgba(0,0,0,.08) 62%,rgba(0,0,0,.18)),rgba(17,17,24,.92);
-  border:1px solid rgba(255,255,255,.1);border-radius:10px;
+  border:1px solid rgba(255,255,255,.1);border-radius:12px;
   box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 6px 14px rgba(0,0,0,.18);
 }
 .ball-preview::after{
-  content:'';position:absolute;left:50%;bottom:6px;width:24px;height:5px;border-radius:50%;transform:translateX(-50%);
+  content:'';position:absolute;left:50%;bottom:8px;width:32px;height:6px;border-radius:50%;transform:translateX(-50%);
   background:rgba(0,0,0,.28);filter:blur(1px);
 }
 .ball-preview img{
-  position:relative;z-index:1;width:28px;height:28px;object-fit:contain;display:none;
+  position:relative;z-index:1;width:40px;height:40px;object-fit:contain;display:none;
   filter:drop-shadow(0 3px 5px rgba(0,0,0,.34));
 }
 .ball-preview img.visible{display:block}
@@ -2063,12 +2070,14 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
           <div class="sprite-slot">
             <div class="sprite-pedestal">
               <img class="modal-sprite" id="mSpriteNormal" src="" alt="" onerror="handlePokemonSpriteError(this, parseInt(this.dataset.pokeId), false)">
+              <img class="sprite-ball-badge" id="mBallIconNormal" src="" alt="">
             </div>
             <span class="sprite-slot-label">Normal</span>
           </div>
           <div class="sprite-slot sprite-slot-shiny">
             <div class="sprite-pedestal">
               <img class="modal-sprite" id="mSpriteShiny" src="" alt="" onerror="handlePokemonSpriteError(this, parseInt(this.dataset.pokeId), true)">
+              <img class="sprite-ball-badge" id="mBallIconShiny" src="" alt="">
             </div>
             <span class="sprite-slot-label">Shiny</span>
           </div>
@@ -2222,8 +2231,17 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
         <div class="capture-control">
           <span class="ball-preview"><img id="fPokeballPreview" src="" alt=""></span>
           <span class="capture-select-stack">
-            <span class="capture-kicker">Pokéball</span>
+            <span class="capture-kicker">Pokéball (normal)</span>
             <select id="fPokeball" onchange="updatePokeballPreview()"></select>
+          </span>
+        </div>
+      </div>
+      <div class="capture-details single capture-final">
+        <div class="capture-control">
+          <span class="ball-preview"><img id="fPokeballShinyPreview" src="" alt=""></span>
+          <span class="capture-select-stack">
+            <span class="capture-kicker">Pokéball (shiny)</span>
+            <select id="fPokeballShiny" onchange="updatePokeballShinyPreview()"></select>
           </span>
         </div>
       </div>
@@ -2794,6 +2812,7 @@ function hasUserData(p) {
     p.context ||
     p.youtube ||
     p.pokeball ||
+    p.pokeballShiny ||
     p.nature ||
     p.game ||
     p.location ||
@@ -2811,6 +2830,7 @@ function sanitizeProgress(data, options = {}) {
     entry.huntMethod = normalizeHuntMethod(entry.huntMethod);
     entry.hunting = !!entry.hunting || entry.huntCount > 0;
     entry.pokeball = entry.pokeball || '';
+    entry.pokeballShiny = entry.pokeballShiny || '';
     entry.nature = entry.nature || '';
     // Ancienne logique: pokemon.json pouvait mettre caught=true juste parce que le nom etait rempli.
     if (!trustCaught && entry.caught && !hasUserData(entry)) delete entry.caught;
@@ -2836,6 +2856,7 @@ function rowMeansCaught(p) {
     p['Lien YouTube'] ||
     p['Contexte de capture'] ||
     p['Pokéball'] ||
+    p['Pokéball Shiny'] ||
     p['Nature'] ||
     p['IV parfaits'] ||
     p['Parfait']
@@ -2906,6 +2927,7 @@ function mergePokedexIntoProgress() {
     if (!existing.context    && p['Contexte de capture']) existing.context    = p['Contexte de capture'];
     if (!existing.youtube    && p['Lien YouTube'])        existing.youtube    = p['Lien YouTube'];
     if (!existing.pokeball   && p['Pokéball'])            existing.pokeball   = p['Pokéball'];
+    if (!existing.pokeballShiny && p['Pokéball Shiny'])    existing.pokeballShiny = p['Pokéball Shiny'];
     if (!existing.nature     && p['Nature'])              existing.nature     = p['Nature'];
     // Statuts: le nom seul ne signifie pas que le shiny est capturé.
     if (rowMeansCaught(p)) existing.caught = true;
@@ -3526,6 +3548,11 @@ function initModalChoiceLists() {
     ballSelect.innerHTML = '<option value="">Aucune</option>' + POKEBALLS.map(([id, label]) => `<option value="${id}">${label}</option>`).join('');
     ballSelect.dataset.ready = 'true';
   }
+  const ballShinySelect = document.getElementById('fPokeballShiny');
+  if (ballShinySelect && !ballShinySelect.dataset.ready) {
+    ballShinySelect.innerHTML = '<option value="">Aucune</option>' + POKEBALLS.map(([id, label]) => `<option value="${id}">${label}</option>`).join('');
+    ballShinySelect.dataset.ready = 'true';
+  }
   const natureSelect = document.getElementById('fNature');
   if (natureSelect && !natureSelect.dataset.ready) {
     natureSelect.innerHTML = '<option value="">Aucune</option>' + NATURES.map(nature => `<option value="${nature}">${nature}</option>`).join('');
@@ -3539,11 +3566,20 @@ function updatePokeballPreview() {
   if (!preview) return;
   preview.classList.toggle('visible', !!ballId);
   preview.src = ballId ? getPokeballSpriteUrl(ballId) : '';
-  updateModalBallIcon(ballId);
+  updateModalBallIcon('mBallIconNormal', ballId);
 }
 
-function updateModalBallIcon(ballId) {
-  const icon = document.getElementById('mBallIcon');
+function updatePokeballShinyPreview() {
+  const ballId = document.getElementById('fPokeballShiny')?.value || '';
+  const preview = document.getElementById('fPokeballShinyPreview');
+  if (!preview) return;
+  preview.classList.toggle('visible', !!ballId);
+  preview.src = ballId ? getPokeballSpriteUrl(ballId) : '';
+  updateModalBallIcon('mBallIconShiny', ballId);
+}
+
+function updateModalBallIcon(elementId, ballId) {
+  const icon = document.getElementById(elementId);
   if (!icon) return;
   icon.classList.toggle('visible', !!ballId);
   icon.src = ballId ? getPokeballSpriteUrl(ballId) : '';
@@ -4607,7 +4643,7 @@ function saveProgressEntry(id, entry) {
   if (isReadOnlyShare()) return;
   const hasIvs = entry.ivs && Object.values(entry.ivs).some(Boolean);
   const hasCustomHuntMethod = entry.huntMethod && entry.huntMethod !== 'masuda';
-  const isEmpty = !entry.caught && !entry.perfect && !entry.target && !entry.hunting && !entry.huntCount && !hasCustomHuntMethod && !entry.nickname && !entry.encounters && !entry.eggs && !entry.date && !entry.context && !entry.youtube && !entry.pokeball && !entry.nature && !entry.game && !entry.location && !hasIvs;
+  const isEmpty = !entry.caught && !entry.perfect && !entry.target && !entry.hunting && !entry.huntCount && !hasCustomHuntMethod && !entry.nickname && !entry.encounters && !entry.eggs && !entry.date && !entry.context && !entry.youtube && !entry.pokeball && !entry.pokeballShiny && !entry.nature && !entry.game && !entry.location && !hasIvs;
   if (isEmpty) delete progress[id];
   else progress[id] = entry;
   localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
@@ -4981,9 +5017,10 @@ function openModal(id, options = {}) {
   document.getElementById('mRegion').innerHTML = `<span class="modal-region-badge" style="color:${r.color};border-color:${r.color}66;background:${r.color}1a">${r.name}</span><span class="modal-gen-badge">Génération ${r.gen}</span>`;
   updateModalNavigation(id);
   document.getElementById('fPokeball').value = p.pokeball || '';
+  document.getElementById('fPokeballShiny').value = p.pokeballShiny || '';
   document.getElementById('fNature').value = p.nature || '';
   updatePokeballPreview();
-  updateModalBallIcon(p.pokeball || '');
+  updatePokeballShinyPreview();
 
   document.getElementById('fCaught').checked   = !!p.caught;
   document.getElementById('fPerfect').checked  = !!p.perfect;
@@ -5058,6 +5095,7 @@ function saveModal() {
                  ? document.getElementById('fLocationSelect').value
                  : document.getElementById('fLocationText').value.trim()),
     pokeball:  document.getElementById('fPokeball').value,
+    pokeballShiny: document.getElementById('fPokeballShiny').value,
     nature:    document.getElementById('fNature').value,
     ivs: {
       hp:  document.getElementById('ivHP').checked,
@@ -5100,7 +5138,7 @@ function exportJSON() {
 
     // N'inclut que les entrées non vides
     const hasCustomHuntMethod = p.huntMethod && p.huntMethod !== 'masuda';
-    if (!p.caught && !p.perfect && !p.target && !p.hunting && !p.huntCount && !hasCustomHuntMethod && !p.nickname && !p.encounters && !p.eggs && !p.date && !p.context && !p.youtube && !p.pokeball && !p.nature && !ivStr) continue;
+    if (!p.caught && !p.perfect && !p.target && !p.hunting && !p.huntCount && !hasCustomHuntMethod && !p.nickname && !p.encounters && !p.eggs && !p.date && !p.context && !p.youtube && !p.pokeball && !p.pokeballShiny && !p.nature && !ivStr) continue;
 
     out.push({
       'N° pokédex':          id,
@@ -5119,6 +5157,7 @@ function exportJSON() {
       'Lien YouTube':        p.youtube     || '',
       'Contexte de capture': p.context     || '',
       'Pokéball':            p.pokeball    || '',
+      'Pokéball Shiny':      p.pokeballShiny || '',
       'Nature':              p.nature      || '',
       'IV parfaits':         ivStr,
       'Parfait':             p.perfect ? '✓' : '',
