@@ -657,7 +657,7 @@ body.card-interaction-suppressed .card:active{
   .modal-sprite-group{gap:14px}
   .sprite-pedestal{width:92px;height:92px;border-radius:20px}
   .modal-sprite-group .modal-sprite{width:74px;height:74px}
-  .sprite-row{gap:5px}
+  .sprite-row{grid-template-columns:32px auto 32px;gap:5px}
   .sprite-ball-badge{width:32px;height:32px}
   .sprite-slot-label{font-size:7px}
   .modal-name-row{justify-content:center}
@@ -1229,7 +1229,7 @@ body.card-interaction-suppressed .card:active{
 }
 .modal-close:hover{color:var(--text)}
 .modal-hero{
-  display:grid;grid-template-columns:58px minmax(0,1fr) 58px;align-items:center;gap:.6rem;margin-bottom:1rem;min-width:0;
+  display:grid;grid-template-columns:58px minmax(0,1fr) 58px;align-items:center;gap:1.1rem;margin-bottom:1rem;min-width:0;
   padding:16px 12px;border-radius:15px;border:1px solid rgba(255,255,255,.11);
   background:
     radial-gradient(circle at 18% 8%,rgba(125,211,252,.12),transparent 38%),
@@ -1247,9 +1247,9 @@ body.card-interaction-suppressed .card:active{
   filter:drop-shadow(0 6px 14px rgba(0,0,0,.45));
   image-rendering:auto;
 }
-.modal-sprite-group{display:flex;align-items:flex-start;justify-content:center;gap:18px;flex:0 0 auto;margin-bottom:1px}
+.modal-sprite-group{display:flex;align-items:flex-start;justify-content:center;gap:10px;flex:0 0 auto;margin-bottom:1px}
 .sprite-slot{display:flex;flex-direction:column;align-items:center;gap:6px;min-width:0}
-.sprite-row{display:flex;align-items:center;justify-content:center;gap:8px;min-width:0}
+.sprite-row{display:grid;grid-template-columns:46px auto 46px;align-items:center;justify-content:center;gap:8px;min-width:0}
 .sprite-pedestal{
   width:132px;height:132px;border-radius:27px;display:grid;place-items:center;position:relative;
   background:rgba(255,255,255,.035);
@@ -1264,7 +1264,7 @@ body.card-interaction-suppressed .card:active{
 }
 .sprite-slot-shiny .sprite-slot-label{color:#d4af37}
 .sprite-ball-badge{
-  flex:0 0 auto;width:46px;height:46px;object-fit:contain;
+  width:46px;height:46px;object-fit:contain;justify-self:center;
   display:none;filter:drop-shadow(0 3px 6px rgba(0,0,0,.4));
 }
 .sprite-ball-badge.visible{display:block}
@@ -1894,7 +1894,7 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   .modal-sprite-group{gap:14px}
   .sprite-pedestal{width:92px;height:92px;border-radius:20px}
   .modal-sprite-group .modal-sprite{width:74px;height:74px}
-  .sprite-row{gap:5px}
+  .sprite-row{grid-template-columns:32px auto 32px;gap:5px}
   .sprite-ball-badge{width:32px;height:32px}
   .sprite-slot-label{font-size:7px}
   .modal-name-row{justify-content:center}
@@ -2076,11 +2076,13 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
               <div class="sprite-pedestal">
                 <img class="modal-sprite" id="mSpriteNormal" src="" alt="" onerror="handlePokemonSpriteError(this, parseInt(this.dataset.pokeId), false)">
               </div>
+              <span aria-hidden="true"></span>
             </div>
             <span class="sprite-slot-label">Normal</span>
           </div>
           <div class="sprite-slot sprite-slot-shiny">
             <div class="sprite-row">
+              <span aria-hidden="true"></span>
               <div class="sprite-pedestal">
                 <img class="modal-sprite" id="mSpriteShiny" src="" alt="" onerror="handlePokemonSpriteError(this, parseInt(this.dataset.pokeId), true)">
               </div>
