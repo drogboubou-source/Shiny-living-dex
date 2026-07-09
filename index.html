@@ -658,6 +658,8 @@ body.card-interaction-suppressed .card:active{
   .sprite-slot{padding:0}
   .sprite-slot-top{grid-template-columns:minmax(0,1fr) 30px;min-height:30px;padding:2px 3px 2px 8px}
   .sprite-pedestal{width:118px;height:100px;border-radius:21px}
+  .sprite-pedestal::before{inset:7px 8px 18px;border-radius:19px}
+  .sprite-pedestal::after{bottom:12px;width:66px;height:14px}
   .modal-sprite-group .modal-sprite{width:94px;height:94px}
   .sprite-row{width:100%}
   .sprite-ball-badge{width:28px;height:28px;padding:3px}
@@ -1269,16 +1271,38 @@ body.card-interaction-suppressed .card:active{
 .sprite-slot-shiny .sprite-slot-top{border-color:rgba(212,175,55,.2);background:linear-gradient(90deg,rgba(212,175,55,.08),rgba(12,12,18,.5))}
 .sprite-row{display:grid;place-items:center;width:100%;min-width:0}
 .sprite-pedestal{
-  width:150px;height:126px;border-radius:28px;display:grid;place-items:center;position:relative;
+  width:150px;height:126px;border-radius:28px;display:grid;place-items:center;position:relative;overflow:hidden;
   background:
-    radial-gradient(ellipse at 50% 86%,rgba(0,0,0,.28),transparent 34%),
-    radial-gradient(circle at 50% 42%,rgba(255,255,255,.13),rgba(255,255,255,.04) 56%,rgba(0,0,0,.1)),
+    linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.012)),
     rgba(255,255,255,.025);
   border:1px solid rgba(255,255,255,.09);
-  transition:transform .16s cubic-bezier(.34,1.56,.64,1),border-color .16s ease;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.07),inset 0 -18px 28px rgba(0,0,0,.12),0 10px 22px rgba(0,0,0,.14);
+  transition:transform .16s cubic-bezier(.34,1.56,.64,1),border-color .16s ease,box-shadow .16s ease;
 }
-.sprite-slot:hover .sprite-pedestal{transform:translateY(-2px);border-color:rgba(125,211,252,.3)}
-.modal-sprite-group .modal-sprite{width:128px;height:128px;filter:drop-shadow(0 10px 13px rgba(0,0,0,.3))}
+.sprite-pedestal::before{
+  content:'';position:absolute;inset:9px 10px 22px;border-radius:24px;
+  background:
+    radial-gradient(circle at 50% 36%,rgba(125,211,252,.18),rgba(125,211,252,.055) 42%,transparent 68%),
+    linear-gradient(180deg,rgba(255,255,255,.05),transparent 62%);
+  opacity:.9;pointer-events:none;
+}
+.sprite-pedestal::after{
+  content:'';position:absolute;left:50%;bottom:16px;width:84px;height:18px;border-radius:50%;transform:translateX(-50%);
+  background:radial-gradient(ellipse at center,rgba(0,0,0,.38),rgba(0,0,0,.16) 46%,transparent 72%);
+  filter:blur(2px);opacity:.86;pointer-events:none;
+}
+.sprite-slot-shiny .sprite-pedestal{
+  border-color:rgba(212,175,55,.16);
+  background:linear-gradient(180deg,rgba(255,247,204,.04),rgba(255,255,255,.012)),rgba(255,255,255,.025);
+}
+.sprite-slot-shiny .sprite-pedestal::before{
+  background:
+    radial-gradient(circle at 50% 34%,rgba(212,175,55,.2),rgba(212,175,55,.07) 44%,transparent 70%),
+    linear-gradient(180deg,rgba(255,255,255,.055),transparent 62%);
+}
+.sprite-slot:hover .sprite-pedestal{transform:translateY(-2px);border-color:rgba(125,211,252,.32);box-shadow:inset 0 1px 0 rgba(255,255,255,.08),inset 0 -18px 28px rgba(0,0,0,.12),0 13px 26px rgba(0,0,0,.18)}
+.modal-sprite-group .modal-sprite{position:relative;z-index:1;width:128px;height:128px;filter:drop-shadow(0 12px 12px rgba(0,0,0,.34)) saturate(1.05) contrast(1.02)}
+.sprite-slot-shiny .modal-sprite{filter:drop-shadow(0 12px 12px rgba(0,0,0,.34)) drop-shadow(0 0 10px rgba(212,175,55,.12)) saturate(1.08) contrast(1.03)}
 .sprite-slot-label{
   min-width:0;font-family:var(--font-logo);font-size:8px;font-weight:400;letter-spacing:.5px;
   text-transform:uppercase;color:rgba(255,255,255,.5);text-align:left;white-space:nowrap;
@@ -1926,6 +1950,8 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   .sprite-slot{padding:0}
   .sprite-slot-top{grid-template-columns:minmax(0,1fr) 30px;min-height:30px;padding:2px 3px 2px 8px}
   .sprite-pedestal{width:118px;height:100px;border-radius:21px}
+  .sprite-pedestal::before{inset:7px 8px 18px;border-radius:19px}
+  .sprite-pedestal::after{bottom:12px;width:66px;height:14px}
   .modal-sprite-group .modal-sprite{width:94px;height:94px}
   .sprite-row{width:100%}
   .sprite-ball-badge{width:28px;height:28px;padding:3px}
