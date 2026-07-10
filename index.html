@@ -678,10 +678,10 @@ body.card-interaction-suppressed .card:active{
   .modal-hero{display:block;padding:18px 44px 16px}
   .modal-details,.modal-num,.modal-name,.modal-region{text-align:center}
   .modal-sprite{width:54px;height:54px}
-  .modal-sprite-group{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;width:100%;max-width:286px;padding:8px;border-radius:15px}
+  .modal-sprite-group{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;width:100%;max-width:276px}
   .sprite-slot{padding:0}
   .sprite-slot-top{grid-template-columns:minmax(0,1fr) 30px;min-height:30px;padding:2px 3px 2px 8px}
-  .sprite-pedestal{width:118px;height:100px;border-radius:15px}
+  .sprite-pedestal{width:118px;height:100px}
   .modal-sprite-group .modal-sprite{width:94px;height:94px}
   .sprite-row{width:100%}
   .sprite-ball-badge{width:28px;height:28px;padding:3px}
@@ -1261,18 +1261,8 @@ body.card-interaction-suppressed .card:active{
   image-rendering:auto;
 }
 .modal-sprite-group{
-  display:grid;grid-template-columns:repeat(2,minmax(126px,1fr));align-items:end;justify-content:center;gap:14px;width:min(100%,358px);margin-bottom:1px;
-  position:relative;padding:10px;border-radius:18px;
-  background:
-    linear-gradient(90deg,rgba(125,211,252,.08),rgba(255,255,255,.025) 48%,rgba(247,215,116,.08)),
-    rgba(10,10,15,.24);
-  border:1px solid rgba(255,255,255,.075);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.055),0 14px 28px -22px rgba(0,0,0,.82);
-}
-.modal-sprite-group::after{
-  content:'';position:absolute;top:20px;bottom:20px;left:50%;width:1px;transform:translateX(-50%);
-  background:linear-gradient(180deg,transparent,rgba(255,255,255,.16),transparent);
-  pointer-events:none;
+  display:grid;grid-template-columns:repeat(2,minmax(126px,1fr));align-items:end;justify-content:center;gap:18px;width:min(100%,348px);margin-bottom:1px;
+  position:relative;
 }
 .sprite-slot{
   display:flex;flex-direction:column;align-items:center;gap:7px;min-width:0;padding:0;
@@ -1286,31 +1276,24 @@ body.card-interaction-suppressed .card:active{
 .sprite-slot-shiny .sprite-slot-top{border-color:rgba(212,175,55,.2);background:linear-gradient(90deg,rgba(212,175,55,.08),rgba(12,12,18,.5))}
 .sprite-row{display:grid;place-items:center;width:100%;min-width:0}
 .sprite-pedestal{
-  width:150px;height:126px;border-radius:18px;display:grid;place-items:center;position:relative;
+  width:150px;height:126px;border-radius:0;display:grid;place-items:center;position:relative;
   isolation:isolate;
-  background:
-    radial-gradient(ellipse at 50% 82%,rgba(0,0,0,.34) 0 22%,transparent 52%),
-    linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.012));
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.05);
-  transition:transform .2s cubic-bezier(.34,1.56,.64,1),box-shadow .2s ease,background .2s ease;
+  background:transparent;
+  box-shadow:none;
+  transition:transform .2s cubic-bezier(.34,1.56,.64,1),filter .2s ease;
 }
 .sprite-pedestal::after{
-  content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none;
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.045);
+  content:'';position:absolute;left:24px;right:24px;bottom:13px;height:14px;border-radius:50%;pointer-events:none;z-index:-1;
+  background:radial-gradient(ellipse,rgba(0,0,0,.42),rgba(0,0,0,.18) 46%,transparent 72%);
+  filter:blur(1px);
 }
 .sprite-slot:hover .sprite-pedestal{
   transform:translateY(-3px);
-  background:
-    radial-gradient(ellipse at 50% 82%,rgba(0,0,0,.38) 0 22%,transparent 52%),
-    linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.016));
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.075),0 16px 28px -22px rgba(0,0,0,.9);
+  filter:brightness(1.05);
 }
 .sprite-slot-shiny .sprite-pedestal{
   position:relative;
-  background:
-    radial-gradient(ellipse at 50% 82%,rgba(0,0,0,.34) 0 22%,transparent 52%),
-    radial-gradient(circle at 74% 20%,rgba(247,215,116,.12),transparent 34%),
-    linear-gradient(180deg,rgba(247,215,116,.055),rgba(255,255,255,.012));
+  background:transparent;
 }
 .sprite-slot-shiny .sprite-pedestal .pedestal-sparkle{
   position:absolute;top:10px;right:12px;z-index:3;color:rgba(255,247,214,.85);
@@ -1967,10 +1950,10 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   .modal-hero{display:block;padding:18px 44px 16px}
   .modal-details,.modal-num,.modal-name,.modal-region{text-align:center}
   .modal-sprite{width:54px;height:54px}
-  .modal-sprite-group{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;width:100%;max-width:286px;padding:8px;border-radius:15px}
+  .modal-sprite-group{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;width:100%;max-width:276px}
   .sprite-slot{padding:0}
   .sprite-slot-top{grid-template-columns:minmax(0,1fr) 30px;min-height:30px;padding:2px 3px 2px 8px}
-  .sprite-pedestal{width:118px;height:100px;border-radius:15px}
+  .sprite-pedestal{width:118px;height:100px}
   .modal-sprite-group .modal-sprite{width:94px;height:94px}
   .sprite-row{width:100%}
   .sprite-ball-badge{width:28px;height:28px;padding:3px}
@@ -5351,7 +5334,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=230', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=231', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
