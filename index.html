@@ -555,7 +555,7 @@ body.card-interaction-suppressed .card:active{
 }
 .sidebar-toggle:hover{color:var(--text);box-shadow:0 10px 28px rgba(0,0,0,.48),0 0 0 1px rgba(192,132,252,.18)}
 .sidebar-toggle.open{left:var(--sidebar-w)}
-.sidebar-toggle:focus-visible,.btn:focus-visible,.gen-btn:focus-visible,.card:focus-visible,.modal-close:focus-visible,.btn-save:focus-visible{outline:2px solid #c084fc;outline-offset:2px}
+.sidebar-toggle:focus-visible,.btn:focus-visible,.gen-btn:focus-visible,.card:focus-visible,.btn-save:focus-visible{outline:2px solid #c084fc;outline-offset:2px}
 @media (max-width: 720px){
   .topbar{grid-template-columns:minmax(0,1fr) auto;gap:.4rem;padding:0 .45rem 0 .7rem}
   .title-actions{gap:6px}
@@ -666,7 +666,7 @@ body.card-interaction-suppressed .card:active{
   .modal-name-row{justify-content:center}
   .modal-nav-arrow{top:28px;width:34px;min-height:46px;font-size:16px;padding:4px 3px;transform:none}
   #modalPrevCard{left:8px}
-  #modalNextCard{right:36px}
+  #modalNextCard{right:8px}
   .modal-nav-arrow:hover{transform:translateY(-1px)}
   .modal-nav-arrow[disabled]{transform:none}
   .modal-nav-thumb{width:24px;height:24px}
@@ -1230,15 +1230,6 @@ body.card-interaction-suppressed .card:active{
   background:linear-gradient(90deg,#c084fc,#d4af37,#7ed660,#7dd3fc);
   opacity:.9;
 }
-.modal-close{
-  position:absolute;top:8px;right:4px;z-index:4;
-  width:28px;height:28px;display:grid;place-items:center;
-  background:rgba(18,18,25,.96);border:1px solid rgba(255,255,255,.16);color:rgba(255,255,255,.62);
-  cursor:pointer;font-size:17px;line-height:1;padding:0;
-  border-radius:999px;box-shadow:0 10px 22px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.08);
-  transition:color .12s,border-color .12s,transform .12s;
-}
-.modal-close:hover{color:var(--text);border-color:rgba(255,255,255,.28);transform:translateY(-1px)}
 .modal-hero{
   display:block;margin-bottom:1rem;min-width:0;
   padding:18px 56px 16px;border-radius:15px;border:1px solid rgba(255,255,255,.11);
@@ -1308,7 +1299,7 @@ body.card-interaction-suppressed .card:active{
   transition:transform .14s ease,border-color .14s ease,box-shadow .14s ease;
 }
 #modalPrevCard{left:14px}
-#modalNextCard{right:36px}
+#modalNextCard{right:14px}
 .modal-nav-thumb{
   width:26px;height:26px;object-fit:contain;flex:0 0 auto;padding:3px;border-radius:9px;
   background:rgba(255,255,255,.05);filter:drop-shadow(0 3px 6px rgba(0,0,0,.4));
@@ -1942,7 +1933,7 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   .modal-name-row{justify-content:center}
   .modal-nav-arrow{top:28px;width:34px;min-height:46px;font-size:16px;padding:4px 3px;transform:none}
   #modalPrevCard{left:8px}
-  #modalNextCard{right:36px}
+  #modalNextCard{right:8px}
   .modal-nav-arrow:hover{transform:translateY(-1px)}
   .modal-nav-arrow[disabled]{transform:none}
   .modal-nav-thumb{width:24px;height:24px}
@@ -2110,7 +2101,6 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
 <!-- MODAL -->
 <div class="overlay" id="overlay" onclick="overlayClick(event)">
   <div class="modal">
-    <button class="modal-close" onclick="closeModal()">✕</button>
     <div class="modal-hero">
       <button class="modal-nav-arrow" id="modalPrevCard" type="button" onclick="goToAdjacentModal(-1)" aria-label="Pokémon précédent">
         <img class="modal-nav-thumb" id="modalPrevThumb" src="" alt="" aria-hidden="true">
