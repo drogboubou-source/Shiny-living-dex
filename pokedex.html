@@ -496,6 +496,16 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
 }
 .form-row input:focus,.form-row textarea:focus{border-color:rgba(255,255,255,.22)}
 .form-row textarea{resize:vertical;min-height:60px}
+.ball-choice-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.ball-choice{display:flex;align-items:center;gap:7px;min-width:0;background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);padding:7px 8px;cursor:pointer;transition:border-color .12s,background .12s,transform .12s}
+.ball-choice:hover{transform:translateY(-1px);border-color:rgba(255,255,255,.2)}
+.ball-choice:has(input:checked){border-color:#c084fc;background:#20152f;color:#f3e8ff}
+.ball-choice input{position:absolute;opacity:0;pointer-events:none}
+.ball-choice img{width:24px;height:24px;object-fit:contain;image-rendering:auto;flex-shrink:0}
+.ball-choice span{font-size:11px;font-weight:700;line-height:1.15;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.card-ball{position:absolute;right:6px;top:6px;width:22px;height:22px;object-fit:contain;filter:drop-shadow(0 2px 5px rgba(0,0,0,.45));z-index:3}
+.modal-ball-preview{display:flex;align-items:center;gap:8px;margin-top:6px;color:var(--muted);font-size:11px}
+.modal-ball-preview img{width:26px;height:26px;object-fit:contain}
 .two-col{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px;min-width:0}
 .two-col .form-row{display:flex;flex-direction:column}
 .two-col .form-row label{min-height:28px;display:flex;align-items:flex-end}
@@ -676,6 +686,11 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
       <input type="text" id="fContext" placeholder="ex: Stream Bruce">
     </div>
     <div class="form-row">
+      <label>Ball</label>
+      <div class="ball-choice-grid" id="fBallChoices"></div>
+      <div class="modal-ball-preview" id="fBallPreview" aria-live="polite"></div>
+    </div>
+    <div class="form-row">
       <label>Lien YouTube</label>
       <input type="url" id="fYoutube" placeholder="https://youtu.be/...">
     </div>
@@ -828,6 +843,15 @@ let currentPokemon = null;
 let sidebarOpen = false;
 let spriteMode = 'pixel';
 const SPRITE_FALLBACK = './Assets/icon-192.png';
+const BALL_OPTIONS = [
+  { value: '', label: 'Aucune', src: '' },
+  { value: 'poke', label: 'Poké Ball', src: './sprites/pok%C3%A9ball.png' },
+  { value: 'super', label: 'Super Ball', src: './sprites/super%20ball.png' },
+  { value: 'hyper', label: 'Hyper Ball', src: './sprites/hyper%20ball.png' },
+  { value: 'luxe', label: 'Luxe Ball', src: './sprites/luxe%20ball.png' },
+  { value: 'honor', label: 'Honor Ball', src: './sprites/honor%20bal.png' },
+  { value: 'scuba', label: 'Scuba Ball', src: './sprites/scuba%20ball.png' },
+];
 const STORAGE_KEY = 'shiny_dex_v4';
 const LEGACY_STORAGE_KEY = 'shiny_dex_v3';
 const REGION_SESSION_KEY = 'shiny_dex_session_region';
@@ -862,6 +886,7 @@ function hasUserData(p) {
   const ivs = p.ivs || {};
   return !!(
     p.perfect ||
+    p.ball ||
     p.nickname ||
     p.encounters ||
     p.eggs ||
@@ -897,6 +922,8 @@ function rowMeansCaught(p) {
     p['Oeufs parent parfait'] ||
     p['Nombre de rencontres'] ||
     p['Date de capture'] ||
+    p['Ball'] ||
+    p['Poké Ball'] ||
     p['Lien YouTube'] ||
     p['Contexte de capture'] ||
     p['IV parfaits'] ||
@@ -945,6 +972,7 @@ function mergePokedexIntoProgress() {
     if (!existing.eggs       && p['Oeufs parent parfait'])existing.eggs       = parseInt(p['Oeufs parent parfait']) || 0;
     if (!existing.date       && p['Date de capture'])     existing.date       = p['Date de capture'];
     if (!existing.context    && p['Contexte de capture']) existing.context    = p['Contexte de capture'];
+    if (!existing.ball) existing.ball = normalizeBallValue(p['Ball'] || p['Poké Ball'] || p['Poke Ball']);
     if (!existing.youtube    && p['Lien YouTube'])        existing.youtube    = p['Lien YouTube'];
     // Statuts: le nom seul ne signifie pas que le shiny est capturé.
     if (rowMeansCaught(p)) existing.caught = true;
@@ -967,6 +995,57 @@ function parseIVs(raw) {
     spd: s.includes('déf spé') || s.includes('spd'),
     spe: s.includes('vitesse') || s.includes('spe') || s.includes('speed'),
   };
+}
+
+function normalizeBallValue(raw) {
+  if (!raw) return '';
+  const value = String(raw).trim().toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .replace(/[_-]+/g, ' ');
+  const compact = value.replace(/\s+/g, '');
+  if (compact === 'poke' || compact === 'pokeball') return 'poke';
+  if (compact.includes('super')) return 'super';
+  if (compact.includes('hyper')) return 'hyper';
+  if (compact.includes('luxe') || compact.includes('luxury')) return 'luxe';
+  if (compact.includes('honor') || compact.includes('honour') || compact.includes('premier')) return 'honor';
+  if (compact.includes('scuba') || compact.includes('plongee') || compact.includes('dive')) return 'scuba';
+  return BALL_OPTIONS.some(ball => ball.value === raw) ? raw : '';
+}
+
+function getBallOption(value) {
+  const normalized = normalizeBallValue(value);
+  return BALL_OPTIONS.find(ball => ball.value === normalized) || BALL_OPTIONS[0];
+}
+
+function renderBallChoices(selectedValue = '') {
+  const container = document.getElementById('fBallChoices');
+  if (!container) return;
+  const selected = getBallOption(selectedValue).value;
+  container.innerHTML = BALL_OPTIONS.map(ball => `
+    <label class="ball-choice">
+      <input type="radio" name="fBall" value="${ball.value}" ${ball.value === selected ? 'checked' : ''} onchange="updateBallPreview()">
+      ${ball.src ? `<img src="${ball.src}" alt="">` : '<span aria-hidden="true">-</span>'}
+      <span>${ball.label}</span>
+    </label>
+  `).join('');
+  updateBallPreview();
+}
+
+function getSelectedBallValue() {
+  return document.querySelector('input[name="fBall"]:checked')?.value || '';
+}
+
+function updateBallPreview() {
+  const preview = document.getElementById('fBallPreview');
+  if (!preview) return;
+  const ball = getBallOption(getSelectedBallValue());
+  preview.innerHTML = ball.src ? `<img src="${ball.src}" alt=""> <span>${ball.label}</span>` : '<span>Aucune ball sélectionnée</span>';
+}
+
+function renderCardBall(value) {
+  const ball = getBallOption(value);
+  if (!ball.src) return '';
+  return `<img class="card-ball" src="${ball.src}" alt="${ball.label}" loading="lazy">`;
 }
 
 /* ══════════════════════════════════════
@@ -1367,6 +1446,7 @@ function renderGrid() {
     const useShinySprite = !!p.caught;
     const spriteUrl = getPokemonSpriteUrl(id, useShinySprite);
     const typeBadges = renderTypeBadges(id);
+    const ballHtml = p.caught ? renderCardBall(p.ball) : '';
     const statusHtml = p.caught && p.perfect
       ? '<span class="status-pair"><span class="status-shiny">Shiny</span><span class="status-perfect">Parfait</span></span>'
       : (p.caught ? '<span class="status-shiny">Shiny</span>' : 'Manquant');
@@ -1378,6 +1458,7 @@ function renderGrid() {
       <div class="type-row">${typeBadges}</div>
       <img src="${spriteUrl}"
              alt="${name}" loading="lazy" width="64" height="64" onerror="handleSpriteError(this, ${id}, ${useShinySprite})">
+      ${ballHtml}
       <div class="status">${statusHtml}</div>
       <div class="holo" aria-hidden="true">${sparkHtml}</div>`;
     grid.appendChild(card);
@@ -1629,6 +1710,7 @@ function openModal(id) {
   document.getElementById('fEggs').value       = p.eggs       || '';
   document.getElementById('fDate').value       = p.date       || '';
   document.getElementById('fContext').value    = p.context    || '';
+  renderBallChoices(p.ball || '');
   document.getElementById('fYoutube').value    = p.youtube    || '';
 
   const ivs = p.ivs || {};
@@ -1674,6 +1756,7 @@ function saveModal() {
     eggs:      eggs,
     date:      document.getElementById('fDate').value,
     context:   document.getElementById('fContext').value.trim(),
+    ball:      getSelectedBallValue(),
     youtube:   document.getElementById('fYoutube').value.trim(),
     ivs: {
       hp:  document.getElementById('ivHP').checked,
@@ -1685,7 +1768,7 @@ function saveModal() {
     }
   };
   // Supprime les entrées vraiment vides
-  const isEmpty = !entry.caught && !entry.perfect && !entry.nickname && !enc && !eggs && !entry.date && !entry.context && !entry.youtube;
+  const isEmpty = !entry.caught && !entry.perfect && !entry.nickname && !enc && !eggs && !entry.date && !entry.context && !entry.ball && !entry.youtube;
   if (isEmpty) {
     delete progress[currentPokemon];
   } else {
@@ -1726,6 +1809,7 @@ function exportJSON() {
       'Oeufs parent parfait': p.eggs      || '',
       'Nombre de rencontres': p.encounters || '',
       'Date de capture':     p.date        || '',
+      'Ball':                getBallOption(p.ball).label !== 'Aucune' ? getBallOption(p.ball).label : '',
       'Lien YouTube':        p.youtube     || '',
       'Contexte de capture': p.context     || '',
       'IV parfaits':         ivStr,
@@ -1790,4 +1874,3 @@ if ('serviceWorker' in navigator) {
 </script>
 </body>
 </html>
-
