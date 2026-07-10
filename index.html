@@ -1113,21 +1113,20 @@ body.card-interaction-suppressed .card:active{
 }
 
 .target-toggle-btn{
-  margin-top:8px;
-  align-self:center;
   display:inline-flex;align-items:center;gap:6px;
-  min-height:27px;padding:5px 9px;
-  border-radius:999px;border:1px solid rgba(126,214,96,.24);
-  background:rgba(126,214,96,.07);color:rgba(255,255,255,.62);
-  font-family:var(--font);font-size:10px;font-weight:800;line-height:1;
-  cursor:pointer;box-shadow:inset 0 1px 0 rgba(255,255,255,.05);
+  min-height:22px;padding:4px 7px;
+  border-radius:999px;border:1px solid rgba(126,214,96,.18);
+  background:rgba(126,214,96,.045);color:rgba(255,255,255,.5);
+  font-family:var(--font);font-size:8px;font-weight:800;line-height:1;
+  cursor:pointer;box-shadow:inset 0 1px 0 rgba(255,255,255,.04);
+  flex:0 0 auto;
 }
 .target-toggle-btn::before{
-  content:'';width:6px;height:6px;border-radius:50%;
-  background:rgba(255,255,255,.32);box-shadow:none;
+  content:'';width:5px;height:5px;border-radius:50%;
+  background:rgba(255,255,255,.24);box-shadow:none;
 }
 .target-toggle-btn[aria-pressed="true"]{
-  color:#fff;background:rgba(126,214,96,.16);border-color:rgba(126,214,96,.5);
+  color:#ecffe8;background:rgba(126,214,96,.12);border-color:rgba(126,214,96,.38);
 }
 .target-toggle-btn[aria-pressed="true"]::before{
   background:#7ed660;box-shadow:0 0 8px rgba(126,214,96,.9);
@@ -2113,11 +2112,11 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
           <div class="modal-num" id="mNum"></div>
           <div class="modal-name-row">
             <div class="modal-name" id="mName"></div>
+            <button class="target-toggle-btn edit-only" id="fTargetBtn" type="button" onclick="toggleFormTarget()" aria-pressed="false">Cible</button>
             <img class="modal-ball-icon" id="mBallIcon" src="" alt="">
             <button class="regional-form-link" id="regionalFormLink" type="button"></button>
           </div>
           <div class="modal-region" id="mRegion"></div>
-          <button class="target-toggle-btn edit-only" id="fTargetBtn" type="button" onclick="toggleFormTarget()" aria-pressed="false">Cible</button>
         </div>
         <div class="modal-sprite-group">
           <div class="sprite-slot">
