@@ -1266,15 +1266,17 @@ body.card-interaction-suppressed .card:active{
   position:relative;
 }
 .modal-sprite-group::after{
-  content:'';position:absolute;left:50%;top:42px;bottom:30px;width:1px;transform:translateX(-50%);
-  background:linear-gradient(180deg,transparent,rgba(125,211,252,.38) 18%,rgba(247,215,116,.42) 50%,rgba(192,132,252,.34) 82%,transparent);
-  box-shadow:0 0 10px rgba(125,211,252,.22),0 0 14px rgba(247,215,116,.14);
+  content:'';position:absolute;left:50%;top:40px;bottom:28px;width:10px;transform:translateX(-50%);
+  background:
+    linear-gradient(180deg,transparent 0 8%,rgba(255,255,255,.2) 8% 24%,transparent 24% 36%,rgba(255,255,255,.34) 36% 64%,transparent 64% 76%,rgba(255,255,255,.2) 76% 92%,transparent 92% 100%),
+    linear-gradient(90deg,transparent 0 4px,rgba(255,255,255,.16) 4px 5px,transparent 5px 100%);
+  opacity:.82;
   pointer-events:none;
 }
 .modal-sprite-group::before{
-  content:'';position:absolute;left:50%;top:50%;width:5px;height:5px;border-radius:50%;transform:translate(-50%,-50%);
-  background:rgba(255,255,255,.62);
-  box-shadow:0 0 9px rgba(247,215,116,.55),0 0 16px rgba(125,211,252,.32);
+  content:'';position:absolute;left:50%;top:50%;width:18px;height:1px;transform:translate(-50%,-50%);
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.38),transparent);
+  opacity:.72;
   pointer-events:none;
 }
 .sprite-slot{
@@ -5336,7 +5338,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=233', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=234', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
