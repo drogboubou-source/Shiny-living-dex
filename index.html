@@ -1260,7 +1260,35 @@ body.card-interaction-suppressed .card:active{
   filter:drop-shadow(0 6px 14px rgba(0,0,0,.45));
   image-rendering:auto;
 }
-.modal-sprite-group{display:grid;grid-template-columns:repeat(2,minmax(126px,1fr));align-items:end;justify-content:center;gap:18px;width:min(100%,348px);margin-bottom:1px}
+.modal-sprite-group{display:grid;grid-template-columns:repeat(2,minmax(126px,1fr));align-items:end;justify-content:center;gap:18px;width:min(100%,348px);margin-bottom:1px;position:relative}
+.sprite-link{
+  position:absolute;left:50%;bottom:0;transform:translateX(-50%);
+  width:60px;height:126px;pointer-events:none;z-index:4;
+  display:flex;align-items:center;justify-content:center;
+}
+.sprite-link::before{
+  content:'';position:absolute;top:6%;bottom:6%;left:50%;width:1px;transform:translateX(-50%);
+  background:linear-gradient(180deg,transparent,rgba(255,255,255,.4) 45%,rgba(255,247,214,.4) 55%,transparent);
+}
+.sprite-link::after{
+  content:'';position:absolute;left:50%;top:50%;width:34px;height:34px;transform:translate(-50%,-50%);
+  border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle,rgba(255,255,255,.35),transparent 70%);
+  opacity:.5;animation:spriteLinkGlow 2.6s ease-in-out infinite;
+}
+@keyframes spriteLinkGlow{
+  0%,100%{opacity:.32;transform:translate(-50%,-50%) scale(.85)}
+  50%{opacity:.6;transform:translate(-50%,-50%) scale(1.15)}
+}
+.sprite-link-gem{
+  position:relative;z-index:1;font-size:13px;line-height:1;
+  color:rgba(255,255,255,.92);text-shadow:0 0 8px rgba(255,255,255,.65),0 0 14px rgba(255,247,214,.4);
+  animation:spriteLinkGemPulse 2.6s ease-in-out infinite;
+}
+@keyframes spriteLinkGemPulse{
+  0%,100%{opacity:.7;transform:scale(.88) rotate(0deg)}
+  50%{opacity:1;transform:scale(1.12) rotate(8deg)}
+}
 .sprite-slot{
   display:flex;flex-direction:column;align-items:center;gap:7px;min-width:0;padding:0;
 }
@@ -2168,6 +2196,9 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
             <div class="sprite-pedestal">
               <img class="modal-sprite" id="mSpriteNormal" src="" alt="" onerror="handlePokemonSpriteError(this, parseInt(this.dataset.pokeId), false)">
             </div>
+          </div>
+          <div class="sprite-link" aria-hidden="true">
+            <span class="sprite-link-gem">&#10022;</span>
           </div>
           <div class="sprite-slot sprite-slot-shiny">
             <div class="sprite-slot-top">
