@@ -5063,7 +5063,7 @@ function openModal(id, options = {}) {
     mSpriteShiny.src = getPokemonSpriteUrl(id, true);
     mSpriteShiny.alt = `${name} (shiny)`;
   }
-  document.getElementById('mRegion').innerHTML = `<span class="modal-region-badge" style="color:${r.color};border-color:${r.color}66;background:${r.color}1a">${r.name}</span><span class="modal-gen-badge">Génération ${r.gen}</span>`;
+  document.getElementById('mRegion').innerHTML = `<span class="modal-region-badge" style="color:${r.color};border-color:${r.color}66;background:${r.color}1a">${r.name}</span><span class="modal-gen-badge">${r.gen}G</span>`;
   updateModalNavigation(id);
   document.getElementById('fPokeball').value = p.pokeball || '';
   document.getElementById('fPokeballShiny').value = p.pokeballShiny || '';
