@@ -2504,6 +2504,9 @@ const TARGETS_META = {
 };
 const POKEMON_CRY_BASE = 'https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/latest';
 const ITEM_SPRITE_BASE = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items';
+const LOCAL_POKEBALL_SPRITES = {
+  'luxury-ball': './sprites/luxe%20ball.png',
+};
 let activePokemonCry = null;
 
 function isReadOnlyShare() {
@@ -3514,6 +3517,7 @@ function getCurrentStats() {
 }
 
 function getPokeballSpriteUrl(ballId) {
+  if (LOCAL_POKEBALL_SPRITES[ballId]) return LOCAL_POKEBALL_SPRITES[ballId];
   return ballId ? `${ITEM_SPRITE_BASE}/${ballId}.png` : '';
 }
 
