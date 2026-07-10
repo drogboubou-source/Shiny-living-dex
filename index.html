@@ -1276,31 +1276,20 @@ body.card-interaction-suppressed .card:active{
 .sprite-slot-shiny .sprite-slot-top{border-color:rgba(212,175,55,.2);background:linear-gradient(90deg,rgba(212,175,55,.08),rgba(12,12,18,.5))}
 .sprite-row{display:grid;place-items:center;width:100%;min-width:0}
 .sprite-pedestal{
-  width:150px;height:126px;border-radius:0;display:grid;place-items:center;position:relative;
+  width:150px;height:126px;display:grid;place-items:center;position:relative;
   isolation:isolate;
-  background:transparent;
-  box-shadow:none;
   transition:transform .2s cubic-bezier(.34,1.56,.64,1),filter .2s ease;
 }
 .sprite-pedestal::after{
-  content:'';position:absolute;left:24px;right:24px;bottom:13px;height:14px;border-radius:50%;pointer-events:none;z-index:-1;
-  background:radial-gradient(ellipse,rgba(0,0,0,.42),rgba(0,0,0,.18) 46%,transparent 72%);
+  content:'';position:absolute;left:28px;right:28px;bottom:14px;height:12px;border-radius:50%;pointer-events:none;z-index:-1;
+  background:radial-gradient(ellipse,rgba(0,0,0,.32),rgba(0,0,0,.14) 48%,transparent 72%);
   filter:blur(1px);
 }
 .sprite-slot:hover .sprite-pedestal{
-  transform:translateY(-3px);
-  filter:brightness(1.05);
+  transform:translateY(-2px);
+  filter:brightness(1.035);
 }
-.sprite-slot-shiny .sprite-pedestal{
-  position:relative;
-  background:transparent;
-}
-.sprite-slot-shiny .sprite-pedestal .pedestal-sparkle{
-  position:absolute;top:10px;right:12px;z-index:3;color:rgba(255,247,214,.85);
-  font-size:14px;line-height:1;text-shadow:0 0 6px rgba(255,247,214,.6);
-  opacity:.9;pointer-events:none;
-}
-.modal-sprite-group .modal-sprite{width:128px;height:128px;filter:drop-shadow(0 10px 13px rgba(0,0,0,.3))}
+.modal-sprite-group .modal-sprite{width:128px;height:128px;filter:drop-shadow(0 8px 10px rgba(0,0,0,.26))}
 .sprite-slot-label{
   min-width:0;font-family:var(--font-logo);font-size:8px;font-weight:400;letter-spacing:.5px;
   text-transform:uppercase;color:rgba(255,255,255,.5);text-align:left;white-space:nowrap;
@@ -2165,7 +2154,6 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
               <img class="sprite-ball-badge" id="mBallIconShiny" src="" alt="">
             </div>
             <div class="sprite-pedestal">
-              <span class="pedestal-sparkle" aria-hidden="true">&#10022;</span>
               <img class="modal-sprite" id="mSpriteShiny" src="" alt="" onerror="handlePokemonSpriteError(this, parseInt(this.dataset.pokeId), true)">
             </div>
           </div>
@@ -5334,7 +5322,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=231', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=232', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
