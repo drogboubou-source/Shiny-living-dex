@@ -390,40 +390,33 @@ body.card-interaction-suppressed .card:active{
 .hunt-tray-compact-list.single .hunt-tray-meta{font-size:10px;margin-top:4px}
 .hunt-tray-sprite{
   width:42px;height:42px;object-fit:contain;flex:0 0 auto;border-radius:10px;
-  background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.16);
+  background:
+    radial-gradient(circle at 50% 30%,rgba(255,255,255,.09),transparent 60%),
+    linear-gradient(180deg,#1c1c26 0%,#101016 100%);
   padding:2px;filter:drop-shadow(0 3px 6px rgba(0,0,0,.35));
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.2),
-    inset 0 -6px 8px -8px rgba(0,0,0,.5),
-    0 0 0 1px rgba(0,0,0,.35),
-    0 0 0 3px rgba(255,255,255,.03);
-  transition:border-color .16s ease,box-shadow .16s ease,transform .16s ease;
+    inset 0 1px 0 rgba(255,255,255,.08),
+    inset 0 -1px 0 rgba(0,0,0,.5),
+    0 0 0 1px rgba(255,255,255,.07),
+    0 0 0 1px rgba(0,0,0,.5);
+  transition:box-shadow .16s ease,transform .16s ease;
 }
 .hunt-tray-card:hover .hunt-tray-sprite{
-  border-color:rgba(255,255,255,.3);transform:translateY(-1px);
+  transform:translateY(-1px);
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.26),
-    inset 0 -6px 8px -8px rgba(0,0,0,.55),
-    0 0 0 1px rgba(0,0,0,.4),
-    0 0 0 3px rgba(255,255,255,.05);
+    inset 0 1px 0 rgba(255,255,255,.12),
+    inset 0 -1px 0 rgba(0,0,0,.5),
+    0 0 0 1px rgba(255,255,255,.11),
+    0 0 0 1px rgba(0,0,0,.5);
 }
-.hunt-tray-sprite-shiny{
-  width:48px;height:48px;
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.26),
-    inset 0 -6px 8px -8px rgba(0,0,0,.5),
-    0 0 0 1px rgba(0,0,0,.35),
-    0 0 0 3px rgba(255,255,255,.05),
-    0 0 14px -6px rgba(255,255,255,.35);
-}
+.hunt-tray-sprite-shiny{width:48px;height:48px}
 .hunt-tray-recent:hover .hunt-tray-sprite-shiny{
-  border-color:rgba(255,255,255,.35);transform:translateY(-1px);
+  transform:translateY(-1px);
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.32),
-    inset 0 -6px 8px -8px rgba(0,0,0,.55),
-    0 0 0 1px rgba(0,0,0,.4),
-    0 0 0 3px rgba(255,255,255,.07),
-    0 0 20px -5px rgba(255,255,255,.45);
+    inset 0 1px 0 rgba(255,255,255,.12),
+    inset 0 -1px 0 rgba(0,0,0,.5),
+    0 0 0 1px rgba(255,255,255,.11),
+    0 0 0 1px rgba(0,0,0,.5);
 }
 .hunt-tray-copy{display:flex;flex-direction:column;min-width:0}
 .hunt-tray-name{font-size:12px;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -1280,53 +1273,48 @@ body.card-interaction-suppressed .card:active{
 .sprite-slot-shiny .sprite-slot-top{border-color:rgba(212,175,55,.2);background:linear-gradient(90deg,rgba(212,175,55,.08),rgba(12,12,18,.5))}
 .sprite-row{display:grid;place-items:center;width:100%;min-width:0}
 .sprite-pedestal{
-  width:150px;height:126px;border-radius:28px;display:grid;place-items:center;position:relative;
-  isolation:isolate;overflow:hidden;
+  width:150px;height:126px;border-radius:26px;display:grid;place-items:center;position:relative;
+  isolation:isolate;
   background:
-    radial-gradient(ellipse at 50% 86%,rgba(0,0,0,.3),transparent 34%),
-    radial-gradient(circle at 50% 42%,rgba(255,255,255,.14),rgba(255,255,255,.04) 56%,rgba(0,0,0,.12)),
-    rgba(255,255,255,.025);
-  border:1px solid rgba(255,255,255,.15);
+    radial-gradient(circle at 50% 30%,rgba(255,255,255,.09),transparent 60%),
+    linear-gradient(180deg,#1c1c26 0%,#101016 100%);
   box-shadow:
-    inset 0 1.5px 0 rgba(255,255,255,.26),
-    inset 0 -12px 18px -14px rgba(0,0,0,.65),
-    inset 0 0 0 1px rgba(255,255,255,.045),
-    0 0 0 1px rgba(0,0,0,.4),
-    0 0 0 3px rgba(255,255,255,.035),
-    0 12px 24px -12px rgba(0,0,0,.68);
-  transition:transform .2s cubic-bezier(.34,1.56,.64,1),box-shadow .22s ease;
+    inset 0 1px 0 rgba(255,255,255,.06),
+    inset 0 -1px 0 rgba(0,0,0,.5),
+    0 0 0 1px rgba(255,255,255,.07),
+    0 0 0 1px rgba(0,0,0,.5),
+    0 18px 30px -14px rgba(0,0,0,.75),
+    0 2px 4px rgba(0,0,0,.4);
+  transition:transform .2s cubic-bezier(.34,1.56,.64,1),box-shadow .2s ease;
 }
 .sprite-pedestal::before{
-  content:'';position:absolute;inset:0;z-index:2;pointer-events:none;border-radius:inherit;
-  background:linear-gradient(125deg,rgba(255,255,255,.22) 0%,rgba(255,255,255,.05) 28%,transparent 55%);
+  content:'';position:absolute;top:-20%;left:15%;right:15%;height:65%;pointer-events:none;z-index:0;
+  background:radial-gradient(ellipse at 50% 0%,rgba(255,255,255,.16),transparent 70%);
 }
 .sprite-pedestal::after{
-  content:'';position:absolute;inset:-30%;z-index:0;pointer-events:none;border-radius:50%;
-  background:radial-gradient(circle,rgba(255,255,255,.4),transparent 68%);
-  opacity:.14;will-change:opacity,transform;
-  animation:pedestalGlowBreathe 4.6s ease-in-out infinite;
-}
-@keyframes pedestalGlowBreathe{
-  0%,100%{opacity:.1;transform:scale(.9)}
-  50%{opacity:.24;transform:scale(1.05)}
+  content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.05);
 }
 .sprite-slot:hover .sprite-pedestal{
   transform:translateY(-3px);
   box-shadow:
-    inset 0 1.5px 0 rgba(255,255,255,.32),
-    inset 0 -12px 18px -14px rgba(0,0,0,.7),
-    inset 0 0 0 1px rgba(255,255,255,.07),
-    0 0 0 1px rgba(0,0,0,.46),
-    0 0 0 3px rgba(255,255,255,.06),
-    0 16px 30px -12px rgba(0,0,0,.72);
+    inset 0 1px 0 rgba(255,255,255,.09),
+    inset 0 -1px 0 rgba(0,0,0,.5),
+    0 0 0 1px rgba(255,255,255,.11),
+    0 0 0 1px rgba(0,0,0,.5),
+    0 22px 36px -14px rgba(0,0,0,.8),
+    0 2px 4px rgba(0,0,0,.4);
 }
-.sprite-slot-shiny .sprite-pedestal::after{
-  background:radial-gradient(circle,rgba(255,255,255,.6),transparent 65%);
-  animation:pedestalGlowBreatheShiny 2.6s ease-in-out infinite;
+.sprite-slot-shiny .sprite-pedestal::before{
+  background:radial-gradient(ellipse at 50% 0%,rgba(255,247,214,.22),transparent 70%);
 }
-@keyframes pedestalGlowBreatheShiny{
-  0%,100%{opacity:.16;transform:scale(.9)}
-  50%{opacity:.4;transform:scale(1.1)}
+.sprite-slot-shiny .sprite-pedestal{
+  position:relative;
+}
+.sprite-slot-shiny .sprite-pedestal .pedestal-sparkle{
+  position:absolute;top:10px;right:12px;z-index:3;color:rgba(255,247,214,.85);
+  font-size:14px;line-height:1;text-shadow:0 0 6px rgba(255,247,214,.6);
+  opacity:.9;pointer-events:none;
 }
 .modal-sprite-group .modal-sprite{width:128px;height:128px;filter:drop-shadow(0 10px 13px rgba(0,0,0,.3))}
 .sprite-slot-label{
@@ -2193,6 +2181,7 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
               <img class="sprite-ball-badge" id="mBallIconShiny" src="" alt="">
             </div>
             <div class="sprite-pedestal">
+              <span class="pedestal-sparkle" aria-hidden="true">&#10022;</span>
               <img class="modal-sprite" id="mSpriteShiny" src="" alt="" onerror="handlePokemonSpriteError(this, parseInt(this.dataset.pokeId), true)">
             </div>
           </div>
