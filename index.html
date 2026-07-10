@@ -1323,6 +1323,7 @@ body.card-interaction-suppressed .card:active{
 }
 .modal-name-row .modal-name{grid-column:2;justify-self:center}
 .modal-name-actions{grid-column:3;justify-self:start;display:flex;align-items:center;gap:6px;min-width:0}
+.modal-sub-actions{display:flex;align-items:center;justify-content:center;min-height:0;margin-top:5px}
 .modal-ball-icon{width:24px;height:24px;object-fit:contain;filter:drop-shadow(0 3px 6px rgba(0,0,0,.36));display:none;flex:0 0 auto}
 .modal-ball-icon.visible{display:block}
 .modal-region{font-size:12px;margin-top:6px;text-align:center;color:rgba(255,255,255,.58);display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:nowrap}
@@ -1334,8 +1335,8 @@ body.card-interaction-suppressed .card:active{
 .modal-gen-badge{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.14);color:rgba(255,255,255,.62)}
 .regional-form-link{
   display:none;align-items:center;justify-content:center;gap:5px;
-  min-height:24px;padding:4px 8px;border-radius:999px;
-  font-family:var(--font);font-size:10px;font-weight:800;color:#dff6ff;
+  min-height:22px;padding:4px 8px;border-radius:999px;
+  font-family:var(--font);font-size:9px;font-weight:800;color:#dff6ff;
   background:linear-gradient(180deg,rgba(125,211,252,.14),rgba(125,211,252,.045)),rgba(18,18,25,.82);
   border:1px solid rgba(125,211,252,.28);cursor:pointer;
 }
@@ -2121,8 +2122,10 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
             <div class="modal-name-actions">
               <button class="target-toggle-btn edit-only" id="fTargetBtn" type="button" onclick="toggleFormTarget()" aria-pressed="false">Cible</button>
               <img class="modal-ball-icon" id="mBallIcon" src="" alt="">
-              <button class="regional-form-link" id="regionalFormLink" type="button"></button>
             </div>
+          </div>
+          <div class="modal-sub-actions">
+            <button class="regional-form-link" id="regionalFormLink" type="button"></button>
           </div>
           <div class="modal-region" id="mRegion"></div>
         </div>
