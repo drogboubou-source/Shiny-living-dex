@@ -1033,6 +1033,7 @@ body.card-interaction-suppressed .card:active{
   font-size:14px;font-weight:800;color:#fff;order:1;
   min-height:34px;padding:2px 0;display:flex;align-items:center;justify-content:center;
   text-transform:uppercase;letter-spacing:.2px;line-height:1.18;
+  text-align:center;width:100%;max-width:100%;overflow-wrap:anywhere;
 }
 .card-sprite{
   width:72px;height:72px;order:2;margin:1px 0 2px;display:block;
@@ -1316,7 +1317,12 @@ body.card-interaction-suppressed .card:active{
 .modal-nav-arrow[disabled]{opacity:.22;cursor:default;transform:none}
 .modal-num{font-family:var(--font);font-size:11px;color:rgba(255,255,255,.56);text-align:center;margin-bottom:1px}
 .modal-name{font-family:var(--font);font-size:24px;line-height:1.12;color:#fff;overflow-wrap:anywhere;text-align:center;max-width:100%;text-shadow:0 2px 12px rgba(0,0,0,.36)}
-.modal-name-row{display:flex;align-items:center;gap:8px;justify-content:center;min-width:0;flex-wrap:wrap}
+.modal-name-row{
+  display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);
+  align-items:center;column-gap:8px;justify-content:center;min-width:0;width:100%;
+}
+.modal-name-row .modal-name{grid-column:2;justify-self:center}
+.modal-name-actions{grid-column:3;justify-self:start;display:flex;align-items:center;gap:6px;min-width:0}
 .modal-ball-icon{width:24px;height:24px;object-fit:contain;filter:drop-shadow(0 3px 6px rgba(0,0,0,.36));display:none;flex:0 0 auto}
 .modal-ball-icon.visible{display:block}
 .modal-region{font-size:12px;margin-top:6px;text-align:center;color:rgba(255,255,255,.58);display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:nowrap}
@@ -2112,9 +2118,11 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
           <div class="modal-num" id="mNum"></div>
           <div class="modal-name-row">
             <div class="modal-name" id="mName"></div>
-            <button class="target-toggle-btn edit-only" id="fTargetBtn" type="button" onclick="toggleFormTarget()" aria-pressed="false">Cible</button>
-            <img class="modal-ball-icon" id="mBallIcon" src="" alt="">
-            <button class="regional-form-link" id="regionalFormLink" type="button"></button>
+            <div class="modal-name-actions">
+              <button class="target-toggle-btn edit-only" id="fTargetBtn" type="button" onclick="toggleFormTarget()" aria-pressed="false">Cible</button>
+              <img class="modal-ball-icon" id="mBallIcon" src="" alt="">
+              <button class="regional-form-link" id="regionalFormLink" type="button"></button>
+            </div>
           </div>
           <div class="modal-region" id="mRegion"></div>
         </div>
