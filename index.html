@@ -679,7 +679,7 @@ body.card-interaction-suppressed .card:active{
   .modal-details,.modal-num,.modal-name,.modal-region{text-align:center}
   .modal-sprite{width:54px;height:54px}
   .modal-sprite-group{grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;width:100%;max-width:306px}
-  .modal-sprite-group::after{top:38px;bottom:28px}
+  .modal-sprite-group::after{top:40px;height:62px}
   .sprite-slot{padding:0}
   .sprite-slot-top{grid-template-columns:minmax(0,1fr) 30px;min-height:30px;padding:2px 3px 2px 8px}
   .sprite-pedestal{width:118px;height:100px}
@@ -1266,17 +1266,17 @@ body.card-interaction-suppressed .card:active{
   position:relative;
 }
 .modal-sprite-group::after{
-  content:'';position:absolute;left:50%;top:40px;bottom:28px;width:10px;transform:translateX(-50%);
+  content:'';position:absolute;left:50%;top:46px;width:24px;height:72px;transform:translateX(-50%) skewX(-12deg);
   background:
-    linear-gradient(180deg,transparent 0 8%,rgba(255,255,255,.2) 8% 24%,transparent 24% 36%,rgba(255,255,255,.34) 36% 64%,transparent 64% 76%,rgba(255,255,255,.2) 76% 92%,transparent 92% 100%),
-    linear-gradient(90deg,transparent 0 4px,rgba(255,255,255,.16) 4px 5px,transparent 5px 100%);
-  opacity:.82;
+    linear-gradient(112deg,transparent 0 42%,rgba(255,255,255,.28) 43% 46%,transparent 47% 100%),
+    linear-gradient(112deg,transparent 0 54%,rgba(255,255,255,.13) 55% 58%,transparent 59% 100%);
+  opacity:.9;
   pointer-events:none;
 }
 .modal-sprite-group::before{
-  content:'';position:absolute;left:50%;top:50%;width:18px;height:1px;transform:translate(-50%,-50%);
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,.38),transparent);
-  opacity:.72;
+  content:'';position:absolute;left:50%;top:50%;width:30px;height:1px;transform:translate(-50%,-50%) rotate(-18deg);
+  background:rgba(255,255,255,.22);
+  opacity:.65;
   pointer-events:none;
 }
 .sprite-slot{
@@ -1955,7 +1955,7 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   .modal-details,.modal-num,.modal-name,.modal-region{text-align:center}
   .modal-sprite{width:54px;height:54px}
   .modal-sprite-group{grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;width:100%;max-width:306px}
-  .modal-sprite-group::after{top:38px;bottom:28px}
+  .modal-sprite-group::after{top:40px;height:62px}
   .sprite-slot{padding:0}
   .sprite-slot-top{grid-template-columns:minmax(0,1fr) 30px;min-height:30px;padding:2px 3px 2px 8px}
   .sprite-pedestal{width:118px;height:100px}
@@ -5338,7 +5338,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=234', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=235', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
