@@ -678,8 +678,7 @@ body.card-interaction-suppressed .card:active{
   .modal-hero{display:block;padding:18px 44px 16px}
   .modal-details,.modal-num,.modal-name,.modal-region{text-align:center}
   .modal-sprite{width:54px;height:54px}
-  .modal-sprite-group{grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;width:100%;max-width:306px;--medallion-travel:62px}
-  .modal-sprite-group::after{top:34px;width:18px;height:18px}
+  .modal-sprite-group{grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;width:100%;max-width:306px}
   .modal-sprite-group::before{top:34px;bottom:20px}
   .sprite-slot{padding:0}
   .sprite-slot-top{grid-template-columns:minmax(0,1fr) 30px;min-height:30px;padding:2px 3px 2px 8px}
@@ -1264,28 +1263,13 @@ body.card-interaction-suppressed .card:active{
 }
 .modal-sprite-group{
   display:grid;grid-template-columns:repeat(2,minmax(126px,1fr));align-items:end;justify-content:center;gap:34px;width:min(100%,382px);margin-bottom:1px;
-  position:relative;--medallion-travel:82px;
-}
-.modal-sprite-group::after{
-  content:'';position:absolute;left:50%;top:34px;width:22px;height:22px;border-radius:50%;transform:translate(-50%,0);
-  background:
-    radial-gradient(circle at 38% 30%,rgba(255,255,255,.28),transparent 34%),
-    linear-gradient(180deg,rgba(255,255,255,.09),rgba(255,255,255,.025)),
-    rgba(18,18,25,.82);
-  border:1px solid rgba(255,255,255,.16);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 8px 14px -10px rgba(0,0,0,.85);
-  animation:spriteMedallionTravel 4.8s ease-in-out infinite;
-  pointer-events:none;
+  position:relative;
 }
 .modal-sprite-group::before{
   content:'';position:absolute;left:50%;top:36px;bottom:22px;width:1px;transform:translateX(-50%);
   background:linear-gradient(180deg,transparent,rgba(255,255,255,.14) 18%,rgba(255,255,255,.22) 50%,rgba(255,255,255,.14) 82%,transparent);
   opacity:.72;
   pointer-events:none;
-}
-@keyframes spriteMedallionTravel{
-  0%,100%{transform:translate(-50%,0)}
-  50%{transform:translate(-50%,var(--medallion-travel))}
 }
 .sprite-slot{
   display:flex;flex-direction:column;align-items:center;gap:7px;min-width:0;padding:0;
@@ -1962,8 +1946,7 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   .modal-hero{display:block;padding:18px 44px 16px}
   .modal-details,.modal-num,.modal-name,.modal-region{text-align:center}
   .modal-sprite{width:54px;height:54px}
-  .modal-sprite-group{grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;width:100%;max-width:306px;--medallion-travel:62px}
-  .modal-sprite-group::after{top:34px;width:18px;height:18px}
+  .modal-sprite-group{grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;width:100%;max-width:306px}
   .modal-sprite-group::before{top:34px;bottom:20px}
   .sprite-slot{padding:0}
   .sprite-slot-top{grid-template-columns:minmax(0,1fr) 30px;min-height:30px;padding:2px 3px 2px 8px}
@@ -5347,7 +5330,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=236', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=237', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
