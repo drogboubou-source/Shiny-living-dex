@@ -678,11 +678,10 @@ body.card-interaction-suppressed .card:active{
   .modal-hero{display:block;padding:18px 44px 16px}
   .modal-details,.modal-num,.modal-name,.modal-region{text-align:center}
   .modal-sprite{width:54px;height:54px}
-  .modal-sprite-group{grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;width:100%;max-width:306px}
-  .modal-sprite-group::before{top:34px;bottom:20px}
+  .modal-sprite-group{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;width:100%;max-width:276px}
   .sprite-slot{padding:0}
   .sprite-slot-top{grid-template-columns:minmax(0,1fr) 30px;min-height:30px;padding:2px 3px 2px 8px}
-  .sprite-pedestal{width:118px;height:100px}
+  .sprite-pedestal{width:118px;height:100px;border-radius:21px}
   .modal-sprite-group .modal-sprite{width:94px;height:94px}
   .sprite-row{width:100%}
   .sprite-ball-badge{width:28px;height:28px;padding:3px}
@@ -1261,16 +1260,7 @@ body.card-interaction-suppressed .card:active{
   filter:drop-shadow(0 6px 14px rgba(0,0,0,.45));
   image-rendering:auto;
 }
-.modal-sprite-group{
-  display:grid;grid-template-columns:repeat(2,minmax(126px,1fr));align-items:end;justify-content:center;gap:34px;width:min(100%,382px);margin-bottom:1px;
-  position:relative;
-}
-.modal-sprite-group::before{
-  content:'';position:absolute;left:50%;top:36px;bottom:22px;width:1px;transform:translateX(-50%);
-  background:linear-gradient(180deg,transparent,rgba(255,255,255,.14) 18%,rgba(255,255,255,.22) 50%,rgba(255,255,255,.14) 82%,transparent);
-  opacity:.72;
-  pointer-events:none;
-}
+.modal-sprite-group{display:grid;grid-template-columns:repeat(2,minmax(126px,1fr));align-items:end;justify-content:center;gap:18px;width:min(100%,348px);margin-bottom:1px}
 .sprite-slot{
   display:flex;flex-direction:column;align-items:center;gap:7px;min-width:0;padding:0;
 }
@@ -1283,20 +1273,44 @@ body.card-interaction-suppressed .card:active{
 .sprite-slot-shiny .sprite-slot-top{border-color:rgba(212,175,55,.2);background:linear-gradient(90deg,rgba(212,175,55,.08),rgba(12,12,18,.5))}
 .sprite-row{display:grid;place-items:center;width:100%;min-width:0}
 .sprite-pedestal{
-  width:150px;height:126px;display:grid;place-items:center;position:relative;
+  width:150px;height:126px;border-radius:26px;display:grid;place-items:center;position:relative;
   isolation:isolate;
-  transition:transform .2s cubic-bezier(.34,1.56,.64,1),filter .2s ease;
+  background:radial-gradient(circle at 50% 26%,#282836 0%,#1c1c26 46%,#101016 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.06),
+    inset 0 -1px 0 rgba(0,0,0,.5),
+    inset 0 0 0 1px rgba(255,255,255,.05),
+    0 0 0 1px rgba(255,255,255,.07),
+    0 0 0 1px rgba(0,0,0,.5),
+    0 18px 30px -14px rgba(0,0,0,.75),
+    0 2px 4px rgba(0,0,0,.4);
+  transition:transform .2s cubic-bezier(.34,1.56,.64,1),box-shadow .2s ease;
 }
 .sprite-pedestal::after{
-  content:'';position:absolute;left:28px;right:28px;bottom:14px;height:12px;border-radius:50%;pointer-events:none;z-index:-1;
-  background:radial-gradient(ellipse,rgba(0,0,0,.32),rgba(0,0,0,.14) 48%,transparent 72%);
-  filter:blur(1px);
+  content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.05);
 }
 .sprite-slot:hover .sprite-pedestal{
-  transform:translateY(-2px);
-  filter:brightness(1.035);
+  transform:translateY(-3px);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.09),
+    inset 0 -1px 0 rgba(0,0,0,.5),
+    inset 0 0 0 1px rgba(255,255,255,.05),
+    0 0 0 1px rgba(255,255,255,.11),
+    0 0 0 1px rgba(0,0,0,.5),
+    0 22px 36px -14px rgba(0,0,0,.8),
+    0 2px 4px rgba(0,0,0,.4);
 }
-.modal-sprite-group .modal-sprite{width:128px;height:128px;filter:drop-shadow(0 8px 10px rgba(0,0,0,.26))}
+.sprite-slot-shiny .sprite-pedestal{
+  position:relative;
+  background:radial-gradient(circle at 50% 26%,#332e22 0%,#211d18 46%,#101016 100%);
+}
+.sprite-slot-shiny .sprite-pedestal .pedestal-sparkle{
+  position:absolute;top:10px;right:12px;z-index:3;color:rgba(255,247,214,.85);
+  font-size:14px;line-height:1;text-shadow:0 0 6px rgba(255,247,214,.6);
+  opacity:.9;pointer-events:none;
+}
+.modal-sprite-group .modal-sprite{width:128px;height:128px;filter:drop-shadow(0 10px 13px rgba(0,0,0,.3))}
 .sprite-slot-label{
   min-width:0;font-family:var(--font-logo);font-size:8px;font-weight:400;letter-spacing:.5px;
   text-transform:uppercase;color:rgba(255,255,255,.5);text-align:left;white-space:nowrap;
@@ -1946,11 +1960,10 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   .modal-hero{display:block;padding:18px 44px 16px}
   .modal-details,.modal-num,.modal-name,.modal-region{text-align:center}
   .modal-sprite{width:54px;height:54px}
-  .modal-sprite-group{grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;width:100%;max-width:306px}
-  .modal-sprite-group::before{top:34px;bottom:20px}
+  .modal-sprite-group{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;width:100%;max-width:276px}
   .sprite-slot{padding:0}
   .sprite-slot-top{grid-template-columns:minmax(0,1fr) 30px;min-height:30px;padding:2px 3px 2px 8px}
-  .sprite-pedestal{width:118px;height:100px}
+  .sprite-pedestal{width:118px;height:100px;border-radius:21px}
   .modal-sprite-group .modal-sprite{width:94px;height:94px}
   .sprite-row{width:100%}
   .sprite-ball-badge{width:28px;height:28px;padding:3px}
@@ -2162,6 +2175,7 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
               <img class="sprite-ball-badge" id="mBallIconShiny" src="" alt="">
             </div>
             <div class="sprite-pedestal">
+              <span class="pedestal-sparkle" aria-hidden="true">&#10022;</span>
               <img class="modal-sprite" id="mSpriteShiny" src="" alt="" onerror="handlePokemonSpriteError(this, parseInt(this.dataset.pokeId), true)">
             </div>
           </div>
@@ -5330,7 +5344,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=237', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=224', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
