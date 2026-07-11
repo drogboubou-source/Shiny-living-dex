@@ -1307,7 +1307,7 @@ body.card-interaction-suppressed .card:active{
 .sprite-slot-label::after{left:calc(100% + 7px);background:linear-gradient(90deg,color-mix(in srgb,var(--region-accent,#7dd3fc) 65%,transparent),transparent)}
 
 .sprite-ball-badge{
-  display:none;margin-top:-3px;
+  visibility:hidden;margin-top:-3px;
   width:28px;height:28px;object-fit:contain;padding:4px;border-radius:999px;
   background:radial-gradient(circle at 50% 42%,rgba(255,255,255,.22),rgba(255,255,255,.08) 52%,rgba(0,0,0,.28));
   border:1px solid rgba(255,255,255,.26);
@@ -1315,7 +1315,7 @@ body.card-interaction-suppressed .card:active{
   filter:drop-shadow(0 2px 5px rgba(0,0,0,.42));
   transition:transform .18s cubic-bezier(.34,1.56,.64,1);
 }
-.sprite-ball-badge.visible{display:block}
+.sprite-ball-badge.visible{visibility:visible}
 .sprite-slot:hover .sprite-ball-badge.visible{transform:scale(1.08) translateY(-1px)}
 .modal-nav-arrow{
   position:absolute;top:28px;width:42px;min-height:52px;border-radius:13px;flex:0 0 auto;
