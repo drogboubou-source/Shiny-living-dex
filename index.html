@@ -685,10 +685,9 @@ body.card-interaction-suppressed .card:active{
   .modal-sprite-group .modal-sprite{width:94px;height:94px}
   .sprite-row{width:100%}
   .sprite-ball-badge{width:26px;height:26px;padding:3px}
-  .sprite-vertical-label{font-size:8px;letter-spacing:2px}
-  .sprite-vertical-label::after{height:11px;top:calc(100% + 6px)}
-  .sprite-vertical-label.label-normal{left:-12px}
-  .sprite-vertical-label.label-shiny{right:-12px}
+  .sprite-vertical-label{font-size:7px;letter-spacing:1.6px;padding:7px 3px 6px}
+  .sprite-vertical-label.label-normal{left:-11px}
+  .sprite-vertical-label.label-shiny{right:-11px}
   .sprite-slot-label{font-size:7px}
   .modal-name{font-size:18px;line-height:1.16}
   .modal-name-row{justify-content:center}
@@ -1305,29 +1304,27 @@ body.card-interaction-suppressed .card:active{
 .sprite-slot-label::after{left:calc(100% + 7px);background:linear-gradient(90deg,color-mix(in srgb,var(--region-accent,#7dd3fc) 65%,transparent),transparent)}
 
 .sprite-vertical-label{
-  position:absolute;top:1px;
+  position:absolute;top:8px;
+  display:flex;align-items:center;justify-content:center;
   writing-mode:vertical-rl;text-orientation:mixed;
-  font-family:var(--font-logo);font-size:9px;font-weight:400;
-  letter-spacing:2.6px;text-transform:uppercase;white-space:nowrap;
+  font-family:var(--font-logo);font-size:8px;font-weight:400;
+  letter-spacing:2.2px;text-transform:uppercase;white-space:nowrap;
+  padding:9px 4px 8px;border-radius:8px;border:1px solid;
   z-index:1;pointer-events:none;
 }
-.sprite-vertical-label::after{
-  content:'';position:absolute;left:50%;top:calc(100% + 9px);
-  width:1px;height:16px;transform:translateX(-50%);
-}
 .sprite-vertical-label.label-normal{
-  left:-17px;color:rgba(255,255,255,.86);
-  text-shadow:0 0 7px rgba(203,213,225,.45),0 1px 2px rgba(0,0,0,.65);
-}
-.sprite-vertical-label.label-normal::after{
-  background:linear-gradient(180deg,rgba(226,232,240,.55),transparent);
+  left:-18px;color:rgba(226,232,240,.92);
+  background:linear-gradient(180deg,rgba(255,255,255,.1),rgba(255,255,255,.02));
+  border-color:rgba(255,255,255,.16);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.13),0 4px 10px rgba(0,0,0,.35);
+  text-shadow:0 1px 1px rgba(0,0,0,.55);
 }
 .sprite-vertical-label.label-shiny{
-  right:-17px;color:#ffd766;
-  text-shadow:0 0 8px rgba(255,215,102,.6),0 1px 2px rgba(0,0,0,.65);
-}
-.sprite-vertical-label.label-shiny::after{
-  background:linear-gradient(180deg,rgba(255,215,102,.65),transparent);
+  right:-18px;color:#3c2c08;
+  background:linear-gradient(180deg,#ffedb0,#ffd766 48%,#e0a936);
+  border-color:rgba(255,230,160,.85);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.55),0 4px 10px rgba(0,0,0,.35),0 0 12px rgba(255,215,102,.3);
+  text-shadow:0 1px 0 rgba(255,255,255,.45);
 }
 .sprite-ball-badge{
   visibility:hidden;
@@ -2024,10 +2021,9 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   .modal-sprite-group .modal-sprite{width:94px;height:94px}
   .sprite-row{width:100%}
   .sprite-ball-badge{width:26px;height:26px;padding:3px}
-  .sprite-vertical-label{font-size:8px;letter-spacing:2px}
-  .sprite-vertical-label::after{height:11px;top:calc(100% + 6px)}
-  .sprite-vertical-label.label-normal{left:-12px}
-  .sprite-vertical-label.label-shiny{right:-12px}
+  .sprite-vertical-label{font-size:7px;letter-spacing:1.6px;padding:7px 3px 6px}
+  .sprite-vertical-label.label-normal{left:-11px}
+  .sprite-vertical-label.label-shiny{right:-11px}
   .sprite-slot-label{font-size:7px}
   .modal-name{font-size:18px;line-height:1.16}
   .modal-name-row{justify-content:center}
