@@ -1295,18 +1295,17 @@ body.card-interaction-suppressed .card:active{
 .modal-sprite-group .modal-sprite{width:128px;height:128px;filter:drop-shadow(0 8px 10px rgba(0,0,0,.26))}
 .sprite-slot-label{
   position:relative;min-width:0;font-family:var(--font-logo);font-size:9px;font-weight:400;letter-spacing:2.4px;
-  text-transform:uppercase;color:rgba(255,255,255,.42);text-align:center;white-space:nowrap;
+  text-transform:uppercase;color:var(--region-accent,#7dd3fc);text-align:center;white-space:nowrap;
+  text-shadow:0 0 10px color-mix(in srgb,var(--region-accent,#7dd3fc) 35%,transparent);
 }
 .sprite-slot-label::before,.sprite-slot-label::after{
   content:'';position:absolute;top:50%;width:11px;height:1px;
-  background:linear-gradient(90deg,transparent,rgba(125,211,252,.5));
+  background:linear-gradient(90deg,transparent,color-mix(in srgb,var(--region-accent,#7dd3fc) 65%,transparent));
   transform:translateY(-1px);
 }
 .sprite-slot-label::before{right:calc(100% + 7px)}
-.sprite-slot-label::after{left:calc(100% + 7px);background:linear-gradient(90deg,rgba(125,211,252,.5),transparent)}
-.sprite-slot-shiny .sprite-slot-label{color:rgba(212,175,55,.8);text-shadow:0 0 12px rgba(212,175,55,.25)}
-.sprite-slot-shiny .sprite-slot-label::before{background:linear-gradient(90deg,transparent,rgba(212,175,55,.65))}
-.sprite-slot-shiny .sprite-slot-label::after{background:linear-gradient(90deg,rgba(212,175,55,.65),transparent)}
+.sprite-slot-label::after{left:calc(100% + 7px);background:linear-gradient(90deg,color-mix(in srgb,var(--region-accent,#7dd3fc) 65%,transparent),transparent)}
+
 .sprite-ball-badge{
   position:absolute;top:0;right:2px;z-index:2;
   width:30px;height:30px;object-fit:contain;
@@ -5108,6 +5107,7 @@ function openModal(id, options = {}) {
     mSpriteShiny.alt = `${name} (shiny)`;
   }
   document.getElementById('mRegion').innerHTML = `<span class="modal-region-badge" style="color:${r.color};border-color:${r.color}66;background:${r.color}1a">${r.name}</span><span class="modal-gen-badge">${r.gen}G</span>`;
+  document.querySelector('.modal-sprite-group')?.style.setProperty('--region-accent', r.color);
   updateModalNavigation(id);
   document.getElementById('fPokeball').value = p.pokeball || '';
   document.getElementById('fPokeballShiny').value = p.pokeballShiny || '';
