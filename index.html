@@ -385,16 +385,15 @@ body.card-interaction-suppressed .card:active{
 .hunt-tray-compact-list.single .hunt-tray-card{
   grid-template-columns:56px minmax(0,1fr) auto;padding:14px 16px;border-radius:14px;gap:14px;
 }
-.hunt-tray-compact-list.single .hunt-tray-sprite-frame{width:56px;height:56px;border-radius:13px}
+.hunt-tray-compact-list.single .hunt-tray-sprite{width:56px;height:56px;border-radius:13px}
 .hunt-tray-compact-list.single .hunt-tray-name{font-size:15px}
 .hunt-tray-compact-list.single .hunt-tray-meta{font-size:10px;margin-top:4px}
-.hunt-tray-sprite-frame{
-  position:relative;display:grid;place-items:center;
-  width:42px;height:42px;flex:0 0 auto;border-radius:10px;isolation:isolate;
+.hunt-tray-sprite{
+  width:42px;height:42px;object-fit:contain;flex:0 0 auto;border-radius:10px;
   background:
     radial-gradient(circle at 50% 30%,rgba(255,255,255,.09),transparent 60%),
     linear-gradient(180deg,#1c1c26 0%,#101016 100%);
-  padding:2px;
+  padding:2px;filter:drop-shadow(0 3px 6px rgba(0,0,0,.35));
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,.08),
     inset 0 -1px 0 rgba(0,0,0,.5),
@@ -402,16 +401,7 @@ body.card-interaction-suppressed .card:active{
     0 0 0 1px rgba(0,0,0,.5);
   transition:box-shadow .16s ease,transform .16s ease;
 }
-.hunt-tray-sprite-frame::before{
-  content:'';position:absolute;inset:-7px;border-radius:inherit;z-index:-1;pointer-events:none;
-  background:radial-gradient(circle,rgba(125,211,252,.22),transparent 68%);
-  opacity:0;transition:opacity .16s ease;
-}
-.hunt-tray-sprite-frame-shiny::before{background:radial-gradient(circle,rgba(212,175,55,.28),transparent 68%)}
-.hunt-tray-card:hover .hunt-tray-sprite-frame::before,
-.hunt-tray-recent:hover .hunt-tray-sprite-frame::before{opacity:1}
-.hunt-tray-sprite{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 3px 6px rgba(0,0,0,.35))}
-.hunt-tray-card:hover .hunt-tray-sprite-frame{
+.hunt-tray-card:hover .hunt-tray-sprite{
   transform:translateY(-1px);
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,.12),
@@ -419,8 +409,8 @@ body.card-interaction-suppressed .card:active{
     0 0 0 1px rgba(255,255,255,.11),
     0 0 0 1px rgba(0,0,0,.5);
 }
-.hunt-tray-sprite-frame-shiny{width:48px;height:48px}
-.hunt-tray-recent:hover .hunt-tray-sprite-frame-shiny{
+.hunt-tray-sprite-shiny{width:48px;height:48px}
+.hunt-tray-recent:hover .hunt-tray-sprite-shiny{
   transform:translateY(-1px);
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,.12),
@@ -1297,52 +1287,28 @@ body.card-interaction-suppressed .card:active{
   isolation:isolate;
   transition:transform .2s cubic-bezier(.34,1.56,.64,1),filter .2s ease;
 }
-.sprite-pedestal::before{
-  content:'';position:absolute;left:50%;bottom:8px;width:132px;height:132px;border-radius:50%;
-  transform:translate(-50%,10%);pointer-events:none;z-index:-1;
-  background:radial-gradient(circle,rgba(125,211,252,.16),rgba(125,211,252,.05) 46%,transparent 72%);
-  opacity:.85;transition:opacity .2s ease,transform .2s ease;
-}
-.sprite-slot-shiny .sprite-pedestal::before{
-  background:radial-gradient(circle,rgba(212,175,55,.22),rgba(212,175,55,.06) 46%,transparent 72%);
-}
 .sprite-pedestal::after{
   content:'';position:absolute;left:28px;right:28px;bottom:14px;height:12px;border-radius:50%;pointer-events:none;z-index:-1;
-  background:radial-gradient(ellipse,rgba(0,0,0,.36),rgba(0,0,0,.16) 48%,transparent 72%);
+  background:radial-gradient(ellipse,rgba(0,0,0,.32),rgba(0,0,0,.14) 48%,transparent 72%);
   filter:blur(1px);
 }
 .sprite-slot:hover .sprite-pedestal{
-  transform:translateY(-3px);
-  filter:brightness(1.05);
+  transform:translateY(-2px);
+  filter:brightness(1.035);
 }
-.sprite-slot:hover .sprite-pedestal::before{opacity:1;transform:translate(-50%,10%) scale(1.06)}
-.modal-sprite-group .modal-sprite{width:128px;height:128px;filter:drop-shadow(0 8px 10px rgba(0,0,0,.26));position:relative;z-index:1}
-.sprite-reflection{
-  position:absolute;left:50%;bottom:11px;width:88px;height:40px;
-  transform:translateX(-50%) scaleY(-1);transform-origin:top center;
-  background-repeat:no-repeat;background-position:center top;background-size:contain;
-  opacity:.22;filter:blur(.3px);pointer-events:none;z-index:0;
-  -webkit-mask-image:linear-gradient(to bottom,rgba(0,0,0,.55),transparent 82%);
-  mask-image:linear-gradient(to bottom,rgba(0,0,0,.55),transparent 82%);
-}
-.sprite-slot:hover .sprite-reflection{opacity:.3}
+.modal-sprite-group .modal-sprite{width:128px;height:128px;filter:drop-shadow(0 8px 10px rgba(0,0,0,.26))}
 .sprite-slot-label{
   min-width:0;font-family:var(--font-logo);font-size:8px;font-weight:400;letter-spacing:.5px;
   text-transform:uppercase;color:rgba(255,255,255,.5);text-align:left;white-space:nowrap;
 }
-.sprite-slot-shiny .sprite-slot-label{color:rgba(255,255,255,.5)}
+.sprite-slot-shiny .sprite-slot-label{color:#d4af37}
 .sprite-ball-badge{
   width:32px;height:32px;object-fit:contain;justify-self:end;
   display:none;padding:4px;border-radius:999px;
   background:radial-gradient(circle at 50% 42%,rgba(255,255,255,.22),rgba(255,255,255,.08) 52%,rgba(0,0,0,.28));
   border:1px solid rgba(255,255,255,.26);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.16),0 0 0 3px rgba(255,255,255,.04),0 5px 10px rgba(0,0,0,.3);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.16),0 5px 10px rgba(0,0,0,.3);
   filter:drop-shadow(0 2px 5px rgba(0,0,0,.42));
-  transition:transform .16s ease,box-shadow .16s ease;
-}
-.sprite-slot:hover .sprite-ball-badge{
-  transform:scale(1.06);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.2),0 0 0 3px rgba(255,255,255,.07),0 6px 12px rgba(0,0,0,.34);
 }
 .sprite-ball-badge.visible{display:block}
 .modal-nav-arrow{
@@ -2184,7 +2150,6 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
           <div class="sprite-slot">
             <div class="sprite-pedestal">
               <img class="modal-sprite" id="mSpriteNormal" src="" alt="" onerror="handlePokemonSpriteError(this, parseInt(this.dataset.pokeId), false)">
-              <div class="sprite-reflection" id="mSpriteNormalReflect" aria-hidden="true"></div>
             </div>
             <div class="sprite-slot-top">
               <span class="sprite-slot-label">Normal</span>
@@ -2194,7 +2159,6 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
           <div class="sprite-slot sprite-slot-shiny">
             <div class="sprite-pedestal">
               <img class="modal-sprite" id="mSpriteShiny" src="" alt="" onerror="handlePokemonSpriteError(this, parseInt(this.dataset.pokeId), true)">
-              <div class="sprite-reflection" id="mSpriteShinyReflect" aria-hidden="true"></div>
             </div>
             <div class="sprite-slot-top">
               <span class="sprite-slot-label">Shiny</span>
@@ -3219,7 +3183,7 @@ function renderHuntTrayItem(item) {
   const dateText = getHuntTrayDate(item);
   return `
     <button class="hunt-tray-card" type="button" onclick="openModalToCounter(${item.id}); closeHuntTray();">
-      <span class="hunt-tray-sprite-frame"><img class="hunt-tray-sprite" src="${getPokemonSpriteUrl(item.id, false, 'home')}" alt="" loading="lazy" onerror="handlePokemonSpriteError(this, ${item.id}, false)"></span>
+      <img class="hunt-tray-sprite" src="${getPokemonSpriteUrl(item.id, false, 'home')}" alt="" loading="lazy" onerror="handlePokemonSpriteError(this, ${item.id}, false)">
       <span class="hunt-tray-copy">
         <span class="hunt-tray-name">${getPokemonDisplayName(item.id)}</span>
         <span class="hunt-tray-meta">${getHuntTrayMeta(item)}</span>
@@ -3233,7 +3197,7 @@ function renderRecentCaptureCard(item, index) {
   const dateText = getHuntTrayDate(item);
   return `
     <button class="hunt-tray-recent" type="button" onclick="openModalToCounter(${item.id}); closeHuntTray();">
-      <span class="hunt-tray-sprite-frame hunt-tray-sprite-frame-shiny"><img class="hunt-tray-sprite hunt-tray-sprite-shiny" src="${getPokemonSpriteUrl(item.id, true, 'home')}" alt="" loading="lazy" onerror="handlePokemonSpriteError(this, ${item.id}, true)"></span>
+      <img class="hunt-tray-sprite hunt-tray-sprite-shiny" src="${getPokemonSpriteUrl(item.id, true, 'home')}" alt="" loading="lazy" onerror="handlePokemonSpriteError(this, ${item.id}, true)">
       <span class="hunt-tray-recent-copy">
         <span class="hunt-tray-name">${getPokemonDisplayName(item.id)}</span>
         <span class="hunt-tray-meta">${getHuntTrayMeta(item)}</span>
@@ -3622,26 +3586,18 @@ function getPokemonSpriteUrl(id, shiny = false, mode = spriteMode) {
   return `${pixelBase}/other/home/${shiny ? 'shiny/' : ''}${id}.png`;
 }
 function handlePokemonSpriteError(img, id, shiny) {
-  const syncReflect = () => {
-    if (!img.id) return;
-    const reflect = document.getElementById(`${img.id}Reflect`);
-    if (reflect) reflect.style.backgroundImage = `url("${img.src}")`;
-  };
   if (shiny && !img.dataset.fellBackToNormal) {
     img.dataset.fellBackToNormal = '1';
     img.src = getPokemonSpriteUrl(id, false);
-    syncReflect();
     return;
   }
   if (!img.dataset.fellBackToOtherMode) {
     img.dataset.fellBackToOtherMode = '1';
     img.src = getPokemonSpriteUrl(id, shiny, isHomeSpriteMode() ? 'pixel' : 'home');
-    syncReflect();
     return;
   }
   img.onerror = null;
   img.src = SPRITE_FALLBACK;
-  syncReflect();
 }
 function toggleSpriteMode() {
   spriteMode = isHomeSpriteMode() ? 'pixel' : 'home';
@@ -5137,16 +5093,12 @@ function openModal(id, options = {}) {
     mSpriteNormal.src = getPokemonSpriteUrl(id, false);
     mSpriteNormal.alt = `${name} (normal)`;
   }
-  const mSpriteNormalReflect = document.getElementById('mSpriteNormalReflect');
-  if (mSpriteNormalReflect) mSpriteNormalReflect.style.backgroundImage = `url("${getPokemonSpriteUrl(id, false)}")`;
   const mSpriteShiny = document.getElementById('mSpriteShiny');
   if (mSpriteShiny) {
     mSpriteShiny.dataset.pokeId = String(id);
     mSpriteShiny.src = getPokemonSpriteUrl(id, true);
     mSpriteShiny.alt = `${name} (shiny)`;
   }
-  const mSpriteShinyReflect = document.getElementById('mSpriteShinyReflect');
-  if (mSpriteShinyReflect) mSpriteShinyReflect.style.backgroundImage = `url("${getPokemonSpriteUrl(id, true)}")`;
   document.getElementById('mRegion').innerHTML = `<span class="modal-region-badge" style="color:${r.color};border-color:${r.color}66;background:${r.color}1a">${r.name}</span><span class="modal-gen-badge">${r.gen}G</span>`;
   updateModalNavigation(id);
   document.getElementById('fPokeball').value = p.pokeball || '';
