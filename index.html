@@ -685,7 +685,9 @@ body.card-interaction-suppressed .card:active{
   .modal-sprite-group .modal-sprite{width:94px;height:94px}
   .sprite-row{width:100%}
   .sprite-ball-badge{width:26px;height:26px;padding:3px}
-  .shiny-star-badge{width:20px;height:20px;top:-4px;right:-2px}
+  .ball-medallion{margin-top:7px}
+  .ball-medallion-shiny{margin-top:5px}
+  .shiny-star-backing{width:42px;height:42px}
   .sprite-slot-label{font-size:7px}
   .modal-name{font-size:18px;line-height:1.16}
   .modal-name-row{justify-content:center}
@@ -1189,6 +1191,7 @@ body.card-interaction-suppressed .card:active{
 }
 @media (prefers-reduced-motion:reduce){
   .card.caught .holo::before,.card.perfect .holo::before{animation:none;opacity:0}
+  .shiny-star-backing{animation:none}
 }
 
 
@@ -1260,7 +1263,7 @@ body.card-interaction-suppressed .card:active{
   image-rendering:auto;
 }
 .modal-sprite-group{
-  display:grid;grid-template-columns:repeat(2,minmax(126px,1fr));align-items:end;justify-content:center;gap:44px;width:min(100%,406px);margin-bottom:1px;
+  display:grid;grid-template-columns:repeat(2,minmax(126px,1fr));align-items:start;justify-content:center;gap:44px;width:min(100%,406px);margin-bottom:1px;
   position:relative;
 }
 .modal-sprite-group::before{
@@ -1301,14 +1304,24 @@ body.card-interaction-suppressed .card:active{
 .sprite-slot-label::before{right:calc(100% + 7px)}
 .sprite-slot-label::after{left:calc(100% + 7px);background:linear-gradient(90deg,color-mix(in srgb,var(--region-accent,#7dd3fc) 65%,transparent),transparent)}
 
-.shiny-star-badge{
-  position:absolute;top:-6px;right:-2px;
-  width:26px;height:26px;object-fit:contain;
-  z-index:2;pointer-events:none;
-  filter:drop-shadow(0 2px 5px rgba(0,0,0,.45));
+.ball-medallion{
+  position:relative;display:inline-flex;align-items:center;justify-content:center;margin-top:9px;
 }
+.ball-medallion-shiny{margin-top:6px}
+.shiny-star-backing{
+  position:absolute;left:50%;top:50%;
+  width:52px;height:52px;object-fit:contain;z-index:0;
+  transform:translate(-50%,-50%) rotate(0deg);
+  filter:drop-shadow(0 0 9px rgba(212,175,55,.7)) drop-shadow(0 0 2px rgba(255,244,214,.6));
+  animation:shinyStarSpin 14s linear infinite;
+}
+@keyframes shinyStarSpin{
+  from{transform:translate(-50%,-50%) rotate(0deg)}
+  to{transform:translate(-50%,-50%) rotate(360deg)}
+}
+.sprite-slot:hover .shiny-star-backing{filter:drop-shadow(0 0 13px rgba(212,175,55,.9)) drop-shadow(0 0 3px rgba(255,244,214,.75))}
 .sprite-ball-badge{
-  visibility:hidden;
+  visibility:hidden;position:relative;z-index:1;
   width:30px;height:30px;object-fit:contain;padding:4px;border-radius:999px;
   background:radial-gradient(circle at 50% 42%,rgba(255,255,255,.22),rgba(255,255,255,.08) 52%,rgba(0,0,0,.28));
   border:1px solid rgba(255,255,255,.26);
@@ -1318,6 +1331,9 @@ body.card-interaction-suppressed .card:active{
 }
 .sprite-ball-badge.visible{visibility:visible}
 .sprite-slot:hover .sprite-ball-badge.visible{transform:scale(1.08) translateY(-1px)}
+.sprite-slot-shiny .sprite-ball-badge.visible{
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.16),0 5px 10px rgba(0,0,0,.35),0 0 0 1px rgba(212,175,55,.28);
+}
 .modal-nav-arrow{
   position:absolute;top:28px;width:42px;min-height:52px;border-radius:13px;flex:0 0 auto;
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:6px 4px;
@@ -2002,7 +2018,9 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   .modal-sprite-group .modal-sprite{width:94px;height:94px}
   .sprite-row{width:100%}
   .sprite-ball-badge{width:26px;height:26px;padding:3px}
-  .shiny-star-badge{width:20px;height:20px;top:-4px;right:-2px}
+  .ball-medallion{margin-top:7px}
+  .ball-medallion-shiny{margin-top:5px}
+  .shiny-star-backing{width:42px;height:42px}
   .sprite-slot-label{font-size:7px}
   .modal-name{font-size:18px;line-height:1.16}
   .modal-name-row{justify-content:center}
@@ -2200,14 +2218,18 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
             <div class="sprite-pedestal">
               <img class="modal-sprite" id="mSpriteNormal" src="" alt="" onerror="handlePokemonSpriteError(this, parseInt(this.dataset.pokeId), false)">
             </div>
-            <img class="sprite-ball-badge" id="mBallIconNormal" src="" alt="">
+            <div class="ball-medallion">
+              <img class="sprite-ball-badge" id="mBallIconNormal" src="" alt="">
+            </div>
           </div>
           <div class="sprite-slot sprite-slot-shiny">
             <div class="sprite-pedestal">
               <img class="modal-sprite" id="mSpriteShiny" src="" alt="" onerror="handlePokemonSpriteError(this, parseInt(this.dataset.pokeId), true)">
-              <img class="shiny-star-badge" src="./sprites/ShinySVStar.png" alt="" aria-hidden="true">
             </div>
-            <img class="sprite-ball-badge" id="mBallIconShiny" src="" alt="">
+            <div class="ball-medallion ball-medallion-shiny">
+              <img class="shiny-star-backing" src="./sprites/ShinySVStar.png" alt="" aria-hidden="true">
+              <img class="sprite-ball-badge" id="mBallIconShiny" src="" alt="">
+            </div>
           </div>
         </div>
       </div>
