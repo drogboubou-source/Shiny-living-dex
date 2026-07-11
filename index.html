@@ -2313,6 +2313,10 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
         <input type="text" id="fLocationText" placeholder="ex: Route 3">
       </div>
       <div class="form-row">
+        <label>Méthode de capture</label>
+        <select id="fHuntMethod"></select>
+      </div>
+      <div class="form-row">
         <label>Contexte de capture</label>
         <input type="text" id="fContext" placeholder="ex: Stream Bruce">
       </div>
@@ -3683,6 +3687,12 @@ function initModalChoiceLists() {
   if (natureSelect && !natureSelect.dataset.ready) {
     natureSelect.innerHTML = '<option value="">Aucune</option>' + NATURES.map(nature => `<option value="${nature}">${nature}</option>`).join('');
     natureSelect.dataset.ready = 'true';
+  }
+  const huntMethodSelect = document.getElementById('fHuntMethod');
+  if (huntMethodSelect && !huntMethodSelect.dataset.ready) {
+    const options = [...Object.entries(HUNT_METHODS), ...Object.entries(EXTRA_HUNT_METHODS)];
+    huntMethodSelect.innerHTML = options.map(([id, method]) => `<option value="${id}">${method.label}</option>`).join('');
+    huntMethodSelect.dataset.ready = 'true';
   }
 }
 
@@ -5148,6 +5158,7 @@ function openModal(id, options = {}) {
   document.getElementById('fPokeball').value = p.pokeball || '';
   document.getElementById('fPokeballShiny').value = p.pokeballShiny || '';
   document.getElementById('fNature').value = p.nature || '';
+  document.getElementById('fHuntMethod').value = normalizeHuntMethod(p.huntMethod);
   updatePokeballPreview();
   updatePokeballShinyPreview();
 
@@ -5212,7 +5223,7 @@ function saveModal() {
     target:    getFormTargetState(),
     hunting:   !document.getElementById('fCaught').checked && !!existing.hunting,
     huntCount: !document.getElementById('fCaught').checked ? (parseInt(existing.huntCount) || 0) : 0,
-    huntMethod: normalizeHuntMethod(existing.huntMethod),
+    huntMethod: normalizeHuntMethod(document.getElementById('fHuntMethod').value),
     nickname:  document.getElementById('fNickname').value.trim(),
     encounters: enc,
     eggs:      parseInt(existing.eggs) || 0,
