@@ -1304,7 +1304,8 @@ body.card-interaction-suppressed .card:active{
 .sprite-slot-label::after{left:calc(100% + 7px);background:linear-gradient(90deg,color-mix(in srgb,var(--region-accent,#7dd3fc) 65%,transparent),transparent)}
 
 .sprite-vertical-label{
-  position:absolute;top:50%;transform:translateY(-50%);
+  position:absolute;top:0;bottom:0;
+  display:flex;align-items:center;justify-content:center;
   writing-mode:vertical-rl;text-orientation:mixed;
   font-family:var(--font-logo);font-size:11px;font-weight:600;
   letter-spacing:3px;text-transform:uppercase;white-space:nowrap;
