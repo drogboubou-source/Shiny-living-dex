@@ -1304,8 +1304,7 @@ body.card-interaction-suppressed .card:active{
 .sprite-slot-label::after{left:calc(100% + 7px);background:linear-gradient(90deg,color-mix(in srgb,var(--region-accent,#7dd3fc) 65%,transparent),transparent)}
 
 .sprite-vertical-label{
-  position:absolute;top:0;bottom:0;
-  display:flex;align-items:center;justify-content:center;
+  position:absolute;top:50%;transform:translateY(-50%);
   writing-mode:vertical-rl;text-orientation:mixed;
   font-family:var(--font-logo);font-size:11px;font-weight:600;
   letter-spacing:3px;text-transform:uppercase;white-space:nowrap;
@@ -2213,9 +2212,9 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
           <div class="modal-region" id="mRegion"></div>
         </div>
         <div class="modal-sprite-group">
+          <span class="sprite-vertical-label label-normal" aria-hidden="true">Normal</span>
           <div class="sprite-slot">
             <div class="sprite-pedestal">
-              <span class="sprite-vertical-label label-normal" aria-hidden="true">Normal</span>
               <img class="modal-sprite" id="mSpriteNormal" src="" alt="" onerror="handlePokemonSpriteError(this, parseInt(this.dataset.pokeId), false)">
             </div>
             <img class="sprite-ball-badge" id="mBallIconNormal" src="" alt="">
@@ -2223,10 +2222,10 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
           <div class="sprite-slot sprite-slot-shiny">
             <div class="sprite-pedestal">
               <img class="modal-sprite" id="mSpriteShiny" src="" alt="" onerror="handlePokemonSpriteError(this, parseInt(this.dataset.pokeId), true)">
-              <span class="sprite-vertical-label label-shiny" aria-hidden="true">Shiny</span>
             </div>
             <img class="sprite-ball-badge" id="mBallIconShiny" src="" alt="">
           </div>
+          <span class="sprite-vertical-label label-shiny" aria-hidden="true">Shiny</span>
         </div>
       </div>
       <button class="modal-nav-arrow" id="modalNextCard" type="button" onclick="goToAdjacentModal(1)" aria-label="Pokémon suivant">
