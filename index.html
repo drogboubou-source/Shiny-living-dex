@@ -686,7 +686,7 @@ body.card-interaction-suppressed .card:active{
   .sprite-row{width:100%}
   .sprite-ball-badge{width:26px;height:26px;padding:3px}
   .shiny-star-badge{width:18px;height:18px;padding:2px}
-  .shiny-badge-row{gap:7px;margin-top:8px;padding:4px 9px 5px}
+  .sprite-badge-row{gap:7px;margin-top:8px;padding:4px 9px 5px}
   .sprite-slot-label{font-size:7px}
   .modal-name{font-size:18px;line-height:1.16}
   .modal-name-row{justify-content:center}
@@ -1302,7 +1302,7 @@ body.card-interaction-suppressed .card:active{
 .sprite-slot-label::before{right:calc(100% + 7px)}
 .sprite-slot-label::after{left:calc(100% + 7px);background:linear-gradient(90deg,color-mix(in srgb,var(--region-accent,#7dd3fc) 65%,transparent),transparent)}
 
-.shiny-badge-row{
+.sprite-badge-row{
   display:flex;align-items:center;justify-content:center;gap:9px;
   margin-top:10px;padding:5px 11px 6px;
   border-radius:999px;position:relative;
@@ -1311,7 +1311,7 @@ body.card-interaction-suppressed .card:active{
   box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 6px 14px rgba(0,0,0,.28);
   transition:transform .18s cubic-bezier(.34,1.56,.64,1),box-shadow .18s ease;
 }
-.sprite-slot:hover .shiny-badge-row{
+.sprite-slot:hover .sprite-badge-row{
   transform:translateY(-1px);
   box-shadow:inset 0 1px 0 rgba(255,255,255,.09),0 8px 16px rgba(0,0,0,.32);
 }
@@ -2019,7 +2019,7 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   .sprite-row{width:100%}
   .sprite-ball-badge{width:26px;height:26px;padding:3px}
   .shiny-star-badge{width:18px;height:18px;padding:2px}
-  .shiny-badge-row{gap:7px;margin-top:8px;padding:4px 9px 5px}
+  .sprite-badge-row{gap:7px;margin-top:8px;padding:4px 9px 5px}
   .sprite-slot-label{font-size:7px}
   .modal-name{font-size:18px;line-height:1.16}
   .modal-name-row{justify-content:center}
@@ -2217,15 +2217,17 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
             <div class="sprite-pedestal">
               <img class="modal-sprite" id="mSpriteNormal" src="" alt="" onerror="handlePokemonSpriteError(this, parseInt(this.dataset.pokeId), false)">
             </div>
+            <div class="sprite-badge-row">
+              <img class="sprite-ball-badge" id="mBallIconNormal" src="" alt="">
+            </div>
           </div>
           <div class="sprite-slot sprite-slot-shiny">
             <div class="sprite-pedestal">
               <img class="modal-sprite" id="mSpriteShiny" src="" alt="" onerror="handlePokemonSpriteError(this, parseInt(this.dataset.pokeId), true)">
             </div>
-            <div class="shiny-badge-row">
-              <img class="sprite-ball-badge" id="mBallIconNormal" src="" alt="">
-              <img class="shiny-star-badge" src="./sprites/ShinySVStar.png" alt="" aria-hidden="true">
+            <div class="sprite-badge-row">
               <img class="sprite-ball-badge" id="mBallIconShiny" src="" alt="">
+              <img class="shiny-star-badge" src="./sprites/ShinySVStar.png" alt="" aria-hidden="true">
             </div>
           </div>
         </div>
