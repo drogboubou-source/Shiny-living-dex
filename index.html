@@ -1382,11 +1382,19 @@ body.card-interaction-suppressed .card:active{
 }
 .caught-toggle:hover,.shiny-perfect:hover{transform:none;background:rgba(255,255,255,.035)}
 .toggle-input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.toggle-check{
+  display:inline-flex;align-items:center;justify-content:center;flex:none;
+  width:0;font-size:11px;font-weight:900;line-height:1;overflow:hidden;
+  opacity:0;transform:scale(.4);
+  transition:opacity .18s ease,transform .22s cubic-bezier(.34,1.56,.64,1),width .18s ease;
+}
 .toggle-label{font-size:13px;font-weight:900;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:rgba(255,255,255,.62);transition:color .16s ease}
 .caught-toggle:has(input:checked){background:linear-gradient(180deg,rgba(192,132,252,.14),rgba(192,132,252,.02))}
 .caught-toggle:has(input:checked) .toggle-label{color:#c084fc;text-shadow:0 0 14px rgba(192,132,252,.4)}
+.caught-toggle:has(input:checked) .toggle-check{width:11px;opacity:1;transform:scale(1);color:#c084fc;text-shadow:0 0 10px rgba(192,132,252,.55)}
 .shiny-perfect:has(input:checked){background:linear-gradient(180deg,rgba(212,175,55,.14),rgba(212,175,55,.02))}
 .shiny-perfect:has(input:checked) .toggle-label{color:#d4af37;text-shadow:0 0 14px rgba(212,175,55,.4)}
+.shiny-perfect:has(input:checked) .toggle-check{width:11px;opacity:1;transform:scale(1);color:#d4af37;text-shadow:0 0 10px rgba(212,175,55,.55)}
 .form-toggles-divider{
   display:flex;flex-direction:column;align-items:center;justify-content:center;flex:0 0 auto;gap:4px;
   padding:0 14px;position:relative;pointer-events:none;
@@ -2186,11 +2194,13 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
     <div class="form-toggles-row">
       <label class="caught-toggle">
         <input type="checkbox" id="fCaught" class="toggle-input">
+        <span class="toggle-check" aria-hidden="true">✓</span>
         <span class="toggle-label">Capturé</span>
       </label>
       <div class="form-toggles-divider" aria-hidden="true"><span>Shiny</span></div>
       <label class="shiny-perfect">
         <input type="checkbox" id="fPerfect" class="toggle-input">
+        <span class="toggle-check" aria-hidden="true">✓</span>
         <span class="toggle-label">Parfait</span>
       </label>
     </div>
