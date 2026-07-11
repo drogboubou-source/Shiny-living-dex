@@ -685,10 +685,9 @@ body.card-interaction-suppressed .card:active{
   .modal-sprite-group .modal-sprite{width:94px;height:94px}
   .sprite-row{width:100%}
   .sprite-ball-badge{width:26px;height:26px;padding:3px}
-  .sprite-vertical-label{font-size:7px;letter-spacing:1.4px;padding:12px 4px 8px}
-  .sprite-vertical-label::before{top:5px;width:3px;height:3px}
-  .sprite-vertical-label.label-normal{left:-13px}
-  .sprite-vertical-label.label-shiny{right:-13px}
+  .sprite-vertical-label{font-size:7px;letter-spacing:1.2px;width:13px;padding:9px 0}
+  .sprite-vertical-label.label-normal{left:-15px}
+  .sprite-vertical-label.label-shiny{right:-15px}
   .sprite-slot-label{font-size:7px}
   .modal-name{font-size:18px;line-height:1.16}
   .modal-name-row{justify-content:center}
@@ -1305,34 +1304,36 @@ body.card-interaction-suppressed .card:active{
 .sprite-slot-label::after{left:calc(100% + 7px);background:linear-gradient(90deg,color-mix(in srgb,var(--region-accent,#7dd3fc) 65%,transparent),transparent)}
 
 .sprite-vertical-label{
-  position:absolute;top:4px;
-  display:flex;align-items:flex-end;justify-content:center;
+  position:absolute;top:4px;width:16px;
+  display:flex;align-items:center;justify-content:center;
   writing-mode:vertical-rl;text-orientation:mixed;
   font-family:var(--font-logo);font-size:8px;font-weight:400;
   letter-spacing:2px;text-transform:uppercase;white-space:nowrap;
-  padding:15px 5px 11px;
+  padding:12px 0;border-radius:999px;
   z-index:1;pointer-events:none;
-  clip-path:polygon(0 0,100% 0,100% 80%,50% 100%,0 80%);
 }
-.sprite-vertical-label::before{
-  content:'';position:absolute;top:7px;left:50%;transform:translateX(-50%);
-  width:4px;height:4px;border-radius:50%;
-  box-shadow:inset 0 1px 1px rgba(0,0,0,.55),0 1px 0 rgba(255,255,255,.12);
+.sprite-vertical-label::after{
+  content:'';position:absolute;top:50%;width:0;height:0;
+  transform:translateY(-50%);
 }
 .sprite-vertical-label.label-normal{
-  left:-17px;color:#eef1f6;
-  background:linear-gradient(180deg,#4f5866,#2c313c 62%,#1d2027);
-  text-shadow:0 1px 1px rgba(0,0,0,.6),0 0 5px rgba(255,255,255,.16);
-  box-shadow:0 5px 11px rgba(0,0,0,.4);
+  left:-19px;color:#eef1f6;
+  background:linear-gradient(180deg,#525c6a,#2c313c 60%,#1d2027);
+  text-shadow:0 1px 1px rgba(0,0,0,.6),0 0 5px rgba(255,255,255,.14);
+  box-shadow:0 5px 11px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.16);
 }
-.sprite-vertical-label.label-normal::before{background:#1a1d23}
+.sprite-vertical-label.label-normal::after{
+  right:-5px;border-top:5px solid transparent;border-bottom:5px solid transparent;border-left:6px solid #2c313c;
+}
 .sprite-vertical-label.label-shiny{
-  right:-17px;color:#4a3106;
+  right:-19px;color:#4a3106;
   background:linear-gradient(180deg,#ffedb2,#ffcf5e 55%,#d59a2d);
   text-shadow:0 1px 0 rgba(255,255,255,.5);
-  box-shadow:0 5px 11px rgba(0,0,0,.4),0 0 13px rgba(255,207,94,.35);
+  box-shadow:0 5px 11px rgba(0,0,0,.4),0 0 13px rgba(255,207,94,.3),inset 0 1px 0 rgba(255,255,255,.55);
 }
-.sprite-vertical-label.label-shiny::before{background:#e0a936}
+.sprite-vertical-label.label-shiny::after{
+  left:-5px;border-top:5px solid transparent;border-bottom:5px solid transparent;border-right:6px solid #ffcf5e;
+}
 .sprite-ball-badge{
   visibility:hidden;
   width:30px;height:30px;object-fit:contain;padding:4px;border-radius:999px;
@@ -2028,10 +2029,9 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   .modal-sprite-group .modal-sprite{width:94px;height:94px}
   .sprite-row{width:100%}
   .sprite-ball-badge{width:26px;height:26px;padding:3px}
-  .sprite-vertical-label{font-size:7px;letter-spacing:1.4px;padding:12px 4px 8px}
-  .sprite-vertical-label::before{top:5px;width:3px;height:3px}
-  .sprite-vertical-label.label-normal{left:-13px}
-  .sprite-vertical-label.label-shiny{right:-13px}
+  .sprite-vertical-label{font-size:7px;letter-spacing:1.2px;width:13px;padding:9px 0}
+  .sprite-vertical-label.label-normal{left:-15px}
+  .sprite-vertical-label.label-shiny{right:-15px}
   .sprite-slot-label{font-size:7px}
   .modal-name{font-size:18px;line-height:1.16}
   .modal-name-row{justify-content:center}
