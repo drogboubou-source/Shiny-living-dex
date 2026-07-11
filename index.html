@@ -686,6 +686,7 @@ body.card-interaction-suppressed .card:active{
   .modal-sprite-group .modal-sprite{width:94px;height:94px}
   .sprite-row{width:100%}
   .sprite-ball-badge{width:28px;height:28px;padding:3px}
+  .shiny-star-badge{width:20px;height:20px;top:-4px;right:-2px}
   .sprite-slot-label{font-size:7px}
   .modal-name{font-size:18px;line-height:1.16}
   .modal-name-row{justify-content:center}
@@ -1304,6 +1305,12 @@ body.card-interaction-suppressed .card:active{
 .sprite-slot-label::before{right:calc(100% + 7px)}
 .sprite-slot-label::after{left:calc(100% + 7px);background:linear-gradient(90deg,color-mix(in srgb,var(--region-accent,#7dd3fc) 65%,transparent),transparent)}
 
+.shiny-star-badge{
+  position:absolute;top:-6px;right:-2px;
+  width:26px;height:26px;object-fit:contain;
+  z-index:2;pointer-events:none;
+  filter:drop-shadow(0 2px 5px rgba(0,0,0,.45));
+}
 .sprite-ball-badge{
   visibility:hidden;margin-top:-3px;
   width:28px;height:28px;object-fit:contain;padding:4px;border-radius:999px;
@@ -2000,6 +2007,7 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   .modal-sprite-group .modal-sprite{width:94px;height:94px}
   .sprite-row{width:100%}
   .sprite-ball-badge{width:28px;height:28px;padding:3px}
+  .shiny-star-badge{width:20px;height:20px;top:-4px;right:-2px}
   .sprite-slot-label{font-size:7px}
   .modal-name{font-size:18px;line-height:1.16}
   .modal-name-row{justify-content:center}
@@ -2197,18 +2205,15 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
             <div class="sprite-pedestal">
               <img class="modal-sprite" id="mSpriteNormal" src="" alt="" onerror="handlePokemonSpriteError(this, parseInt(this.dataset.pokeId), false)">
             </div>
-            <div class="sprite-slot-caption">
-              <span class="sprite-slot-label">Normal</span>
-            </div>
+            <div class="sprite-slot-caption"></div>
             <img class="sprite-ball-badge" id="mBallIconNormal" src="" alt="">
           </div>
           <div class="sprite-slot sprite-slot-shiny">
             <div class="sprite-pedestal">
               <img class="modal-sprite" id="mSpriteShiny" src="" alt="" onerror="handlePokemonSpriteError(this, parseInt(this.dataset.pokeId), true)">
+              <img class="shiny-star-badge" src="./sprites/ShinySVStar.png" alt="" aria-hidden="true">
             </div>
-            <div class="sprite-slot-caption">
-              <span class="sprite-slot-label">Shiny</span>
-            </div>
+            <div class="sprite-slot-caption"></div>
             <img class="sprite-ball-badge" id="mBallIconShiny" src="" alt="">
           </div>
         </div>
