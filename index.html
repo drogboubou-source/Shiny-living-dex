@@ -1312,7 +1312,7 @@ body.card-interaction-suppressed .card:active{
 .ball-hanger{
   position:relative;display:block;
   transform-origin:50% -18px;
-  animation:ballSway 4.4s ease-in-out infinite;
+  animation:ballSway 4.4s cubic-bezier(.45,.05,.55,.95) infinite;
 }
 .ball-hanger-shiny{animation-duration:5.3s}
 .ball-hanger::before{
@@ -1321,8 +1321,12 @@ body.card-interaction-suppressed .card:active{
   transform:translateX(-50%);
 }
 @keyframes ballSway{
-  0%,100%{transform:rotate(-6deg);}
-  50%{transform:rotate(6deg);}
+  0%,100%{transform:rotate(-5deg);}
+  50%{transform:rotate(5deg);}
+}
+@keyframes ballFollow{
+  0%,100%{transform:rotate(-7.5deg);}
+  50%{transform:rotate(7.5deg);}
 }
 .sprite-ball-badge{
   visibility:hidden;
@@ -1331,11 +1335,15 @@ body.card-interaction-suppressed .card:active{
   border:2px solid rgba(255,255,255,.2);
   box-shadow:inset 0 1.5px 0 rgba(255,255,255,.22),0 6px 13px rgba(0,0,0,.4);
   transition:border-color .2s ease;
+  transform-origin:50% -18px;
+  animation:ballFollow 4.4s cubic-bezier(.45,.05,.55,.95) infinite;
+  animation-delay:-.16s;
 }
+.ball-hanger-shiny .sprite-ball-badge{animation-duration:5.3s;animation-delay:-.19s}
 .sprite-ball-badge.visible{visibility:visible}
 .sprite-slot:hover .sprite-ball-badge.visible{border-color:rgba(255,255,255,.36)}
 @media (prefers-reduced-motion:reduce){
-  .ball-hanger{animation:none}
+  .ball-hanger,.sprite-ball-badge{animation:none}
 }
 .modal-nav-arrow{
   position:absolute;top:28px;width:42px;min-height:52px;border-radius:13px;flex:0 0 auto;
