@@ -680,7 +680,10 @@ body.card-interaction-suppressed .card:active{
   .modal-sprite{width:54px;height:54px}
   .modal-sprite-group{grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;width:100%;max-width:324px}
   .modal-sprite-group::before{top:28px;bottom:46px}
-  .sprite-slot{gap:6px;padding:0}
+  .sprite-slot{gap:22px;padding:0}
+  .ball-hanger{transform-origin:50% -15px}
+  .ball-hanger::before{top:-15px;height:14px}
+  .ball-hanger::after{top:-18px;width:6px;height:6px}
   .sprite-pedestal{width:118px;height:100px}
   .modal-sprite-group .modal-sprite{width:94px;height:94px}
   .sprite-row{width:100%}
@@ -1270,7 +1273,7 @@ body.card-interaction-suppressed .card:active{
   pointer-events:none;
 }
 .sprite-slot{
-  display:flex;flex-direction:column;align-items:center;gap:8px;min-width:0;padding:0;
+  display:flex;flex-direction:column;align-items:center;gap:30px;min-width:0;padding:0;
 }
 .sprite-row{display:grid;place-items:center;width:100%;min-width:0}
 .sprite-pedestal{
@@ -1307,43 +1310,41 @@ body.card-interaction-suppressed .card:active{
   z-index:2;pointer-events:none;
   filter:drop-shadow(0 2px 5px rgba(0,0,0,.5));
 }
+.ball-hanger{
+  position:relative;display:block;
+  transform-origin:50% -20px;
+  animation:ballSway 4.4s ease-in-out infinite;
+}
+.ball-hanger-shiny{animation-duration:5.3s}
+.ball-hanger::before{
+  content:'';position:absolute;left:50%;top:-20px;width:1px;height:19px;
+  background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.85) 55%,rgba(255,255,255,.9));
+  box-shadow:0 0 3px rgba(255,255,255,.35);
+  transform:translateX(-50%);
+}
+.ball-hanger::after{
+  content:'';position:absolute;left:50%;top:-24px;width:7px;height:7px;
+  border:1.3px solid rgba(255,255,255,.75);border-radius:50%;
+  background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.5),rgba(255,255,255,.05));
+  box-shadow:0 1px 2px rgba(0,0,0,.45);
+  transform:translateX(-50%);
+}
+@keyframes ballSway{
+  0%,100%{transform:rotate(-6deg);}
+  50%{transform:rotate(6deg);}
+}
 .sprite-ball-badge{
   visibility:hidden;
   width:36px;height:36px;object-fit:contain;padding:6px;border-radius:999px;
   background:linear-gradient(180deg,rgba(255,255,255,.09),rgba(255,255,255,.02));
   border:1px solid rgba(255,255,255,.15);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 4px 10px rgba(0,0,0,.32);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 5px 10px rgba(0,0,0,.35);
   transition:border-color .2s ease;
-  animation:ballSpin 4.8s ease-in-out infinite;
 }
 .sprite-ball-badge.visible{visibility:visible}
 .sprite-slot:hover .sprite-ball-badge.visible{border-color:rgba(255,255,255,.26)}
-@keyframes ballSpin{
-  0%{
-    transform:rotate(0deg) scale(1) translateY(0);
-    box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 4px 10px rgba(0,0,0,.32);
-    filter:brightness(1);
-    animation-timing-function:cubic-bezier(.45,0,.4,1);
-  }
-  17%{
-    transform:rotate(200deg) scale(1.07) translateY(-3px);
-    box-shadow:inset 0 1px 0 rgba(255,255,255,.26),0 4px 10px rgba(0,0,0,.32),0 0 15px rgba(255,255,255,.42);
-    filter:brightness(1.2);
-    animation-timing-function:cubic-bezier(.16,1,.3,1);
-  }
-  32%{
-    transform:rotate(360deg) scale(1) translateY(0);
-    box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 4px 10px rgba(0,0,0,.32);
-    filter:brightness(1);
-  }
-  100%{
-    transform:rotate(360deg) scale(1) translateY(0);
-    box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 4px 10px rgba(0,0,0,.32);
-    filter:brightness(1);
-  }
-}
 @media (prefers-reduced-motion:reduce){
-  .sprite-ball-badge{animation:none}
+  .ball-hanger{animation:none}
 }
 .modal-nav-arrow{
   position:absolute;top:28px;width:42px;min-height:52px;border-radius:13px;flex:0 0 auto;
@@ -2024,7 +2025,10 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   .modal-sprite{width:54px;height:54px}
   .modal-sprite-group{grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;width:100%;max-width:324px}
   .modal-sprite-group::before{top:28px;bottom:46px}
-  .sprite-slot{gap:6px;padding:0}
+  .sprite-slot{gap:22px;padding:0}
+  .ball-hanger{transform-origin:50% -15px}
+  .ball-hanger::before{top:-15px;height:14px}
+  .ball-hanger::after{top:-18px;width:6px;height:6px}
   .sprite-pedestal{width:118px;height:100px}
   .modal-sprite-group .modal-sprite{width:94px;height:94px}
   .sprite-row{width:100%}
@@ -2227,14 +2231,18 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
             <div class="sprite-pedestal">
               <img class="modal-sprite" id="mSpriteNormal" src="" alt="" onerror="handlePokemonSpriteError(this, parseInt(this.dataset.pokeId), false)">
             </div>
-            <img class="sprite-ball-badge" id="mBallIconNormal" src="" alt="">
+            <span class="ball-hanger">
+              <img class="sprite-ball-badge" id="mBallIconNormal" src="" alt="">
+            </span>
           </div>
           <div class="sprite-slot sprite-slot-shiny">
             <div class="sprite-pedestal">
               <img class="modal-sprite" id="mSpriteShiny" src="" alt="" onerror="handlePokemonSpriteError(this, parseInt(this.dataset.pokeId), true)">
               <img class="shiny-star-badge" src="./sprites/ShinySVStar.png" alt="" aria-hidden="true">
             </div>
-            <img class="sprite-ball-badge" id="mBallIconShiny" src="" alt="">
+            <span class="ball-hanger ball-hanger-shiny">
+              <img class="sprite-ball-badge" id="mBallIconShiny" src="" alt="">
+            </span>
           </div>
         </div>
       </div>
