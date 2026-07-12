@@ -680,13 +680,11 @@ body.card-interaction-suppressed .card:active{
   .modal-sprite{width:54px;height:54px}
   .modal-sprite-group{grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;width:100%;max-width:324px}
   .modal-sprite-group::before{top:28px;bottom:46px}
-  .sprite-slot{gap:22px;padding:0}
-  .ball-hanger{transform-origin:50% -14px}
-  .ball-hanger::before{top:-14px;height:14px}
+  .sprite-slot{gap:6px;padding:0}
   .sprite-pedestal{width:118px;height:100px}
   .modal-sprite-group .modal-sprite{width:94px;height:94px}
   .sprite-row{width:100%}
-  .sprite-ball-badge{width:33px;height:33px;padding:5.5px}
+  .sprite-ball-badge{width:32px;height:32px;padding:5px}
   .shiny-star-badge{width:23px;height:23px;top:-6px;right:-3px}
   .sprite-slot-label{font-size:7px}
   .modal-name{font-size:18px;line-height:1.16}
@@ -1272,7 +1270,7 @@ body.card-interaction-suppressed .card:active{
   pointer-events:none;
 }
 .sprite-slot{
-  display:flex;flex-direction:column;align-items:center;gap:30px;min-width:0;padding:0;
+  display:flex;flex-direction:column;align-items:center;gap:8px;min-width:0;padding:0;
 }
 .sprite-row{display:grid;place-items:center;width:100%;min-width:0}
 .sprite-pedestal{
@@ -1309,41 +1307,30 @@ body.card-interaction-suppressed .card:active{
   z-index:2;pointer-events:none;
   filter:drop-shadow(0 2px 5px rgba(0,0,0,.5));
 }
-.ball-hanger{
-  position:relative;display:block;
-  transform-origin:50% -18px;
-  animation:ballSway 4.4s cubic-bezier(.45,.05,.55,.95) infinite;
-}
-.ball-hanger-shiny{animation-duration:5.3s}
-.ball-hanger::before{
-  content:'';position:absolute;left:50%;top:-18px;width:1px;height:18px;
-  background:linear-gradient(180deg,transparent,rgba(255,255,255,.55) 35%,rgba(255,255,255,.7));
-  transform:translateX(-50%);
-}
-@keyframes ballSway{
-  0%,100%{transform:rotate(-5deg);}
-  50%{transform:rotate(5deg);}
-}
-@keyframes ballFollow{
-  0%,100%{transform:rotate(-7.5deg);}
-  50%{transform:rotate(7.5deg);}
-}
 .sprite-ball-badge{
   visibility:hidden;
-  width:38px;height:38px;object-fit:contain;padding:7px;border-radius:999px;
-  background:linear-gradient(155deg,#3c414d,#20232b 58%,#15171c);
-  border:2px solid rgba(255,255,255,.2);
-  box-shadow:inset 0 1.5px 0 rgba(255,255,255,.22),0 6px 13px rgba(0,0,0,.4);
+  width:36px;height:36px;object-fit:contain;padding:6px;border-radius:999px;
+  background:
+    linear-gradient(75deg,transparent 32%,rgba(255,255,255,.4) 46%,transparent 60%),
+    linear-gradient(180deg,rgba(255,255,255,.09),rgba(255,255,255,.02));
+  background-size:260% 260%,100% 100%;
+  background-position:-140% -140%,0 0;
+  background-repeat:no-repeat;
+  border:1px solid rgba(255,255,255,.15);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 4px 10px rgba(0,0,0,.32);
   transition:border-color .2s ease;
-  transform-origin:50% -18px;
-  animation:ballFollow 4.4s cubic-bezier(.45,.05,.55,.95) infinite;
-  animation-delay:-.16s;
 }
-.ball-hanger-shiny .sprite-ball-badge{animation-duration:5.3s;animation-delay:-.19s}
-.sprite-ball-badge.visible{visibility:visible}
-.sprite-slot:hover .sprite-ball-badge.visible{border-color:rgba(255,255,255,.36)}
+.sprite-ball-badge.visible{
+  visibility:visible;
+  animation:ballShine 6s ease-in-out infinite;
+}
+.sprite-slot:hover .sprite-ball-badge.visible{border-color:rgba(255,255,255,.26)}
+@keyframes ballShine{
+  0%,72%,100%{background-position:-140% -140%,0 0;}
+  36%{background-position:140% 140%,0 0;}
+}
 @media (prefers-reduced-motion:reduce){
-  .ball-hanger,.sprite-ball-badge{animation:none}
+  .sprite-ball-badge.visible{animation:none}
 }
 .modal-nav-arrow{
   position:absolute;top:28px;width:42px;min-height:52px;border-radius:13px;flex:0 0 auto;
@@ -2024,13 +2011,11 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   .modal-sprite{width:54px;height:54px}
   .modal-sprite-group{grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;width:100%;max-width:324px}
   .modal-sprite-group::before{top:28px;bottom:46px}
-  .sprite-slot{gap:22px;padding:0}
-  .ball-hanger{transform-origin:50% -14px}
-  .ball-hanger::before{top:-14px;height:14px}
+  .sprite-slot{gap:6px;padding:0}
   .sprite-pedestal{width:118px;height:100px}
   .modal-sprite-group .modal-sprite{width:94px;height:94px}
   .sprite-row{width:100%}
-  .sprite-ball-badge{width:33px;height:33px;padding:5.5px}
+  .sprite-ball-badge{width:32px;height:32px;padding:5px}
   .shiny-star-badge{width:23px;height:23px;top:-6px;right:-3px}
   .sprite-slot-label{font-size:7px}
   .modal-name{font-size:18px;line-height:1.16}
@@ -2229,18 +2214,14 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
             <div class="sprite-pedestal">
               <img class="modal-sprite" id="mSpriteNormal" src="" alt="" onerror="handlePokemonSpriteError(this, parseInt(this.dataset.pokeId), false)">
             </div>
-            <span class="ball-hanger">
-              <img class="sprite-ball-badge" id="mBallIconNormal" src="" alt="">
-            </span>
+            <img class="sprite-ball-badge" id="mBallIconNormal" src="" alt="">
           </div>
           <div class="sprite-slot sprite-slot-shiny">
             <div class="sprite-pedestal">
               <img class="modal-sprite" id="mSpriteShiny" src="" alt="" onerror="handlePokemonSpriteError(this, parseInt(this.dataset.pokeId), true)">
               <img class="shiny-star-badge" src="./sprites/ShinySVStar.png" alt="" aria-hidden="true">
             </div>
-            <span class="ball-hanger ball-hanger-shiny">
-              <img class="sprite-ball-badge" id="mBallIconShiny" src="" alt="">
-            </span>
+            <img class="sprite-ball-badge" id="mBallIconShiny" src="" alt="">
           </div>
         </div>
       </div>
