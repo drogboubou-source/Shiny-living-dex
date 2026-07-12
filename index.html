@@ -681,9 +681,8 @@ body.card-interaction-suppressed .card:active{
   .modal-sprite-group{grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;width:100%;max-width:324px}
   .modal-sprite-group::before{top:28px;bottom:46px}
   .sprite-slot{gap:22px;padding:0}
-  .ball-hanger{transform-origin:50% -15px}
-  .ball-hanger::before{top:-14px}
-  .ball-hanger::after{top:-19px;width:7px;height:7px}
+  .ball-hanger{transform-origin:50% -14px}
+  .ball-hanger::before{top:-14px;height:14px}
   .sprite-pedestal{width:118px;height:100px}
   .modal-sprite-group .modal-sprite{width:94px;height:94px}
   .sprite-row{width:100%}
@@ -1312,24 +1311,13 @@ body.card-interaction-suppressed .card:active{
 }
 .ball-hanger{
   position:relative;display:block;
-  transform-origin:50% -20px;
+  transform-origin:50% -18px;
   animation:ballSway 4.4s ease-in-out infinite;
 }
 .ball-hanger-shiny{animation-duration:5.3s}
 .ball-hanger::before{
-  content:'';position:absolute;left:50%;top:-19px;width:2px;height:2px;border-radius:50%;
-  background:rgba(255,255,255,.85);
-  box-shadow:
-    0 4.5px 0 rgba(255,255,255,.7),
-    0 9px 0 rgba(255,255,255,.55),
-    0 13.5px 0 rgba(255,255,255,.38);
-  transform:translateX(-50%);
-}
-.ball-hanger::after{
-  content:'';position:absolute;left:50%;top:-25px;width:8px;height:8px;border-radius:50%;
-  border:1.6px solid rgba(255,255,255,.85);
-  background:rgba(18,19,24,.5);
-  box-shadow:0 1px 2px rgba(0,0,0,.4);
+  content:'';position:absolute;left:50%;top:-18px;width:1px;height:18px;
+  background:linear-gradient(180deg,transparent,rgba(255,255,255,.55) 35%,rgba(255,255,255,.7));
   transform:translateX(-50%);
 }
 @keyframes ballSway{
@@ -2029,9 +2017,8 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   .modal-sprite-group{grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;width:100%;max-width:324px}
   .modal-sprite-group::before{top:28px;bottom:46px}
   .sprite-slot{gap:22px;padding:0}
-  .ball-hanger{transform-origin:50% -15px}
-  .ball-hanger::before{top:-14px}
-  .ball-hanger::after{top:-19px;width:7px;height:7px}
+  .ball-hanger{transform-origin:50% -14px}
+  .ball-hanger::before{top:-14px;height:14px}
   .sprite-pedestal{width:118px;height:100px}
   .modal-sprite-group .modal-sprite{width:94px;height:94px}
   .sprite-row{width:100%}
