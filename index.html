@@ -684,7 +684,7 @@ body.card-interaction-suppressed .card:active{
   .sprite-pedestal{width:118px;height:100px}
   .modal-sprite-group .modal-sprite{width:94px;height:94px}
   .sprite-row{width:100%}
-  .sprite-ball-badge{width:35px;height:35px;padding:5px}
+  .sprite-ball-badge{width:32px;height:32px;padding:5px}
   .shiny-star-badge{width:23px;height:23px;top:-6px;right:-3px}
   .sprite-slot-label{font-size:7px}
   .modal-name{font-size:18px;line-height:1.16}
@@ -1317,26 +1317,17 @@ body.card-interaction-suppressed .card:active{
 }
 .sprite-ball-badge{
   visibility:hidden;
-  width:40px;height:40px;object-fit:contain;padding:6px;border-radius:999px;
-  background:radial-gradient(circle at 32% 26%,rgba(255,255,255,.38),rgba(255,255,255,.07) 44%,rgba(0,0,0,.34) 80%);
-  border:1.5px solid rgba(255,255,255,.3);
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.24),
-    inset 0 -3px 6px rgba(0,0,0,.38),
-    0 0 0 3px rgba(255,255,255,.05),
-    0 0 16px color-mix(in srgb,var(--region-accent,#7dd3fc) 22%,transparent),
-    0 6px 14px rgba(0,0,0,.4);
-  transition:transform .2s cubic-bezier(.34,1.56,.64,1),box-shadow .2s ease;
+  width:36px;height:36px;object-fit:contain;padding:6px;border-radius:999px;
+  background:linear-gradient(180deg,rgba(255,255,255,.09),rgba(255,255,255,.02));
+  border:1px solid rgba(255,255,255,.15);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 4px 10px rgba(0,0,0,.32);
+  transition:transform .2s cubic-bezier(.34,1.56,.64,1),box-shadow .2s ease,border-color .2s ease;
 }
 .sprite-ball-badge.visible{visibility:visible}
 .sprite-slot:hover .sprite-ball-badge.visible{
-  transform:scale(1.1) translateY(-2px);
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.3),
-    inset 0 -3px 6px rgba(0,0,0,.38),
-    0 0 0 3px rgba(255,255,255,.08),
-    0 0 22px color-mix(in srgb,var(--region-accent,#7dd3fc) 32%,transparent),
-    0 8px 18px rgba(0,0,0,.45);
+  transform:translateY(-2px);
+  border-color:rgba(255,255,255,.24);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.16),0 6px 14px rgba(0,0,0,.36);
 }
 .modal-nav-arrow{
   position:absolute;top:28px;width:42px;min-height:52px;border-radius:13px;flex:0 0 auto;
@@ -2021,7 +2012,7 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   .sprite-pedestal{width:118px;height:100px}
   .modal-sprite-group .modal-sprite{width:94px;height:94px}
   .sprite-row{width:100%}
-  .sprite-ball-badge{width:35px;height:35px;padding:5px}
+  .sprite-ball-badge{width:32px;height:32px;padding:5px}
   .shiny-star-badge{width:23px;height:23px;top:-6px;right:-3px}
   .sprite-slot-label{font-size:7px}
   .modal-name{font-size:18px;line-height:1.16}
