@@ -1305,15 +1305,7 @@ body.card-interaction-suppressed .card:active{
   position:absolute;top:-9px;right:-5px;
   width:30px;height:30px;object-fit:contain;
   z-index:2;pointer-events:none;
-  filter:drop-shadow(0 2px 5px rgba(0,0,0,.5)) drop-shadow(0 0 7px rgba(255,215,102,.55));
-  animation:starGlow 2.8s ease-in-out infinite;
-}
-@keyframes starGlow{
-  0%,100%{transform:scale(1) rotate(-4deg);filter:drop-shadow(0 2px 5px rgba(0,0,0,.5)) drop-shadow(0 0 7px rgba(255,215,102,.55));}
-  50%{transform:scale(1.12) rotate(4deg);filter:drop-shadow(0 2px 5px rgba(0,0,0,.5)) drop-shadow(0 0 13px rgba(255,215,102,.9));}
-}
-@media (prefers-reduced-motion:reduce){
-  .shiny-star-badge{animation:none}
+  filter:drop-shadow(0 2px 5px rgba(0,0,0,.5));
 }
 .sprite-ball-badge{
   visibility:hidden;
