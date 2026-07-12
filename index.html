@@ -685,11 +685,7 @@ body.card-interaction-suppressed .card:active{
   .modal-sprite-group .modal-sprite{width:94px;height:94px}
   .sprite-row{width:100%}
   .sprite-ball-badge{width:33px;height:33px;padding:4px}
-  .sprite-vertical-label{font-size:7px;letter-spacing:1.2px;width:13px;padding:18px 0 9px}
-  .sprite-vertical-label::before{height:10px}
-  .sprite-vertical-label::after{top:9px}
-  .sprite-vertical-label.label-normal{left:-16px}
-  .sprite-vertical-label.label-shiny{right:-16px}
+  .shiny-star-badge{width:20px;height:20px;top:-4px;right:-2px}
   .sprite-slot-label{font-size:7px}
   .modal-name{font-size:18px;line-height:1.16}
   .modal-name-row{justify-content:center}
@@ -1305,52 +1301,11 @@ body.card-interaction-suppressed .card:active{
 .sprite-slot-label::before{right:calc(100% + 7px)}
 .sprite-slot-label::after{left:calc(100% + 7px);background:linear-gradient(90deg,color-mix(in srgb,var(--region-accent,#7dd3fc) 65%,transparent),transparent)}
 
-.sprite-vertical-label{
-  position:absolute;top:-9px;width:16px;
-  display:flex;align-items:center;justify-content:center;
-  writing-mode:vertical-rl;text-orientation:mixed;
-  font-family:var(--font-logo);font-size:8px;font-weight:400;
-  letter-spacing:2px;text-transform:uppercase;white-space:nowrap;
-  padding:21px 0 12px;
-  z-index:1;pointer-events:none;
-  transform-origin:50% 9px;
-  animation:tagSway 3.6s ease-in-out infinite;
-}
-.sprite-vertical-label::before{
-  content:'';position:absolute;top:0;left:50%;width:1px;height:12px;
-  background:linear-gradient(180deg,rgba(255,255,255,.7),rgba(255,255,255,.12));
-  transform:translateX(-50%);
-}
-.sprite-vertical-label::after{
-  content:'';position:absolute;top:11px;left:0;right:0;bottom:0;
-  border-radius:999px;z-index:-1;
-}
-.sprite-vertical-label.label-normal{
-  left:-19px;color:#eef1f6;
-  text-shadow:0 1px 1px rgba(0,0,0,.6),0 0 5px rgba(255,255,255,.14);
-  animation-duration:3.3s;
-  animation-delay:-0.4s;
-}
-.sprite-vertical-label.label-normal::after{
-  background:linear-gradient(180deg,#525c6a,#2c313c 60%,#1d2027);
-  box-shadow:0 5px 11px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.16);
-}
-.sprite-vertical-label.label-shiny{
-  right:-19px;color:#eef1f6;
-  text-shadow:0 1px 1px rgba(0,0,0,.6),0 0 5px rgba(255,255,255,.14);
-  animation-duration:4.4s;
-  animation-delay:-2.2s;
-}
-.sprite-vertical-label.label-shiny::after{
-  background:linear-gradient(180deg,#525c6a,#2c313c 60%,#1d2027);
-  box-shadow:0 5px 11px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.16);
-}
-@keyframes tagSway{
-  0%,100%{transform:rotate(-3.2deg);}
-  50%{transform:rotate(3deg);}
-}
-@media (prefers-reduced-motion:reduce){
-  .sprite-vertical-label{animation:none}
+.shiny-star-badge{
+  position:absolute;top:-6px;right:-2px;
+  width:26px;height:26px;object-fit:contain;
+  z-index:2;pointer-events:none;
+  filter:drop-shadow(0 2px 5px rgba(0,0,0,.45));
 }
 .sprite-ball-badge{
   visibility:hidden;
@@ -2047,11 +2002,7 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   .modal-sprite-group .modal-sprite{width:94px;height:94px}
   .sprite-row{width:100%}
   .sprite-ball-badge{width:33px;height:33px;padding:4px}
-  .sprite-vertical-label{font-size:7px;letter-spacing:1.2px;width:13px;padding:18px 0 9px}
-  .sprite-vertical-label::before{height:10px}
-  .sprite-vertical-label::after{top:9px}
-  .sprite-vertical-label.label-normal{left:-16px}
-  .sprite-vertical-label.label-shiny{right:-16px}
+  .shiny-star-badge{width:20px;height:20px;top:-4px;right:-2px}
   .sprite-slot-label{font-size:7px}
   .modal-name{font-size:18px;line-height:1.16}
   .modal-name-row{justify-content:center}
@@ -2245,7 +2196,6 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
           <div class="modal-region" id="mRegion"></div>
         </div>
         <div class="modal-sprite-group">
-          <span class="sprite-vertical-label label-normal" aria-hidden="true">Normal</span>
           <div class="sprite-slot">
             <div class="sprite-pedestal">
               <img class="modal-sprite" id="mSpriteNormal" src="" alt="" onerror="handlePokemonSpriteError(this, parseInt(this.dataset.pokeId), false)">
@@ -2255,10 +2205,10 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
           <div class="sprite-slot sprite-slot-shiny">
             <div class="sprite-pedestal">
               <img class="modal-sprite" id="mSpriteShiny" src="" alt="" onerror="handlePokemonSpriteError(this, parseInt(this.dataset.pokeId), true)">
+              <img class="shiny-star-badge" src="./sprites/ShinySVStar.png" alt="" aria-hidden="true">
             </div>
             <img class="sprite-ball-badge" id="mBallIconShiny" src="" alt="">
           </div>
-          <span class="sprite-vertical-label label-shiny" aria-hidden="true">Shiny</span>
         </div>
       </div>
       <button class="modal-nav-arrow" id="modalNextCard" type="button" onclick="goToAdjacentModal(1)" aria-label="Pokémon suivant">
