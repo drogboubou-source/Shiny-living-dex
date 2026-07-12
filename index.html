@@ -682,7 +682,7 @@ body.card-interaction-suppressed .card:active{
   .modal-sprite-group::before{top:28px;bottom:46px}
   .sprite-slot{gap:22px;padding:0}
   .ball-hanger{transform-origin:50% -15px}
-  .ball-hanger::before{top:-15px;height:14px}
+  .ball-hanger::before{top:-14px}
   .ball-hanger::after{top:-19px;width:7px;height:7px}
   .sprite-pedestal{width:118px;height:100px}
   .modal-sprite-group .modal-sprite{width:94px;height:94px}
@@ -1317,22 +1317,19 @@ body.card-interaction-suppressed .card:active{
 }
 .ball-hanger-shiny{animation-duration:5.3s}
 .ball-hanger::before{
-  content:'';position:absolute;left:50%;top:-20px;width:2px;height:19px;
-  background:repeating-linear-gradient(180deg,rgba(255,255,255,.95) 0 2px,rgba(255,255,255,.35) 2px 3.4px);
-  -webkit-mask-image:linear-gradient(180deg,transparent,#000 22%,#000 92%,transparent);
-  mask-image:linear-gradient(180deg,transparent,#000 22%,#000 92%,transparent);
-  box-shadow:0 0 4px rgba(255,255,255,.3);
-  border-radius:2px;
+  content:'';position:absolute;left:50%;top:-19px;width:2px;height:2px;border-radius:50%;
+  background:rgba(255,255,255,.85);
+  box-shadow:
+    0 4.5px 0 rgba(255,255,255,.7),
+    0 9px 0 rgba(255,255,255,.55),
+    0 13.5px 0 rgba(255,255,255,.38);
   transform:translateX(-50%);
 }
 .ball-hanger::after{
-  content:'';position:absolute;left:50%;top:-25px;width:8px;height:8px;
-  border-radius:50%;
-  background:linear-gradient(150deg,#fbfbfd,#c3c6cf 50%,#83868f);
-  box-shadow:
-    inset 0 -1.5px 2px rgba(0,0,0,.5),
-    inset 0 1px 1px rgba(255,255,255,.75),
-    0 1px 2px rgba(0,0,0,.45);
+  content:'';position:absolute;left:50%;top:-25px;width:8px;height:8px;border-radius:50%;
+  border:1.6px solid rgba(255,255,255,.85);
+  background:rgba(18,19,24,.5);
+  box-shadow:0 1px 2px rgba(0,0,0,.4);
   transform:translateX(-50%);
 }
 @keyframes ballSway{
@@ -1341,25 +1338,14 @@ body.card-interaction-suppressed .card:active{
 }
 .sprite-ball-badge{
   visibility:hidden;
-  width:38px;height:38px;object-fit:contain;padding:6.5px;border-radius:999px;
-  background:radial-gradient(circle at 30% 24%,rgba(255,255,255,.4),rgba(255,255,255,.08) 46%,rgba(0,0,0,.32) 82%);
-  border:1.4px solid rgba(255,255,255,.3);
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.24),
-    inset 0 -2px 4px rgba(0,0,0,.35),
-    0 0 0 3px rgba(255,255,255,.05),
-    0 6px 12px rgba(0,0,0,.38);
-  transition:border-color .2s ease,box-shadow .2s ease;
+  width:38px;height:38px;object-fit:contain;padding:7px;border-radius:999px;
+  background:linear-gradient(155deg,#3c414d,#20232b 58%,#15171c);
+  border:2px solid rgba(255,255,255,.2);
+  box-shadow:inset 0 1.5px 0 rgba(255,255,255,.22),0 6px 13px rgba(0,0,0,.4);
+  transition:border-color .2s ease;
 }
 .sprite-ball-badge.visible{visibility:visible}
-.sprite-slot:hover .sprite-ball-badge.visible{
-  border-color:rgba(255,255,255,.4);
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.3),
-    inset 0 -2px 4px rgba(0,0,0,.35),
-    0 0 0 3px rgba(255,255,255,.08),
-    0 8px 15px rgba(0,0,0,.42);
-}
+.sprite-slot:hover .sprite-ball-badge.visible{border-color:rgba(255,255,255,.36)}
 @media (prefers-reduced-motion:reduce){
   .ball-hanger{animation:none}
 }
@@ -2044,7 +2030,7 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   .modal-sprite-group::before{top:28px;bottom:46px}
   .sprite-slot{gap:22px;padding:0}
   .ball-hanger{transform-origin:50% -15px}
-  .ball-hanger::before{top:-15px;height:14px}
+  .ball-hanger::before{top:-14px}
   .ball-hanger::after{top:-19px;width:7px;height:7px}
   .sprite-pedestal{width:118px;height:100px}
   .modal-sprite-group .modal-sprite{width:94px;height:94px}
