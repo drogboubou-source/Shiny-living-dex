@@ -1321,16 +1321,19 @@ body.card-interaction-suppressed .card:active{
   background:linear-gradient(180deg,rgba(255,255,255,.09),rgba(255,255,255,.02));
   border:1px solid rgba(255,255,255,.15);
   box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 4px 10px rgba(0,0,0,.32);
-  transition:box-shadow .2s ease,border-color .2s ease;
+  transition:border-color .2s ease;
 }
-.sprite-ball-badge.visible{visibility:visible;animation:ballSpin 10s linear infinite}
+.sprite-ball-badge.visible{visibility:visible;animation:ballSpin 4.2s cubic-bezier(.3,.85,.4,1) infinite}
 .sprite-slot:hover .sprite-ball-badge.visible{
-  border-color:rgba(255,255,255,.24);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.16),0 6px 14px rgba(0,0,0,.36);
-  animation-duration:3.4s;
+  border-color:rgba(255,255,255,.26);
+  animation-duration:2.1s;
 }
 @keyframes ballSpin{
-  to{transform:rotate(360deg);}
+  0%{transform:rotate(0deg) scale(1);box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 4px 10px rgba(0,0,0,.32);}
+  16%{transform:rotate(352deg) scale(1.08);box-shadow:inset 0 1px 0 rgba(255,255,255,.24),0 4px 10px rgba(0,0,0,.32),0 0 14px rgba(255,255,255,.4);}
+  24%{transform:rotate(367deg) scale(.98);box-shadow:inset 0 1px 0 rgba(255,255,255,.16),0 4px 10px rgba(0,0,0,.32),0 0 6px rgba(255,255,255,.18);}
+  30%{transform:rotate(360deg) scale(1);box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 4px 10px rgba(0,0,0,.32);}
+  100%{transform:rotate(360deg) scale(1);box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 4px 10px rgba(0,0,0,.32);}
 }
 @media (prefers-reduced-motion:reduce){
   .sprite-ball-badge.visible{animation:none}
