@@ -1245,9 +1245,9 @@ body.card-interaction-suppressed .card:active{
   display:block;margin-bottom:1rem;min-width:0;
   padding:18px 56px 16px;border-radius:15px;border:1px solid rgba(255,255,255,.11);
   background:
-    radial-gradient(circle at 82% 100%,rgba(192,132,252,.1),transparent 42%),
-    linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.014)),
-    rgba(24,24,31,.72);
+    radial-gradient(circle at 50% 28%,rgba(255,255,255,.16),transparent 62%),
+    radial-gradient(circle at 50% 105%,rgba(255,255,255,.05),transparent 62%),
+    linear-gradient(180deg,#2a2a2c,#1e1e20 55%,#18181a);
   box-shadow:inset 0 1px 0 rgba(255,255,255,.065),0 12px 28px rgba(0,0,0,.18);
   position:relative;overflow:hidden;
 }
@@ -5157,7 +5157,7 @@ function openModal(id, options = {}) {
     mSpriteShiny.alt = `${name} (shiny)`;
   }
   document.getElementById('mRegion').innerHTML = `<span class="modal-region-badge" style="color:${r.color};border-color:${r.color}66;background:${r.color}1a">${r.name}</span><span class="modal-gen-badge">${r.gen}G</span>`;
-  document.querySelector('.modal-sprite-group')?.style.setProperty('--region-accent', r.color);
+  document.querySelector('.modal-hero')?.style.setProperty('--region-accent', r.color);
   updateModalNavigation(id);
   document.getElementById('fPokeball').value = p.pokeball || '';
   document.getElementById('fPokeballShiny').value = p.pokeballShiny || '';
