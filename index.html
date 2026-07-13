@@ -691,7 +691,6 @@ body.card-interaction-suppressed .card:active{
   .sprite-ball-badge{width:30px;height:30px;top:34px}
   .sprite-slot:not(.sprite-slot-shiny) .sprite-ball-badge{left:-20px}
   .sprite-slot.sprite-slot-shiny .sprite-ball-badge{right:-20px}
-  .shiny-star-badge{width:23px;height:23px;top:-6px;right:-3px}
   .sprite-slot-label{font-size:7px}
   .modal-name{font-size:18px;line-height:1.16}
   .modal-name-row{justify-content:center}
@@ -1334,12 +1333,6 @@ body.card-interaction-suppressed .card:active{
 .sprite-slot-label::before{right:calc(100% + 7px)}
 .sprite-slot-label::after{left:calc(100% + 7px);background:linear-gradient(90deg,color-mix(in srgb,var(--region-accent,#7dd3fc) 65%,transparent),transparent)}
 
-.shiny-star-badge{
-  position:absolute;top:-9px;right:-5px;
-  width:30px;height:30px;object-fit:contain;
-  z-index:2;pointer-events:none;
-  filter:drop-shadow(0 2px 5px rgba(0,0,0,.5));
-}
 .sprite-ball-badge{
   visibility:hidden;position:absolute;top:46px;z-index:3;pointer-events:none;
   width:34px;height:34px;object-fit:contain;
@@ -2045,7 +2038,6 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   .sprite-ball-badge{width:30px;height:30px;top:34px}
   .sprite-slot:not(.sprite-slot-shiny) .sprite-ball-badge{left:-20px}
   .sprite-slot.sprite-slot-shiny .sprite-ball-badge{right:-20px}
-  .shiny-star-badge{width:23px;height:23px;top:-6px;right:-3px}
   .sprite-slot-label{font-size:7px}
   .modal-name{font-size:18px;line-height:1.16}
   .modal-name-row{justify-content:center}
@@ -2249,7 +2241,6 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
           <div class="sprite-slot sprite-slot-shiny">
             <div class="sprite-pedestal">
               <img class="modal-sprite" id="mSpriteShiny" src="" alt="" onerror="handlePokemonSpriteError(this, parseInt(this.dataset.pokeId), true)">
-              <img class="shiny-star-badge" src="./sprites/ShinySVStar.png" alt="" aria-hidden="true">
             </div>
             <img class="sprite-ball-badge" id="mBallIconShiny" src="" alt="">
           </div>
@@ -5608,7 +5599,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=268', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=270', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
