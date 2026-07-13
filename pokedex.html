@@ -250,9 +250,10 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   .two-col{grid-template-columns:1fr}
   .iv-grid{grid-template-columns:1fr 1fr}
   .modal{padding:1.35rem;max-height:92vh}
-  .modal-hero{display:grid;grid-template-columns:1fr;justify-items:center;text-align:center;gap:.85rem}
-  .sprite-pair{gap:6px}
-  .modal-sprite,.modal-sprite-shiny{width:74px;height:74px}
+  .modal-hero{display:grid;grid-template-columns:1fr;justify-items:center;text-align:center;gap:.85rem;padding:12px}
+  .sprite-pair{gap:8px}
+  .modal-sprite,.modal-sprite-shiny{width:68px;height:68px}
+  .sprite-slot{padding:8px 9px 7px}
   .modal-footer{position:sticky;bottom:-1.35rem;margin-left:-1.35rem;margin-right:-1.35rem;padding:1rem 1.35rem;background:linear-gradient(180deg,rgba(24,24,31,.72),var(--surface) 34%);border-top:1px solid var(--border)}
   .btn-save{flex:1}
 }
@@ -467,26 +468,72 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   border-radius:6px;transition:color .12s;
 }
 .modal-close:hover{color:var(--text)}
-.modal-hero{display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem;min-width:0}
-.modal-hero > div{min-width:0}
+.modal-hero{
+  --rc: var(--region-color, #c084fc);
+  position:relative;display:flex;align-items:center;gap:1.1rem;
+  margin-bottom:1.5rem;min-width:0;padding:14px;
+  border-radius:var(--r-lg);border:1px solid var(--border);
+  background:
+    radial-gradient(120% 150% at 8% 0%, color-mix(in srgb, var(--rc) 22%, transparent) 0%, transparent 58%),
+    var(--surface2);
+  overflow:hidden;isolation:isolate;
+}
+.modal-hero::before{
+  content:'';position:absolute;inset:0;pointer-events:none;z-index:0;
+  background-image:radial-gradient(rgba(255,255,255,.05) 1px,transparent 1px);
+  background-size:9px 9px;opacity:.5;
+}
+.modal-hero::after{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;pointer-events:none;z-index:0;
+  background:linear-gradient(90deg,transparent,color-mix(in srgb, var(--rc) 80%, white 0%),transparent);
+  opacity:.7;
+}
+.modal-hero > div{min-width:0;position:relative;z-index:1}
+.sprite-pair{display:flex;gap:10px}
+.sprite-slot{
+  display:flex;flex-direction:column;align-items:center;gap:6px;
+  padding:10px 11px 8px;border-radius:var(--r);flex-shrink:0;
+  background:rgba(0,0,0,.28);border:1px solid rgba(255,255,255,.08);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 4px 10px rgba(0,0,0,.28);
+  position:relative;transition:transform .15s ease;
+}
+.sprite-slot:hover{transform:translateY(-2px)}
 .modal-sprite{
-  width:88px;height:88px;image-rendering:pixelated;
-  background:var(--surface2);border-radius:var(--r);flex-shrink:0;
-  box-sizing:border-box;border:1px solid rgba(255,255,255,.12);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.1),0 4px 10px rgba(0,0,0,.3);
+  width:80px;height:80px;image-rendering:pixelated;
+  background:transparent;flex-shrink:0;display:block;
+}
+.sprite-slot-shiny{
+  border-color:rgba(212,175,55,.4);
+  background:linear-gradient(160deg,rgba(212,175,55,.1),rgba(0,0,0,.3) 65%);
+  box-shadow:inset 0 1px 0 rgba(255,232,171,.12),0 4px 10px rgba(0,0,0,.3),0 0 16px rgba(212,175,55,.14);
+}
+.sprite-slot-shiny::before{
+  content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  box-shadow:0 0 0 1px rgba(212,175,55,.35) inset;
+  animation:shinyPulse 2.6s ease-in-out infinite;
+}
+@keyframes shinyPulse{
+  0%,100%{box-shadow:0 0 0 1px rgba(212,175,55,.25) inset,0 0 8px rgba(212,175,55,.05)}
+  50%{box-shadow:0 0 0 1px rgba(212,175,55,.6) inset,0 0 16px rgba(212,175,55,.25)}
 }
 .modal-sprite-shiny{
-  width:88px;height:88px;image-rendering:pixelated;
-  background:var(--surface2);border-radius:var(--r);flex-shrink:0;
-  position:relative;
-  box-sizing:border-box;border:1px solid rgba(212,175,55,.4);
-  box-shadow:inset 0 1px 0 rgba(255,232,171,.14),0 4px 10px rgba(0,0,0,.3),0 0 14px rgba(212,175,55,.12);
+  width:80px;height:80px;image-rendering:pixelated;position:relative;
+  filter:drop-shadow(0 0 5px rgba(212,175,55,.35));
 }
-.sprite-pair{display:flex;gap:8px}
-.sprite-label{font-size:10px;color:var(--muted);text-align:center;margin-top:3px}
-.modal-num{font-family:var(--font);font-size:12px;color:var(--muted)}
-.modal-name{font-family:var(--font);font-size:22px;color:#fff;overflow-wrap:anywhere}
-.modal-region{font-size:12px;margin-top:4px}
+.sprite-label{font-size:9px;color:var(--muted);text-align:center;text-transform:uppercase;letter-spacing:.7px;font-weight:700}
+.sprite-label-shiny{color:#e8c766}
+.modal-num{font-family:var(--font);font-size:12px;color:var(--muted);letter-spacing:.5px}
+.modal-name{font-family:var(--font);font-size:22px;color:#fff;overflow-wrap:anywhere;margin-top:2px}
+.modal-region{font-size:12px;margin-top:8px}
+.region-chip{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:3px 11px 3px 8px;border-radius:999px;
+  font-family:var(--font);font-size:11px;font-weight:600;
+  background:color-mix(in srgb, var(--rc, #888) 16%, transparent);
+  border:1px solid color-mix(in srgb, var(--rc, #888) 40%, transparent);
+  color:var(--rc, #ccc);
+}
+.region-chip .dot{width:6px;height:6px;border-radius:50%;background:currentColor;box-shadow:0 0 6px currentColor;flex-shrink:0}
 .caught-toggle{
   display:flex;align-items:center;gap:10px;
   background:var(--surface2);border:1px solid var(--border);
@@ -657,16 +704,16 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
 <div class="overlay" id="overlay" onclick="overlayClick(event)">
   <div class="modal">
     <button class="modal-close" onclick="closeModal()">✕</button>
-    <div class="modal-hero">
+    <div class="modal-hero" id="modalHero">
       <div>
         <div class="sprite-pair">
-          <div>
+          <div class="sprite-slot">
             <img class="modal-sprite" id="mSprite" src="" alt="">
             <div class="sprite-label">Normal</div>
           </div>
-          <div>
+          <div class="sprite-slot sprite-slot-shiny">
             <img class="modal-sprite-shiny" id="mSpriteShiny" src="" alt="">
-            <div class="sprite-label">✦ Shiny</div>
+            <div class="sprite-label sprite-label-shiny">✦ Shiny</div>
           </div>
         </div>
       </div>
@@ -1724,7 +1771,8 @@ function openModal(id) {
   shinySprite.src = getPokemonSpriteUrl(id, true);
   document.getElementById('mNum').textContent = `#${String(id).padStart(4,'0')}`;
   document.getElementById('mName').textContent = name;
-  document.getElementById('mRegion').innerHTML = `<span style="color:${r.color};font-family:var(--font)">${r.name} · Génération ${r.gen}</span>`;
+  document.getElementById('mRegion').innerHTML = `<span class="region-chip" style="--rc:${r.color}"><span class="dot"></span>${r.name} · Génération ${r.gen}</span>`;
+  document.getElementById('modalHero').style.setProperty('--region-color', r.color);
 
   document.getElementById('fCaught').checked   = !!p.caught;
   document.getElementById('fPerfect').checked  = !!p.perfect;
