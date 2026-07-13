@@ -1,5 +1,5 @@
-const CACHE_NAME = 'shiny-living-dex-v246';
-const RUNTIME_CACHE = 'shiny-living-dex-runtime-v246';
+const CACHE_NAME = 'shiny-living-dex-v260';
+const RUNTIME_CACHE = 'shiny-living-dex-runtime-v260';
 const OFFLINE_URL = './index.html';
 const APP_SHELL = [
   './',
@@ -11,14 +11,21 @@ const APP_SHELL = [
   './Assets/icon-maskable-192.png',
   './Assets/icon-maskable-512.png',
   './Assets/targets-header.png',
-  './Assets/fonts/pokemon-gb-ffonts.ttf',
-  './Assets/fonts/pokemon-gb.ttf',
-  './Assets/fonts/press-start-2p.ttf',
-  './Assets/fonts/logo-retro-pixel-v70.ttf',
-  './Assets/fonts/region-gameboy-v70.ttf',
-  './Assets/fonts/pokemon-classic.ttf',
-  './Assets/fonts/pokemon_x_and_y.woff2',
-  './acier.png',
+  './sprites/acier.png',
+  './sprites/combat.png',
+  './sprites/dragon.png',
+  './sprites/electric.png',
+  './sprites/f%C3%A9e.png',
+  './sprites/feu.png',
+  './sprites/glace.png',
+  './sprites/insecte.png',
+  './sprites/normal.png',
+  './sprites/plante.png',
+  './sprites/poison.png',
+  './sprites/roche.png',
+  './sprites/sol.png',
+  './sprites/spectre.png',
+  './sprites/vol.png',
   './sprites/pok%C3%A9ball.png',
   './sprites/super%20ball.png',
   './sprites/hyper%20ball.png',

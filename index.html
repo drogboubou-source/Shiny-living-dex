@@ -1283,7 +1283,10 @@ body.card-interaction-suppressed .card:active{
   position:relative;z-index:2;
 }
 .modal-sprite-group::before{
-  content:none;
+  content:'';position:absolute;left:50%;top:28px;bottom:54px;width:1px;transform:translateX(-50%);
+  background:linear-gradient(180deg,transparent,rgba(255,255,255,.14) 18%,rgba(255,255,255,.22) 50%,rgba(255,255,255,.14) 82%,transparent);
+  opacity:.72;
+  pointer-events:none;
 }
 .sprite-slot{
   display:flex;flex-direction:column;align-items:center;gap:8px;min-width:0;padding:0;
@@ -2580,10 +2583,29 @@ function applyModalTypeGlow(types) {
     shapes + `</svg>`;
 }
 
+const TYPE_BACKDROP_IMAGES = {
+  normal: './sprites/normal.png',
+  fire: './sprites/feu.png',
+  electric: './sprites/electric.png',
+  grass: './sprites/plante.png',
+  ice: './sprites/glace.png',
+  fighting: './sprites/combat.png',
+  poison: './sprites/poison.png',
+  ground: './sprites/sol.png',
+  flying: './sprites/vol.png',
+  bug: './sprites/insecte.png',
+  rock: './sprites/roche.png',
+  ghost: './sprites/spectre.png',
+  dragon: './sprites/dragon.png',
+  steel: './sprites/acier.png',
+  fairy: './sprites/f%C3%A9e.png'
+};
+
 function getTypeBackdropImage(types) {
   const list = types || [];
   for (const type of list) {
-    if (type === 'water') return 'url("./eau.png")';
+    const src = TYPE_BACKDROP_IMAGES[type];
+    if (src) return `url("${src}")`;
   }
   return '';
 }
@@ -5530,7 +5552,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=258', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=260', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
