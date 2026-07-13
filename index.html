@@ -1225,16 +1225,6 @@ body.card-interaction-suppressed .card:active{
   backdrop-filter:blur(5px);
   z-index:200;padding:1rem;overflow:hidden;
 }
-.overlay::before{
-  content:'';position:absolute;inset:0;z-index:0;pointer-events:none;
-  background:
-    linear-gradient(180deg,rgba(4,6,16,.18),rgba(4,6,16,.8)),
-    url("./t%C3%A9n%C3%A8bres%20glace.png");
-  background-size:cover;background-position:center;
-  opacity:0;transform:scale(1.02);
-  transition:opacity .22s ease;
-}
-.overlay.type-backdrop::before{opacity:.72}
 .overlay.open{display:flex}
 .modal{
   background:
@@ -1261,6 +1251,18 @@ body.card-interaction-suppressed .card:active{
   position:relative;overflow:hidden;
   transition:background .25s ease;
 }
+.modal-hero::after{
+  content:'';position:absolute;left:74px;right:74px;top:96px;bottom:10px;z-index:0;
+  pointer-events:none;border-radius:18px;
+  background:
+    linear-gradient(180deg,rgba(8,10,24,.08),rgba(8,10,24,.48)),
+    url("./t%C3%A9n%C3%A8bres%20glace.png");
+  background-size:cover;background-position:center;
+  opacity:0;filter:saturate(1.08) contrast(1.04);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.1),inset 0 -20px 28px rgba(0,0,0,.25);
+  transition:opacity .22s ease;
+}
+.modal-hero.type-backdrop::after{opacity:.84}
 .modal-hero > div{min-width:0}
 .modal-type-motifs{
   position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden;
@@ -1269,6 +1271,16 @@ body.card-interaction-suppressed .card:active{
 .modal-type-motifs svg{display:block;width:100%;height:100%}
 .modal-details{text-align:center;position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:14px}
 .modal-info{min-width:0;display:flex;flex-direction:column;align-items:center;width:100%}
+.modal-name-row,.modal-sub-actions,.modal-region{
+  position:relative;z-index:2;
+}
+.modal-name-row::before,.modal-region::before,
+.modal-sub-actions:has(.regional-form-link.visible)::before{
+  content:'';position:absolute;inset:-5px -12px;z-index:-1;border-radius:999px;
+  background:rgba(14,14,22,.72);
+  border:1px solid rgba(255,255,255,.08);
+  box-shadow:0 6px 14px rgba(0,0,0,.16);
+}
 .modal-sprite{
   width:76px;height:76px;flex:0 0 auto;object-fit:contain;
   filter:drop-shadow(0 6px 14px rgba(0,0,0,.45));
@@ -1344,6 +1356,7 @@ body.card-interaction-suppressed .card:active{
   font-size:20px;line-height:1;font-family:var(--font);
   box-shadow:inset 0 1px 0 rgba(255,255,255,.065),0 8px 18px rgba(0,0,0,.18);
   transition:transform .14s ease,border-color .14s ease,box-shadow .14s ease;
+  z-index:3;
 }
 #modalPrevCard{left:14px}
 #modalNextCard{right:14px}
@@ -5278,7 +5291,7 @@ function openModal(id, options = {}) {
   }
   document.getElementById('mRegion').innerHTML = `<span class="modal-region-badge" style="color:${r.color};border-color:${r.color}66;background:${r.color}1a">${r.name}</span><span class="modal-gen-badge">${r.gen}G</span>`;
   document.querySelector('.modal-sprite-group')?.style.setProperty('--region-accent', r.color);
-  document.getElementById('overlay')?.classList.toggle('type-backdrop', hasDarkIceBackdrop(displayTypes));
+  document.querySelector('.modal-hero')?.classList.toggle('type-backdrop', hasDarkIceBackdrop(displayTypes));
   applyModalTypeGlow(displayTypes);
   updateModalNavigation(id);
   document.getElementById('fPokeball').value = p.pokeball || '';
@@ -5330,7 +5343,8 @@ function closeModal(options = {}) {
   const modal = document.querySelector('#overlay .modal');
   const overlay = document.getElementById('overlay');
   const wasOpen = overlay.classList.contains('open');
-  overlay.classList.remove('open', 'type-backdrop');
+  overlay.classList.remove('open');
+  document.querySelector('.modal-hero')?.classList.remove('type-backdrop');
   modal?.classList.remove('hunt-mode');
   document.getElementById('huntPanel')?.classList.remove('open');
   if (modal) modal.scrollTop = 0;
@@ -5512,7 +5526,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=241', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=242', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
