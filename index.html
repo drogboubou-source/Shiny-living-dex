@@ -1252,8 +1252,8 @@ body.card-interaction-suppressed .card:active{
   transition:background .25s ease;
 }
 .modal-hero::after{
-  content:'';position:absolute;left:0;right:0;top:96px;bottom:10px;z-index:0;
-  pointer-events:none;border-radius:0 0 15px 15px;
+  content:'';position:absolute;inset:0;z-index:0;
+  pointer-events:none;border-radius:inherit;
   background:
     linear-gradient(180deg,rgba(8,10,24,.42),rgba(8,10,24,.78)),
     url("./t%C3%A9n%C3%A8bres%20glace.png");
@@ -1271,16 +1271,7 @@ body.card-interaction-suppressed .card:active{
 .modal-type-motifs svg{display:block;width:100%;height:100%}
 .modal-details{text-align:center;position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:14px}
 .modal-info{min-width:0;display:flex;flex-direction:column;align-items:center;width:100%}
-.modal-name-row,.modal-sub-actions,.modal-region{
-  position:relative;z-index:2;
-}
-.modal-name-row::before,.modal-region::before,
-.modal-sub-actions:has(.regional-form-link.visible)::before{
-  content:'';position:absolute;inset:-5px -12px;z-index:-1;border-radius:999px;
-  background:rgba(14,14,22,.72);
-  border:1px solid rgba(255,255,255,.08);
-  box-shadow:0 6px 14px rgba(0,0,0,.16);
-}
+.modal-name-row,.modal-sub-actions,.modal-region{position:relative;z-index:2}
 .modal-sprite{
   width:76px;height:76px;flex:0 0 auto;object-fit:contain;
   filter:drop-shadow(0 6px 14px rgba(0,0,0,.45));
@@ -5540,7 +5531,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=244', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=245', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
