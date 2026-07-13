@@ -678,8 +678,8 @@ body.card-interaction-suppressed .card:active{
   .modal-hero{display:block;padding:18px 44px 16px}
   .modal-details,.modal-num,.modal-name,.modal-region{text-align:center}
   .modal-sprite{width:54px;height:54px}
-  .modal-sprite-group{grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;width:100%;max-width:324px}
-  .modal-sprite-group::before{top:28px;bottom:46px}
+  .modal-sprite-group{grid-template-columns:repeat(2,minmax(0,1fr));gap:36px;width:100%;max-width:336px}
+  .modal-sprite-group::before{top:50px;width:28px;height:13px}
   .sprite-slot{gap:6px;padding:0}
   .sprite-pedestal{width:118px;height:100px}
   .modal-sprite-group .modal-sprite{width:94px;height:94px}
@@ -1280,13 +1280,14 @@ body.card-interaction-suppressed .card:active{
   image-rendering:auto;
 }
 .modal-sprite-group{
-  display:grid;grid-template-columns:repeat(2,minmax(126px,1fr));align-items:end;justify-content:center;gap:44px;width:min(100%,406px);margin-bottom:1px;
+  display:grid;grid-template-columns:repeat(2,minmax(126px,1fr));align-items:end;justify-content:center;gap:56px;width:min(100%,430px);margin-bottom:1px;
   position:relative;z-index:2;
 }
 .modal-sprite-group::before{
-  content:'';position:absolute;left:50%;top:28px;bottom:54px;width:1px;transform:translateX(-50%);
-  background:linear-gradient(180deg,transparent,rgba(255,255,255,.14) 18%,rgba(255,255,255,.22) 50%,rgba(255,255,255,.14) 82%,transparent);
-  opacity:.72;
+  content:'';position:absolute;left:50%;top:60px;width:32px;height:14px;transform:translateX(-50%);
+  background:url('./sprites/types/eau.png') center / contain no-repeat;
+  filter:drop-shadow(0 3px 6px rgba(0,0,0,.38));
+  opacity:.95;
   pointer-events:none;
 }
 .sprite-slot{
@@ -2020,8 +2021,8 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   .modal-hero{display:block;padding:18px 44px 16px}
   .modal-details,.modal-num,.modal-name,.modal-region{text-align:center}
   .modal-sprite{width:54px;height:54px}
-  .modal-sprite-group{grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;width:100%;max-width:324px}
-  .modal-sprite-group::before{top:28px;bottom:46px}
+  .modal-sprite-group{grid-template-columns:repeat(2,minmax(0,1fr));gap:36px;width:100%;max-width:336px}
+  .modal-sprite-group::before{top:50px;width:28px;height:13px}
   .sprite-slot{gap:6px;padding:0}
   .sprite-pedestal{width:118px;height:100px}
   .modal-sprite-group .modal-sprite{width:94px;height:94px}
