@@ -1204,6 +1204,7 @@ body.card-interaction-suppressed .card:active{
 .type-row{width:100%;min-height:19px;margin:2px 0 5px;display:flex;justify-content:center;gap:3px;flex-wrap:wrap;padding:0 2px;order:3}
 .type-pill{display:inline-grid;place-items:center;width:46px;height:12px;filter:drop-shadow(0 2px 5px rgba(0,0,0,.32))}
 .type-pill img{width:46px;height:12px;display:block;image-rendering:auto}
+.type-pill.type-pill--water img{width:auto;height:14px;max-width:46px}
 .empty{color:var(--muted);font-size:14px;padding:4rem 0;text-align:center;grid-column:1/-1}
 
 /* ── BUTTONS ── */
@@ -2015,6 +2016,7 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   .card .status{font-size:7px;padding:3px 6px}
   .type-row{gap:3px;margin:1px 0 3px;padding:0}
   .type-pill,.type-pill img{width:40px;height:10px}
+  .type-pill.type-pill--water img{width:auto;height:12px;max-width:40px}
   .modal-hero{display:block;padding:18px 44px 16px}
   .modal-details,.modal-num,.modal-name,.modal-region{text-align:center}
   .modal-sprite{width:54px;height:54px}
@@ -2473,7 +2475,7 @@ const POKEMON_TYPES = {"1":["grass","poison"],"2":["grass","poison"],"3":["grass
 const TYPE_META = {
   normal: { label: 'Normal', src: 'data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2260%22%20height%3D%2215%22%20viewBox%3D%220%200%2060%2015%22%3E%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%2260%22%20height%3D%2215%22%20rx%3D%225%22%20ry%3D%225%22%20fill%3D%22%23a8a878%22%2F%3E%3Ctext%20x%3D%2230%22%20y%3D%2211.5%22%20font-size%3D%228.4%22%20font-family%3D%22Arial%2C%20Helvetica%2C%20sans-serif%22%20font-weight%3D%22700%22%20fill%3D%22%23000%22%20text-anchor%3D%22middle%22%3ENORMAL%3C%2Ftext%3E%3C%2Fsvg%3E' },
   fire: { label: 'Feu', src: 'data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2260%22%20height%3D%2215%22%20viewBox%3D%220%200%2060%2015%22%3E%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%2260%22%20height%3D%2215%22%20rx%3D%225%22%20ry%3D%225%22%20fill%3D%22%23f89030%22%2F%3E%3Ctext%20x%3D%2230%22%20y%3D%2211.5%22%20font-size%3D%228.4%22%20font-family%3D%22Arial%2C%20Helvetica%2C%20sans-serif%22%20font-weight%3D%22700%22%20fill%3D%22%23fff%22%20text-anchor%3D%22middle%22%3EFEU%3C%2Ftext%3E%3C%2Fsvg%3E' },
-  water: { label: 'Eau', src: 'data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2260%22%20height%3D%2215%22%20viewBox%3D%220%200%2060%2015%22%3E%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%2260%22%20height%3D%2215%22%20rx%3D%225%22%20ry%3D%225%22%20fill%3D%22%236890f0%22%2F%3E%3Ctext%20x%3D%2230%22%20y%3D%2211.5%22%20font-size%3D%228.4%22%20font-family%3D%22Arial%2C%20Helvetica%2C%20sans-serif%22%20font-weight%3D%22700%22%20fill%3D%22%23fff%22%20text-anchor%3D%22middle%22%3EEAU%3C%2Ftext%3E%3C%2Fsvg%3E' },
+  water: { label: 'Eau', src: './sprites/types/eau.png' },
   electric: { label: 'Electrik', src: 'data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2260%22%20height%3D%2215%22%20viewBox%3D%220%200%2060%2015%22%3E%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%2260%22%20height%3D%2215%22%20rx%3D%225%22%20ry%3D%225%22%20fill%3D%22%23f8d030%22%2F%3E%3Ctext%20x%3D%2230%22%20y%3D%2211.5%22%20font-size%3D%228.4%22%20font-family%3D%22Arial%2C%20Helvetica%2C%20sans-serif%22%20font-weight%3D%22700%22%20fill%3D%22%23000%22%20text-anchor%3D%22middle%22%3EELECTRIK%3C%2Ftext%3E%3C%2Fsvg%3E' },
   grass: { label: 'Plante', src: 'data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2260%22%20height%3D%2215%22%20viewBox%3D%220%200%2060%2015%22%3E%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%2260%22%20height%3D%2215%22%20rx%3D%225%22%20ry%3D%225%22%20fill%3D%22%2378c850%22%2F%3E%3Ctext%20x%3D%2230%22%20y%3D%2211.5%22%20font-size%3D%228.4%22%20font-family%3D%22Arial%2C%20Helvetica%2C%20sans-serif%22%20font-weight%3D%22700%22%20fill%3D%22%23000%22%20text-anchor%3D%22middle%22%3EPLANTE%3C%2Ftext%3E%3C%2Fsvg%3E' },
   ice: { label: 'Glace', src: 'data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2260%22%20height%3D%2215%22%20viewBox%3D%220%200%2060%2015%22%3E%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%2260%22%20height%3D%2215%22%20rx%3D%225%22%20ry%3D%225%22%20fill%3D%22%2398d8d8%22%2F%3E%3Ctext%20x%3D%2230%22%20y%3D%2211.5%22%20font-size%3D%228.4%22%20font-family%3D%22Arial%2C%20Helvetica%2C%20sans-serif%22%20font-weight%3D%22700%22%20fill%3D%22%23000%22%20text-anchor%3D%22middle%22%3EGLACE%3C%2Ftext%3E%3C%2Fsvg%3E' },
@@ -2628,7 +2630,7 @@ function renderTypeBadges(id) {
 function renderTypeBadgesForTypes(types) {
   return (types || []).map(type => {
     const meta = TYPE_META[type] || TYPE_META.normal;
-    return '<span class="type-pill" title="Type ' + meta.label + '" aria-label="Type ' + meta.label + '"><img src="' + meta.src + '" alt=""></span>';
+    return '<span class="type-pill type-pill--' + type + '" title="Type ' + meta.label + '" aria-label="Type ' + meta.label + '"><img src="' + meta.src + '" alt=""></span>';
   }).join('');
 }
 
