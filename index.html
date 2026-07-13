@@ -680,17 +680,17 @@ body.card-interaction-suppressed .card:active{
   .modal-details,.modal-num,.modal-name,.modal-region{text-align:center}
   .modal-sprite{width:54px;height:54px}
   .modal-details{gap:10px}
-  .modal-sprite-group{grid-template-columns:repeat(2,118px);gap:16px;width:min(100%,252px);max-width:252px;padding-bottom:28px}
-  .modal-sprite-group::before,.modal-sprite-group::after{top:104px;width:38px;height:9px}
-  .modal-sprite-group.dual-type-separator::before{top:100px}
-  .modal-sprite-group.dual-type-separator::after{top:112px}
+  .modal-sprite-group{grid-template-columns:repeat(2,118px);gap:16px;width:min(100%,252px);max-width:252px;padding-bottom:48px}
+  .modal-sprite-group::before,.modal-sprite-group::after{top:112px;width:38px;height:9px}
+  .modal-sprite-group.dual-type-separator::before{top:106px}
+  .modal-sprite-group.dual-type-separator::after{top:118px}
   .sprite-slot{gap:6px;padding:0}
   .sprite-pedestal{width:118px;height:100px}
   .modal-sprite-group .modal-sprite{width:94px;height:94px}
   .sprite-row{width:100%}
-  .sprite-ball-badge{width:30px;height:30px;top:34px}
-  .sprite-slot:not(.sprite-slot-shiny) .sprite-ball-badge{left:-20px}
-  .sprite-slot.sprite-slot-shiny .sprite-ball-badge{right:-20px}
+  .sprite-ball-badge{width:30px;height:30px;top:101px}
+  .sprite-slot:not(.sprite-slot-shiny) .sprite-ball-badge,
+  .sprite-slot.sprite-slot-shiny .sprite-ball-badge{left:50%;right:auto;transform:translateX(-50%)}
   .sprite-slot-label{font-size:7px}
   .modal-name{font-size:18px;line-height:1.16}
   .modal-name-row{justify-content:center}
@@ -1284,20 +1284,20 @@ body.card-interaction-suppressed .card:active{
   image-rendering:auto;
 }
 .modal-sprite-group{
-  display:grid;grid-template-columns:repeat(2,150px);align-items:start;justify-content:center;gap:20px;width:min(100%,320px);margin-bottom:1px;padding-bottom:34px;
+  display:grid;grid-template-columns:repeat(2,150px);align-items:start;justify-content:center;gap:20px;width:min(100%,320px);margin-bottom:1px;padding-bottom:56px;
   position:relative;z-index:2;
 }
 .modal-sprite-group::before,
 .modal-sprite-group::after{
-  content:'';position:absolute;left:50%;top:132px;width:48px;height:12px;transform:translateX(-50%);
+  content:'';position:absolute;left:50%;top:138px;width:48px;height:12px;transform:translateX(-50%);
   background:var(--modal-type-separator-a,url('./sprites/types/Miniature_Type_Normal_LPZA.png')) center / contain no-repeat;
   filter:drop-shadow(0 3px 6px rgba(0,0,0,.38));
   opacity:.95;
   pointer-events:none;
 }
 .modal-sprite-group::after{display:none;background:var(--modal-type-separator-b,url('./sprites/types/Miniature_Type_Normal_LPZA.png')) center / contain no-repeat}
-.modal-sprite-group.dual-type-separator::before{top:128px;transform:translateX(-50%)}
-.modal-sprite-group.dual-type-separator::after{display:block;top:142px;transform:translateX(-50%)}
+.modal-sprite-group.dual-type-separator::before{top:132px;transform:translateX(-50%)}
+.modal-sprite-group.dual-type-separator::after{display:block;top:146px;transform:translateX(-50%)}
 .sprite-slot{
   display:flex;flex-direction:column;align-items:center;gap:8px;min-width:0;padding:0;position:relative;
 }
@@ -1334,7 +1334,7 @@ body.card-interaction-suppressed .card:active{
 .sprite-slot-label::after{left:calc(100% + 7px);background:linear-gradient(90deg,color-mix(in srgb,var(--region-accent,#7dd3fc) 65%,transparent),transparent)}
 
 .sprite-ball-badge{
-  visibility:hidden;position:absolute;top:46px;z-index:3;pointer-events:none;
+  visibility:hidden;position:absolute;top:128px;z-index:3;pointer-events:none;
   width:34px;height:34px;object-fit:contain;
   filter:
     drop-shadow(0 1px 0 rgba(255,255,255,.5))
@@ -1343,8 +1343,8 @@ body.card-interaction-suppressed .card:active{
     saturate(1.2)
     contrast(1.1);
 }
-.sprite-slot:not(.sprite-slot-shiny) .sprite-ball-badge{left:-28px}
-.sprite-slot.sprite-slot-shiny .sprite-ball-badge{right:-28px}
+.sprite-slot:not(.sprite-slot-shiny) .sprite-ball-badge,
+.sprite-slot.sprite-slot-shiny .sprite-ball-badge{left:50%;right:auto;transform:translateX(-50%)}
 .sprite-ball-badge.visible{visibility:visible}
 .modal-name-actions{display:none}
 .modal-nav-arrow{
@@ -2027,17 +2027,17 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   .modal-details,.modal-num,.modal-name,.modal-region{text-align:center}
   .modal-sprite{width:54px;height:54px}
   .modal-details{gap:10px}
-  .modal-sprite-group{grid-template-columns:repeat(2,118px);gap:16px;width:min(100%,252px);max-width:252px;padding-bottom:28px}
-  .modal-sprite-group::before,.modal-sprite-group::after{top:104px;width:38px;height:9px}
-  .modal-sprite-group.dual-type-separator::before{top:100px}
-  .modal-sprite-group.dual-type-separator::after{top:112px}
+  .modal-sprite-group{grid-template-columns:repeat(2,118px);gap:16px;width:min(100%,252px);max-width:252px;padding-bottom:48px}
+  .modal-sprite-group::before,.modal-sprite-group::after{top:112px;width:38px;height:9px}
+  .modal-sprite-group.dual-type-separator::before{top:106px}
+  .modal-sprite-group.dual-type-separator::after{top:118px}
   .sprite-slot{gap:6px;padding:0}
   .sprite-pedestal{width:118px;height:100px}
   .modal-sprite-group .modal-sprite{width:94px;height:94px}
   .sprite-row{width:100%}
-  .sprite-ball-badge{width:30px;height:30px;top:34px}
-  .sprite-slot:not(.sprite-slot-shiny) .sprite-ball-badge{left:-20px}
-  .sprite-slot.sprite-slot-shiny .sprite-ball-badge{right:-20px}
+  .sprite-ball-badge{width:30px;height:30px;top:101px}
+  .sprite-slot:not(.sprite-slot-shiny) .sprite-ball-badge,
+  .sprite-slot.sprite-slot-shiny .sprite-ball-badge{left:50%;right:auto;transform:translateX(-50%)}
   .sprite-slot-label{font-size:7px}
   .modal-name{font-size:18px;line-height:1.16}
   .modal-name-row{justify-content:center}
@@ -5599,7 +5599,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=270', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=271', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
