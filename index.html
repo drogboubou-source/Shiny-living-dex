@@ -1259,7 +1259,7 @@ body.card-interaction-suppressed .card:active{
     linear-gradient(180deg,rgba(8,18,34,.38),rgba(7,22,39,.78)),
     var(--type-backdrop-image, none);
   background-repeat:no-repeat,no-repeat,no-repeat;
-  background-size:100% 100%,100% 100%,clamp(132px,32vw,210px) clamp(132px,32vw,210px);
+  background-size:100% 100%,100% 100%,clamp(66px,16vw,105px) clamp(66px,16vw,105px);
   background-position:center,center,center 58%;
   opacity:0;filter:saturate(1.06) contrast(.96);
   box-shadow:inset 0 1px 0 rgba(255,255,255,.08),inset 0 -24px 32px rgba(0,0,0,.34);
@@ -5535,7 +5535,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=250', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=251', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
