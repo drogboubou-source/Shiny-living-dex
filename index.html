@@ -1252,8 +1252,8 @@ body.card-interaction-suppressed .card:active{
   transition:background .25s ease;
 }
 .modal-hero::after{
-  content:'';position:absolute;left:74px;right:74px;top:96px;bottom:10px;z-index:0;
-  pointer-events:none;border-radius:18px;
+  content:'';position:absolute;left:0;right:0;top:96px;bottom:10px;z-index:0;
+  pointer-events:none;border-radius:0 0 15px 15px;
   background:
     linear-gradient(180deg,rgba(8,10,24,.08),rgba(8,10,24,.48)),
     url("./t%C3%A9n%C3%A8bres%20glace.png");
@@ -5526,7 +5526,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=242', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=243', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
