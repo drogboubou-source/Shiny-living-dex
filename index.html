@@ -1256,12 +1256,37 @@ body.card-interaction-suppressed .card:active{
 }
 .sprite-slot{
   display:flex;flex-direction:column;align-items:center;gap:8px;min-width:0;padding:0;
+  position:relative;
+}
+.sprite-slot::before{
+  content:'';position:absolute;left:50%;bottom:31px;width:88px;height:34px;border-radius:50%;
+  transform:translateX(-50%);
+  background:
+    radial-gradient(circle at 24% 42%,rgba(255,255,255,.9) 0 2px,transparent 3px),
+    radial-gradient(circle at 70% 32%,rgba(247,215,116,.86) 0 1.5px,transparent 3px),
+    radial-gradient(circle at 58% 72%,rgba(125,211,252,.82) 0 1.5px,transparent 3px);
+  opacity:.45;filter:drop-shadow(0 0 7px rgba(125,211,252,.34));
+  pointer-events:none;z-index:0;
+  animation:spriteSparkleDrift 3.8s ease-in-out infinite;
+}
+.sprite-slot-shiny::before{
+  animation-delay:1.15s;
+  filter:drop-shadow(0 0 8px rgba(247,215,116,.36));
 }
 .sprite-row{display:grid;place-items:center;width:100%;min-width:0}
 .sprite-pedestal{
   width:150px;height:126px;display:grid;place-items:center;position:relative;
   isolation:isolate;
   transition:transform .2s cubic-bezier(.34,1.56,.64,1),filter .2s ease;
+}
+.sprite-pedestal::before{
+  content:'';position:absolute;left:20px;right:20px;bottom:8px;height:24px;border-radius:50%;pointer-events:none;z-index:-1;
+  background:
+    radial-gradient(ellipse at center,rgba(255,255,255,.18),transparent 52%),
+    conic-gradient(from 0deg,transparent 0 18%,rgba(125,211,252,.8) 26%,transparent 34% 58%,rgba(247,215,116,.72) 66%,transparent 76% 100%);
+  filter:blur(.25px) drop-shadow(0 0 8px rgba(125,211,252,.22));
+  opacity:.58;
+  animation:spriteAuraSpin 5.6s linear infinite;
 }
 .sprite-pedestal::after{
   content:'';position:absolute;left:28px;right:28px;bottom:14px;height:12px;border-radius:50%;pointer-events:none;z-index:-1;
@@ -1272,6 +1297,7 @@ body.card-interaction-suppressed .card:active{
   transform:translateY(-2px);
   filter:brightness(1.035);
 }
+.sprite-slot:hover .sprite-pedestal::before{opacity:.78}
 .modal-sprite-group .modal-sprite{width:128px;height:128px;filter:drop-shadow(0 8px 10px rgba(0,0,0,.26))}
 .sprite-slot-label{
   position:relative;min-width:0;font-family:var(--font-logo);font-size:9px;font-weight:400;letter-spacing:2.4px;
@@ -1285,6 +1311,16 @@ body.card-interaction-suppressed .card:active{
 }
 .sprite-slot-label::before{right:calc(100% + 7px)}
 .sprite-slot-label::after{left:calc(100% + 7px);background:linear-gradient(90deg,color-mix(in srgb,var(--region-accent,#7dd3fc) 65%,transparent),transparent)}
+@keyframes spriteAuraSpin{
+  to{transform:rotate(360deg)}
+}
+@keyframes spriteSparkleDrift{
+  0%,100%{opacity:.32;transform:translateX(-50%) translateY(2px) scale(.96)}
+  50%{opacity:.68;transform:translateX(-50%) translateY(-2px) scale(1.04)}
+}
+@media (prefers-reduced-motion:reduce){
+  .sprite-pedestal::before,.sprite-slot::before{animation:none}
+}
 
 .shiny-star-badge{
   position:absolute;top:-9px;right:-5px;
