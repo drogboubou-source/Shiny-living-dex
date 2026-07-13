@@ -1264,11 +1264,11 @@ body.card-interaction-suppressed .card:active{
   background-repeat:no-repeat,no-repeat,no-repeat,no-repeat,no-repeat,no-repeat;
   background-size:
     100% 100%,
-    clamp(44px,10vw,70px) clamp(44px,10vw,70px),
-    clamp(44px,10vw,70px) clamp(44px,10vw,70px),
-    clamp(44px,10vw,70px) clamp(44px,10vw,70px),
-    clamp(44px,10vw,70px) clamp(44px,10vw,70px),
-    clamp(38px,8.8vw,60px) clamp(38px,8.8vw,60px);
+    clamp(32px,7.2vw,50px) clamp(32px,7.2vw,50px),
+    clamp(32px,7.2vw,50px) clamp(32px,7.2vw,50px),
+    clamp(32px,7.2vw,50px) clamp(32px,7.2vw,50px),
+    clamp(32px,7.2vw,50px) clamp(32px,7.2vw,50px),
+    clamp(28px,6.4vw,44px) clamp(28px,6.4vw,44px);
   background-position:
     center,
     calc(50% + 1px) 58%,
@@ -5550,7 +5550,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=253', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=254', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
