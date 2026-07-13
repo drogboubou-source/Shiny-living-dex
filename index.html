@@ -1245,8 +1245,6 @@ body.card-interaction-suppressed .card:active{
   display:block;margin-bottom:1rem;min-width:0;
   padding:18px 56px 16px;border-radius:15px;border:1px solid rgba(255,255,255,.11);
   background:
-    radial-gradient(circle at 12% 0%,rgba(var(--type-glow-1-rgb,125,211,252),.14),transparent 40%),
-    radial-gradient(circle at 88% 100%,rgba(var(--type-glow-2-rgb,192,132,252),.14),transparent 40%),
     linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.014)),
     rgba(24,24,31,.72);
   box-shadow:inset 0 1px 0 rgba(255,255,255,.065),0 12px 28px rgba(0,0,0,.18);
@@ -1254,6 +1252,11 @@ body.card-interaction-suppressed .card:active{
   transition:background .25s ease;
 }
 .modal-hero > div{min-width:0}
+.modal-type-motifs{
+  position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden;
+  border-radius:inherit;transition:opacity .25s ease;
+}
+.modal-type-motifs svg{display:block;width:100%;height:100%}
 .modal-details{text-align:center;position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:14px}
 .modal-info{min-width:0;display:flex;flex-direction:column;align-items:center;width:100%}
 .modal-sprite{
@@ -2179,6 +2182,7 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
 <div class="overlay" id="overlay" onclick="overlayClick(event)">
   <div class="modal">
     <div class="modal-hero">
+      <div class="modal-type-motifs" id="modalTypeMotifs" aria-hidden="true"></div>
       <button class="modal-nav-arrow" id="modalPrevCard" type="button" onclick="goToAdjacentModal(-1)" aria-label="Pokémon précédent">
         <img class="modal-nav-thumb" id="modalPrevThumb" src="" alt="" aria-hidden="true">
         <span class="modal-nav-arrow-icon" aria-hidden="true">‹</span>
@@ -2469,8 +2473,7 @@ const TYPE_META = {
   fairy: { label: 'Fee', src: 'data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2260%22%20height%3D%2215%22%20viewBox%3D%220%200%2060%2015%22%3E%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%2260%22%20height%3D%2215%22%20rx%3D%225%22%20ry%3D%225%22%20fill%3D%22%23ee99ac%22%2F%3E%3Ctext%20x%3D%2230%22%20y%3D%2211.5%22%20font-size%3D%228.4%22%20font-family%3D%22Arial%2C%20Helvetica%2C%20sans-serif%22%20font-weight%3D%22700%22%20fill%3D%22%23000%22%20text-anchor%3D%22middle%22%3EFEE%3C%2Ftext%3E%3C%2Fsvg%3E' }
 };
 
-// Couleurs officielles par type (memes teintes que les badges ci-dessus),
-// utilisees pour teinter le fond de la fiche selon le(s) type(s) du Pokemon.
+// Couleurs officielles par type (memes teintes que les badges ci-dessus).
 const TYPE_COLORS = {
   normal:'#a8a878', fire:'#f89030', water:'#6890f0', electric:'#f8d030',
   grass:'#78c850', ice:'#98d8d8', fighting:'#c03028', poison:'#a040a0',
@@ -2479,20 +2482,58 @@ const TYPE_COLORS = {
   steel:'#b8b8d0', fairy:'#ee99ac'
 };
 
-function getPokemonTypeColors(types) {
-  const list = (types || []).filter(t => TYPE_COLORS[t]);
-  if (!list.length) return ['#7dd3fc', '#c084fc'];
-  if (list.length === 1) return [TYPE_COLORS[list[0]], TYPE_COLORS[list[0]]];
-  return [TYPE_COLORS[list[0]], TYPE_COLORS[list[1]]];
+// Petites formes symboliques par type (viewBox interne 0 0 24 24, dessinees
+// autour du centre 12,12) utilisees pour décorer le fond de la fiche selon
+// le(s) type(s) du Pokemon affiche - un vrai rappel visuel, pas juste une couleur.
+const TYPE_MOTIFS = {
+  ice: '<g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M12 2v20M3.5 7l17 10M20.5 7l-17 10"/><path d="M12 4.6l-2 2.3M12 4.6l2 2.3M12 19.4l-2-2.3M12 19.4l2-2.3M5.4 8.2l3.1 1M5.4 8.2l.7-3.2M18.6 8.2l-3.1 1M18.6 8.2l-.7-3.2M5.4 15.8l3.1-1M5.4 15.8l.7 3.2M18.6 15.8l-3.1-1M18.6 15.8l-.7 3.2"/></g>',
+  dark: '<path d="M13.2 2.1C7.9 2.6 3.8 7.1 3.8 12.4c0 5.7 4.6 10.4 10.4 10.4 1.9 0 3.7-.5 5.2-1.4-.5.05-1 .1-1.5.1-5.7 0-10.4-4.6-10.4-10.4 0-3.6 1.9-6.8 4.7-8.6-.2 0 .1-.2 1-.4z" fill="currentColor"/>',
+  fire: '<path d="M12 2c1 3-3 4.2-3 8.2a3 3 0 006 0c0-1-.6-1.8-.6-1.8 1.9 1.2 2.9 3.1 2.9 5.1a5.3 5.3 0 01-10.6 0c0-5.4 4.2-6.3 5.3-11.5z" fill="currentColor"/>',
+  water: '<path d="M12 2.2C8 8.3 5 11.9 5 15.5a7 7 0 0014 0c0-3.6-3-7.2-7-13.3z" fill="currentColor"/>',
+  grass: '<path d="M12 21C6 18.3 4 13 6.2 4.1c7 0 11.8 4 11.8 9.9 0 4-3 7-6 7z" fill="currentColor"/><path d="M6.4 4.6c4 3.4 5.3 8.5 5.4 14.7" fill="none" stroke="rgba(0,0,0,.25)" stroke-width="1"/>',
+  electric: '<path d="M13.2 2 5.4 13.6h5l-1.1 8.4L21 10.4h-5.2z" fill="currentColor"/>',
+  fighting: '<g fill="currentColor"><circle cx="12" cy="12" r="8.6" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 6.6v3.4M12 14v3.4M6.6 12h3.4M14 12h3.4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></g>',
+  poison: '<g fill="currentColor"><circle cx="12" cy="12" r="7.4"/><circle cx="12" cy="12" r="2.6" fill="rgba(0,0,0,.35)"/></g>',
+  ground: '<path d="M2.2 18.4 9 6.4l3.8 6.8 3.4-4.6 5.6 9.8z" fill="currentColor"/>',
+  flying: '<path d="M2.4 12.8c3.6-5.4 8.4-7.4 9.6-7.6-1.9 2.8-1.9 4.7-.9 5.7 2.9-2.9 7.6-3.8 10.5-1.9-4.7 1-7.6 2.9-8.5 5.6 2.9 0 5.7 1 7.6 2.9-4.7 1-8.5 0-10.5-2.9-1.9 2.9-4.8 3.8-7.6 3.8 1.9-1.9 2.9-3.8 2.9-5.7-1 0-1.9-.9-2.9 0z" fill="currentColor"/>',
+  psychic: '<g fill="currentColor"><circle cx="12" cy="12" r="2.6"/><path d="M12 2.4a9.6 9.6 0 100 19.2 9.6 9.6 0 000-19.2zm0 3a6.6 6.6 0 110 13.2 6.6 6.6 0 010-13.2z" opacity=".55"/></g>',
+  bug: '<path d="M12 4.4c-1.9 0-3 1.4-3 3.3 0 1 .4 1.7 1 2.2-2.9.5-4.8 2.9-4.8 6 0 2.7 2.9 4.8 6.8 4.8s6.8-2.1 6.8-4.8c0-3.1-1.9-5.5-4.8-6 .6-.5 1-1.2 1-2.2 0-1.9-1.1-3.3-3-3.3z" fill="currentColor"/>',
+  rock: '<path d="M4.2 15.8 8 8.2l6-1.8 5.8 3.8-.9 6.6-8.7 2.8z" fill="currentColor"/>',
+  ghost: '<path d="M12 3a7 7 0 00-7 7v9.4l2-2 2 2 3-3 3 3 2-2 2 2V10a7 7 0 00-7-7z" fill="currentColor"/><circle cx="9.6" cy="10.4" r="1" fill="rgba(0,0,0,.4)"/><circle cx="14.4" cy="10.4" r="1" fill="rgba(0,0,0,.4)"/>',
+  dragon: '<path d="M3.2 14.2c4-1 6-4 6-8 3 1 4 4 3 7.1 3-1 5-1 8 1-2 3-5 4-8 3 1 2 3 3 6 3-4 3-9 3-12-1-1 2-2 3-3 5.1-1-4.1 0-7 0-10.2z" fill="currentColor"/>',
+  steel: '<path d="M12 3.6 14.2 6l3.3-1 0 3.4 2.3 2.3-2.3 2.3 0 3.4-3.3-1-2.2 2.4-2.2-2.4-3.3 1 0-3.4-2.3-2.3 2.3-2.3 0-3.4 3.3 1z" fill="currentColor"/><circle cx="12" cy="12" r="2.4" fill="rgba(0,0,0,.3)"/>',
+  fairy: '<path d="M12 2.2l1.9 6.4L20.3 10.6l-6.4 1.9L12 19l-1.9-6.5L3.7 10.6l6.4-2z" fill="currentColor"/>',
+  normal: '<circle cx="12" cy="12" r="7.4" fill="currentColor"/>'
+};
+
+// Position/rotation/taille fixes pour un rendu stable et lisible (pas de flicker aleatoire a chaque ouverture).
+const TYPE_MOTIF_LAYOUT = [
+  {x:32,  y:34,  s:1.7, rot:-14, o:.20},
+  {x:368, y:30,  s:1.3, rot:16,  o:.16},
+  {x:30,  y:150, s:1.2, rot:10,  o:.15},
+  {x:372, y:158, s:1.8, rot:-20, o:.19},
+  {x:200, y:18,  s:1.0, rot:4,   o:.12},
+  {x:200, y:172, s:1.0, rot:-6,  o:.12}
+];
+
+function getPokemonTypeList(types) {
+  const list = (types || []).filter(t => TYPE_MOTIFS[t]);
+  return list.length ? list : ['normal'];
 }
 
 function applyModalTypeGlow(types) {
-  const hero = document.querySelector('.modal-hero');
-  if (!hero) return;
-  const [c1, c2] = getPokemonTypeColors(types);
-  hero.style.setProperty('--type-glow-1-rgb', hexToRgbString(c1));
-  hero.style.setProperty('--type-glow-2-rgb', hexToRgbString(c2));
+  const layer = document.getElementById('modalTypeMotifs');
+  if (!layer) return;
+  const list = getPokemonTypeList(types);
+  const shapes = TYPE_MOTIF_LAYOUT.map((l, i) => {
+    const type = list[i % list.length];
+    const color = TYPE_COLORS[type] || '#7dd3fc';
+    const size = 22 * l.s;
+    return `<g transform="translate(${l.x} ${l.y}) rotate(${l.rot}) scale(${l.s}) translate(-12 -12)" style="color:${color};opacity:${l.o}">${TYPE_MOTIFS[type]}</g>`;
+  }).join('');
+  layer.innerHTML = `<svg viewBox="0 0 400 200" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">${shapes}</svg>`;
 }
+
 
 function renderTypeBadges(id) {
   return renderTypeBadgesForTypes(POKEMON_TYPES[id] || []);
