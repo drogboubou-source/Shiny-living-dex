@@ -246,8 +246,8 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   .card .status{font-size:9px;padding:3px 6px}
   .card .status-pair{gap:4px}
   .type-row{gap:3px;margin:1px 0 3px;padding:0}
-  .type-pill{width:40px;height:14px}
-  .type-pill img{width:auto;height:14px;max-width:40px}
+  .type-pill{width:40px;height:10px}
+  .type-pill img{width:40px;height:auto;max-height:10px}
   .two-col{grid-template-columns:1fr}
   .iv-grid{grid-template-columns:1fr 1fr}
   .modal{padding:1.35rem;max-height:92vh}
@@ -433,8 +433,8 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 }
 
 .type-row{width:100%;min-height:19px;margin:2px 0 4px;display:flex;justify-content:center;gap:3px;flex-wrap:wrap;padding:0 2px;order:3}
-.type-pill{display:inline-grid;place-items:center;width:46px;height:16px;filter:drop-shadow(0 2px 5px rgba(0,0,0,.25))}
-.type-pill img{width:auto;height:16px;max-width:46px;display:block;image-rendering:auto}
+.type-pill{display:inline-grid;place-items:center;width:46px;height:12px;filter:drop-shadow(0 2px 5px rgba(0,0,0,.25))}
+.type-pill img{width:46px;height:auto;max-height:12px;display:block;image-rendering:auto}
 .empty{color:var(--muted);font-size:14px;padding:4rem 0;text-align:center;grid-column:1/-1}
 
 /* ── BUTTONS ── */
@@ -617,8 +617,8 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   .card .status{font-size:9px;padding:3px 6px}
   .card .status-pair{gap:4px}
   .type-row{gap:3px;margin:1px 0 3px;padding:0}
-  .type-pill{width:40px;height:14px}
-  .type-pill img{width:auto;height:14px;max-width:40px}
+  .type-pill{width:40px;height:10px}
+  .type-pill img{width:40px;height:auto;max-height:10px}
   .modal-hero{display:grid;grid-template-columns:1fr;justify-items:center;text-align:center;gap:.85rem}
   .modal-hero .sprite-pair{justify-content:center}
 }
@@ -1964,7 +1964,7 @@ initStatsButtonSwipe();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=263', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=264', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
