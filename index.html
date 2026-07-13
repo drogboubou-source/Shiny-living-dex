@@ -1061,30 +1061,13 @@ body.card-interaction-suppressed .card:active{
   text-transform:uppercase;letter-spacing:.2px;line-height:1.18;
   text-align:center;width:100%;max-width:100%;overflow-wrap:anywhere;
 }
-.card-sprite-wrap{
-  width:78px;height:78px;order:2;margin:0 0 1px;display:grid;place-items:center;
-  position:relative;isolation:isolate;border-radius:18px;overflow:hidden;
-}
-.sprite-type-backdrop{
-  position:absolute;inset:0;z-index:0;pointer-events:none;border-radius:inherit;
-  background:
-    linear-gradient(180deg,rgba(12,14,28,.06),rgba(12,14,28,.46)),
-    url("./t%C3%A9n%C3%A8bres%20glace.png");
-  background-size:cover;background-position:center;
-  opacity:.9;filter:saturate(1.12) contrast(1.05);
-}
-.sprite-type-backdrop::after{
-  content:'';position:absolute;inset:0;
-  background:radial-gradient(ellipse at 50% 80%,rgba(0,0,0,.28),transparent 52%);
-}
 .card-sprite{
-  width:72px;height:72px;display:block;position:relative;z-index:1;
+  width:72px;height:72px;order:2;margin:1px 0 2px;display:block;
   object-fit:contain;padding:4px;border-radius:16px;
   background:radial-gradient(ellipse at 50% 78%,rgba(0,0,0,.3),transparent 48%);
   filter:drop-shadow(0 5px 8px rgba(0,0,0,.44));
   box-sizing:border-box;
 }
-.card-sprite-wrap.has-type-backdrop .card-sprite{background:transparent}
 .card.caught .card-sprite{filter:drop-shadow(0 5px 9px rgba(0,0,0,.45)) drop-shadow(0 0 9px rgba(192,132,252,.2))}
 .card.perfect .card-sprite{filter:drop-shadow(0 5px 9px rgba(0,0,0,.45)) drop-shadow(0 0 9px rgba(212,175,55,.2))}
 .card.hunting .card-sprite{filter:drop-shadow(0 5px 9px rgba(0,0,0,.45)) drop-shadow(0 0 9px rgba(125,211,252,.2))}
@@ -1242,6 +1225,16 @@ body.card-interaction-suppressed .card:active{
   backdrop-filter:blur(5px);
   z-index:200;padding:1rem;overflow:hidden;
 }
+.overlay::before{
+  content:'';position:absolute;inset:0;z-index:0;pointer-events:none;
+  background:
+    linear-gradient(180deg,rgba(4,6,16,.18),rgba(4,6,16,.8)),
+    url("./t%C3%A9n%C3%A8bres%20glace.png");
+  background-size:cover;background-position:center;
+  opacity:0;transform:scale(1.02);
+  transition:opacity .22s ease;
+}
+.overlay.type-backdrop::before{opacity:.72}
 .overlay.open{display:flex}
 .modal{
   background:
@@ -1250,7 +1243,7 @@ body.card-interaction-suppressed .card:active{
   border:1px solid rgba(255,255,255,.13);
   border-radius:18px;width:min(640px,calc(100vw - 2rem));max-width:calc(100vw - 2rem);
   max-height:90vh;overflow-y:auto;overflow-x:hidden;padding:1.35rem;position:relative;
-  min-width:0;overscroll-behavior:contain;
+  z-index:1;min-width:0;overscroll-behavior:contain;
   box-shadow:0 28px 80px rgba(0,0,0,.64),inset 0 1px 0 rgba(255,255,255,.08);
 }
 .modal::before{
@@ -1300,22 +1293,6 @@ body.card-interaction-suppressed .card:active{
   isolation:isolate;
   transition:transform .2s cubic-bezier(.34,1.56,.64,1),filter .2s ease;
 }
-.sprite-pedestal.has-type-backdrop{
-  border-radius:22px;overflow:hidden;
-  background:
-    linear-gradient(180deg,rgba(12,14,28,.06),rgba(12,14,28,.5)),
-    url("./t%C3%A9n%C3%A8bres%20glace.png");
-  background-size:cover;background-position:center;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.12),inset 0 -18px 24px rgba(0,0,0,.24);
-}
-.sprite-pedestal.has-type-backdrop::before{
-  content:'';position:absolute;inset:0;z-index:0;pointer-events:none;
-  background:
-    radial-gradient(circle at 50% 24%,rgba(255,255,255,.16),transparent 34%),
-    radial-gradient(ellipse at 50% 86%,rgba(0,0,0,.34),transparent 58%);
-}
-.sprite-pedestal.has-type-backdrop .modal-sprite,
-.sprite-pedestal.has-type-backdrop .shiny-star-badge{position:relative;z-index:1}
 .sprite-pedestal::after{
   content:'';position:absolute;left:28px;right:28px;bottom:14px;height:12px;border-radius:50%;pointer-events:none;z-index:-1;
   background:radial-gradient(ellipse,rgba(0,0,0,.32),rgba(0,0,0,.14) 48%,transparent 72%);
@@ -2606,15 +2583,6 @@ function getPokemonDisplayTypes(id) {
   const form = getRegionalFormById(id);
   if (form?.types) return form.types;
   return POKEMON_TYPES[String(id)] || POKEMON_TYPES[id] || [];
-}
-
-function getSpriteBackdropHtml(types) {
-  const active = hasDarkIceBackdrop(types);
-  return `<span class="sprite-type-backdrop" aria-hidden="true"${active ? '' : ' hidden'}></span>`;
-}
-
-function getSpriteBackdropClass(types) {
-  return hasDarkIceBackdrop(types) ? ' has-type-backdrop' : '';
 }
 
 
@@ -4430,14 +4398,10 @@ function createRegionalOriginalCard(id) {
   };
   const useShinySprite = !!p.caught;
   const spriteUrl = getPokemonSpriteUrl(id, useShinySprite);
-  const types = getPokemonDisplayTypes(id);
   card.innerHTML = `
     <div class="form-tag">Base</div>
     <div class="num">#${String(id).padStart(4,'0')}</div>
-    <span class="card-sprite-wrap${getSpriteBackdropClass(types)}">
-      ${getSpriteBackdropHtml(types)}
-      <img class="card-sprite" src="${spriteUrl}" alt="${name}" loading="lazy" onerror="handlePokemonSpriteError(this, ${id}, ${useShinySprite})">
-    </span>
+    <img class="card-sprite" src="${spriteUrl}" alt="${name}" loading="lazy" onerror="handlePokemonSpriteError(this, ${id}, ${useShinySprite})">
     <div class="pname">${name}</div>
     <div class="type-row">${renderTypeBadges(id)}</div>
     <div class="status">${statusHtml}</div>
@@ -4468,10 +4432,7 @@ function createRegionalFormCard(form) {
   card.innerHTML = `
     <div class="form-tag">${form.region}</div>
     <div class="num">#${String(form.baseId).padStart(4,'0')}</div>
-    <span class="card-sprite-wrap${getSpriteBackdropClass(form.types)}">
-      ${getSpriteBackdropHtml(form.types)}
-      <img class="card-sprite" src="${spriteUrl}" alt="${form.label}" loading="lazy" onerror="handlePokemonSpriteError(this, ${form.formId}, ${useShinySprite})">
-    </span>
+    <img class="card-sprite" src="${spriteUrl}" alt="${form.label}" loading="lazy" onerror="handlePokemonSpriteError(this, ${form.formId}, ${useShinySprite})">
     <div class="pname">${form.label}</div>
     <div class="type-row">${renderTypeBadgesForTypes(form.types)}</div>
     <div class="status">${statusHtml}</div>
@@ -4538,17 +4499,13 @@ function renderGrid() {
     };
 
     const typeBadges = renderTypeBadges(id);
-    const types = getPokemonDisplayTypes(id);
     const statusHtml = unavailable ? 'Indisponible' : getCardStatusHtml(p, isHuntingCard);
     const useShinySprite = !!p.caught && !unavailable;
     const spriteUrl = getPokemonSpriteUrl(id, useShinySprite);
 
     card.innerHTML = `
       <div class="num">#${String(id).padStart(4,'0')}</div>
-      <span class="card-sprite-wrap${getSpriteBackdropClass(types)}">
-        ${getSpriteBackdropHtml(types)}
-        <img class="card-sprite" src="${spriteUrl}" alt="${name}" loading="lazy" onerror="handlePokemonSpriteError(this, ${id}, ${useShinySprite})">
-      </span>
+      <img class="card-sprite" src="${spriteUrl}" alt="${name}" loading="lazy" onerror="handlePokemonSpriteError(this, ${id}, ${useShinySprite})">
       <div class="pname">${name}</div>
       <div class="type-row">${typeBadges}</div>
       <div class="status">${statusHtml}</div>
@@ -5321,9 +5278,7 @@ function openModal(id, options = {}) {
   }
   document.getElementById('mRegion').innerHTML = `<span class="modal-region-badge" style="color:${r.color};border-color:${r.color}66;background:${r.color}1a">${r.name}</span><span class="modal-gen-badge">${r.gen}G</span>`;
   document.querySelector('.modal-sprite-group')?.style.setProperty('--region-accent', r.color);
-  document.querySelectorAll('.sprite-pedestal').forEach(pedestal => {
-    pedestal.classList.toggle('has-type-backdrop', hasDarkIceBackdrop(displayTypes));
-  });
+  document.getElementById('overlay')?.classList.toggle('type-backdrop', hasDarkIceBackdrop(displayTypes));
   applyModalTypeGlow(displayTypes);
   updateModalNavigation(id);
   document.getElementById('fPokeball').value = p.pokeball || '';
@@ -5373,8 +5328,9 @@ function overlayClick(e) {
 }
 function closeModal(options = {}) {
   const modal = document.querySelector('#overlay .modal');
-  const wasOpen = document.getElementById('overlay').classList.contains('open');
-  document.getElementById('overlay').classList.remove('open');
+  const overlay = document.getElementById('overlay');
+  const wasOpen = overlay.classList.contains('open');
+  overlay.classList.remove('open', 'type-backdrop');
   modal?.classList.remove('hunt-mode');
   document.getElementById('huntPanel')?.classList.remove('open');
   if (modal) modal.scrollTop = 0;
@@ -5556,7 +5512,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=240', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=241', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
