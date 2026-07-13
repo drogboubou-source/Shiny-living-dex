@@ -689,8 +689,8 @@ body.card-interaction-suppressed .card:active{
   .modal-sprite-group .modal-sprite{width:94px;height:94px}
   .sprite-row{width:100%}
   .sprite-ball-badge{width:30px;height:30px;top:34px}
-  .sprite-slot:not(.sprite-slot-shiny) .sprite-ball-badge{left:-4px}
-  .sprite-slot.sprite-slot-shiny .sprite-ball-badge{right:-4px}
+  .sprite-slot:not(.sprite-slot-shiny) .sprite-ball-badge{left:-20px}
+  .sprite-slot.sprite-slot-shiny .sprite-ball-badge{right:-20px}
   .shiny-star-badge{width:23px;height:23px;top:-6px;right:-3px}
   .sprite-slot-label{font-size:7px}
   .modal-name{font-size:18px;line-height:1.16}
@@ -1350,8 +1350,8 @@ body.card-interaction-suppressed .card:active{
     saturate(1.2)
     contrast(1.1);
 }
-.sprite-slot:not(.sprite-slot-shiny) .sprite-ball-badge{left:-8px}
-.sprite-slot.sprite-slot-shiny .sprite-ball-badge{right:-8px}
+.sprite-slot:not(.sprite-slot-shiny) .sprite-ball-badge{left:-28px}
+.sprite-slot.sprite-slot-shiny .sprite-ball-badge{right:-28px}
 .sprite-ball-badge.visible{visibility:visible}
 .modal-name-actions{display:none}
 .modal-nav-arrow{
@@ -2043,8 +2043,8 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   .modal-sprite-group .modal-sprite{width:94px;height:94px}
   .sprite-row{width:100%}
   .sprite-ball-badge{width:30px;height:30px;top:34px}
-  .sprite-slot:not(.sprite-slot-shiny) .sprite-ball-badge{left:-4px}
-  .sprite-slot.sprite-slot-shiny .sprite-ball-badge{right:-4px}
+  .sprite-slot:not(.sprite-slot-shiny) .sprite-ball-badge{left:-20px}
+  .sprite-slot.sprite-slot-shiny .sprite-ball-badge{right:-20px}
   .shiny-star-badge{width:23px;height:23px;top:-6px;right:-3px}
   .sprite-slot-label{font-size:7px}
   .modal-name{font-size:18px;line-height:1.16}
@@ -5608,7 +5608,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=267', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=268', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
