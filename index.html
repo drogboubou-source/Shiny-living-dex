@@ -1256,8 +1256,8 @@ body.card-interaction-suppressed .card:active{
   pointer-events:none;border-radius:inherit;
   background:var(--type-backdrop-image, none);
   background-repeat:no-repeat;
-  background-size:clamp(28px,6.4vw,44px) clamp(28px,6.4vw,44px);
-  background-position:center 48%;
+  background-size:clamp(24px,5.5vw,38px) clamp(24px,5.5vw,38px);
+  background-position:center 66%;
   opacity:0;filter:none;
   transition:opacity .22s ease;
 }
@@ -5530,7 +5530,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=257', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=258', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
