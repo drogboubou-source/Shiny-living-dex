@@ -1255,14 +1255,14 @@ body.card-interaction-suppressed .card:active{
   content:'';position:absolute;left:0;right:0;top:96px;bottom:10px;z-index:0;
   pointer-events:none;border-radius:0 0 15px 15px;
   background:
-    linear-gradient(180deg,rgba(8,10,24,.08),rgba(8,10,24,.48)),
+    linear-gradient(180deg,rgba(8,10,24,.42),rgba(8,10,24,.78)),
     url("./t%C3%A9n%C3%A8bres%20glace.png");
   background-size:cover;background-position:center;
-  opacity:0;filter:saturate(1.08) contrast(1.04);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.1),inset 0 -20px 28px rgba(0,0,0,.25);
+  opacity:0;filter:brightness(.62) saturate(.78) contrast(.92);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08),inset 0 -24px 32px rgba(0,0,0,.42);
   transition:opacity .22s ease;
 }
-.modal-hero.type-backdrop::after{opacity:.84}
+.modal-hero.type-backdrop::after{opacity:.58}
 .modal-hero > div{min-width:0}
 .modal-type-motifs{
   position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden;
@@ -1288,7 +1288,7 @@ body.card-interaction-suppressed .card:active{
 }
 .modal-sprite-group{
   display:grid;grid-template-columns:repeat(2,minmax(126px,1fr));align-items:end;justify-content:center;gap:44px;width:min(100%,406px);margin-bottom:1px;
-  position:relative;
+  position:relative;z-index:2;
 }
 .modal-sprite-group::before{
   content:'';position:absolute;left:50%;top:28px;bottom:54px;width:1px;transform:translateX(-50%);
@@ -1305,6 +1305,14 @@ body.card-interaction-suppressed .card:active{
   isolation:isolate;
   transition:transform .2s cubic-bezier(.34,1.56,.64,1),filter .2s ease;
 }
+.sprite-pedestal::before{
+  content:'';position:absolute;left:18px;right:18px;top:14px;bottom:8px;border-radius:24px;z-index:-1;
+  pointer-events:none;
+  background:
+    radial-gradient(circle at 50% 36%,rgba(255,255,255,.22),rgba(255,255,255,.08) 34%,transparent 64%),
+    radial-gradient(ellipse at 50% 78%,rgba(0,0,0,.38),transparent 62%);
+  filter:blur(.3px);
+}
 .sprite-pedestal::after{
   content:'';position:absolute;left:28px;right:28px;bottom:14px;height:12px;border-radius:50%;pointer-events:none;z-index:-1;
   background:radial-gradient(ellipse,rgba(0,0,0,.32),rgba(0,0,0,.14) 48%,transparent 72%);
@@ -1314,7 +1322,13 @@ body.card-interaction-suppressed .card:active{
   transform:translateY(-2px);
   filter:brightness(1.035);
 }
-.modal-sprite-group .modal-sprite{width:128px;height:128px;filter:drop-shadow(0 8px 10px rgba(0,0,0,.26))}
+.modal-sprite-group .modal-sprite{
+  width:128px;height:128px;
+  filter:
+    drop-shadow(0 1px 0 rgba(255,255,255,.32))
+    drop-shadow(0 10px 12px rgba(0,0,0,.58))
+    drop-shadow(0 0 10px rgba(0,0,0,.22));
+}
 .sprite-slot-label{
   position:relative;min-width:0;font-family:var(--font-logo);font-size:9px;font-weight:400;letter-spacing:2.4px;
   text-transform:uppercase;color:var(--region-accent,#7dd3fc);text-align:center;white-space:nowrap;
@@ -5526,7 +5540,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=243', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=244', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
