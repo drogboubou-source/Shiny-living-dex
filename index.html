@@ -1255,14 +1255,17 @@ body.card-interaction-suppressed .card:active{
   content:'';position:absolute;inset:0;z-index:0;
   pointer-events:none;border-radius:inherit;
   background:
-    linear-gradient(180deg,rgba(8,10,24,.42),rgba(8,10,24,.78)),
+    radial-gradient(circle at 50% 58%,rgba(56,189,248,.3),rgba(14,116,144,.14) 34%,transparent 62%),
+    linear-gradient(180deg,rgba(8,18,34,.38),rgba(7,22,39,.78)),
     var(--type-backdrop-image, none);
-  background-size:cover;background-position:center;
-  opacity:0;filter:brightness(.62) saturate(.78) contrast(.92);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.08),inset 0 -24px 32px rgba(0,0,0,.42);
+  background-repeat:no-repeat,no-repeat,no-repeat;
+  background-size:100% 100%,100% 100%,clamp(132px,32vw,210px) clamp(132px,32vw,210px);
+  background-position:center,center,center 58%;
+  opacity:0;filter:saturate(1.06) contrast(.96);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08),inset 0 -24px 32px rgba(0,0,0,.34);
   transition:opacity .22s ease;
 }
-.modal-hero.type-backdrop::after{opacity:.58}
+.modal-hero.type-backdrop::after{opacity:.78}
 .modal-hero > div{min-width:0}
 .modal-type-motifs{
   display:none;position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden;
@@ -2585,9 +2588,7 @@ function applyModalTypeGlow(types) {
 function getTypeBackdropImage(types) {
   const list = types || [];
   for (const type of list) {
-    if (type === 'fighting') return 'url("./combat.png")';
-    if (type === 'steel') return 'url("./acier.png")';
-    if (type === 'dark' || type === 'ice') return 'url("./t%C3%A9n%C3%A8bres%20glace.png")';
+    if (type === 'water') return 'url("./eau.png")';
   }
   return '';
 }
@@ -5534,7 +5535,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=249', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=250', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
