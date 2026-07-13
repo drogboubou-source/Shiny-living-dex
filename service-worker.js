@@ -1,5 +1,5 @@
-const CACHE_NAME = 'shiny-living-dex-v261';
-const RUNTIME_CACHE = 'shiny-living-dex-runtime-v261';
+const CACHE_NAME = 'shiny-living-dex-v263';
+const RUNTIME_CACHE = 'shiny-living-dex-runtime-v263';
 const OFFLINE_URL = './index.html';
 const APP_SHELL = [
   './',
@@ -26,7 +26,24 @@ const APP_SHELL = [
   './sprites/sol.png',
   './sprites/spectre.png',
   './sprites/vol.png',
-  './sprites/types/eau.png',
+  './sprites/types/Miniature_Type_Acier_LPZA.png',
+  './sprites/types/Miniature_Type_Combat_LPZA.png',
+  './sprites/types/Miniature_Type_Dragon_LPZA.png',
+  './sprites/types/Miniature_Type_Eau_LPZA.png',
+  './sprites/types/Miniature_Type_Feu_LPZA.png',
+  './sprites/types/Miniature_Type_F%C3%A9e_LPZA.png',
+  './sprites/types/Miniature_Type_Glace_LPZA.png',
+  './sprites/types/Miniature_Type_Insecte_LPZA.png',
+  './sprites/types/Miniature_Type_Normal_LPZA.png',
+  './sprites/types/Miniature_Type_Plante_LPZA.png',
+  './sprites/types/Miniature_Type_Poison_LPZA.png',
+  './sprites/types/Miniature_Type_Psy_LPZA.png',
+  './sprites/types/Miniature_Type_Roche_LPZA.png',
+  './sprites/types/Miniature_Type_Sol_LPZA.png',
+  './sprites/types/Miniature_Type_Spectre_LPZA.png',
+  './sprites/types/Miniature_Type_T%C3%A9n%C3%A8bres_LPZA.png',
+  './sprites/types/Miniature_Type_Vol_LPZA.png',
+  './sprites/types/Miniature_Type_%C3%89lectrik_LPZA.png',
   './sprites/pok%C3%A9ball.png',
   './sprites/super%20ball.png',
   './sprites/hyper%20ball.png',
