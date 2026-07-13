@@ -679,13 +679,15 @@ body.card-interaction-suppressed .card:active{
   .modal-hero{display:block;padding:18px 44px 16px}
   .modal-details,.modal-num,.modal-name,.modal-region{text-align:center}
   .modal-sprite{width:54px;height:54px}
-  .modal-sprite-group{grid-template-columns:repeat(2,minmax(0,1fr));gap:48px;width:100%;max-width:360px}
-  .modal-sprite-group::before,.modal-sprite-group::after{top:50px;width:36px;height:9px}
+  .modal-sprite-group{grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;width:100%;max-width:308px;padding-bottom:28px}
+  .modal-sprite-group::before,.modal-sprite-group::after{top:106px;width:36px;height:9px}
+  .modal-sprite-group.dual-type-separator::before{top:102px}
+  .modal-sprite-group.dual-type-separator::after{top:114px}
   .sprite-slot{gap:6px;padding:0}
   .sprite-pedestal{width:118px;height:100px}
   .modal-sprite-group .modal-sprite{width:94px;height:94px}
   .sprite-row{width:100%}
-  .sprite-ball-badge{width:30px;height:30px}
+  .sprite-ball-badge{width:30px;height:30px;top:34px}
   .shiny-star-badge{width:23px;height:23px;top:-6px;right:-3px}
   .sprite-slot-label{font-size:7px}
   .modal-name{font-size:18px;line-height:1.16}
@@ -1280,22 +1282,22 @@ body.card-interaction-suppressed .card:active{
   image-rendering:auto;
 }
 .modal-sprite-group{
-  display:grid;grid-template-columns:repeat(2,minmax(126px,1fr));align-items:end;justify-content:center;gap:82px;width:min(100%,482px);margin-bottom:1px;
+  display:grid;grid-template-columns:repeat(2,minmax(126px,1fr));align-items:start;justify-content:center;gap:38px;width:min(100%,382px);margin-bottom:1px;padding-bottom:36px;
   position:relative;z-index:2;
 }
 .modal-sprite-group::before,
 .modal-sprite-group::after{
-  content:'';position:absolute;left:50%;top:60px;width:44px;height:11px;transform:translateX(-50%);
+  content:'';position:absolute;left:50%;top:132px;width:44px;height:11px;transform:translateX(-50%);
   background:var(--modal-type-separator-a,url('./sprites/types/Miniature_Type_Normal_LPZA.png')) center / contain no-repeat;
   filter:drop-shadow(0 3px 6px rgba(0,0,0,.38));
   opacity:.95;
   pointer-events:none;
 }
 .modal-sprite-group::after{display:none;background:var(--modal-type-separator-b,url('./sprites/types/Miniature_Type_Normal_LPZA.png')) center / contain no-repeat}
-.modal-sprite-group.dual-type-separator::before{top:54px;transform:translateX(-50%)}
-.modal-sprite-group.dual-type-separator::after{display:block;top:68px;transform:translateX(-50%)}
+.modal-sprite-group.dual-type-separator::before{top:128px;transform:translateX(-50%)}
+.modal-sprite-group.dual-type-separator::after{display:block;top:142px;transform:translateX(-50%)}
 .sprite-slot{
-  display:flex;flex-direction:column;align-items:center;gap:8px;min-width:0;padding:0;
+  display:flex;flex-direction:column;align-items:center;gap:8px;min-width:0;padding:0;position:relative;
 }
 .sprite-row{display:grid;place-items:center;width:100%;min-width:0}
 .sprite-pedestal{
@@ -1336,7 +1338,7 @@ body.card-interaction-suppressed .card:active{
   filter:drop-shadow(0 2px 5px rgba(0,0,0,.5));
 }
 .sprite-ball-badge{
-  visibility:hidden;
+  visibility:hidden;position:absolute;top:46px;z-index:3;pointer-events:none;
   width:34px;height:34px;object-fit:contain;
   filter:
     drop-shadow(0 1px 0 rgba(255,255,255,.5))
@@ -1345,6 +1347,8 @@ body.card-interaction-suppressed .card:active{
     saturate(1.2)
     contrast(1.1);
 }
+.sprite-slot:not(.sprite-slot-shiny) .sprite-ball-badge{left:4px}
+.sprite-slot.sprite-slot-shiny .sprite-ball-badge{right:4px}
 .sprite-ball-badge.visible{visibility:visible}
 .modal-nav-arrow{
   position:absolute;top:28px;width:42px;min-height:52px;border-radius:13px;flex:0 0 auto;
@@ -2025,15 +2029,15 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   .modal-hero{display:block;padding:18px 44px 16px}
   .modal-details,.modal-num,.modal-name,.modal-region{text-align:center}
   .modal-sprite{width:54px;height:54px}
-  .modal-sprite-group{grid-template-columns:repeat(2,minmax(0,1fr));gap:48px;width:100%;max-width:360px}
-  .modal-sprite-group::before,.modal-sprite-group::after{top:50px;width:36px;height:9px}
-  .modal-sprite-group.dual-type-separator::before{top:46px}
-  .modal-sprite-group.dual-type-separator::after{top:58px}
+  .modal-sprite-group{grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;width:100%;max-width:308px;padding-bottom:28px}
+  .modal-sprite-group::before,.modal-sprite-group::after{top:106px;width:36px;height:9px}
+  .modal-sprite-group.dual-type-separator::before{top:102px}
+  .modal-sprite-group.dual-type-separator::after{top:114px}
   .sprite-slot{gap:6px;padding:0}
   .sprite-pedestal{width:118px;height:100px}
   .modal-sprite-group .modal-sprite{width:94px;height:94px}
   .sprite-row{width:100%}
-  .sprite-ball-badge{width:30px;height:30px}
+  .sprite-ball-badge{width:30px;height:30px;top:34px}
   .shiny-star-badge{width:23px;height:23px;top:-6px;right:-3px}
   .sprite-slot-label{font-size:7px}
   .modal-name{font-size:18px;line-height:1.16}
@@ -5597,7 +5601,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=265', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=266', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
