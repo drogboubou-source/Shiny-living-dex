@@ -1271,11 +1271,11 @@ body.card-interaction-suppressed .card:active{
     clamp(28px,6.4vw,44px) clamp(28px,6.4vw,44px);
   background-position:
     center,
-    calc(50% + 1px) 58%,
-    calc(50% - 1px) 58%,
-    50% calc(58% + 1px),
-    50% calc(58% - 1px),
-    center 58%;
+    calc(50% + 1px) 66%,
+    calc(50% - 1px) 66%,
+    50% calc(66% + 1px),
+    50% calc(66% - 1px),
+    center 66%;
   opacity:0;filter:none;
   box-shadow:inset 0 1px 0 rgba(255,255,255,.08),inset 0 -24px 32px rgba(0,0,0,.34);
   transition:opacity .22s ease;
@@ -1300,10 +1300,7 @@ body.card-interaction-suppressed .card:active{
   position:relative;z-index:2;
 }
 .modal-sprite-group::before{
-  content:'';position:absolute;left:50%;top:28px;bottom:54px;width:1px;transform:translateX(-50%);
-  background:linear-gradient(180deg,transparent,rgba(255,255,255,.14) 18%,rgba(255,255,255,.22) 50%,rgba(255,255,255,.14) 82%,transparent);
-  opacity:.72;
-  pointer-events:none;
+  content:none;
 }
 .sprite-slot{
   display:flex;flex-direction:column;align-items:center;gap:8px;min-width:0;padding:0;
@@ -5550,7 +5547,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=254', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=255', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
