@@ -680,10 +680,10 @@ body.card-interaction-suppressed .card:active{
   .modal-details,.modal-num,.modal-name,.modal-region{text-align:center}
   .modal-sprite{width:54px;height:54px}
   .modal-details{gap:10px}
-  .modal-sprite-group{grid-template-columns:repeat(2,118px);gap:16px;width:min(100%,252px);max-width:252px;padding-bottom:48px}
-  .modal-sprite-group::before,.modal-sprite-group::after{top:112px;width:38px;height:9px}
-  .modal-sprite-group.dual-type-separator::before{top:106px}
-  .modal-sprite-group.dual-type-separator::after{top:118px}
+  .modal-sprite-group{grid-template-columns:repeat(2,118px);gap:16px;width:min(100%,252px);max-width:252px;padding-bottom:64px}
+  .modal-sprite-group::before,.modal-sprite-group::after{top:105px;width:30px;height:30px}
+  .modal-sprite-group.dual-type-separator::before{top:96px}
+  .modal-sprite-group.dual-type-separator::after{top:128px}
   .sprite-slot{gap:6px;padding:0}
   .sprite-pedestal{width:118px;height:100px}
   .modal-sprite-group .modal-sprite{width:94px;height:94px}
@@ -1284,20 +1284,20 @@ body.card-interaction-suppressed .card:active{
   image-rendering:auto;
 }
 .modal-sprite-group{
-  display:grid;grid-template-columns:repeat(2,150px);align-items:start;justify-content:center;gap:20px;width:min(100%,320px);margin-bottom:1px;padding-bottom:56px;
+  display:grid;grid-template-columns:repeat(2,150px);align-items:start;justify-content:center;gap:20px;width:min(100%,320px);margin-bottom:1px;padding-bottom:72px;
   position:relative;z-index:2;
 }
 .modal-sprite-group::before,
 .modal-sprite-group::after{
-  content:'';position:absolute;left:50%;top:138px;width:48px;height:12px;transform:translateX(-50%);
-  background:var(--modal-type-separator-a,url('./sprites/types/Miniature_Type_Normal_LPZA.png')) center / contain no-repeat;
+  content:'';position:absolute;left:50%;top:130px;width:34px;height:34px;transform:translateX(-50%);
+  background:var(--modal-type-separator-a,url('./sprites/types/Icône_Type_Normal_LPZA.png')) center / contain no-repeat;
   filter:drop-shadow(0 3px 6px rgba(0,0,0,.38));
   opacity:.95;
   pointer-events:none;
 }
-.modal-sprite-group::after{display:none;background:var(--modal-type-separator-b,url('./sprites/types/Miniature_Type_Normal_LPZA.png')) center / contain no-repeat}
-.modal-sprite-group.dual-type-separator::before{top:132px;transform:translateX(-50%)}
-.modal-sprite-group.dual-type-separator::after{display:block;top:146px;transform:translateX(-50%)}
+.modal-sprite-group::after{display:none;background:var(--modal-type-separator-b,url('./sprites/types/Icône_Type_Normal_LPZA.png')) center / contain no-repeat}
+.modal-sprite-group.dual-type-separator::before{top:116px;transform:translateX(-50%)}
+.modal-sprite-group.dual-type-separator::after{display:block;top:152px;transform:translateX(-50%)}
 .sprite-slot{
   display:flex;flex-direction:column;align-items:center;gap:8px;min-width:0;padding:0;position:relative;
 }
@@ -2027,10 +2027,10 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   .modal-details,.modal-num,.modal-name,.modal-region{text-align:center}
   .modal-sprite{width:54px;height:54px}
   .modal-details{gap:10px}
-  .modal-sprite-group{grid-template-columns:repeat(2,118px);gap:16px;width:min(100%,252px);max-width:252px;padding-bottom:48px}
-  .modal-sprite-group::before,.modal-sprite-group::after{top:112px;width:38px;height:9px}
-  .modal-sprite-group.dual-type-separator::before{top:106px}
-  .modal-sprite-group.dual-type-separator::after{top:118px}
+  .modal-sprite-group{grid-template-columns:repeat(2,118px);gap:16px;width:min(100%,252px);max-width:252px;padding-bottom:64px}
+  .modal-sprite-group::before,.modal-sprite-group::after{top:105px;width:30px;height:30px}
+  .modal-sprite-group.dual-type-separator::before{top:96px}
+  .modal-sprite-group.dual-type-separator::after{top:128px}
   .sprite-slot{gap:6px;padding:0}
   .sprite-pedestal{width:118px;height:100px}
   .modal-sprite-group .modal-sprite{width:94px;height:94px}
@@ -2523,6 +2523,27 @@ const TYPE_ICON_SRC = {
   fairy: './sprites/types/Miniature_Type_F%C3%A9e_LPZA.png'
 };
 
+const MODAL_TYPE_ICON_SRC = {
+  normal: './sprites/types/Icône_Type_Normal_LPZA.png',
+  fire: './sprites/types/Icône_Type_Feu_LPZA.png',
+  water: './sprites/types/Icône_Type_Eau_LPZA.png',
+  electric: './sprites/types/Icône_Type_%C3%89lectrik_LPZA.png',
+  grass: './sprites/types/Icône_Type_Plante_LPZA.png',
+  ice: './sprites/types/Icône_Type_Glace_LPZA.png',
+  fighting: './sprites/types/Icône_Type_Combat_LPZA.png',
+  poison: './sprites/types/Icône_Type_Poison_LPZA.png',
+  ground: './sprites/types/Icône_Type_Sol_LPZA.png',
+  flying: './sprites/types/Icône_Type_Vol_LPZA.png',
+  psychic: './sprites/types/Icône_Type_Psy_LPZA.png',
+  bug: './sprites/types/Icône_Type_Insecte_LPZA.png',
+  rock: './sprites/types/Icône_Type_Roche_LPZA.png',
+  ghost: './sprites/types/Icône_Type_Spectre_LPZA.png',
+  dragon: './sprites/types/Icône_Type_Dragon_LPZA.png',
+  dark: './sprites/types/Icône_Type_T%C3%A9n%C3%A8bres_LPZA.png',
+  steel: './sprites/types/Icône_Type_Acier_LPZA.png',
+  fairy: './sprites/types/Icône_Type_F%C3%A9e_LPZA.png'
+};
+
 Object.entries(TYPE_ICON_SRC).forEach(([type, src]) => {
   if (TYPE_META[type]) TYPE_META[type].src = src;
 });
@@ -2663,6 +2684,10 @@ function renderTypeBadges(id) {
 
 function getTypeIconSrc(type) {
   return TYPE_ICON_SRC[type] || TYPE_ICON_SRC.normal;
+}
+
+function getModalTypeIconSrc(type) {
+  return MODAL_TYPE_ICON_SRC[type] || MODAL_TYPE_ICON_SRC.normal;
 }
 
 function renderTypeBadgesForTypes(types) {
@@ -5356,8 +5381,8 @@ function openModal(id, options = {}) {
   if (modalSpriteGroup) {
     const separatorTypes = displayTypes.length ? displayTypes : ['normal'];
     modalSpriteGroup.style.setProperty('--region-accent', r.color);
-    modalSpriteGroup.style.setProperty('--modal-type-separator-a', `url("${getTypeIconSrc(separatorTypes[0])}")`);
-    modalSpriteGroup.style.setProperty('--modal-type-separator-b', `url("${getTypeIconSrc(separatorTypes[1] || separatorTypes[0])}")`);
+    modalSpriteGroup.style.setProperty('--modal-type-separator-a', `url("${getModalTypeIconSrc(separatorTypes[0])}")`);
+    modalSpriteGroup.style.setProperty('--modal-type-separator-b', `url("${getModalTypeIconSrc(separatorTypes[1] || separatorTypes[0])}")`);
     modalSpriteGroup.classList.toggle('dual-type-separator', separatorTypes.length > 1);
   }
   const modalHero = document.querySelector('.modal-hero');
@@ -5599,7 +5624,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=271', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=272', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
