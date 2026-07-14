@@ -680,7 +680,7 @@ body.card-interaction-suppressed .card:active{
   .modal-details,.modal-num,.modal-name,.modal-region{text-align:center}
   .modal-sprite{width:54px;height:54px}
   .modal-details{gap:10px}
-  .modal-sprite-group{--modal-type-top:99px;--modal-type-icon-size:30px;--modal-type-stack-gap:32px;--modal-type-ball-offset:16px;grid-template-columns:repeat(2,118px);gap:16px;width:min(100%,252px);max-width:252px;padding-bottom:78px}
+  .modal-sprite-group{--modal-type-top:78px;--modal-ball-top:101px;--modal-type-icon-size:30px;--modal-type-stack-gap:32px;--modal-sprite-gap:16px;grid-template-columns:repeat(2,118px);gap:var(--modal-sprite-gap);width:min(100%,252px);max-width:252px;padding-bottom:78px}
   .modal-sprite-group::before,.modal-sprite-group::after{width:var(--modal-type-icon-size);height:var(--modal-type-icon-size)}
   .sprite-slot{gap:6px;padding:0}
   .sprite-pedestal{width:118px;height:100px}
@@ -1282,11 +1282,12 @@ body.card-interaction-suppressed .card:active{
   image-rendering:auto;
 }
 .modal-sprite-group{
-  --modal-type-top:118px;
+  --modal-type-top:92px;
+  --modal-ball-top:128px;
   --modal-type-icon-size:34px;
   --modal-type-stack-gap:36px;
-  --modal-type-ball-offset:18px;
-  display:grid;grid-template-columns:repeat(2,150px);align-items:start;justify-content:center;gap:20px;width:min(100%,320px);margin-bottom:1px;padding-bottom:88px;
+  --modal-sprite-gap:20px;
+  display:grid;grid-template-columns:repeat(2,150px);align-items:start;justify-content:center;gap:var(--modal-sprite-gap);width:min(100%,320px);margin-bottom:1px;padding-bottom:88px;
   position:relative;z-index:2;
 }
 .modal-sprite-group::before,
@@ -1336,7 +1337,7 @@ body.card-interaction-suppressed .card:active{
 .sprite-slot-label::after{left:calc(100% + 7px);background:linear-gradient(90deg,color-mix(in srgb,var(--region-accent,#7dd3fc) 65%,transparent),transparent)}
 
 .sprite-ball-badge{
-  visibility:hidden;position:absolute;top:var(--modal-type-top);z-index:3;pointer-events:none;
+  visibility:hidden;position:absolute;top:var(--modal-ball-top);z-index:3;pointer-events:none;
   width:34px;height:34px;object-fit:contain;
   filter:
     drop-shadow(0 1px 0 rgba(255,255,255,.5))
@@ -1347,7 +1348,6 @@ body.card-interaction-suppressed .card:active{
 }
 .sprite-slot:not(.sprite-slot-shiny) .sprite-ball-badge,
 .sprite-slot.sprite-slot-shiny .sprite-ball-badge{left:50%;right:auto;transform:translateX(-50%)}
-.modal-sprite-group.dual-type-separator .sprite-ball-badge{top:calc(var(--modal-type-top) + var(--modal-type-ball-offset))}
 .sprite-ball-badge.visible{visibility:visible}
 .modal-name-actions{display:none}
 .modal-nav-arrow{
@@ -2030,7 +2030,7 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   .modal-details,.modal-num,.modal-name,.modal-region{text-align:center}
   .modal-sprite{width:54px;height:54px}
   .modal-details{gap:10px}
-  .modal-sprite-group{--modal-type-top:99px;--modal-type-icon-size:30px;--modal-type-stack-gap:32px;--modal-type-ball-offset:16px;grid-template-columns:repeat(2,118px);gap:16px;width:min(100%,252px);max-width:252px;padding-bottom:78px}
+  .modal-sprite-group{--modal-type-top:78px;--modal-ball-top:101px;--modal-type-icon-size:30px;--modal-type-stack-gap:32px;--modal-sprite-gap:16px;grid-template-columns:repeat(2,118px);gap:var(--modal-sprite-gap);width:min(100%,252px);max-width:252px;padding-bottom:78px}
   .modal-sprite-group::before,.modal-sprite-group::after{width:var(--modal-type-icon-size);height:var(--modal-type-icon-size)}
   .sprite-slot{gap:6px;padding:0}
   .sprite-pedestal{width:118px;height:100px}
@@ -2738,20 +2738,17 @@ function getSpriteAlphaBounds(img) {
 function getModalSpriteVisibleMeasure(img, group) {
   if (!img || !group || !img.complete || !img.naturalWidth) return null;
   const imgRect = img.getBoundingClientRect();
-  const groupRect = group.getBoundingClientRect();
   if (!imgRect.width || !imgRect.height) return null;
 
   const bounds = getSpriteAlphaBounds(img);
   if (!bounds) {
     return {
-      bottom: imgRect.bottom - groupRect.top,
-      height: imgRect.height
+      width: imgRect.width
     };
   }
 
   return {
-    bottom: (imgRect.top - groupRect.top) + (((bounds.bottom + 1) / bounds.height) * imgRect.height),
-    height: ((bounds.bottom - bounds.top + 1) / bounds.height) * imgRect.height
+    width: ((bounds.right - bounds.left + 1) / bounds.width) * imgRect.width
   };
 }
 
@@ -2765,13 +2762,11 @@ function updateModalTypeIconLayout() {
   if (!measures.length) return;
 
   const isCompact = window.matchMedia('(max-width:720px)').matches;
-  const visibleBottom = Math.max(...measures.map(measure => measure.bottom));
-  const visibleHeight = Math.max(...measures.map(measure => measure.height));
-  const fullness = clampNumber((visibleHeight - (isCompact ? 42 : 58)) / (isCompact ? 44 : 62), 0, 1);
-  const gap = (isCompact ? 2 : 3) + fullness * (isCompact ? 8 : 11);
-  const top = clampNumber(visibleBottom + gap, isCompact ? 88 : 104, isCompact ? 116 : 140);
+  const visibleWidth = Math.max(...measures.map(measure => measure.width));
+  const fullness = clampNumber((visibleWidth - (isCompact ? 42 : 58)) / (isCompact ? 44 : 62), 0, 1);
+  const gap = clampNumber((isCompact ? 10 : 14) + fullness * (isCompact ? 20 : 28), isCompact ? 10 : 14, isCompact ? 30 : 42);
 
-  group.style.setProperty('--modal-type-top', `${Math.round(top)}px`);
+  group.style.setProperty('--modal-sprite-gap', `${Math.round(gap)}px`);
 }
 
 function scheduleModalTypeIconLayout() {
@@ -5717,7 +5712,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=273', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=274', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
