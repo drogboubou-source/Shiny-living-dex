@@ -680,7 +680,7 @@ body.card-interaction-suppressed .card:active{
   .modal-details,.modal-num,.modal-name,.modal-region{text-align:center}
   .modal-sprite{width:54px;height:54px}
   .modal-details{gap:10px}
-  .modal-sprite-group{--modal-type-top:35px;--modal-type-stack-top:19px;--modal-ball-top:101px;--modal-type-icon-size:30px;--modal-type-stack-gap:32px;grid-template-columns:repeat(2,118px);gap:42px;width:min(100%,278px);max-width:278px;padding-bottom:78px}
+  .modal-sprite-group{--modal-type-top:35px;--modal-type-stack-top:19px;--modal-ball-top:101px;--modal-type-icon-size:30px;--modal-type-stack-gap:32px;grid-template-columns:repeat(2,118px);gap:42px;width:min(100%,278px);max-width:278px;padding-bottom:38px}
   .modal-sprite-group::before,.modal-sprite-group::after{width:var(--modal-type-icon-size);height:var(--modal-type-icon-size)}
   .sprite-slot{gap:6px;padding:0}
   .sprite-pedestal{width:118px;height:100px}
@@ -1287,7 +1287,7 @@ body.card-interaction-suppressed .card:active{
   --modal-ball-top:128px;
   --modal-type-icon-size:34px;
   --modal-type-stack-gap:36px;
-  display:grid;grid-template-columns:repeat(2,150px);align-items:start;justify-content:center;gap:56px;width:min(100%,356px);margin-bottom:1px;padding-bottom:88px;
+  display:grid;grid-template-columns:repeat(2,150px);align-items:start;justify-content:center;gap:56px;width:min(100%,356px);margin-bottom:1px;padding-bottom:44px;
   position:relative;z-index:2;
 }
 .modal-sprite-group::before,
@@ -2030,7 +2030,7 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   .modal-details,.modal-num,.modal-name,.modal-region{text-align:center}
   .modal-sprite{width:54px;height:54px}
   .modal-details{gap:10px}
-  .modal-sprite-group{--modal-type-top:35px;--modal-type-stack-top:19px;--modal-ball-top:101px;--modal-type-icon-size:30px;--modal-type-stack-gap:32px;grid-template-columns:repeat(2,118px);gap:42px;width:min(100%,278px);max-width:278px;padding-bottom:78px}
+  .modal-sprite-group{--modal-type-top:35px;--modal-type-stack-top:19px;--modal-ball-top:101px;--modal-type-icon-size:30px;--modal-type-stack-gap:32px;grid-template-columns:repeat(2,118px);gap:42px;width:min(100%,278px);max-width:278px;padding-bottom:38px}
   .modal-sprite-group::before,.modal-sprite-group::after{width:var(--modal-type-icon-size);height:var(--modal-type-icon-size)}
   .sprite-slot{gap:6px;padding:0}
   .sprite-pedestal{width:118px;height:100px}
@@ -5625,7 +5625,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=275', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=276', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
