@@ -702,6 +702,12 @@ body.card-interaction-suppressed .card:active{
   .modal-nav-thumb{width:24px;height:24px}
   .ball-preview{width:56px;height:56px}
   .ball-preview img{width:42px;height:42px}
+  .capture-control.dual-control{gap:6px}
+  .capture-control.dual-control > .ball-preview{width:40px;height:40px}
+  .capture-control.dual-control > .ball-preview img{width:28px;height:28px}
+  .gender-subcontrol .gender-preview{width:32px;height:32px}
+  .gender-subcontrol .gender-preview img{width:20px;height:20px}
+  .gender-subcontrol .capture-kicker{display:none}
   .modal-footer{position:sticky;bottom:-1.35rem;margin-left:-1.35rem;margin-right:-1.35rem;padding:1rem 1.35rem;background:linear-gradient(180deg,rgba(24,24,31,.72),var(--surface) 34%);border-top:1px solid var(--border)}
   .btn-save{flex:1}
 }
@@ -1194,6 +1200,7 @@ body.card-interaction-suppressed .card:active{
 }
 @media (prefers-reduced-motion:reduce){
   .card.caught .holo::before,.card.perfect .holo::before{animation:none;opacity:0}
+  .modal-hunt-percent.hunt-active{animation:none}
 }
 
 
@@ -1373,6 +1380,24 @@ body.card-interaction-suppressed .card:active{
   border:1px solid rgba(255,225,156,.28);
   box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 6px 14px rgba(0,0,0,.32);
   pointer-events:none;
+  transition:color .2s ease,border-color .2s ease,background .2s ease;
+}
+.modal-hunt-percent.hunt-active{
+  color:#ffcf6b;
+  border-color:rgba(255,180,64,.55);
+  animation:huntPercentPulse 1.7s ease-in-out infinite;
+}
+.modal-hunt-percent.hunt-complete{
+  color:#9df0b4;
+  border-color:rgba(126,214,96,.55);
+  background:linear-gradient(180deg,rgba(126,214,96,.16),rgba(126,214,96,.03)),rgba(24,24,31,.92);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 0 12px rgba(126,214,96,.4);
+  animation:none;
+}
+.modal-hunt-percent.hunt-complete::before{content:'✦ ';font-size:10px;opacity:.85}
+@keyframes huntPercentPulse{
+  0%,100%{box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 0 0 rgba(255,180,64,0);}
+  50%{box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 0 11px rgba(255,180,64,.6);}
 }
 .modal-name-actions{display:none}
 .modal-nav-arrow{
@@ -1992,6 +2017,23 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
 }
 .capture-control select:focus{outline:none}
 button.capture-control{width:100%;text-align:left;font:inherit;color:inherit;cursor:pointer}
+.capture-control.dual-control{display:flex;align-items:center;gap:8px}
+.capture-control.dual-control .capture-select-stack{min-width:0;flex:1 1 auto}
+.capture-control.dual-control > .ball-preview{width:46px;height:46px;border-radius:11px;flex:0 0 auto}
+.capture-control.dual-control > .ball-preview img{width:34px;height:34px}
+.capture-control.dual-control > .ball-preview::after{bottom:6px;width:22px;height:5px}
+.dual-divider{width:1px;align-self:stretch;margin:1px 0;background:rgba(255,255,255,.12);flex:0 0 auto}
+.gender-subcontrol{
+  display:flex;align-items:center;gap:8px;min-width:0;flex:0 1 auto;
+  background:none;border:0;padding:0;margin:0;cursor:pointer;font:inherit;color:inherit;text-align:left;
+  border-radius:10px;transition:background .14s ease;
+}
+.gender-subcontrol:hover{background:rgba(255,255,255,.04)}
+.gender-subcontrol .gender-preview{width:38px;height:38px;border-radius:10px;flex:0 0 auto}
+.gender-subcontrol .gender-preview::after{bottom:5px;width:18px;height:4px}
+.gender-subcontrol .gender-preview img{width:24px;height:24px}
+.gender-subcontrol .capture-select-stack{flex:0 1 auto}
+.gender-subcontrol .capture-value{white-space:nowrap}
 .capture-value{display:block;font-family:var(--font);font-size:13px;font-weight:800;color:var(--text);padding:4px 0}
 .gender-preview img{display:block;width:34px;height:34px;object-fit:contain;position:relative;z-index:1;filter:drop-shadow(0 3px 5px rgba(0,0,0,.35))}
 .iv-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;min-width:0}
@@ -2080,6 +2122,12 @@ button.capture-control{width:100%;text-align:left;font:inherit;color:inherit;cur
   .capture-details{grid-template-columns:1fr}
   .ball-preview{width:56px;height:56px}
   .ball-preview img{width:42px;height:42px}
+  .capture-control.dual-control{gap:6px}
+  .capture-control.dual-control > .ball-preview{width:40px;height:40px}
+  .capture-control.dual-control > .ball-preview img{width:28px;height:28px}
+  .gender-subcontrol .gender-preview{width:32px;height:32px}
+  .gender-subcontrol .gender-preview img{width:20px;height:20px}
+  .gender-subcontrol .capture-kicker{display:none}
   .hunt-panel{padding:.8rem}
   .hunt-counter-surface{grid-template-columns:minmax(0,1fr) 108px;gap:7px}
   .hunt-count-card{padding:10px 8px}
@@ -2425,42 +2473,40 @@ button.capture-control{width:100%;text-align:left;font:inherit;color:inherit;cur
         </div>
       </div>
       <div class="capture-details single capture-final">
-        <div class="capture-control">
+        <div class="capture-control dual-control">
           <span class="ball-preview"><img id="fPokeballPreview" src="" alt=""></span>
           <span class="capture-select-stack">
             <span class="capture-kicker">Pokéball (normal)</span>
             <select id="fPokeball" onchange="updatePokeballPreview()"></select>
           </span>
+          <span class="dual-divider" aria-hidden="true"></span>
+          <button type="button" class="gender-subcontrol" id="fGenderNormalControl" onclick="cycleGender('Normal')">
+            <span class="ball-preview gender-preview" id="fGenderNormalPreview"></span>
+            <span class="capture-select-stack">
+              <span class="capture-kicker">Genre</span>
+              <span class="capture-value" id="fGenderNormalLabel">—</span>
+            </span>
+          </button>
+          <input type="hidden" id="fGenderNormal" value="">
         </div>
       </div>
       <div class="capture-details single capture-final">
-        <div class="capture-control">
+        <div class="capture-control dual-control">
           <span class="ball-preview"><img id="fPokeballShinyPreview" src="" alt=""></span>
           <span class="capture-select-stack">
             <span class="capture-kicker">Pokéball (shiny)</span>
             <select id="fPokeballShiny" onchange="updatePokeballShinyPreview()"></select>
           </span>
+          <span class="dual-divider" aria-hidden="true"></span>
+          <button type="button" class="gender-subcontrol" id="fGenderShinyControl" onclick="cycleGender('Shiny')">
+            <span class="ball-preview gender-preview" id="fGenderShinyPreview"></span>
+            <span class="capture-select-stack">
+              <span class="capture-kicker">Genre</span>
+              <span class="capture-value" id="fGenderShinyLabel">—</span>
+            </span>
+          </button>
+          <input type="hidden" id="fGenderShiny" value="">
         </div>
-      </div>
-      <div class="capture-details single capture-final">
-        <button type="button" class="capture-control gender-control" id="fGenderNormalControl" onclick="cycleGender('Normal')">
-          <span class="ball-preview gender-preview" id="fGenderNormalPreview"></span>
-          <span class="capture-select-stack">
-            <span class="capture-kicker">Genre (normal)</span>
-            <span class="capture-value" id="fGenderNormalLabel">Non renseigné</span>
-          </span>
-        </button>
-        <input type="hidden" id="fGenderNormal" value="">
-      </div>
-      <div class="capture-details single capture-final">
-        <button type="button" class="capture-control gender-control" id="fGenderShinyControl" onclick="cycleGender('Shiny')">
-          <span class="ball-preview gender-preview" id="fGenderShinyPreview"></span>
-          <span class="capture-select-stack">
-            <span class="capture-kicker">Genre (shiny)</span>
-            <span class="capture-value" id="fGenderShinyLabel">Non renseigné</span>
-          </span>
-        </button>
-        <input type="hidden" id="fGenderShiny" value="">
       </div>
     </div>
     </div>
@@ -4019,7 +4065,7 @@ function updateModalBallIcon(elementId, ballId) {
    GENRE & VERSIONS POSSÉDÉES
 ══════════════════════════════════════ */
 const GENDER_CYCLE = ['', 'male', 'female'];
-const GENDER_LABELS = { '': 'Non renseigné', male: 'Masculin', female: 'Féminin' };
+const GENDER_LABELS = { '': '—', male: 'Masculin', female: 'Féminin' };
 
 function getGenderIconSrc(gender) {
   if (gender === 'male') {
@@ -5338,7 +5384,15 @@ function renderHuntCounter(animate = false, kind = 'flash') {
   if (oddsChance) oddsChance.textContent = chanceText;
   if (oddsFill) oddsFill.style.width = oddsMeta.odds ? `${Math.min(100, chance)}%` : '0%';
   const huntPercentBadge = document.getElementById('mHuntPercent');
-  if (huntPercentBadge) huntPercentBadge.textContent = chanceText;
+  if (huntPercentBadge) {
+    huntPercentBadge.textContent = chanceText;
+    const inProgress = !p.caught && (!!p.hunting || count > 0);
+    huntPercentBadge.classList.toggle('hunt-active', inProgress);
+    huntPercentBadge.classList.toggle('hunt-complete', !!p.caught);
+    huntPercentBadge.title = p.caught
+      ? 'Shiny capturé'
+      : (inProgress ? 'Chasse en cours' : 'Chances cumulées du compteur');
+  }
 }
 
 function adjustHuntCounter(delta) {
