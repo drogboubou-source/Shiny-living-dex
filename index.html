@@ -1409,7 +1409,7 @@ body.card-interaction-suppressed .card:active{
   border:1px solid rgba(255,255,255,.1);
   box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 8px 18px rgba(0,0,0,.22);
 }
-.caught-toggle,.shiny-perfect{
+.caught-toggle,.shiny-perfect,.normal-toggle{
   display:flex;position:relative;align-items:center;justify-content:center;gap:9px;flex:1 1 0;min-width:0;
   padding:13px 12px;cursor:pointer;
   background:transparent;border:none;border-radius:0;
@@ -1417,14 +1417,15 @@ body.card-interaction-suppressed .card:active{
   box-shadow:none;
 }
 .shiny-perfect{flex-direction:row-reverse}
-.caught-toggle:hover,.shiny-perfect:hover{background:rgba(255,255,255,.03)}
-.caught-toggle:active,.shiny-perfect:active{transform:scale(.985)}
-.caught-toggle::after,.shiny-perfect::after{
+.caught-toggle:hover,.shiny-perfect:hover,.normal-toggle:hover{background:rgba(255,255,255,.03)}
+.caught-toggle:active,.shiny-perfect:active,.normal-toggle:active{transform:scale(.985)}
+.caught-toggle::after,.shiny-perfect::after,.normal-toggle::after{
   content:'';position:absolute;left:22%;right:22%;bottom:0;height:2px;border-radius:2px 2px 0 0;
   opacity:0;transition:opacity .22s ease,background .22s ease;
 }
 .caught-toggle:has(input:checked)::after{opacity:1;background:linear-gradient(90deg,transparent,#c084fc,transparent)}
 .shiny-perfect:has(input:checked)::after{opacity:1;background:linear-gradient(90deg,transparent,#d4af37,transparent)}
+.normal-toggle:has(input:checked)::after{opacity:1;background:linear-gradient(90deg,transparent,#fbbf24,transparent)}
 .toggle-input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
 .toggle-label{font-size:13px;font-weight:900;letter-spacing:.2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:rgba(255,255,255,.58);transition:color .18s ease,text-shadow .18s ease}
 .toggle-check{
@@ -1454,6 +1455,16 @@ body.card-interaction-suppressed .card:active{
 .shiny-perfect:has(input:checked) .toggle-check{
   color:#231a02;border-color:#d4af37;background:#d4af37;
   box-shadow:0 0 12px rgba(212,175,55,.5),inset 0 1px 0 rgba(255,255,255,.5);
+  transform:scale(1.1);
+}
+.normal-toggle:has(input:checked){
+  background:linear-gradient(180deg,rgba(251,191,36,.15),rgba(251,191,36,.02));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.05),inset 0 0 0 1px rgba(251,191,36,.16);
+}
+.normal-toggle:has(input:checked) .toggle-label{color:#fbbf24;text-shadow:0 0 14px rgba(251,191,36,.4)}
+.normal-toggle:has(input:checked) .toggle-check{
+  color:#241a02;border-color:#fbbf24;background:#fbbf24;
+  box-shadow:0 0 12px rgba(251,191,36,.55),inset 0 1px 0 rgba(255,255,255,.5);
   transform:scale(1.1);
 }
 .form-toggles-divider{
@@ -1966,6 +1977,63 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   outline:none;box-shadow:none;cursor:pointer;
 }
 .capture-control select:focus{outline:none}
+
+.ball-gender-grid{display:grid;grid-template-columns:1fr 84px;gap:10px;align-items:stretch;min-width:0;margin-top:.7rem}
+.ball-gender-balls{display:flex;flex-direction:column;gap:9px;min-width:0}
+.ball-gender-balls .capture-details{margin-top:0}
+.ball-gender-gender{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;min-width:0;
+  padding:9px;border-radius:var(--r);
+  background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.018)),rgba(34,34,48,.95);
+  border:1px solid rgba(255,255,255,.14);box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 8px 18px rgba(0,0,0,.16);
+}
+.gender-picker{display:flex;flex-direction:column;gap:6px;width:100%}
+.gender-btn{
+  width:100%;aspect-ratio:1;display:grid;place-items:center;flex:none;
+  font-size:18px;font-weight:900;line-height:1;cursor:pointer;
+  border-radius:10px;border:1px solid rgba(255,255,255,.16);
+  background:rgba(255,255,255,.03);color:rgba(255,255,255,.5);
+  transition:border-color .16s ease,background .16s ease,color .16s ease,transform .16s cubic-bezier(.34,1.56,.64,1),box-shadow .16s ease;
+}
+.gender-btn:hover{transform:translateY(-1px);border-color:rgba(255,255,255,.3)}
+.gender-btn--male.selected{
+  color:#60a5fa;border-color:#60a5fa;background:rgba(96,165,250,.16);
+  box-shadow:0 0 12px rgba(96,165,250,.35),inset 0 1px 0 rgba(255,255,255,.08);
+}
+.gender-btn--female.selected{
+  color:#f472b6;border-color:#f472b6;background:rgba(244,114,182,.16);
+  box-shadow:0 0 12px rgba(244,114,182,.35),inset 0 1px 0 rgba(255,255,255,.08);
+}
+
+.type-gauge-grid{display:grid;grid-template-columns:1fr 84px;gap:10px;align-items:stretch;min-width:0;margin-top:9px}
+.type-gauge-types{
+  display:flex;flex-direction:column;gap:8px;justify-content:center;min-width:0;
+  padding:9px;border-radius:var(--r);
+  background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.018)),rgba(34,34,48,.95);
+  border:1px solid rgba(255,255,255,.14);box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 8px 18px rgba(0,0,0,.16);
+}
+.modal-type-row{display:flex;flex-wrap:wrap;gap:6px}
+.modal-type-row .type-pill{width:58px;height:15px}
+.modal-type-row .type-pill img{width:58px;max-height:15px}
+.type-gauge-gauge{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;min-width:0;
+  padding:9px;border-radius:var(--r);
+  background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.018)),rgba(34,34,48,.95);
+  border:1px solid rgba(255,255,255,.14);box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 8px 18px rgba(0,0,0,.16);
+}
+.progress-gauge{width:48px;height:48px;overflow:visible}
+.gauge-bg{fill:rgba(255,255,255,.04)}
+.gauge-half{fill:transparent;stroke:none;transition:fill .22s ease}
+.gauge-half--normal.filled{fill:#fbbf24}
+.gauge-half--shiny.filled{fill:#c084fc}
+.gauge-divider{stroke:rgba(0,0,0,.3);stroke-width:1}
+.gauge-ring{fill:none;stroke:rgba(255,255,255,.18);stroke-width:1.6}
+@media (max-width:520px){
+  .ball-gender-grid,.type-gauge-grid{grid-template-columns:1fr 68px}
+  .modal-type-row .type-pill{width:44px;height:12px}
+  .modal-type-row .type-pill img{width:44px;max-height:12px}
+  .progress-gauge{width:38px;height:38px}
+}
 .iv-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;min-width:0}
 .iv-item{
   display:flex;align-items:center;justify-content:center;gap:6px;
@@ -2255,8 +2323,14 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
 
     <div class="modal-form-fields" id="modalFormFields">
     <div class="form-toggles-row">
+      <label class="normal-toggle">
+        <input type="checkbox" id="fCaughtNormal" class="toggle-input" onchange="updateProgressGaugeFromForm()">
+        <span class="toggle-check" aria-hidden="true">✓</span>
+        <span class="toggle-label">Normal</span>
+      </label>
+      <div class="form-toggles-divider" aria-hidden="true"><span aria-hidden="true">·</span></div>
       <label class="caught-toggle">
-        <input type="checkbox" id="fCaught" class="toggle-input">
+        <input type="checkbox" id="fCaught" class="toggle-input" onchange="updateProgressGaugeFromForm()">
         <span class="toggle-check" aria-hidden="true">✓</span>
         <span class="toggle-label">Capturé</span>
       </label>
@@ -2388,22 +2462,50 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
           </span>
         </div>
       </div>
-      <div class="capture-details single capture-final">
-        <div class="capture-control">
-          <span class="ball-preview"><img id="fPokeballPreview" src="" alt=""></span>
-          <span class="capture-select-stack">
-            <span class="capture-kicker">Pokéball (normal)</span>
-            <select id="fPokeball" onchange="updatePokeballPreview()"></select>
-          </span>
+      <div class="ball-gender-grid">
+        <div class="ball-gender-balls">
+          <div class="capture-details single capture-final">
+            <div class="capture-control">
+              <span class="ball-preview"><img id="fPokeballPreview" src="" alt=""></span>
+              <span class="capture-select-stack">
+                <span class="capture-kicker">Pokéball (normal)</span>
+                <select id="fPokeball" onchange="updatePokeballPreview()"></select>
+              </span>
+            </div>
+          </div>
+          <div class="capture-details single capture-final">
+            <div class="capture-control">
+              <span class="ball-preview"><img id="fPokeballShinyPreview" src="" alt=""></span>
+              <span class="capture-select-stack">
+                <span class="capture-kicker">Pokéball (shiny)</span>
+                <select id="fPokeballShiny" onchange="updatePokeballShinyPreview()"></select>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="ball-gender-gender">
+          <span class="capture-kicker">Genre</span>
+          <div class="gender-picker" id="fGenderPicker">
+            <button type="button" class="gender-btn gender-btn--male" data-gender="male" onclick="selectPokemonGender('male')" aria-pressed="false" aria-label="Mâle">♂</button>
+            <button type="button" class="gender-btn gender-btn--female" data-gender="female" onclick="selectPokemonGender('female')" aria-pressed="false" aria-label="Femelle">♀</button>
+          </div>
         </div>
       </div>
-      <div class="capture-details single capture-final">
-        <div class="capture-control">
-          <span class="ball-preview"><img id="fPokeballShinyPreview" src="" alt=""></span>
-          <span class="capture-select-stack">
-            <span class="capture-kicker">Pokéball (shiny)</span>
-            <select id="fPokeballShiny" onchange="updatePokeballShinyPreview()"></select>
-          </span>
+
+      <div class="type-gauge-grid">
+        <div class="type-gauge-types">
+          <span class="capture-kicker">Types</span>
+          <div class="type-row modal-type-row" id="mModalTypeBadges"></div>
+        </div>
+        <div class="type-gauge-gauge">
+          <span class="capture-kicker">Progression</span>
+          <svg viewBox="0 0 40 40" class="progress-gauge" aria-hidden="true">
+            <circle class="gauge-bg" cx="20" cy="20" r="16.5"></circle>
+            <path id="gaugeHalfNormal" class="gauge-half gauge-half--normal" d="M20 3.5 A16.5 16.5 0 0 0 20 36.5 Z"></path>
+            <path id="gaugeHalfShiny" class="gauge-half gauge-half--shiny" d="M20 3.5 A16.5 16.5 0 0 1 20 36.5 Z"></path>
+            <line x1="20" y1="3.5" x2="20" y2="36.5" class="gauge-divider"></line>
+            <circle class="gauge-ring" cx="20" cy="20" r="16.5"></circle>
+          </svg>
         </div>
       </div>
     </div>
@@ -3946,6 +4048,38 @@ function updateModalBallIcon(elementId, ballId) {
   icon.alt = ballId ? 'Pokéball utilisée' : '';
 }
 
+let currentGenderSelection = '';
+
+function renderGenderPicker(selected) {
+  currentGenderSelection = selected || '';
+  document.querySelectorAll('#fGenderPicker .gender-btn').forEach(btn => {
+    const isSelected = btn.dataset.gender === currentGenderSelection;
+    btn.classList.toggle('selected', isSelected);
+    btn.setAttribute('aria-pressed', String(isSelected));
+  });
+}
+
+function selectPokemonGender(value) {
+  renderGenderPicker(currentGenderSelection === value ? '' : value);
+}
+
+function getSelectedGenderValue() {
+  return currentGenderSelection;
+}
+
+function updateProgressGauge(hasNormal, hasShiny) {
+  const halfNormal = document.getElementById('gaugeHalfNormal');
+  const halfShiny  = document.getElementById('gaugeHalfShiny');
+  if (halfNormal) halfNormal.classList.toggle('filled', !!hasNormal);
+  if (halfShiny)  halfShiny.classList.toggle('filled', !!hasShiny);
+}
+
+function updateProgressGaugeFromForm() {
+  const hasNormal = document.getElementById('fCaughtNormal')?.checked || false;
+  const hasShiny  = document.getElementById('fCaught')?.checked || false;
+  updateProgressGauge(hasNormal, hasShiny);
+}
+
 function setFormTargetState(enabled) {
   const button = document.getElementById('fTargetBtn');
   if (!button) return;
@@ -5005,7 +5139,7 @@ function saveProgressEntry(id, entry) {
   if (isReadOnlyShare()) return;
   const hasIvs = entry.ivs && Object.values(entry.ivs).some(Boolean);
   const hasCustomHuntMethod = entry.huntMethod && entry.huntMethod !== 'masuda';
-  const isEmpty = !entry.caught && !entry.perfect && !entry.target && !entry.hunting && !entry.huntCount && !hasCustomHuntMethod && !entry.nickname && !entry.encounters && !entry.eggs && !entry.date && !entry.context && !entry.youtube && !entry.pokeball && !entry.pokeballShiny && !entry.nature && !entry.game && !entry.location && !hasIvs;
+  const isEmpty = !entry.caught && !entry.caughtNormal && !entry.gender && !entry.perfect && !entry.target && !entry.hunting && !entry.huntCount && !hasCustomHuntMethod && !entry.nickname && !entry.encounters && !entry.eggs && !entry.date && !entry.context && !entry.youtube && !entry.pokeball && !entry.pokeballShiny && !entry.nature && !entry.game && !entry.location && !hasIvs;
   if (isEmpty) delete progress[id];
   else progress[id] = entry;
   localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
@@ -5401,7 +5535,12 @@ function openModal(id, options = {}) {
   updatePokeballShinyPreview();
 
   document.getElementById('fCaught').checked   = !!p.caught;
+  document.getElementById('fCaughtNormal').checked = !!p.caughtNormal;
   document.getElementById('fPerfect').checked  = !!p.perfect;
+  renderGenderPicker(p.gender || '');
+  const typeBadgesContainer = document.getElementById('mModalTypeBadges');
+  if (typeBadgesContainer) typeBadgesContainer.innerHTML = renderTypeBadgesForTypes(displayTypes);
+  updateProgressGauge(!!p.caughtNormal, !!p.caught);
   setFormTargetState(!!p.target);
   document.getElementById('fNickname').value   = p.nickname   || '';
   document.getElementById('fEncounters').value = p.encounters || '';
@@ -5459,6 +5598,8 @@ function saveModal() {
   const existing = progress[currentPokemon] || {};
   const entry = {
     caught:    document.getElementById('fCaught').checked,
+    caughtNormal: document.getElementById('fCaughtNormal').checked,
+    gender:    getSelectedGenderValue(),
     perfect:   document.getElementById('fPerfect').checked,
     target:    getFormTargetState(),
     hunting:   !document.getElementById('fCaught').checked && !!existing.hunting,
