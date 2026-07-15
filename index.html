@@ -688,12 +688,10 @@ body.card-interaction-suppressed .card:active{
   .sprite-pedestal{width:118px;height:100px}
   .modal-sprite-group .modal-sprite{width:94px;height:94px}
   .sprite-row{width:100%}
-  .sprite-ball-badge{width:30px;height:30px}
-  .sprite-slot:not(.sprite-slot-shiny) .sprite-ball-badge,
-  .sprite-slot.sprite-slot-shiny .sprite-ball-badge{left:50%;right:auto;transform:translateX(-50%)}
-  .modal-sprite-group{--modal-gender-offset:24px}
-  .sprite-gender-badge{width:20px;height:20px}
-  .modal-version-gauge{width:26px;height:26px}
+  .sprite-badge-row{gap:5px}
+  .sprite-ball-badge{width:28px;height:28px}
+  .sprite-gender-badge{width:19px;height:19px}
+  .modal-version-gauge{width:32px;height:32px}
   .sprite-slot-label{font-size:7px}
   .modal-name{font-size:18px;line-height:1.16}
   .modal-name-row{justify-content:center}
@@ -1341,8 +1339,14 @@ body.card-interaction-suppressed .card:active{
 .sprite-slot-label::before{right:calc(100% + 7px)}
 .sprite-slot-label::after{left:calc(100% + 7px);background:linear-gradient(90deg,color-mix(in srgb,var(--region-accent,#7dd3fc) 65%,transparent),transparent)}
 
+.sprite-badge-row{
+  position:absolute;left:50%;top:var(--modal-ball-top);z-index:3;
+  transform:translateX(-50%);
+  display:flex;align-items:center;justify-content:center;gap:7px;
+  pointer-events:none;
+}
 .sprite-ball-badge{
-  visibility:hidden;position:absolute;top:var(--modal-ball-top);z-index:3;pointer-events:none;
+  display:none;flex:0 0 auto;
   width:34px;height:34px;object-fit:contain;
   filter:
     drop-shadow(0 1px 0 rgba(255,255,255,.5))
@@ -1351,26 +1355,31 @@ body.card-interaction-suppressed .card:active{
     saturate(1.2)
     contrast(1.1);
 }
-.sprite-slot:not(.sprite-slot-shiny) .sprite-ball-badge,
-.sprite-slot.sprite-slot-shiny .sprite-ball-badge{left:50%;right:auto;transform:translateX(-50%)}
-.sprite-ball-badge.visible{visibility:visible}
+.sprite-ball-badge.visible{display:block}
 .sprite-gender-badge{
-  visibility:hidden;position:absolute;top:var(--modal-ball-top);z-index:3;pointer-events:none;
-  width:26px;height:26px;object-fit:contain;
-  filter:drop-shadow(0 2px 4px rgba(0,0,0,.4));
+  display:none;flex:0 0 auto;
+  width:24px;height:24px;object-fit:contain;
+  filter:drop-shadow(0 2px 4px rgba(0,0,0,.45));
 }
-.sprite-slot:not(.sprite-slot-shiny) .sprite-gender-badge{left:50%;transform:translateX(calc(-50% + var(--modal-gender-offset,34px)))}
-.sprite-slot.sprite-slot-shiny .sprite-gender-badge{left:50%;transform:translateX(calc(-50% - var(--modal-gender-offset,34px)))}
-.sprite-gender-badge.visible{visibility:visible}
+.sprite-gender-badge.visible{display:block}
 .modal-version-gauge{
   position:absolute;left:50%;top:var(--modal-ball-top);z-index:4;pointer-events:auto;cursor:pointer;
-  width:34px;height:34px;transform:translate(-50%,0);
-  filter:drop-shadow(0 3px 6px rgba(0,0,0,.4));
-  transition:transform .14s ease;
+  width:38px;height:38px;transform:translate(-50%,-2px);
+  transition:transform .16s cubic-bezier(.34,1.56,.64,1);
 }
-.modal-version-gauge:hover{transform:translate(-50%,-1px)}
-.modal-version-gauge circle.gauge-track{fill:rgba(20,20,28,.85);stroke:rgba(255,255,255,.28);stroke-width:1.4}
-.modal-version-gauge path{transition:fill .15s ease}
+.modal-version-gauge:hover{transform:translate(-50%,-4px)}
+.modal-version-gauge:active{transform:translate(-50%,-1px)}
+.modal-version-gauge circle.gauge-backdrop{
+  fill:rgba(22,22,30,.82);
+  stroke:rgba(255,255,255,.09);stroke-width:1;
+}
+.modal-version-gauge .gauge-arc{
+  fill:none;stroke-width:5;stroke-linecap:round;
+  transition:stroke .18s ease,filter .18s ease,opacity .18s ease;
+}
+.modal-version-gauge .gauge-arc.dim{stroke:rgba(255,255,255,.14);opacity:1}
+.modal-version-gauge .gauge-arc.gauge-normal.on{stroke:#e7ecf3;filter:drop-shadow(0 0 3px rgba(231,236,243,.75))}
+.modal-version-gauge .gauge-arc.gauge-shiny.on{stroke:#f4cd52;filter:drop-shadow(0 0 4px rgba(244,205,82,.85))}
 .modal-name-actions{display:none}
 .modal-nav-arrow{
   position:absolute;top:28px;width:42px;min-height:52px;border-radius:13px;flex:0 0 auto;
@@ -1991,9 +2000,13 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
 button.capture-control{width:100%;text-align:left;font:inherit;color:inherit;cursor:pointer}
 .capture-value{display:block;font-family:var(--font);font-size:13px;font-weight:800;color:var(--text);padding:4px 0}
 .gender-preview img{display:block;width:34px;height:34px;object-fit:contain;position:relative;z-index:1;filter:drop-shadow(0 3px 5px rgba(0,0,0,.35))}
-.version-gauge-preview{width:38px;height:38px;position:relative;z-index:1}
-.version-gauge-preview circle.gauge-track{fill:rgba(20,20,28,.85);stroke:rgba(255,255,255,.28);stroke-width:1.4}
-.version-gauge-preview path{transition:fill .15s ease}
+.gauge-preview-holder{overflow:visible}
+.version-gauge-preview{width:38px;height:38px;position:relative;z-index:1;overflow:visible}
+.version-gauge-preview circle.gauge-backdrop{fill:rgba(22,22,30,.82);stroke:rgba(255,255,255,.09);stroke-width:1}
+.version-gauge-preview .gauge-arc{fill:none;stroke-width:5;stroke-linecap:round;transition:stroke .18s ease,filter .18s ease}
+.version-gauge-preview .gauge-arc.dim{stroke:rgba(255,255,255,.16)}
+.version-gauge-preview .gauge-arc.gauge-normal.on{stroke:#e7ecf3;filter:drop-shadow(0 0 3px rgba(231,236,243,.7))}
+.version-gauge-preview .gauge-arc.gauge-shiny.on{stroke:#f4cd52;filter:drop-shadow(0 0 4px rgba(244,205,82,.8))}
 .iv-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;min-width:0}
 .iv-item{
   display:flex;align-items:center;justify-content:center;gap:6px;
@@ -2064,12 +2077,10 @@ button.capture-control{width:100%;text-align:left;font:inherit;color:inherit;cur
   .sprite-pedestal{width:118px;height:100px}
   .modal-sprite-group .modal-sprite{width:94px;height:94px}
   .sprite-row{width:100%}
-  .sprite-ball-badge{width:30px;height:30px}
-  .sprite-slot:not(.sprite-slot-shiny) .sprite-ball-badge,
-  .sprite-slot.sprite-slot-shiny .sprite-ball-badge{left:50%;right:auto;transform:translateX(-50%)}
-  .modal-sprite-group{--modal-gender-offset:24px}
-  .sprite-gender-badge{width:20px;height:20px}
-  .modal-version-gauge{width:26px;height:26px}
+  .sprite-badge-row{gap:5px}
+  .sprite-ball-badge{width:28px;height:28px}
+  .sprite-gender-badge{width:19px;height:19px}
+  .modal-version-gauge{width:32px;height:32px}
   .sprite-slot-label{font-size:7px}
   .modal-name{font-size:18px;line-height:1.16}
   .modal-name-row{justify-content:center}
@@ -2268,20 +2279,24 @@ button.capture-control{width:100%;text-align:left;font:inherit;color:inherit;cur
             <div class="sprite-pedestal">
               <img class="modal-sprite" id="mSpriteNormal" src="" alt="" onerror="handlePokemonSpriteError(this, parseInt(this.dataset.pokeId), false)">
             </div>
-            <img class="sprite-ball-badge" id="mBallIconNormal" src="" alt="">
-            <img class="sprite-gender-badge" id="mGenderIconNormal" src="" alt="">
+            <div class="sprite-badge-row">
+              <img class="sprite-ball-badge" id="mBallIconNormal" src="" alt="">
+              <img class="sprite-gender-badge" id="mGenderIconNormal" src="" alt="">
+            </div>
           </div>
-          <svg class="modal-version-gauge" id="mVersionGauge" viewBox="0 0 34 34" role="button" tabindex="0" aria-label="Versions possédées" onclick="cycleVersions()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();cycleVersions();}">
-            <circle class="gauge-track" cx="17" cy="17" r="15"></circle>
-            <path id="mVersionGaugeLeft" d="M17,2 A15,15 0 0,0 17,32 Z" fill="transparent"></path>
-            <path id="mVersionGaugeRight" d="M17,2 A15,15 0 0,1 17,32 Z" fill="transparent"></path>
+          <svg class="modal-version-gauge" id="mVersionGauge" viewBox="0 0 36 36" role="button" tabindex="0" aria-label="Versions possédées" onclick="cycleVersions()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();cycleVersions();}">
+            <circle class="gauge-backdrop" cx="18" cy="18" r="14"></circle>
+            <path id="mVersionGaugeLeft" class="gauge-arc gauge-normal dim" d="M16.05,31.86 A14,14 0 0,1 16.05,4.14"></path>
+            <path id="mVersionGaugeRight" class="gauge-arc gauge-shiny dim" d="M19.95,4.14 A14,14 0 0,1 19.95,31.86"></path>
           </svg>
           <div class="sprite-slot sprite-slot-shiny">
             <div class="sprite-pedestal">
               <img class="modal-sprite" id="mSpriteShiny" src="" alt="" onerror="handlePokemonSpriteError(this, parseInt(this.dataset.pokeId), true)">
             </div>
-            <img class="sprite-gender-badge" id="mGenderIconShiny" src="" alt="">
-            <img class="sprite-ball-badge" id="mBallIconShiny" src="" alt="">
+            <div class="sprite-badge-row">
+              <img class="sprite-ball-badge" id="mBallIconShiny" src="" alt="">
+              <img class="sprite-gender-badge" id="mGenderIconShiny" src="" alt="">
+            </div>
           </div>
         </div>
       </div>
@@ -2445,22 +2460,32 @@ button.capture-control{width:100%;text-align:left;font:inherit;color:inherit;cur
         </div>
       </div>
       <div class="capture-details single capture-final">
-        <button type="button" class="capture-control gender-control" id="fGenderControl" onclick="cycleGender()">
-          <span class="ball-preview gender-preview" id="fGenderPreview"></span>
+        <button type="button" class="capture-control gender-control" id="fGenderNormalControl" onclick="cycleGender('Normal')">
+          <span class="ball-preview gender-preview" id="fGenderNormalPreview"></span>
           <span class="capture-select-stack">
-            <span class="capture-kicker">Genre</span>
-            <span class="capture-value" id="fGenderLabel">Non renseigné</span>
+            <span class="capture-kicker">Genre (normal)</span>
+            <span class="capture-value" id="fGenderNormalLabel">Non renseigné</span>
           </span>
         </button>
-        <input type="hidden" id="fGender" value="">
+        <input type="hidden" id="fGenderNormal" value="">
+      </div>
+      <div class="capture-details single capture-final">
+        <button type="button" class="capture-control gender-control" id="fGenderShinyControl" onclick="cycleGender('Shiny')">
+          <span class="ball-preview gender-preview" id="fGenderShinyPreview"></span>
+          <span class="capture-select-stack">
+            <span class="capture-kicker">Genre (shiny)</span>
+            <span class="capture-value" id="fGenderShinyLabel">Non renseigné</span>
+          </span>
+        </button>
+        <input type="hidden" id="fGenderShiny" value="">
       </div>
       <div class="capture-details single capture-final">
         <button type="button" class="capture-control versions-control" id="fVersionsControl" onclick="cycleVersions()">
-          <span class="ball-preview">
-            <svg class="version-gauge-preview" id="fVersionsGauge" viewBox="0 0 34 34">
-              <circle class="gauge-track" cx="17" cy="17" r="15"></circle>
-              <path id="fVersionsGaugeLeft" d="M17,2 A15,15 0 0,0 17,32 Z" fill="transparent"></path>
-              <path id="fVersionsGaugeRight" d="M17,2 A15,15 0 0,1 17,32 Z" fill="transparent"></path>
+          <span class="ball-preview gauge-preview-holder">
+            <svg class="version-gauge-preview" id="fVersionsGauge" viewBox="0 0 36 36">
+              <circle class="gauge-backdrop" cx="18" cy="18" r="14"></circle>
+              <path id="fVersionsGaugeLeft" class="gauge-arc gauge-normal dim" d="M16.05,31.86 A14,14 0 0,1 16.05,4.14"></path>
+              <path id="fVersionsGaugeRight" class="gauge-arc gauge-shiny dim" d="M19.95,4.14 A14,14 0 0,1 19.95,31.86"></path>
             </svg>
           </span>
           <span class="capture-select-stack">
@@ -3232,6 +3257,7 @@ function hasUserData(p) {
     p.pokeballShiny ||
     p.nature ||
     p.gender ||
+    p.genderShiny ||
     p.versions ||
     p.game ||
     p.location ||
@@ -3252,6 +3278,7 @@ function sanitizeProgress(data, options = {}) {
     entry.pokeballShiny = entry.pokeballShiny || '';
     entry.nature = entry.nature || '';
     entry.gender = GENDER_CYCLE.includes(entry.gender) ? entry.gender : '';
+    entry.genderShiny = GENDER_CYCLE.includes(entry.genderShiny) ? entry.genderShiny : '';
     entry.versions = VERSION_CYCLE.includes(entry.versions) ? entry.versions : '';
     // Ancienne logique: pokemon.json pouvait mettre caught=true juste parce que le nom etait rempli.
     if (!trustCaught && entry.caught && !hasUserData(entry)) delete entry.caught;
@@ -3366,6 +3393,7 @@ function mergePokedexIntoProgress() {
     if (!existing.pokeballShiny && p['Pokéball Shiny'])    existing.pokeballShiny = p['Pokéball Shiny'];
     if (!existing.nature     && p['Nature'])              existing.nature     = p['Nature'];
     if (!existing.gender     && p['Genre'])                existing.gender     = rowGender(p['Genre']);
+    if (!existing.genderShiny && p['Genre Shiny'])          existing.genderShiny = rowGender(p['Genre Shiny']);
     if (!existing.versions   && p['Versions possédées'])   existing.versions   = rowVersions(p['Versions possédées']);
     // Statuts: le nom seul ne signifie pas que le shiny est capturé.
     if (rowMeansCaught(p)) existing.caught = true;
@@ -4049,28 +4077,30 @@ function getGenderIconSrc(gender) {
   return '';
 }
 
-function cycleGender() {
+function cycleGender(kind) {
   if (isReadOnlyShare()) return;
-  const input = document.getElementById('fGender');
+  const input = document.getElementById(`fGender${kind}`);
   if (!input) return;
   const idx = GENDER_CYCLE.indexOf(input.value);
   input.value = GENDER_CYCLE[(idx + 1) % GENDER_CYCLE.length];
-  renderGenderUI();
+  renderGenderUI(kind);
 }
 
-function renderGenderUI() {
-  const gender = document.getElementById('fGender')?.value || '';
-  const src = getGenderIconSrc(gender);
-  const labelEl = document.getElementById('fGenderLabel');
-  if (labelEl) labelEl.textContent = GENDER_LABELS[gender] || GENDER_LABELS[''];
-  const preview = document.getElementById('fGenderPreview');
-  if (preview) preview.innerHTML = src ? `<img src="${src}" alt="">` : '';
-  ['mGenderIconNormal', 'mGenderIconShiny'].forEach(id => {
-    const icon = document.getElementById(id);
-    if (!icon) return;
-    icon.src = src;
-    icon.alt = gender ? `Genre ${GENDER_LABELS[gender]}` : '';
-    icon.classList.toggle('visible', !!src);
+function renderGenderUI(kind) {
+  const kinds = kind ? [kind] : ['Normal', 'Shiny'];
+  kinds.forEach(k => {
+    const gender = document.getElementById(`fGender${k}`)?.value || '';
+    const src = getGenderIconSrc(gender);
+    const labelEl = document.getElementById(`fGender${k}Label`);
+    if (labelEl) labelEl.textContent = GENDER_LABELS[gender] || GENDER_LABELS[''];
+    const preview = document.getElementById(`fGender${k}Preview`);
+    if (preview) preview.innerHTML = src ? `<img src="${src}" alt="">` : '';
+    const icon = document.getElementById(`mGenderIcon${k}`);
+    if (icon) {
+      icon.src = src;
+      icon.alt = gender ? `Genre ${GENDER_LABELS[gender]}` : '';
+      icon.classList.toggle('visible', !!src);
+    }
   });
 }
 
@@ -4087,15 +4117,17 @@ function renderVersionsUI() {
   const v = document.getElementById('fVersions')?.value || '';
   const labelEl = document.getElementById('fVersionsLabel');
   if (labelEl) labelEl.textContent = VERSION_LABELS[v] || VERSION_LABELS[''];
-  const leftFill = (v === 'normal' || v === 'both') ? '#cbd5e1' : 'transparent';
-  const rightFill = (v === 'shiny' || v === 'both') ? '#d4af37' : 'transparent';
+  const normalOn = v === 'normal' || v === 'both';
+  const shinyOn = v === 'shiny' || v === 'both';
   ['mVersionGaugeLeft', 'fVersionsGaugeLeft'].forEach(id => {
     const el = document.getElementById(id);
-    if (el) el.setAttribute('fill', leftFill);
+    if (el) el.classList.toggle('on', normalOn);
+    if (el) el.classList.toggle('dim', !normalOn);
   });
   ['mVersionGaugeRight', 'fVersionsGaugeRight'].forEach(id => {
     const el = document.getElementById(id);
-    if (el) el.setAttribute('fill', rightFill);
+    if (el) el.classList.toggle('on', shinyOn);
+    if (el) el.classList.toggle('dim', !shinyOn);
   });
   const gauge = document.getElementById('mVersionGauge');
   if (gauge) gauge.setAttribute('aria-label', `Versions possédées : ${VERSION_LABELS[v] || VERSION_LABELS['']}`);
@@ -5160,7 +5192,7 @@ function saveProgressEntry(id, entry) {
   if (isReadOnlyShare()) return;
   const hasIvs = entry.ivs && Object.values(entry.ivs).some(Boolean);
   const hasCustomHuntMethod = entry.huntMethod && entry.huntMethod !== 'masuda';
-  const isEmpty = !entry.caught && !entry.perfect && !entry.target && !entry.hunting && !entry.huntCount && !hasCustomHuntMethod && !entry.nickname && !entry.encounters && !entry.eggs && !entry.date && !entry.context && !entry.youtube && !entry.pokeball && !entry.pokeballShiny && !entry.nature && !entry.gender && !entry.versions && !entry.game && !entry.location && !hasIvs;
+  const isEmpty = !entry.caught && !entry.perfect && !entry.target && !entry.hunting && !entry.huntCount && !hasCustomHuntMethod && !entry.nickname && !entry.encounters && !entry.eggs && !entry.date && !entry.context && !entry.youtube && !entry.pokeball && !entry.pokeballShiny && !entry.nature && !entry.gender && !entry.genderShiny && !entry.versions && !entry.game && !entry.location && !hasIvs;
   if (isEmpty) delete progress[id];
   else progress[id] = entry;
   localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
@@ -5554,7 +5586,8 @@ function openModal(id, options = {}) {
   document.getElementById('fHuntMethod').value = normalizeHuntMethod(p.huntMethod);
   updatePokeballPreview();
   updatePokeballShinyPreview();
-  document.getElementById('fGender').value = GENDER_CYCLE.includes(p.gender) ? p.gender : '';
+  document.getElementById('fGenderNormal').value = GENDER_CYCLE.includes(p.gender) ? p.gender : '';
+  document.getElementById('fGenderShiny').value = GENDER_CYCLE.includes(p.genderShiny) ? p.genderShiny : '';
   document.getElementById('fVersions').value = VERSION_CYCLE.includes(p.versions) ? p.versions : '';
   renderGenderUI();
   renderVersionsUI();
@@ -5636,7 +5669,8 @@ function saveModal() {
     pokeball:  document.getElementById('fPokeball').value,
     pokeballShiny: document.getElementById('fPokeballShiny').value,
     nature:    document.getElementById('fNature').value,
-    gender:    document.getElementById('fGender').value,
+    gender:    document.getElementById('fGenderNormal').value,
+    genderShiny: document.getElementById('fGenderShiny').value,
     versions:  document.getElementById('fVersions').value,
     ivs: {
       hp:  document.getElementById('ivHP').checked,
@@ -5679,7 +5713,7 @@ function exportJSON() {
 
     // N'inclut que les entrées non vides
     const hasCustomHuntMethod = p.huntMethod && p.huntMethod !== 'masuda';
-    if (!p.caught && !p.perfect && !p.target && !p.hunting && !p.huntCount && !hasCustomHuntMethod && !p.nickname && !p.encounters && !p.eggs && !p.date && !p.context && !p.youtube && !p.pokeball && !p.pokeballShiny && !p.nature && !p.gender && !p.versions && !ivStr) continue;
+    if (!p.caught && !p.perfect && !p.target && !p.hunting && !p.huntCount && !hasCustomHuntMethod && !p.nickname && !p.encounters && !p.eggs && !p.date && !p.context && !p.youtube && !p.pokeball && !p.pokeballShiny && !p.nature && !p.gender && !p.genderShiny && !p.versions && !ivStr) continue;
 
     out.push({
       'N° pokédex':          id,
@@ -5701,6 +5735,7 @@ function exportJSON() {
       'Pokéball Shiny':      p.pokeballShiny || '',
       'Nature':              p.nature      || '',
       'Genre':               GENDER_LABELS[p.gender] && p.gender ? GENDER_LABELS[p.gender] : '',
+      'Genre Shiny':         GENDER_LABELS[p.genderShiny] && p.genderShiny ? GENDER_LABELS[p.genderShiny] : '',
       'Versions possédées':  VERSION_LABELS[p.versions] && p.versions ? VERSION_LABELS[p.versions] : '',
       'IV parfaits':         ivStr,
       'Parfait':             p.perfect ? '✓' : '',
