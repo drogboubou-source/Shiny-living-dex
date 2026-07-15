@@ -96,7 +96,9 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 body.readonly-share .edit-only{display:none!important}
 body.readonly-share .readonly-disabled{opacity:.62;pointer-events:none}
 body.readonly-share .modal-form-fields input,
-body.readonly-share .modal-form-fields select{pointer-events:none}
+body.readonly-share .modal-form-fields select,
+body.readonly-share .modal-form-fields button.capture-control,
+body.readonly-share .modal-version-gauge{pointer-events:none}
 
 /* ── TOPBAR ── */
 .topbar{
@@ -689,6 +691,9 @@ body.card-interaction-suppressed .card:active{
   .sprite-ball-badge{width:30px;height:30px}
   .sprite-slot:not(.sprite-slot-shiny) .sprite-ball-badge,
   .sprite-slot.sprite-slot-shiny .sprite-ball-badge{left:50%;right:auto;transform:translateX(-50%)}
+  .modal-sprite-group{--modal-gender-offset:24px}
+  .sprite-gender-badge{width:20px;height:20px}
+  .modal-version-gauge{width:26px;height:26px}
   .sprite-slot-label{font-size:7px}
   .modal-name{font-size:18px;line-height:1.16}
   .modal-name-row{justify-content:center}
@@ -1349,6 +1354,23 @@ body.card-interaction-suppressed .card:active{
 .sprite-slot:not(.sprite-slot-shiny) .sprite-ball-badge,
 .sprite-slot.sprite-slot-shiny .sprite-ball-badge{left:50%;right:auto;transform:translateX(-50%)}
 .sprite-ball-badge.visible{visibility:visible}
+.sprite-gender-badge{
+  visibility:hidden;position:absolute;top:var(--modal-ball-top);z-index:3;pointer-events:none;
+  width:26px;height:26px;object-fit:contain;
+  filter:drop-shadow(0 2px 4px rgba(0,0,0,.4));
+}
+.sprite-slot:not(.sprite-slot-shiny) .sprite-gender-badge{left:50%;transform:translateX(calc(-50% + var(--modal-gender-offset,34px)))}
+.sprite-slot.sprite-slot-shiny .sprite-gender-badge{left:50%;transform:translateX(calc(-50% - var(--modal-gender-offset,34px)))}
+.sprite-gender-badge.visible{visibility:visible}
+.modal-version-gauge{
+  position:absolute;left:50%;top:var(--modal-ball-top);z-index:4;pointer-events:auto;cursor:pointer;
+  width:34px;height:34px;transform:translate(-50%,0);
+  filter:drop-shadow(0 3px 6px rgba(0,0,0,.4));
+  transition:transform .14s ease;
+}
+.modal-version-gauge:hover{transform:translate(-50%,-1px)}
+.modal-version-gauge circle.gauge-track{fill:rgba(20,20,28,.85);stroke:rgba(255,255,255,.28);stroke-width:1.4}
+.modal-version-gauge path{transition:fill .15s ease}
 .modal-name-actions{display:none}
 .modal-nav-arrow{
   position:absolute;top:28px;width:42px;min-height:52px;border-radius:13px;flex:0 0 auto;
@@ -1409,7 +1431,7 @@ body.card-interaction-suppressed .card:active{
   border:1px solid rgba(255,255,255,.1);
   box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 8px 18px rgba(0,0,0,.22);
 }
-.caught-toggle,.shiny-perfect,.normal-toggle{
+.caught-toggle,.shiny-perfect{
   display:flex;position:relative;align-items:center;justify-content:center;gap:9px;flex:1 1 0;min-width:0;
   padding:13px 12px;cursor:pointer;
   background:transparent;border:none;border-radius:0;
@@ -1417,15 +1439,14 @@ body.card-interaction-suppressed .card:active{
   box-shadow:none;
 }
 .shiny-perfect{flex-direction:row-reverse}
-.caught-toggle:hover,.shiny-perfect:hover,.normal-toggle:hover{background:rgba(255,255,255,.03)}
-.caught-toggle:active,.shiny-perfect:active,.normal-toggle:active{transform:scale(.985)}
-.caught-toggle::after,.shiny-perfect::after,.normal-toggle::after{
+.caught-toggle:hover,.shiny-perfect:hover{background:rgba(255,255,255,.03)}
+.caught-toggle:active,.shiny-perfect:active{transform:scale(.985)}
+.caught-toggle::after,.shiny-perfect::after{
   content:'';position:absolute;left:22%;right:22%;bottom:0;height:2px;border-radius:2px 2px 0 0;
   opacity:0;transition:opacity .22s ease,background .22s ease;
 }
 .caught-toggle:has(input:checked)::after{opacity:1;background:linear-gradient(90deg,transparent,#c084fc,transparent)}
 .shiny-perfect:has(input:checked)::after{opacity:1;background:linear-gradient(90deg,transparent,#d4af37,transparent)}
-.normal-toggle:has(input:checked)::after{opacity:1;background:linear-gradient(90deg,transparent,#fbbf24,transparent)}
 .toggle-input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
 .toggle-label{font-size:13px;font-weight:900;letter-spacing:.2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:rgba(255,255,255,.58);transition:color .18s ease,text-shadow .18s ease}
 .toggle-check{
@@ -1455,16 +1476,6 @@ body.card-interaction-suppressed .card:active{
 .shiny-perfect:has(input:checked) .toggle-check{
   color:#231a02;border-color:#d4af37;background:#d4af37;
   box-shadow:0 0 12px rgba(212,175,55,.5),inset 0 1px 0 rgba(255,255,255,.5);
-  transform:scale(1.1);
-}
-.normal-toggle:has(input:checked){
-  background:linear-gradient(180deg,rgba(251,191,36,.15),rgba(251,191,36,.02));
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.05),inset 0 0 0 1px rgba(251,191,36,.16);
-}
-.normal-toggle:has(input:checked) .toggle-label{color:#fbbf24;text-shadow:0 0 14px rgba(251,191,36,.4)}
-.normal-toggle:has(input:checked) .toggle-check{
-  color:#241a02;border-color:#fbbf24;background:#fbbf24;
-  box-shadow:0 0 12px rgba(251,191,36,.55),inset 0 1px 0 rgba(255,255,255,.5);
   transform:scale(1.1);
 }
 .form-toggles-divider{
@@ -1977,63 +1988,12 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   outline:none;box-shadow:none;cursor:pointer;
 }
 .capture-control select:focus{outline:none}
-
-.ball-gender-grid{display:grid;grid-template-columns:1fr 84px;gap:10px;align-items:stretch;min-width:0;margin-top:.7rem}
-.ball-gender-balls{display:flex;flex-direction:column;gap:9px;min-width:0}
-.ball-gender-balls .capture-details{margin-top:0}
-.ball-gender-gender{
-  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;min-width:0;
-  padding:9px;border-radius:var(--r);
-  background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.018)),rgba(34,34,48,.95);
-  border:1px solid rgba(255,255,255,.14);box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 8px 18px rgba(0,0,0,.16);
-}
-.gender-picker{display:flex;flex-direction:column;gap:6px;width:100%}
-.gender-btn{
-  width:100%;aspect-ratio:1;display:grid;place-items:center;flex:none;
-  font-size:18px;font-weight:900;line-height:1;cursor:pointer;
-  border-radius:10px;border:1px solid rgba(255,255,255,.16);
-  background:rgba(255,255,255,.03);color:rgba(255,255,255,.5);
-  transition:border-color .16s ease,background .16s ease,color .16s ease,transform .16s cubic-bezier(.34,1.56,.64,1),box-shadow .16s ease;
-}
-.gender-btn:hover{transform:translateY(-1px);border-color:rgba(255,255,255,.3)}
-.gender-btn--male.selected{
-  color:#60a5fa;border-color:#60a5fa;background:rgba(96,165,250,.16);
-  box-shadow:0 0 12px rgba(96,165,250,.35),inset 0 1px 0 rgba(255,255,255,.08);
-}
-.gender-btn--female.selected{
-  color:#f472b6;border-color:#f472b6;background:rgba(244,114,182,.16);
-  box-shadow:0 0 12px rgba(244,114,182,.35),inset 0 1px 0 rgba(255,255,255,.08);
-}
-
-.type-gauge-grid{display:grid;grid-template-columns:1fr 84px;gap:10px;align-items:stretch;min-width:0;margin-top:9px}
-.type-gauge-types{
-  display:flex;flex-direction:column;gap:8px;justify-content:center;min-width:0;
-  padding:9px;border-radius:var(--r);
-  background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.018)),rgba(34,34,48,.95);
-  border:1px solid rgba(255,255,255,.14);box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 8px 18px rgba(0,0,0,.16);
-}
-.modal-type-row{display:flex;flex-wrap:wrap;gap:6px}
-.modal-type-row .type-pill{width:58px;height:15px}
-.modal-type-row .type-pill img{width:58px;max-height:15px}
-.type-gauge-gauge{
-  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;min-width:0;
-  padding:9px;border-radius:var(--r);
-  background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.018)),rgba(34,34,48,.95);
-  border:1px solid rgba(255,255,255,.14);box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 8px 18px rgba(0,0,0,.16);
-}
-.progress-gauge{width:48px;height:48px;overflow:visible}
-.gauge-bg{fill:rgba(255,255,255,.04)}
-.gauge-half{fill:transparent;stroke:none;transition:fill .22s ease}
-.gauge-half--normal.filled{fill:#fbbf24}
-.gauge-half--shiny.filled{fill:#c084fc}
-.gauge-divider{stroke:rgba(0,0,0,.3);stroke-width:1}
-.gauge-ring{fill:none;stroke:rgba(255,255,255,.18);stroke-width:1.6}
-@media (max-width:520px){
-  .ball-gender-grid,.type-gauge-grid{grid-template-columns:1fr 68px}
-  .modal-type-row .type-pill{width:44px;height:12px}
-  .modal-type-row .type-pill img{width:44px;max-height:12px}
-  .progress-gauge{width:38px;height:38px}
-}
+button.capture-control{width:100%;text-align:left;font:inherit;color:inherit;cursor:pointer}
+.capture-value{display:block;font-family:var(--font);font-size:13px;font-weight:800;color:var(--text);padding:4px 0}
+.gender-preview img{display:block;width:34px;height:34px;object-fit:contain;position:relative;z-index:1;filter:drop-shadow(0 3px 5px rgba(0,0,0,.35))}
+.version-gauge-preview{width:38px;height:38px;position:relative;z-index:1}
+.version-gauge-preview circle.gauge-track{fill:rgba(20,20,28,.85);stroke:rgba(255,255,255,.28);stroke-width:1.4}
+.version-gauge-preview path{transition:fill .15s ease}
 .iv-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;min-width:0}
 .iv-item{
   display:flex;align-items:center;justify-content:center;gap:6px;
@@ -2107,6 +2067,9 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   .sprite-ball-badge{width:30px;height:30px}
   .sprite-slot:not(.sprite-slot-shiny) .sprite-ball-badge,
   .sprite-slot.sprite-slot-shiny .sprite-ball-badge{left:50%;right:auto;transform:translateX(-50%)}
+  .modal-sprite-group{--modal-gender-offset:24px}
+  .sprite-gender-badge{width:20px;height:20px}
+  .modal-version-gauge{width:26px;height:26px}
   .sprite-slot-label{font-size:7px}
   .modal-name{font-size:18px;line-height:1.16}
   .modal-name-row{justify-content:center}
@@ -2306,11 +2269,18 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
               <img class="modal-sprite" id="mSpriteNormal" src="" alt="" onerror="handlePokemonSpriteError(this, parseInt(this.dataset.pokeId), false)">
             </div>
             <img class="sprite-ball-badge" id="mBallIconNormal" src="" alt="">
+            <img class="sprite-gender-badge" id="mGenderIconNormal" src="" alt="">
           </div>
+          <svg class="modal-version-gauge" id="mVersionGauge" viewBox="0 0 34 34" role="button" tabindex="0" aria-label="Versions possédées" onclick="cycleVersions()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();cycleVersions();}">
+            <circle class="gauge-track" cx="17" cy="17" r="15"></circle>
+            <path id="mVersionGaugeLeft" d="M17,2 A15,15 0 0,0 17,32 Z" fill="transparent"></path>
+            <path id="mVersionGaugeRight" d="M17,2 A15,15 0 0,1 17,32 Z" fill="transparent"></path>
+          </svg>
           <div class="sprite-slot sprite-slot-shiny">
             <div class="sprite-pedestal">
               <img class="modal-sprite" id="mSpriteShiny" src="" alt="" onerror="handlePokemonSpriteError(this, parseInt(this.dataset.pokeId), true)">
             </div>
+            <img class="sprite-gender-badge" id="mGenderIconShiny" src="" alt="">
             <img class="sprite-ball-badge" id="mBallIconShiny" src="" alt="">
           </div>
         </div>
@@ -2323,14 +2293,8 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
 
     <div class="modal-form-fields" id="modalFormFields">
     <div class="form-toggles-row">
-      <label class="normal-toggle">
-        <input type="checkbox" id="fCaughtNormal" class="toggle-input" onchange="updateProgressGaugeFromForm()">
-        <span class="toggle-check" aria-hidden="true">✓</span>
-        <span class="toggle-label">Normal</span>
-      </label>
-      <div class="form-toggles-divider" aria-hidden="true"><span aria-hidden="true">·</span></div>
       <label class="caught-toggle">
-        <input type="checkbox" id="fCaught" class="toggle-input" onchange="updateProgressGaugeFromForm()">
+        <input type="checkbox" id="fCaught" class="toggle-input">
         <span class="toggle-check" aria-hidden="true">✓</span>
         <span class="toggle-label">Capturé</span>
       </label>
@@ -2462,51 +2426,49 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
           </span>
         </div>
       </div>
-      <div class="ball-gender-grid">
-        <div class="ball-gender-balls">
-          <div class="capture-details single capture-final">
-            <div class="capture-control">
-              <span class="ball-preview"><img id="fPokeballPreview" src="" alt=""></span>
-              <span class="capture-select-stack">
-                <span class="capture-kicker">Pokéball (normal)</span>
-                <select id="fPokeball" onchange="updatePokeballPreview()"></select>
-              </span>
-            </div>
-          </div>
-          <div class="capture-details single capture-final">
-            <div class="capture-control">
-              <span class="ball-preview"><img id="fPokeballShinyPreview" src="" alt=""></span>
-              <span class="capture-select-stack">
-                <span class="capture-kicker">Pokéball (shiny)</span>
-                <select id="fPokeballShiny" onchange="updatePokeballShinyPreview()"></select>
-              </span>
-            </div>
-          </div>
-        </div>
-        <div class="ball-gender-gender">
-          <span class="capture-kicker">Genre</span>
-          <div class="gender-picker" id="fGenderPicker">
-            <button type="button" class="gender-btn gender-btn--male" data-gender="male" onclick="selectPokemonGender('male')" aria-pressed="false" aria-label="Mâle">♂</button>
-            <button type="button" class="gender-btn gender-btn--female" data-gender="female" onclick="selectPokemonGender('female')" aria-pressed="false" aria-label="Femelle">♀</button>
-          </div>
+      <div class="capture-details single capture-final">
+        <div class="capture-control">
+          <span class="ball-preview"><img id="fPokeballPreview" src="" alt=""></span>
+          <span class="capture-select-stack">
+            <span class="capture-kicker">Pokéball (normal)</span>
+            <select id="fPokeball" onchange="updatePokeballPreview()"></select>
+          </span>
         </div>
       </div>
-
-      <div class="type-gauge-grid">
-        <div class="type-gauge-types">
-          <span class="capture-kicker">Types</span>
-          <div class="type-row modal-type-row" id="mModalTypeBadges"></div>
+      <div class="capture-details single capture-final">
+        <div class="capture-control">
+          <span class="ball-preview"><img id="fPokeballShinyPreview" src="" alt=""></span>
+          <span class="capture-select-stack">
+            <span class="capture-kicker">Pokéball (shiny)</span>
+            <select id="fPokeballShiny" onchange="updatePokeballShinyPreview()"></select>
+          </span>
         </div>
-        <div class="type-gauge-gauge">
-          <span class="capture-kicker">Progression</span>
-          <svg viewBox="0 0 40 40" class="progress-gauge" aria-hidden="true">
-            <circle class="gauge-bg" cx="20" cy="20" r="16.5"></circle>
-            <path id="gaugeHalfNormal" class="gauge-half gauge-half--normal" d="M20 3.5 A16.5 16.5 0 0 0 20 36.5 Z"></path>
-            <path id="gaugeHalfShiny" class="gauge-half gauge-half--shiny" d="M20 3.5 A16.5 16.5 0 0 1 20 36.5 Z"></path>
-            <line x1="20" y1="3.5" x2="20" y2="36.5" class="gauge-divider"></line>
-            <circle class="gauge-ring" cx="20" cy="20" r="16.5"></circle>
-          </svg>
-        </div>
+      </div>
+      <div class="capture-details single capture-final">
+        <button type="button" class="capture-control gender-control" id="fGenderControl" onclick="cycleGender()">
+          <span class="ball-preview gender-preview" id="fGenderPreview"></span>
+          <span class="capture-select-stack">
+            <span class="capture-kicker">Genre</span>
+            <span class="capture-value" id="fGenderLabel">Non renseigné</span>
+          </span>
+        </button>
+        <input type="hidden" id="fGender" value="">
+      </div>
+      <div class="capture-details single capture-final">
+        <button type="button" class="capture-control versions-control" id="fVersionsControl" onclick="cycleVersions()">
+          <span class="ball-preview">
+            <svg class="version-gauge-preview" id="fVersionsGauge" viewBox="0 0 34 34">
+              <circle class="gauge-track" cx="17" cy="17" r="15"></circle>
+              <path id="fVersionsGaugeLeft" d="M17,2 A15,15 0 0,0 17,32 Z" fill="transparent"></path>
+              <path id="fVersionsGaugeRight" d="M17,2 A15,15 0 0,1 17,32 Z" fill="transparent"></path>
+            </svg>
+          </span>
+          <span class="capture-select-stack">
+            <span class="capture-kicker">Versions possédées</span>
+            <span class="capture-value" id="fVersionsLabel">Aucune</span>
+          </span>
+        </button>
+        <input type="hidden" id="fVersions" value="">
       </div>
     </div>
     </div>
@@ -3269,6 +3231,8 @@ function hasUserData(p) {
     p.pokeball ||
     p.pokeballShiny ||
     p.nature ||
+    p.gender ||
+    p.versions ||
     p.game ||
     p.location ||
     ivs.hp || ivs.atk || ivs.def || ivs.spa || ivs.spd || ivs.spe
@@ -3287,6 +3251,8 @@ function sanitizeProgress(data, options = {}) {
     entry.pokeball = entry.pokeball || '';
     entry.pokeballShiny = entry.pokeballShiny || '';
     entry.nature = entry.nature || '';
+    entry.gender = GENDER_CYCLE.includes(entry.gender) ? entry.gender : '';
+    entry.versions = VERSION_CYCLE.includes(entry.versions) ? entry.versions : '';
     // Ancienne logique: pokemon.json pouvait mettre caught=true juste parce que le nom etait rempli.
     if (!trustCaught && entry.caught && !hasUserData(entry)) delete entry.caught;
     const isEmpty = !entry.caught && !entry.target && !hasUserData(entry);
@@ -3330,6 +3296,21 @@ function rowHuntMethod(p) {
   const value = String(raw || '').trim().toLowerCase();
   if (value.includes('reset')) return 'resets';
   if (value.includes('masuda')) return 'masuda';
+  return '';
+}
+
+function rowGender(raw) {
+  const value = String(raw || '').trim().toLowerCase();
+  if (value.startsWith('m')) return 'male';
+  if (value.startsWith('f') || value.startsWith('é') || value.startsWith('e')) return 'female';
+  return '';
+}
+
+function rowVersions(raw) {
+  const value = String(raw || '').trim().toLowerCase();
+  if (value.includes('deux') || value.includes('both')) return 'both';
+  if (value.includes('shiny')) return 'shiny';
+  if (value.includes('normal')) return 'normal';
   return '';
 }
 
@@ -3384,6 +3365,8 @@ function mergePokedexIntoProgress() {
     if (!existing.pokeball   && p['Pokéball'])            existing.pokeball   = p['Pokéball'];
     if (!existing.pokeballShiny && p['Pokéball Shiny'])    existing.pokeballShiny = p['Pokéball Shiny'];
     if (!existing.nature     && p['Nature'])              existing.nature     = p['Nature'];
+    if (!existing.gender     && p['Genre'])                existing.gender     = rowGender(p['Genre']);
+    if (!existing.versions   && p['Versions possédées'])   existing.versions   = rowVersions(p['Versions possédées']);
     // Statuts: le nom seul ne signifie pas que le shiny est capturé.
     if (rowMeansCaught(p)) existing.caught = true;
     if (rowMeansTarget(p)) existing.target = true;
@@ -4048,36 +4031,74 @@ function updateModalBallIcon(elementId, ballId) {
   icon.alt = ballId ? 'Pokéball utilisée' : '';
 }
 
-let currentGenderSelection = '';
+/* ══════════════════════════════════════
+   GENRE & VERSIONS POSSÉDÉES
+══════════════════════════════════════ */
+const GENDER_CYCLE = ['', 'male', 'female'];
+const GENDER_LABELS = { '': 'Non renseigné', male: 'Masculin', female: 'Féminin' };
+const VERSION_CYCLE = ['', 'normal', 'shiny', 'both'];
+const VERSION_LABELS = { '': 'Aucune', normal: 'Normal possédé', shiny: 'Shiny possédé', both: 'Les deux possédés' };
 
-function renderGenderPicker(selected) {
-  currentGenderSelection = selected || '';
-  document.querySelectorAll('#fGenderPicker .gender-btn').forEach(btn => {
-    const isSelected = btn.dataset.gender === currentGenderSelection;
-    btn.classList.toggle('selected', isSelected);
-    btn.setAttribute('aria-pressed', String(isSelected));
+function getGenderIconSrc(gender) {
+  if (gender === 'male') {
+    return 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="#5ab4f7" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="14" r="6.2"/><path d="M14.4 9.6 20.5 3.5"/><path d="M14.5 3.5h6v6"/></g></svg>');
+  }
+  if (gender === 'female') {
+    return 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="#f472b6" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="9" r="6.2"/><path d="M12 15.2v6.3"/><path d="M8.4 19h7.2"/></g></svg>');
+  }
+  return '';
+}
+
+function cycleGender() {
+  if (isReadOnlyShare()) return;
+  const input = document.getElementById('fGender');
+  if (!input) return;
+  const idx = GENDER_CYCLE.indexOf(input.value);
+  input.value = GENDER_CYCLE[(idx + 1) % GENDER_CYCLE.length];
+  renderGenderUI();
+}
+
+function renderGenderUI() {
+  const gender = document.getElementById('fGender')?.value || '';
+  const src = getGenderIconSrc(gender);
+  const labelEl = document.getElementById('fGenderLabel');
+  if (labelEl) labelEl.textContent = GENDER_LABELS[gender] || GENDER_LABELS[''];
+  const preview = document.getElementById('fGenderPreview');
+  if (preview) preview.innerHTML = src ? `<img src="${src}" alt="">` : '';
+  ['mGenderIconNormal', 'mGenderIconShiny'].forEach(id => {
+    const icon = document.getElementById(id);
+    if (!icon) return;
+    icon.src = src;
+    icon.alt = gender ? `Genre ${GENDER_LABELS[gender]}` : '';
+    icon.classList.toggle('visible', !!src);
   });
 }
 
-function selectPokemonGender(value) {
-  renderGenderPicker(currentGenderSelection === value ? '' : value);
+function cycleVersions() {
+  if (isReadOnlyShare()) return;
+  const input = document.getElementById('fVersions');
+  if (!input) return;
+  const idx = VERSION_CYCLE.indexOf(input.value);
+  input.value = VERSION_CYCLE[(idx + 1) % VERSION_CYCLE.length];
+  renderVersionsUI();
 }
 
-function getSelectedGenderValue() {
-  return currentGenderSelection;
-}
-
-function updateProgressGauge(hasNormal, hasShiny) {
-  const halfNormal = document.getElementById('gaugeHalfNormal');
-  const halfShiny  = document.getElementById('gaugeHalfShiny');
-  if (halfNormal) halfNormal.classList.toggle('filled', !!hasNormal);
-  if (halfShiny)  halfShiny.classList.toggle('filled', !!hasShiny);
-}
-
-function updateProgressGaugeFromForm() {
-  const hasNormal = document.getElementById('fCaughtNormal')?.checked || false;
-  const hasShiny  = document.getElementById('fCaught')?.checked || false;
-  updateProgressGauge(hasNormal, hasShiny);
+function renderVersionsUI() {
+  const v = document.getElementById('fVersions')?.value || '';
+  const labelEl = document.getElementById('fVersionsLabel');
+  if (labelEl) labelEl.textContent = VERSION_LABELS[v] || VERSION_LABELS[''];
+  const leftFill = (v === 'normal' || v === 'both') ? '#cbd5e1' : 'transparent';
+  const rightFill = (v === 'shiny' || v === 'both') ? '#d4af37' : 'transparent';
+  ['mVersionGaugeLeft', 'fVersionsGaugeLeft'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.setAttribute('fill', leftFill);
+  });
+  ['mVersionGaugeRight', 'fVersionsGaugeRight'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.setAttribute('fill', rightFill);
+  });
+  const gauge = document.getElementById('mVersionGauge');
+  if (gauge) gauge.setAttribute('aria-label', `Versions possédées : ${VERSION_LABELS[v] || VERSION_LABELS['']}`);
 }
 
 function setFormTargetState(enabled) {
@@ -5139,7 +5160,7 @@ function saveProgressEntry(id, entry) {
   if (isReadOnlyShare()) return;
   const hasIvs = entry.ivs && Object.values(entry.ivs).some(Boolean);
   const hasCustomHuntMethod = entry.huntMethod && entry.huntMethod !== 'masuda';
-  const isEmpty = !entry.caught && !entry.caughtNormal && !entry.gender && !entry.perfect && !entry.target && !entry.hunting && !entry.huntCount && !hasCustomHuntMethod && !entry.nickname && !entry.encounters && !entry.eggs && !entry.date && !entry.context && !entry.youtube && !entry.pokeball && !entry.pokeballShiny && !entry.nature && !entry.game && !entry.location && !hasIvs;
+  const isEmpty = !entry.caught && !entry.perfect && !entry.target && !entry.hunting && !entry.huntCount && !hasCustomHuntMethod && !entry.nickname && !entry.encounters && !entry.eggs && !entry.date && !entry.context && !entry.youtube && !entry.pokeball && !entry.pokeballShiny && !entry.nature && !entry.gender && !entry.versions && !entry.game && !entry.location && !hasIvs;
   if (isEmpty) delete progress[id];
   else progress[id] = entry;
   localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
@@ -5533,14 +5554,13 @@ function openModal(id, options = {}) {
   document.getElementById('fHuntMethod').value = normalizeHuntMethod(p.huntMethod);
   updatePokeballPreview();
   updatePokeballShinyPreview();
+  document.getElementById('fGender').value = GENDER_CYCLE.includes(p.gender) ? p.gender : '';
+  document.getElementById('fVersions').value = VERSION_CYCLE.includes(p.versions) ? p.versions : '';
+  renderGenderUI();
+  renderVersionsUI();
 
   document.getElementById('fCaught').checked   = !!p.caught;
-  document.getElementById('fCaughtNormal').checked = !!p.caughtNormal;
   document.getElementById('fPerfect').checked  = !!p.perfect;
-  renderGenderPicker(p.gender || '');
-  const typeBadgesContainer = document.getElementById('mModalTypeBadges');
-  if (typeBadgesContainer) typeBadgesContainer.innerHTML = renderTypeBadgesForTypes(displayTypes);
-  updateProgressGauge(!!p.caughtNormal, !!p.caught);
   setFormTargetState(!!p.target);
   document.getElementById('fNickname').value   = p.nickname   || '';
   document.getElementById('fEncounters').value = p.encounters || '';
@@ -5598,8 +5618,6 @@ function saveModal() {
   const existing = progress[currentPokemon] || {};
   const entry = {
     caught:    document.getElementById('fCaught').checked,
-    caughtNormal: document.getElementById('fCaughtNormal').checked,
-    gender:    getSelectedGenderValue(),
     perfect:   document.getElementById('fPerfect').checked,
     target:    getFormTargetState(),
     hunting:   !document.getElementById('fCaught').checked && !!existing.hunting,
@@ -5618,6 +5636,8 @@ function saveModal() {
     pokeball:  document.getElementById('fPokeball').value,
     pokeballShiny: document.getElementById('fPokeballShiny').value,
     nature:    document.getElementById('fNature').value,
+    gender:    document.getElementById('fGender').value,
+    versions:  document.getElementById('fVersions').value,
     ivs: {
       hp:  document.getElementById('ivHP').checked,
       atk: document.getElementById('ivAtk').checked,
@@ -5659,7 +5679,7 @@ function exportJSON() {
 
     // N'inclut que les entrées non vides
     const hasCustomHuntMethod = p.huntMethod && p.huntMethod !== 'masuda';
-    if (!p.caught && !p.perfect && !p.target && !p.hunting && !p.huntCount && !hasCustomHuntMethod && !p.nickname && !p.encounters && !p.eggs && !p.date && !p.context && !p.youtube && !p.pokeball && !p.pokeballShiny && !p.nature && !ivStr) continue;
+    if (!p.caught && !p.perfect && !p.target && !p.hunting && !p.huntCount && !hasCustomHuntMethod && !p.nickname && !p.encounters && !p.eggs && !p.date && !p.context && !p.youtube && !p.pokeball && !p.pokeballShiny && !p.nature && !p.gender && !p.versions && !ivStr) continue;
 
     out.push({
       'N° pokédex':          id,
@@ -5680,6 +5700,8 @@ function exportJSON() {
       'Pokéball':            p.pokeball    || '',
       'Pokéball Shiny':      p.pokeballShiny || '',
       'Nature':              p.nature      || '',
+      'Genre':               GENDER_LABELS[p.gender] && p.gender ? GENDER_LABELS[p.gender] : '',
+      'Versions possédées':  VERSION_LABELS[p.versions] && p.versions ? VERSION_LABELS[p.versions] : '',
       'IV parfaits':         ivStr,
       'Parfait':             p.perfect ? '✓' : '',
     });
