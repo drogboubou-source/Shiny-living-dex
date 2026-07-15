@@ -97,8 +97,7 @@ body.readonly-share .edit-only{display:none!important}
 body.readonly-share .readonly-disabled{opacity:.62;pointer-events:none}
 body.readonly-share .modal-form-fields input,
 body.readonly-share .modal-form-fields select,
-body.readonly-share .modal-form-fields button.capture-control,
-body.readonly-share .modal-version-gauge{pointer-events:none}
+body.readonly-share .modal-form-fields button.capture-control{pointer-events:none}
 
 /* ── TOPBAR ── */
 .topbar{
@@ -691,7 +690,6 @@ body.card-interaction-suppressed .card:active{
   .sprite-badge-row{gap:5px}
   .sprite-ball-badge{width:28px;height:28px}
   .sprite-gender-badge{width:19px;height:19px}
-  .modal-version-gauge{width:32px;height:32px}
   .sprite-slot-label{font-size:7px}
   .modal-name{font-size:18px;line-height:1.16}
   .modal-name-row{justify-content:center}
@@ -1362,24 +1360,6 @@ body.card-interaction-suppressed .card:active{
   filter:drop-shadow(0 2px 4px rgba(0,0,0,.45));
 }
 .sprite-gender-badge.visible{display:block}
-.modal-version-gauge{
-  position:absolute;left:50%;top:var(--modal-ball-top);z-index:4;pointer-events:auto;cursor:pointer;
-  width:38px;height:38px;transform:translate(-50%,-2px);
-  transition:transform .16s cubic-bezier(.34,1.56,.64,1);
-}
-.modal-version-gauge:hover{transform:translate(-50%,-4px)}
-.modal-version-gauge:active{transform:translate(-50%,-1px)}
-.modal-version-gauge circle.gauge-backdrop{
-  fill:rgba(22,22,30,.82);
-  stroke:rgba(255,255,255,.09);stroke-width:1;
-}
-.modal-version-gauge .gauge-arc{
-  fill:none;stroke-width:5;stroke-linecap:round;
-  transition:stroke .18s ease,filter .18s ease,opacity .18s ease;
-}
-.modal-version-gauge .gauge-arc.dim{stroke:rgba(255,255,255,.14);opacity:1}
-.modal-version-gauge .gauge-arc.gauge-normal.on{stroke:#e7ecf3;filter:drop-shadow(0 0 3px rgba(231,236,243,.75))}
-.modal-version-gauge .gauge-arc.gauge-shiny.on{stroke:#f4cd52;filter:drop-shadow(0 0 4px rgba(244,205,82,.85))}
 .modal-name-actions{display:none}
 .modal-nav-arrow{
   position:absolute;top:28px;width:42px;min-height:52px;border-radius:13px;flex:0 0 auto;
@@ -2000,13 +1980,6 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
 button.capture-control{width:100%;text-align:left;font:inherit;color:inherit;cursor:pointer}
 .capture-value{display:block;font-family:var(--font);font-size:13px;font-weight:800;color:var(--text);padding:4px 0}
 .gender-preview img{display:block;width:34px;height:34px;object-fit:contain;position:relative;z-index:1;filter:drop-shadow(0 3px 5px rgba(0,0,0,.35))}
-.gauge-preview-holder{overflow:visible}
-.version-gauge-preview{width:38px;height:38px;position:relative;z-index:1;overflow:visible}
-.version-gauge-preview circle.gauge-backdrop{fill:rgba(22,22,30,.82);stroke:rgba(255,255,255,.09);stroke-width:1}
-.version-gauge-preview .gauge-arc{fill:none;stroke-width:5;stroke-linecap:round;transition:stroke .18s ease,filter .18s ease}
-.version-gauge-preview .gauge-arc.dim{stroke:rgba(255,255,255,.16)}
-.version-gauge-preview .gauge-arc.gauge-normal.on{stroke:#e7ecf3;filter:drop-shadow(0 0 3px rgba(231,236,243,.7))}
-.version-gauge-preview .gauge-arc.gauge-shiny.on{stroke:#f4cd52;filter:drop-shadow(0 0 4px rgba(244,205,82,.8))}
 .iv-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;min-width:0}
 .iv-item{
   display:flex;align-items:center;justify-content:center;gap:6px;
@@ -2080,7 +2053,6 @@ button.capture-control{width:100%;text-align:left;font:inherit;color:inherit;cur
   .sprite-badge-row{gap:5px}
   .sprite-ball-badge{width:28px;height:28px}
   .sprite-gender-badge{width:19px;height:19px}
-  .modal-version-gauge{width:32px;height:32px}
   .sprite-slot-label{font-size:7px}
   .modal-name{font-size:18px;line-height:1.16}
   .modal-name-row{justify-content:center}
@@ -2284,11 +2256,6 @@ button.capture-control{width:100%;text-align:left;font:inherit;color:inherit;cur
               <img class="sprite-gender-badge" id="mGenderIconNormal" src="" alt="">
             </div>
           </div>
-          <svg class="modal-version-gauge" id="mVersionGauge" viewBox="0 0 36 36" role="button" tabindex="0" aria-label="Versions possédées" onclick="cycleVersions()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();cycleVersions();}">
-            <circle class="gauge-backdrop" cx="18" cy="18" r="14"></circle>
-            <path id="mVersionGaugeLeft" class="gauge-arc gauge-normal dim" d="M16.05,31.86 A14,14 0 0,1 16.05,4.14"></path>
-            <path id="mVersionGaugeRight" class="gauge-arc gauge-shiny dim" d="M19.95,4.14 A14,14 0 0,1 19.95,31.86"></path>
-          </svg>
           <div class="sprite-slot sprite-slot-shiny">
             <div class="sprite-pedestal">
               <img class="modal-sprite" id="mSpriteShiny" src="" alt="" onerror="handlePokemonSpriteError(this, parseInt(this.dataset.pokeId), true)">
@@ -2478,22 +2445,6 @@ button.capture-control{width:100%;text-align:left;font:inherit;color:inherit;cur
           </span>
         </button>
         <input type="hidden" id="fGenderShiny" value="">
-      </div>
-      <div class="capture-details single capture-final">
-        <button type="button" class="capture-control versions-control" id="fVersionsControl" onclick="cycleVersions()">
-          <span class="ball-preview gauge-preview-holder">
-            <svg class="version-gauge-preview" id="fVersionsGauge" viewBox="0 0 36 36">
-              <circle class="gauge-backdrop" cx="18" cy="18" r="14"></circle>
-              <path id="fVersionsGaugeLeft" class="gauge-arc gauge-normal dim" d="M16.05,31.86 A14,14 0 0,1 16.05,4.14"></path>
-              <path id="fVersionsGaugeRight" class="gauge-arc gauge-shiny dim" d="M19.95,4.14 A14,14 0 0,1 19.95,31.86"></path>
-            </svg>
-          </span>
-          <span class="capture-select-stack">
-            <span class="capture-kicker">Versions possédées</span>
-            <span class="capture-value" id="fVersionsLabel">Aucune</span>
-          </span>
-        </button>
-        <input type="hidden" id="fVersions" value="">
       </div>
     </div>
     </div>
@@ -3258,7 +3209,6 @@ function hasUserData(p) {
     p.nature ||
     p.gender ||
     p.genderShiny ||
-    p.versions ||
     p.game ||
     p.location ||
     ivs.hp || ivs.atk || ivs.def || ivs.spa || ivs.spd || ivs.spe
@@ -3279,7 +3229,6 @@ function sanitizeProgress(data, options = {}) {
     entry.nature = entry.nature || '';
     entry.gender = GENDER_CYCLE.includes(entry.gender) ? entry.gender : '';
     entry.genderShiny = GENDER_CYCLE.includes(entry.genderShiny) ? entry.genderShiny : '';
-    entry.versions = VERSION_CYCLE.includes(entry.versions) ? entry.versions : '';
     // Ancienne logique: pokemon.json pouvait mettre caught=true juste parce que le nom etait rempli.
     if (!trustCaught && entry.caught && !hasUserData(entry)) delete entry.caught;
     const isEmpty = !entry.caught && !entry.target && !hasUserData(entry);
@@ -3330,14 +3279,6 @@ function rowGender(raw) {
   const value = String(raw || '').trim().toLowerCase();
   if (value.startsWith('m')) return 'male';
   if (value.startsWith('f') || value.startsWith('é') || value.startsWith('e')) return 'female';
-  return '';
-}
-
-function rowVersions(raw) {
-  const value = String(raw || '').trim().toLowerCase();
-  if (value.includes('deux') || value.includes('both')) return 'both';
-  if (value.includes('shiny')) return 'shiny';
-  if (value.includes('normal')) return 'normal';
   return '';
 }
 
@@ -3394,7 +3335,6 @@ function mergePokedexIntoProgress() {
     if (!existing.nature     && p['Nature'])              existing.nature     = p['Nature'];
     if (!existing.gender     && p['Genre'])                existing.gender     = rowGender(p['Genre']);
     if (!existing.genderShiny && p['Genre Shiny'])          existing.genderShiny = rowGender(p['Genre Shiny']);
-    if (!existing.versions   && p['Versions possédées'])   existing.versions   = rowVersions(p['Versions possédées']);
     // Statuts: le nom seul ne signifie pas que le shiny est capturé.
     if (rowMeansCaught(p)) existing.caught = true;
     if (rowMeansTarget(p)) existing.target = true;
@@ -4064,8 +4004,6 @@ function updateModalBallIcon(elementId, ballId) {
 ══════════════════════════════════════ */
 const GENDER_CYCLE = ['', 'male', 'female'];
 const GENDER_LABELS = { '': 'Non renseigné', male: 'Masculin', female: 'Féminin' };
-const VERSION_CYCLE = ['', 'normal', 'shiny', 'both'];
-const VERSION_LABELS = { '': 'Aucune', normal: 'Normal possédé', shiny: 'Shiny possédé', both: 'Les deux possédés' };
 
 function getGenderIconSrc(gender) {
   if (gender === 'male') {
@@ -4102,35 +4040,6 @@ function renderGenderUI(kind) {
       icon.classList.toggle('visible', !!src);
     }
   });
-}
-
-function cycleVersions() {
-  if (isReadOnlyShare()) return;
-  const input = document.getElementById('fVersions');
-  if (!input) return;
-  const idx = VERSION_CYCLE.indexOf(input.value);
-  input.value = VERSION_CYCLE[(idx + 1) % VERSION_CYCLE.length];
-  renderVersionsUI();
-}
-
-function renderVersionsUI() {
-  const v = document.getElementById('fVersions')?.value || '';
-  const labelEl = document.getElementById('fVersionsLabel');
-  if (labelEl) labelEl.textContent = VERSION_LABELS[v] || VERSION_LABELS[''];
-  const normalOn = v === 'normal' || v === 'both';
-  const shinyOn = v === 'shiny' || v === 'both';
-  ['mVersionGaugeLeft', 'fVersionsGaugeLeft'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.classList.toggle('on', normalOn);
-    if (el) el.classList.toggle('dim', !normalOn);
-  });
-  ['mVersionGaugeRight', 'fVersionsGaugeRight'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.classList.toggle('on', shinyOn);
-    if (el) el.classList.toggle('dim', !shinyOn);
-  });
-  const gauge = document.getElementById('mVersionGauge');
-  if (gauge) gauge.setAttribute('aria-label', `Versions possédées : ${VERSION_LABELS[v] || VERSION_LABELS['']}`);
 }
 
 function setFormTargetState(enabled) {
@@ -5192,7 +5101,7 @@ function saveProgressEntry(id, entry) {
   if (isReadOnlyShare()) return;
   const hasIvs = entry.ivs && Object.values(entry.ivs).some(Boolean);
   const hasCustomHuntMethod = entry.huntMethod && entry.huntMethod !== 'masuda';
-  const isEmpty = !entry.caught && !entry.perfect && !entry.target && !entry.hunting && !entry.huntCount && !hasCustomHuntMethod && !entry.nickname && !entry.encounters && !entry.eggs && !entry.date && !entry.context && !entry.youtube && !entry.pokeball && !entry.pokeballShiny && !entry.nature && !entry.gender && !entry.genderShiny && !entry.versions && !entry.game && !entry.location && !hasIvs;
+  const isEmpty = !entry.caught && !entry.perfect && !entry.target && !entry.hunting && !entry.huntCount && !hasCustomHuntMethod && !entry.nickname && !entry.encounters && !entry.eggs && !entry.date && !entry.context && !entry.youtube && !entry.pokeball && !entry.pokeballShiny && !entry.nature && !entry.gender && !entry.genderShiny && !entry.game && !entry.location && !hasIvs;
   if (isEmpty) delete progress[id];
   else progress[id] = entry;
   localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
@@ -5588,9 +5497,7 @@ function openModal(id, options = {}) {
   updatePokeballShinyPreview();
   document.getElementById('fGenderNormal').value = GENDER_CYCLE.includes(p.gender) ? p.gender : '';
   document.getElementById('fGenderShiny').value = GENDER_CYCLE.includes(p.genderShiny) ? p.genderShiny : '';
-  document.getElementById('fVersions').value = VERSION_CYCLE.includes(p.versions) ? p.versions : '';
   renderGenderUI();
-  renderVersionsUI();
 
   document.getElementById('fCaught').checked   = !!p.caught;
   document.getElementById('fPerfect').checked  = !!p.perfect;
@@ -5671,7 +5578,6 @@ function saveModal() {
     nature:    document.getElementById('fNature').value,
     gender:    document.getElementById('fGenderNormal').value,
     genderShiny: document.getElementById('fGenderShiny').value,
-    versions:  document.getElementById('fVersions').value,
     ivs: {
       hp:  document.getElementById('ivHP').checked,
       atk: document.getElementById('ivAtk').checked,
@@ -5713,7 +5619,7 @@ function exportJSON() {
 
     // N'inclut que les entrées non vides
     const hasCustomHuntMethod = p.huntMethod && p.huntMethod !== 'masuda';
-    if (!p.caught && !p.perfect && !p.target && !p.hunting && !p.huntCount && !hasCustomHuntMethod && !p.nickname && !p.encounters && !p.eggs && !p.date && !p.context && !p.youtube && !p.pokeball && !p.pokeballShiny && !p.nature && !p.gender && !p.genderShiny && !p.versions && !ivStr) continue;
+    if (!p.caught && !p.perfect && !p.target && !p.hunting && !p.huntCount && !hasCustomHuntMethod && !p.nickname && !p.encounters && !p.eggs && !p.date && !p.context && !p.youtube && !p.pokeball && !p.pokeballShiny && !p.nature && !p.gender && !p.genderShiny && !ivStr) continue;
 
     out.push({
       'N° pokédex':          id,
@@ -5736,7 +5642,6 @@ function exportJSON() {
       'Nature':              p.nature      || '',
       'Genre':               GENDER_LABELS[p.gender] && p.gender ? GENDER_LABELS[p.gender] : '',
       'Genre Shiny':         GENDER_LABELS[p.genderShiny] && p.genderShiny ? GENDER_LABELS[p.genderShiny] : '',
-      'Versions possédées':  VERSION_LABELS[p.versions] && p.versions ? VERSION_LABELS[p.versions] : '',
       'IV parfaits':         ivStr,
       'Parfait':             p.perfect ? '✓' : '',
     });
