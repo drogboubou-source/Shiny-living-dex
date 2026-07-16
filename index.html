@@ -688,7 +688,8 @@ body.card-interaction-suppressed .card:active{
   .modal-sprite-group .modal-sprite{width:94px;height:94px}
   .sprite-row{width:100%}
   .sprite-badge-row{gap:5px;height:28px}
-  .modal-hunt-percent{height:28px;font-size:12px;transform:translate(-50%,0)}
+  .modal-hunt-percent{height:28px;font-size:12px;transform:translate(-50%,0);gap:4px}
+  .hunt-status-icon{width:13px;height:13px}
   .sprite-ball-badge{width:28px;height:28px}
   .sprite-gender-badge{width:19px;height:19px}
   .sprite-slot-label{font-size:7px}
@@ -1372,7 +1373,7 @@ body.card-interaction-suppressed .card:active{
 .modal-hunt-percent{
   position:absolute;left:50%;top:var(--modal-ball-top);z-index:4;
   height:34px;transform:translate(-50%,0);
-  display:flex;align-items:center;justify-content:center;
+  display:flex;align-items:center;justify-content:center;gap:5px;
   white-space:nowrap;pointer-events:none;
   font-family:var(--font);font-size:15px;font-weight:900;letter-spacing:.3px;
   font-variant-numeric:tabular-nums;
@@ -1380,6 +1381,10 @@ body.card-interaction-suppressed .card:active{
   text-shadow:0 0 10px rgba(240,193,90,.5),0 2px 4px rgba(0,0,0,.55);
   transition:color .25s ease,text-shadow .25s ease;
 }
+.hunt-status-icon{display:none;width:16px;height:16px;flex:0 0 auto;filter:drop-shadow(0 2px 3px rgba(0,0,0,.5))}
+.hunt-status-icon.visible{display:block}
+.modal-hunt-percent.hunt-none{color:#8b93a3;text-shadow:0 2px 4px rgba(0,0,0,.4)}
+.modal-hunt-percent.hunt-none #mHuntPercentValue{display:none}
 .modal-hunt-percent.hunt-active{
   color:#ffab3d;
   text-shadow:0 0 12px rgba(255,171,61,.65),0 2px 4px rgba(0,0,0,.55);
@@ -2102,7 +2107,8 @@ button.capture-control{width:100%;text-align:left;font:inherit;color:inherit;cur
   .modal-sprite-group .modal-sprite{width:94px;height:94px}
   .sprite-row{width:100%}
   .sprite-badge-row{gap:5px;height:28px}
-  .modal-hunt-percent{height:28px;font-size:12px;transform:translate(-50%,0)}
+  .modal-hunt-percent{height:28px;font-size:12px;transform:translate(-50%,0);gap:4px}
+  .hunt-status-icon{width:13px;height:13px}
   .sprite-ball-badge{width:28px;height:28px}
   .sprite-gender-badge{width:19px;height:19px}
   .sprite-slot-label{font-size:7px}
@@ -2314,7 +2320,20 @@ button.capture-control{width:100%;text-align:left;font:inherit;color:inherit;cur
               <img class="sprite-gender-badge" id="mGenderIconNormal" src="" alt="">
             </div>
           </div>
-          <div class="modal-hunt-percent" id="mHuntPercent" title="Chances cumulées du compteur"><span id="mHuntPercentValue">0%</span></div>
+          <div class="modal-hunt-percent" id="mHuntPercent" title="Chances cumulées du compteur">
+            <svg class="hunt-status-icon" id="mHuntStatusNone" viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="12" cy="12" r="9.2" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="3 3.4"></circle>
+            </svg>
+            <svg class="hunt-status-icon" id="mHuntStatusActive" viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="10.1" cy="10.1" r="6.1" fill="none" stroke="currentColor" stroke-width="2.3"></circle>
+              <line x1="14.8" y1="14.8" x2="20.2" y2="20.2" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"></line>
+            </svg>
+            <svg class="hunt-status-icon" id="mHuntStatusCaught" viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="12" cy="12" r="9.2" fill="none" stroke="currentColor" stroke-width="2"></circle>
+              <path d="M7.6 12.3l2.9 2.9 5.9-6.3" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+            <span id="mHuntPercentValue">0%</span>
+          </div>
           <div class="sprite-slot sprite-slot-shiny">
             <div class="sprite-pedestal">
               <img class="modal-sprite" id="mSpriteShiny" src="" alt="" onerror="handlePokemonSpriteError(this, parseInt(this.dataset.pokeId), true)">
@@ -5383,11 +5402,17 @@ function renderHuntCounter(animate = false, kind = 'flash') {
     const huntPercentValue = document.getElementById('mHuntPercentValue');
     if (huntPercentValue) huntPercentValue.textContent = chanceText;
     const inProgress = !p.caught && (!!p.hunting || count > 0);
-    huntPercentBadge.classList.toggle('hunt-active', inProgress);
-    huntPercentBadge.classList.toggle('hunt-complete', !!p.caught);
+    const huntState = p.caught ? 'complete' : (inProgress ? 'active' : 'none');
+    huntPercentBadge.classList.toggle('hunt-active', huntState === 'active');
+    huntPercentBadge.classList.toggle('hunt-complete', huntState === 'complete');
+    huntPercentBadge.classList.toggle('hunt-none', huntState === 'none');
+    const iconIds = { none: 'mHuntStatusNone', active: 'mHuntStatusActive', complete: 'mHuntStatusCaught' };
+    Object.entries(iconIds).forEach(([key, id]) => {
+      document.getElementById(id)?.classList.toggle('visible', key === huntState);
+    });
     huntPercentBadge.title = p.caught
       ? 'Shiny capturé'
-      : (inProgress ? 'Chasse en cours' : 'Chances cumulées du compteur');
+      : (inProgress ? 'Chasse en cours' : 'Pas chassé');
   }
 }
 
