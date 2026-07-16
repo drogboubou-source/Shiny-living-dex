@@ -688,7 +688,7 @@ body.card-interaction-suppressed .card:active{
   .modal-sprite-group .modal-sprite{width:94px;height:94px}
   .sprite-row{width:100%}
   .sprite-badge-row{gap:5px;height:28px}
-  .modal-hunt-percent{height:28px;font-size:10px;padding:0 7px}
+  .modal-hunt-percent{height:28px;font-size:10px;padding:0 7px;transform:translate(-50%,0)}
   .sprite-ball-badge{width:28px;height:28px}
   .sprite-gender-badge{width:19px;height:19px}
   .sprite-slot-label{font-size:7px}
@@ -1370,47 +1370,45 @@ body.card-interaction-suppressed .card:active{
 }
 .sprite-gender-badge.visible{display:block}
 .modal-hunt-percent{
-  position:absolute;left:50%;top:var(--modal-ball-top);z-index:4;isolation:isolate;overflow:hidden;
-  height:34px;min-width:54px;transform:translate(-50%,0);
+  position:absolute;left:50%;top:var(--modal-ball-top);z-index:4;
+  height:26px;min-width:50px;transform:translate(-50%,4px);
   display:flex;align-items:center;justify-content:center;
-  padding:0 15px;border-radius:999px;white-space:nowrap;
-  font-family:var(--font);font-size:14px;font-weight:900;letter-spacing:.2px;
+  padding:0 12px;border-radius:999px;white-space:nowrap;
+  font-family:var(--font);font-size:12px;font-weight:900;letter-spacing:.2px;
   font-variant-numeric:tabular-nums;
-  color:#1a1406;
-  background:
-    radial-gradient(circle at 30% -25%,rgba(255,255,255,.55),transparent 58%),
-    linear-gradient(180deg,#ffe9ac 0%,#f7c65c 46%,#e6a52e 100%);
-  border:1px solid rgba(150,96,10,.4);
+  color:#402505;
+  background:linear-gradient(180deg,#ffedbb,#f0b23e);
   box-shadow:
-    inset 0 1.5px 0 rgba(255,255,255,.65),
-    inset 0 -8px 12px -9px rgba(120,66,0,.55),
-    0 6px 14px rgba(0,0,0,.34);
+    inset 0 1px 0 rgba(255,255,255,.65),
+    inset 0 -3px 5px rgba(120,66,0,.18),
+    0 0 11px rgba(240,178,62,.4),
+    0 4px 9px rgba(0,0,0,.28);
   pointer-events:none;
-  transition:border-color .25s ease,background .3s ease,color .2s ease;
+  transition:background .3s ease,box-shadow .3s ease,color .2s ease;
 }
-.modal-hunt-percent::before{
-  content:'';position:absolute;top:0;left:14%;right:14%;height:1px;z-index:1;
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,.85),transparent);
-  opacity:.9;pointer-events:none;
-}
-.modal-hunt-percent span{position:relative;z-index:2;text-shadow:0 1px 0 rgba(255,255,255,.25)}
 .modal-hunt-percent.hunt-active{
-  border-color:rgba(150,80,0,.45);
-  background:
-    radial-gradient(circle at 30% -25%,rgba(255,255,255,.58),transparent 58%),
-    linear-gradient(180deg,#ffd489 0%,#ffa93f 50%,#f07d10 100%);
-  animation:huntPercentBreathe 2s ease-in-out infinite;
+  color:#4a2200;
+  background:linear-gradient(180deg,#ffd28a,#f0821c);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.6),
+    inset 0 -3px 5px rgba(110,45,0,.22),
+    0 0 12px rgba(240,130,28,.55),
+    0 4px 9px rgba(0,0,0,.28);
+  animation:huntPercentBreathe 1.9s ease-in-out infinite;
 }
 .modal-hunt-percent.hunt-complete{
-  border-color:rgba(20,110,50,.45);
-  background:
-    radial-gradient(circle at 30% -25%,rgba(255,255,255,.55),transparent 58%),
-    linear-gradient(180deg,#b7f3c6 0%,#6fdc93 50%,#3cb567 100%);
+  color:#0d3a1e;
+  background:linear-gradient(180deg,#bdf3cd,#4fbd76);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.6),
+    inset 0 -3px 5px rgba(10,80,35,.2),
+    0 0 11px rgba(79,189,118,.45),
+    0 4px 9px rgba(0,0,0,.28);
   animation:none;
 }
 @keyframes huntPercentBreathe{
-  0%,100%{border-color:rgba(150,80,0,.3)}
-  50%{border-color:rgba(90,48,0,.7)}
+  0%,100%{box-shadow:inset 0 1px 0 rgba(255,255,255,.6),inset 0 -3px 5px rgba(110,45,0,.22),0 0 8px rgba(240,130,28,.35),0 4px 9px rgba(0,0,0,.28);}
+  50%{box-shadow:inset 0 1px 0 rgba(255,255,255,.6),inset 0 -3px 5px rgba(110,45,0,.22),0 0 16px rgba(240,130,28,.75),0 4px 9px rgba(0,0,0,.28);}
 }
 .modal-name-actions{display:none}
 .modal-nav-arrow{
@@ -2120,7 +2118,7 @@ button.capture-control{width:100%;text-align:left;font:inherit;color:inherit;cur
   .modal-sprite-group .modal-sprite{width:94px;height:94px}
   .sprite-row{width:100%}
   .sprite-badge-row{gap:5px;height:28px}
-  .modal-hunt-percent{height:28px;font-size:10px;padding:0 7px}
+  .modal-hunt-percent{height:28px;font-size:10px;padding:0 7px;transform:translate(-50%,0)}
   .sprite-ball-badge{width:28px;height:28px}
   .sprite-gender-badge{width:19px;height:19px}
   .sprite-slot-label{font-size:7px}
