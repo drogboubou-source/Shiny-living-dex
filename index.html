@@ -688,7 +688,7 @@ body.card-interaction-suppressed .card:active{
   .modal-sprite-group .modal-sprite{width:94px;height:94px}
   .sprite-row{width:100%}
   .sprite-badge-row{gap:5px;height:28px}
-  .modal-hunt-percent{height:28px;font-size:10px;padding:0 7px;transform:translate(-50%,0)}
+  .modal-hunt-percent{height:28px;font-size:12px;transform:translate(-50%,0)}
   .sprite-ball-badge{width:28px;height:28px}
   .sprite-gender-badge{width:19px;height:19px}
   .sprite-slot-label{font-size:7px}
@@ -1371,44 +1371,28 @@ body.card-interaction-suppressed .card:active{
 .sprite-gender-badge.visible{display:block}
 .modal-hunt-percent{
   position:absolute;left:50%;top:var(--modal-ball-top);z-index:4;
-  height:26px;min-width:50px;transform:translate(-50%,4px);
+  height:34px;transform:translate(-50%,0);
   display:flex;align-items:center;justify-content:center;
-  padding:0 12px;border-radius:999px;white-space:nowrap;
-  font-family:var(--font);font-size:12px;font-weight:900;letter-spacing:.2px;
+  white-space:nowrap;pointer-events:none;
+  font-family:var(--font);font-size:15px;font-weight:900;letter-spacing:.3px;
   font-variant-numeric:tabular-nums;
-  color:#402505;
-  background:linear-gradient(180deg,#ffedbb,#f0b23e);
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.65),
-    inset 0 -3px 5px rgba(120,66,0,.18),
-    0 0 11px rgba(240,178,62,.4),
-    0 4px 9px rgba(0,0,0,.28);
-  pointer-events:none;
-  transition:background .3s ease,box-shadow .3s ease,color .2s ease;
+  color:#f0c15a;
+  text-shadow:0 0 10px rgba(240,193,90,.5),0 2px 4px rgba(0,0,0,.55);
+  transition:color .25s ease,text-shadow .25s ease;
 }
 .modal-hunt-percent.hunt-active{
-  color:#4a2200;
-  background:linear-gradient(180deg,#ffd28a,#f0821c);
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.6),
-    inset 0 -3px 5px rgba(110,45,0,.22),
-    0 0 12px rgba(240,130,28,.55),
-    0 4px 9px rgba(0,0,0,.28);
+  color:#ffab3d;
+  text-shadow:0 0 12px rgba(255,171,61,.65),0 2px 4px rgba(0,0,0,.55);
   animation:huntPercentBreathe 1.9s ease-in-out infinite;
 }
 .modal-hunt-percent.hunt-complete{
-  color:#0d3a1e;
-  background:linear-gradient(180deg,#bdf3cd,#4fbd76);
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.6),
-    inset 0 -3px 5px rgba(10,80,35,.2),
-    0 0 11px rgba(79,189,118,.45),
-    0 4px 9px rgba(0,0,0,.28);
+  color:#5fe093;
+  text-shadow:0 0 11px rgba(95,224,147,.6),0 2px 4px rgba(0,0,0,.55);
   animation:none;
 }
 @keyframes huntPercentBreathe{
-  0%,100%{box-shadow:inset 0 1px 0 rgba(255,255,255,.6),inset 0 -3px 5px rgba(110,45,0,.22),0 0 8px rgba(240,130,28,.35),0 4px 9px rgba(0,0,0,.28);}
-  50%{box-shadow:inset 0 1px 0 rgba(255,255,255,.6),inset 0 -3px 5px rgba(110,45,0,.22),0 0 16px rgba(240,130,28,.75),0 4px 9px rgba(0,0,0,.28);}
+  0%,100%{text-shadow:0 0 8px rgba(255,171,61,.4),0 2px 4px rgba(0,0,0,.55);}
+  50%{text-shadow:0 0 16px rgba(255,171,61,.85),0 2px 4px rgba(0,0,0,.55);}
 }
 .modal-name-actions{display:none}
 .modal-nav-arrow{
@@ -2118,7 +2102,7 @@ button.capture-control{width:100%;text-align:left;font:inherit;color:inherit;cur
   .modal-sprite-group .modal-sprite{width:94px;height:94px}
   .sprite-row{width:100%}
   .sprite-badge-row{gap:5px;height:28px}
-  .modal-hunt-percent{height:28px;font-size:10px;padding:0 7px;transform:translate(-50%,0)}
+  .modal-hunt-percent{height:28px;font-size:12px;transform:translate(-50%,0)}
   .sprite-ball-badge{width:28px;height:28px}
   .sprite-gender-badge{width:19px;height:19px}
   .sprite-slot-label{font-size:7px}
