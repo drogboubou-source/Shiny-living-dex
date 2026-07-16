@@ -1371,49 +1371,59 @@ body.card-interaction-suppressed .card:active{
 .sprite-gender-badge.visible{display:block}
 .modal-hunt-percent{
   position:absolute;left:50%;top:var(--modal-ball-top);z-index:4;isolation:isolate;overflow:hidden;
-  height:34px;transform:translate(-50%,0);
+  height:34px;min-width:54px;transform:translate(-50%,0);
   display:flex;align-items:center;justify-content:center;
-  padding:0 14px;border-radius:999px;white-space:nowrap;
-  font-family:var(--font);font-size:12px;font-weight:800;letter-spacing:.4px;
+  padding:0 15px;border-radius:999px;white-space:nowrap;
+  font-family:var(--font);font-size:13px;font-weight:800;letter-spacing:.3px;
   font-variant-numeric:tabular-nums;
-  color:#ffe19c;
-  text-shadow:0 1px 0 rgba(0,0,0,.4);
   background:
-    radial-gradient(circle at 30% -25%,rgba(255,255,255,.26),transparent 58%),
-    linear-gradient(180deg,rgba(255,255,255,.09),rgba(255,255,255,.015) 50%,rgba(0,0,0,.08) 100%),
+    radial-gradient(circle at 30% -25%,rgba(255,255,255,.28),transparent 58%),
+    linear-gradient(180deg,rgba(255,255,255,.09),rgba(255,255,255,.015) 50%,rgba(0,0,0,.1) 100%),
     #17171f;
-  border:1px solid rgba(255,225,156,.32);
+  border:1px solid rgba(255,225,156,.34);
   box-shadow:
     inset 0 0 0 1px rgba(255,255,255,.05),
-    inset 0 1px 0 rgba(255,255,255,.14),
-    inset 0 -10px 14px -12px rgba(0,0,0,.7),
-    0 5px 12px rgba(0,0,0,.32);
+    inset 0 1.5px 0 rgba(255,255,255,.17),
+    inset 0 -10px 14px -12px rgba(0,0,0,.72),
+    0 1px 0 rgba(255,255,255,.05),
+    0 6px 14px rgba(0,0,0,.34);
   pointer-events:none;
-  transition:color .2s ease,border-color .25s ease,background .3s ease;
+  transition:border-color .25s ease,background .3s ease;
 }
 .modal-hunt-percent::before{
   content:'';position:absolute;top:0;left:14%;right:14%;height:1px;z-index:1;
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,.65),transparent);
-  opacity:.8;pointer-events:none;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.7),transparent);
+  opacity:.85;pointer-events:none;
 }
-.modal-hunt-percent span{position:relative;z-index:2}
+.modal-hunt-percent span{
+  position:relative;z-index:2;
+  background:linear-gradient(180deg,#fff5dd 0%,#ffda93 42%,#e2a53c 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 1px 0 rgba(0,0,0,.35));
+}
 .modal-hunt-percent.hunt-active{
-  color:#ffd685;
   border-color:rgba(255,180,64,.55);
   background:
-    radial-gradient(circle at 30% -25%,rgba(255,255,255,.28),transparent 58%),
-    linear-gradient(180deg,rgba(255,180,64,.22),rgba(255,180,64,.025) 50%,rgba(0,0,0,.08) 100%),
+    radial-gradient(circle at 30% -25%,rgba(255,255,255,.3),transparent 58%),
+    linear-gradient(180deg,rgba(255,180,64,.22),rgba(255,180,64,.025) 50%,rgba(0,0,0,.1) 100%),
     #17171f;
   animation:huntPercentBreathe 2s ease-in-out infinite;
 }
+.modal-hunt-percent.hunt-active span{
+  background:linear-gradient(180deg,#fffaf0 0%,#ffcf6e 45%,#ff9f2e 100%);
+  -webkit-background-clip:text;background-clip:text;
+}
 .modal-hunt-percent.hunt-complete{
-  color:#aef6c2;
   border-color:rgba(126,214,96,.58);
   background:
-    radial-gradient(circle at 30% -25%,rgba(255,255,255,.26),transparent 58%),
-    linear-gradient(180deg,rgba(126,214,96,.24),rgba(126,214,96,.035) 50%,rgba(0,0,0,.08) 100%),
+    radial-gradient(circle at 30% -25%,rgba(255,255,255,.28),transparent 58%),
+    linear-gradient(180deg,rgba(126,214,96,.24),rgba(126,214,96,.035) 50%,rgba(0,0,0,.1) 100%),
     #17171f;
   animation:none;
+}
+.modal-hunt-percent.hunt-complete span{
+  background:linear-gradient(180deg,#eefff2 0%,#a4f1bb 45%,#63cf85 100%);
+  -webkit-background-clip:text;background-clip:text;
 }
 @keyframes huntPercentBreathe{
   0%,100%{border-color:rgba(255,180,64,.42)}
