@@ -1374,7 +1374,7 @@ body.card-interaction-suppressed .card:active{
   height:34px;min-width:54px;transform:translate(-50%,0);
   display:flex;align-items:center;justify-content:center;
   padding:0 15px;border-radius:999px;white-space:nowrap;
-  font-family:var(--font);font-size:13px;font-weight:800;letter-spacing:.3px;
+  font-family:var(--font);font-size:14px;font-weight:900;letter-spacing:.2px;
   font-variant-numeric:tabular-nums;
   background:
     radial-gradient(circle at 30% -25%,rgba(255,255,255,.28),transparent 58%),
@@ -1397,9 +1397,10 @@ body.card-interaction-suppressed .card:active{
 }
 .modal-hunt-percent span{
   position:relative;z-index:2;
-  background:linear-gradient(180deg,#fff5dd 0%,#ffda93 42%,#e2a53c 100%);
+  background:linear-gradient(180deg,#fffaf0 0%,#ffe9b8 30%,#f0c168 62%,#c88a2e 100%);
   -webkit-background-clip:text;background-clip:text;color:transparent;
-  filter:drop-shadow(0 1px 0 rgba(0,0,0,.35));
+  -webkit-text-stroke:.4px rgba(70,42,4,.35);
+  filter:drop-shadow(0 1px 0 rgba(0,0,0,.4));
 }
 .modal-hunt-percent.hunt-active{
   border-color:rgba(255,180,64,.55);
@@ -1410,8 +1411,9 @@ body.card-interaction-suppressed .card:active{
   animation:huntPercentBreathe 2s ease-in-out infinite;
 }
 .modal-hunt-percent.hunt-active span{
-  background:linear-gradient(180deg,#fffaf0 0%,#ffcf6e 45%,#ff9f2e 100%);
+  background:linear-gradient(180deg,#fffdf6 0%,#ffe4a0 28%,#ffb655 62%,#e07f1c 100%);
   -webkit-background-clip:text;background-clip:text;
+  -webkit-text-stroke:.4px rgba(102,44,0,.35);
 }
 .modal-hunt-percent.hunt-complete{
   border-color:rgba(126,214,96,.58);
@@ -1422,8 +1424,9 @@ body.card-interaction-suppressed .card:active{
   animation:none;
 }
 .modal-hunt-percent.hunt-complete span{
-  background:linear-gradient(180deg,#eefff2 0%,#a4f1bb 45%,#63cf85 100%);
+  background:linear-gradient(180deg,#f6fff8 0%,#c8f5d4 28%,#7fe0a0 62%,#3fa565 100%);
   -webkit-background-clip:text;background-clip:text;
+  -webkit-text-stroke:.4px rgba(9,58,30,.35);
 }
 @keyframes huntPercentBreathe{
   0%,100%{border-color:rgba(255,180,64,.42)}
