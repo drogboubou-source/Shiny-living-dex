@@ -1376,61 +1376,41 @@ body.card-interaction-suppressed .card:active{
   padding:0 15px;border-radius:999px;white-space:nowrap;
   font-family:var(--font);font-size:14px;font-weight:900;letter-spacing:.2px;
   font-variant-numeric:tabular-nums;
+  color:#1a1406;
   background:
-    radial-gradient(circle at 30% -25%,rgba(255,255,255,.28),transparent 58%),
-    linear-gradient(180deg,rgba(255,255,255,.09),rgba(255,255,255,.015) 50%,rgba(0,0,0,.1) 100%),
-    #17171f;
-  border:1px solid rgba(255,225,156,.34);
+    radial-gradient(circle at 30% -25%,rgba(255,255,255,.55),transparent 58%),
+    linear-gradient(180deg,#ffe9ac 0%,#f7c65c 46%,#e6a52e 100%);
+  border:1px solid rgba(150,96,10,.4);
   box-shadow:
-    inset 0 0 0 1px rgba(255,255,255,.05),
-    inset 0 1.5px 0 rgba(255,255,255,.17),
-    inset 0 -10px 14px -12px rgba(0,0,0,.72),
-    0 1px 0 rgba(255,255,255,.05),
+    inset 0 1.5px 0 rgba(255,255,255,.65),
+    inset 0 -8px 12px -9px rgba(120,66,0,.55),
     0 6px 14px rgba(0,0,0,.34);
   pointer-events:none;
-  transition:border-color .25s ease,background .3s ease;
+  transition:border-color .25s ease,background .3s ease,color .2s ease;
 }
 .modal-hunt-percent::before{
   content:'';position:absolute;top:0;left:14%;right:14%;height:1px;z-index:1;
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,.7),transparent);
-  opacity:.85;pointer-events:none;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.85),transparent);
+  opacity:.9;pointer-events:none;
 }
-.modal-hunt-percent span{
-  position:relative;z-index:2;
-  background:linear-gradient(180deg,#fffaf0 0%,#ffe9b8 30%,#f0c168 62%,#c88a2e 100%);
-  -webkit-background-clip:text;background-clip:text;color:transparent;
-  -webkit-text-stroke:.4px rgba(70,42,4,.35);
-  filter:drop-shadow(0 1px 0 rgba(0,0,0,.4));
-}
+.modal-hunt-percent span{position:relative;z-index:2;text-shadow:0 1px 0 rgba(255,255,255,.25)}
 .modal-hunt-percent.hunt-active{
-  border-color:rgba(255,180,64,.55);
+  border-color:rgba(150,80,0,.45);
   background:
-    radial-gradient(circle at 30% -25%,rgba(255,255,255,.3),transparent 58%),
-    linear-gradient(180deg,rgba(255,180,64,.22),rgba(255,180,64,.025) 50%,rgba(0,0,0,.1) 100%),
-    #17171f;
+    radial-gradient(circle at 30% -25%,rgba(255,255,255,.58),transparent 58%),
+    linear-gradient(180deg,#ffd489 0%,#ffa93f 50%,#f07d10 100%);
   animation:huntPercentBreathe 2s ease-in-out infinite;
 }
-.modal-hunt-percent.hunt-active span{
-  background:linear-gradient(180deg,#fffdf6 0%,#ffe4a0 28%,#ffb655 62%,#e07f1c 100%);
-  -webkit-background-clip:text;background-clip:text;
-  -webkit-text-stroke:.4px rgba(102,44,0,.35);
-}
 .modal-hunt-percent.hunt-complete{
-  border-color:rgba(126,214,96,.58);
+  border-color:rgba(20,110,50,.45);
   background:
-    radial-gradient(circle at 30% -25%,rgba(255,255,255,.28),transparent 58%),
-    linear-gradient(180deg,rgba(126,214,96,.24),rgba(126,214,96,.035) 50%,rgba(0,0,0,.1) 100%),
-    #17171f;
+    radial-gradient(circle at 30% -25%,rgba(255,255,255,.55),transparent 58%),
+    linear-gradient(180deg,#b7f3c6 0%,#6fdc93 50%,#3cb567 100%);
   animation:none;
 }
-.modal-hunt-percent.hunt-complete span{
-  background:linear-gradient(180deg,#f6fff8 0%,#c8f5d4 28%,#7fe0a0 62%,#3fa565 100%);
-  -webkit-background-clip:text;background-clip:text;
-  -webkit-text-stroke:.4px rgba(9,58,30,.35);
-}
 @keyframes huntPercentBreathe{
-  0%,100%{border-color:rgba(255,180,64,.42)}
-  50%{border-color:rgba(255,214,120,.95)}
+  0%,100%{border-color:rgba(150,80,0,.3)}
+  50%{border-color:rgba(90,48,0,.7)}
 }
 .modal-name-actions{display:none}
 .modal-nav-arrow{
