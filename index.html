@@ -1596,11 +1596,11 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   box-shadow:0 0 6px rgba(125,211,252,.65);
 }
 .hunt-counter-surface{
-  position:relative;display:grid;grid-template-columns:minmax(0,1fr) 118px;gap:9px;align-items:stretch;
-  margin-bottom:.85rem;
+  position:relative;margin-bottom:.85rem;
 }
 .hunt-count-card{
-  position:relative;min-width:0;padding:14px 12px;border-radius:14px;text-align:left;overflow:hidden;isolation:isolate;
+  position:relative;min-width:0;width:100%;padding:14px 14px 12px;border-radius:14px;text-align:left;overflow:hidden;isolation:isolate;
+  cursor:pointer;touch-action:manipulation;will-change:transform;
   background:
     radial-gradient(circle at 16% -15%,rgba(125,211,252,.28),transparent 55%),
     linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.015) 50%),
@@ -1613,6 +1613,40 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
     0 0 0 1px rgba(125,211,252,.05),
     0 0 22px rgba(125,211,252,.1);
   transform:translateZ(0);
+  transition:transform .16s cubic-bezier(.34,1.56,.64,1),border-color .16s ease,box-shadow .16s ease;
+}
+.hunt-count-card:active{transform:scale(.98) translateZ(0)}
+.hunt-count-card:focus{outline:none}
+.hunt-count-card:focus-visible{outline:2px solid rgba(125,211,252,.7);outline-offset:2px}
+@media (hover:hover) and (pointer:fine){
+  .hunt-count-card:hover{
+    transform:translateY(-1px) translateZ(0);border-color:rgba(125,211,252,.5);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,.12),inset 0 -14px 24px -20px rgba(0,0,0,.62),
+      0 14px 30px rgba(0,0,0,.3),0 0 0 1px rgba(125,211,252,.14),0 0 24px rgba(125,211,252,.18);
+  }
+  .hunt-count-card:hover .hunt-plus-invite-glow{animation-play-state:paused;opacity:.42}
+  .hunt-count-card:hover .hunt-plus-invite-ring{animation-play-state:paused;opacity:0}
+}
+.hunt-count-card:active .hunt-plus-invite-glow,.hunt-count-card.pulse .hunt-plus-invite-glow{animation-play-state:paused;opacity:.42}
+.hunt-count-card:active .hunt-plus-invite-ring,.hunt-count-card.pulse .hunt-plus-invite-ring{animation-play-state:paused;opacity:0}
+.hunt-count-card.pulse{border-color:rgba(125,211,252,.98);animation:huntPlusShake .26s ease-in-out}
+.hunt-count-card.pulse .hunt-count-ripple{animation:huntTapRipple .3s ease-out}
+.hunt-count-ripple{
+  position:absolute;left:50%;top:42%;width:16px;height:16px;border-radius:50%;z-index:3;
+  transform:translate(-50%,-50%) scale(0);background:rgba(255,255,255,.3);opacity:0;pointer-events:none;
+}
+.hunt-count-head{position:relative;z-index:3;display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:7px}
+.hunt-count-head .hunt-count-label{margin-bottom:0}
+.hunt-plus-chip{
+  font-family:var(--font);font-size:11px;font-weight:900;color:#0b1622;white-space:nowrap;
+  background:linear-gradient(180deg,#e4f5ff,#7dd3fc);
+  padding:2px 9px;border-radius:999px;letter-spacing:.02em;
+  box-shadow:0 0 9px rgba(125,211,252,.45),inset 0 1px 0 rgba(255,255,255,.6);
+}
+.hunt-plus-hint{
+  position:relative;z-index:3;display:block;margin-top:8px;text-align:center;
+  color:rgba(255,255,255,.5);font-size:8px;font-weight:900;text-transform:uppercase;letter-spacing:.1em;
 }
 .hunt-count-card::before{
   content:'';position:absolute;top:0;left:0;right:0;height:2px;z-index:2;
@@ -1764,34 +1798,6 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   50%{border-color:#c084fc;box-shadow:0 0 26px rgba(192,132,252,.5)}
   100%{transform:scale(1.16);opacity:0;border-color:#f7d774;box-shadow:0 0 24px rgba(247,215,116,.4)}
 }
-.hunt-plus-main{
-  position:relative;min-height:74px;border-radius:14px;overflow:hidden;isolation:isolate;
-  border:1px solid rgba(125,211,252,.4);color:#eafaff;cursor:pointer;font-family:var(--font);
-  background:
-    radial-gradient(circle at 18% -15%,rgba(125,211,252,.26),transparent 55%),
-    linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.015) 50%),
-    #15151f;
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.09),
-    inset 0 -14px 24px -20px rgba(0,0,0,.62),
-    0 14px 30px rgba(0,0,0,.26),
-    0 0 0 1px rgba(125,211,252,.05),
-    0 0 22px rgba(125,211,252,.1);
-  transition:transform .16s cubic-bezier(.34,1.56,.64,1),border-color .16s ease,box-shadow .16s ease;
-  touch-action:manipulation;
-  transform:translateZ(0);
-  will-change:transform;
-}
-.hunt-plus-main::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:2px;z-index:2;pointer-events:none;
-  background:linear-gradient(90deg,#7dd3fc,#c084fc,#f7d774,#7dd3fc);
-  background-size:220% 100%;opacity:.9;
-  animation:huntAccentDrift 6s ease-in-out infinite;
-}
-.hunt-plus-main::after{
-  content:'';position:absolute;left:50%;top:50%;width:16px;height:16px;border-radius:50%;z-index:3;
-  transform:translate(-50%,-50%) scale(0);background:rgba(255,255,255,.3);opacity:0;pointer-events:none;
-}
 .hunt-plus-invite-glow{
   position:absolute;inset:-45%;z-index:0;pointer-events:none;border-radius:50%;
   background:radial-gradient(circle,rgba(125,211,252,.5),rgba(192,132,252,.14) 45%,transparent 68%);
@@ -1812,38 +1818,13 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   68%{opacity:.6}
   100%{opacity:0;transform:scale(1.09)}
 }
-.hunt-plus-main:active .hunt-plus-invite-glow,.hunt-plus-main.pulse .hunt-plus-invite-glow{animation-play-state:paused;opacity:.42}
-.hunt-plus-main:active .hunt-plus-invite-ring,.hunt-plus-main.pulse .hunt-plus-invite-ring{animation-play-state:paused;opacity:0}
-@media (hover:hover) and (pointer:fine){
-  .hunt-plus-main:hover .hunt-plus-invite-glow{animation-play-state:paused;opacity:.42}
-  .hunt-plus-main:hover .hunt-plus-invite-ring{animation-play-state:paused;opacity:0}
-  .hunt-plus-main:hover{
-    transform:translateY(-1px) translateZ(0);border-color:rgba(125,211,252,.78);
-    box-shadow:
-      inset 0 1px 0 rgba(255,255,255,.16),inset 0 -1px 0 rgba(0,0,0,.32),
-      0 14px 30px rgba(0,0,0,.3),0 0 0 1px rgba(125,211,252,.22),0 0 20px rgba(125,211,252,.26);
-  }
-}
-.hunt-plus-main:focus{outline:none}
-.hunt-plus-main:focus-visible{outline:2px solid rgba(125,211,252,.7);outline-offset:2px}
-.hunt-plus-main:active{transform:scale(.94) translateZ(0)}
-.hunt-plus-main.pulse{
-  border-color:rgba(125,211,252,.98);
-  animation:huntPlusShake .26s ease-in-out;
-}
 @keyframes huntPlusShake{
-  0%{transform:scale(.94) translateZ(0) translateX(0)}
-  22%{transform:scale(.95) translateZ(0) translateX(-3px)}
-  44%{transform:scale(.96) translateZ(0) translateX(3px)}
-  66%{transform:scale(.98) translateZ(0) translateX(-2px)}
-  86%{transform:scale(.99) translateZ(0) translateX(1px)}
+  0%{transform:scale(.98) translateZ(0) translateX(0)}
+  22%{transform:scale(.985) translateZ(0) translateX(-3px)}
+  44%{transform:scale(.99) translateZ(0) translateX(3px)}
+  66%{transform:scale(.995) translateZ(0) translateX(-2px)}
+  86%{transform:scale(1) translateZ(0) translateX(1px)}
   100%{transform:scale(1) translateZ(0) translateX(0)}
-}
-.hunt-plus-main.pulse::after{animation:huntTapRipple .3s ease-out}
-.hunt-plus-main small{display:block;margin-top:5px;color:rgba(255,255,255,.65);font-size:8px;font-weight:900;text-transform:uppercase;letter-spacing:.1em;position:relative;z-index:2}
-.hunt-plus-label{
-  display:block;font-size:25px;font-weight:900;letter-spacing:.01em;color:#fff;position:relative;z-index:2;
-  text-shadow:0 -1px 0 rgba(255,255,255,.22),0 2px 10px rgba(0,0,0,.4);
 }
 
 .hunt-tap-ring{
@@ -2130,10 +2111,8 @@ button.capture-control{width:100%;text-align:left;font:inherit;color:inherit;cur
   .gender-subcontrol .gender-preview img{width:20px;height:20px}
   .gender-subcontrol .capture-kicker{display:none}
   .hunt-panel{padding:.8rem}
-  .hunt-counter-surface{grid-template-columns:minmax(0,1fr) 108px;gap:7px}
-  .hunt-count-card{padding:10px 8px}
+  .hunt-count-card{padding:11px 10px 10px}
   .hunt-count{height:34px;min-height:34px;font-size:28px;--digit-h:34px;padding:0 5px}
-  .hunt-plus-main{min-height:70px;font-size:23px;border-radius:15px}
   .hunt-actions{gap:6px}
   .hunt-actions .btn{min-height:34px;font-size:10px;padding-left:5px;padding-right:5px}
   .region-stat-row.primary{grid-template-columns:1fr;padding:8px 9px 7px}
@@ -2532,21 +2511,22 @@ button.capture-control{width:100%;text-align:left;font:inherit;color:inherit;cur
     <div class="hunt-panel edit-only" id="huntPanel">
       <div class="hunt-label">Rencontres en cours</div>
       <div class="hunt-counter-surface">
-        <div class="hunt-count-card">
+        <div class="hunt-count-card" id="huntPlusMain" role="button" tabindex="0" aria-label="Ajouter une rencontre" onclick="tapHuntPlus()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();tapHuntPlus();}">
           <span class="hunt-count-glow" aria-hidden="true"></span>
           <span class="hunt-count-foil" aria-hidden="true"></span>
           <span class="hunt-card-twinkle t1" aria-hidden="true"></span>
           <span class="hunt-card-twinkle t2" aria-hidden="true"></span>
           <span class="hunt-card-twinkle t3" aria-hidden="true"></span>
-          <span class="hunt-count-label">Compteur</span>
-          <div class="hunt-count" id="huntCount"><span class="hunt-count-row"></span></div>
-        </div>
-        <button class="hunt-plus-main" id="huntPlusMain" type="button" onclick="tapHuntPlus()">
           <span class="hunt-plus-invite-glow" aria-hidden="true"></span>
           <span class="hunt-plus-invite-ring" aria-hidden="true"></span>
-          <span class="hunt-plus-label">+1</span>
-          <small>continuer</small>
-        </button>
+          <span class="hunt-count-ripple" aria-hidden="true"></span>
+          <div class="hunt-count-head">
+            <span class="hunt-count-label">Compteur</span>
+            <span class="hunt-plus-chip">+1</span>
+          </div>
+          <div class="hunt-count" id="huntCount"><span class="hunt-count-row"></span></div>
+          <small class="hunt-plus-hint">Toucher pour continuer</small>
+        </div>
       </div>
       <div class="hunt-method-picker" id="huntMethods"></div>
       <div class="hunt-odds" aria-live="polite">
