@@ -1687,17 +1687,6 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   32%{transform:translateX(140%)}
   100%{transform:translateX(140%)}
 }
-.hunt-card-holo-border{
-  position:absolute;inset:0;z-index:2;pointer-events:none;border-radius:inherit;
-  padding:1.5px;opacity:.6;
-  background:conic-gradient(from 0deg,#7dd3fc,#c084fc,#f7d774,#7dd3fc,#c084fc,#7dd3fc);
-  -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
-  -webkit-mask-composite:xor;
-  mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
-  mask-composite:exclude;
-  animation:huntHoloSpin 5s linear infinite;
-}
-@keyframes huntHoloSpin{to{transform:rotate(360deg)}}
 .hunt-count-label{position:relative;z-index:3;display:flex;align-items:center;gap:5px;color:rgba(255,255,255,.55);font-size:8px;font-weight:900;text-transform:uppercase;margin-bottom:7px;letter-spacing:.08em}
 .hunt-count-label::before{
   content:'';width:4px;height:4px;flex:none;border-radius:50%;
@@ -2531,7 +2520,6 @@ button.capture-control{width:100%;text-align:left;font:inherit;color:inherit;cur
         <div class="hunt-count-card" id="huntPlusMain" role="button" tabindex="0" aria-label="Ajouter une rencontre" onclick="tapHuntPlus()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();tapHuntPlus();}">
           <span class="hunt-count-glow" aria-hidden="true"></span>
           <span class="hunt-count-foil" aria-hidden="true"></span>
-          <span class="hunt-card-holo-border" aria-hidden="true"></span>
           <span class="hunt-plus-invite-glow" aria-hidden="true"></span>
           <span class="hunt-plus-invite-ring" aria-hidden="true"></span>
           <span class="hunt-count-ripple" aria-hidden="true"></span>
