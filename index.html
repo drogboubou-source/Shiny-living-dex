@@ -1664,14 +1664,17 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   pointer-events:none;
 }
 .hunt-count-glow{
-  position:absolute;inset:-45%;z-index:0;pointer-events:none;border-radius:50%;
-  background:radial-gradient(circle,rgba(125,211,252,.45),rgba(192,132,252,.18) 45%,transparent 68%);
-  opacity:.2;will-change:opacity,transform;
-  animation:huntCountGlowBreathe 4.5s ease-in-out infinite;
+  position:absolute;inset:0;z-index:0;pointer-events:none;border-radius:inherit;
+  background:
+    radial-gradient(ellipse 65% 110% at 10% 15%,rgba(125,211,252,.34),transparent 68%),
+    radial-gradient(ellipse 65% 110% at 90% 88%,rgba(192,132,252,.28),transparent 68%),
+    radial-gradient(ellipse 85% 150% at 50% 50%,rgba(247,215,116,.12),transparent 74%);
+  opacity:.45;will-change:opacity,transform;
+  animation:huntCountGlowBreathe 5s ease-in-out infinite;
 }
 @keyframes huntCountGlowBreathe{
-  0%,100%{opacity:.15;transform:scale(.9)}
-  50%{opacity:.32;transform:scale(1.06)}
+  0%,100%{opacity:.32;transform:translateX(-2%) scale(1)}
+  50%{opacity:.6;transform:translateX(2%) scale(1.015)}
 }
 .hunt-count-foil{
   position:absolute;inset:-25%;z-index:1;pointer-events:none;
