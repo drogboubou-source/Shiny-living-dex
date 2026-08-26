@@ -72,7 +72,10 @@
 *{box-sizing:border-box;margin:0;padding:0}
 html{height:100%;overflow:hidden;overscroll-behavior-x:none}
 body{
-  background:url('./fond.png') center / cover fixed no-repeat var(--bg);
+  background:
+    radial-gradient(circle at 50% 28%,rgba(42,210,145,.26),rgba(5,18,17,.56) 36%,rgba(2,8,10,.84) 74%),
+    linear-gradient(180deg,rgba(0,7,8,.72),rgba(0,9,8,.52) 42%,rgba(0,3,5,.82)),
+    url('./fond.png') center / cover fixed no-repeat var(--bg);
   color:var(--text);font-family:var(--font);height:100%;overflow:hidden;-webkit-text-size-adjust:100%;text-size-adjust:100%;
   overscroll-behavior-x:none;
 }
@@ -311,11 +314,13 @@ body.hunt-tray-open .card:active{
 body.hunt-tray-open .card:hover,
 body.hunt-tray-open .card:active{
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.13),
-    inset 0 -14px 18px rgba(0,0,0,.18),
-    0 0 0 1px rgba(0,0,0,.55),
-    0 6px 10px rgba(0,0,0,.4),
-    0 18px 30px rgba(0,0,0,.5)!important;
+    inset 0 1px 0 rgba(255,255,255,.16),
+    inset 0 -18px 24px rgba(0,0,0,.42),
+    inset 0 0 28px rgba(var(--card-glow-rgb),.055),
+    0 0 0 1px rgba(1,10,10,.78),
+    0 8px 18px rgba(0,0,0,.56),
+    0 22px 38px rgba(0,0,0,.66),
+    0 0 20px rgba(var(--card-glow-rgb),.2)!important;
 }
 body.card-interaction-suppressed .card,
 body.card-interaction-suppressed .card:hover,
@@ -326,11 +331,13 @@ body.card-interaction-suppressed .card:active{
 body.card-interaction-suppressed .card:hover,
 body.card-interaction-suppressed .card:active{
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.13),
-    inset 0 -14px 18px rgba(0,0,0,.18),
-    0 0 0 1px rgba(0,0,0,.55),
-    0 6px 10px rgba(0,0,0,.4),
-    0 18px 30px rgba(0,0,0,.5)!important;
+    inset 0 1px 0 rgba(255,255,255,.16),
+    inset 0 -18px 24px rgba(0,0,0,.42),
+    inset 0 0 28px rgba(var(--card-glow-rgb),.055),
+    0 0 0 1px rgba(1,10,10,.78),
+    0 8px 18px rgba(0,0,0,.56),
+    0 22px 38px rgba(0,0,0,.66),
+    0 0 20px rgba(var(--card-glow-rgb),.2)!important;
 }
 .hunt-tray-popin{
   position:fixed;top:calc(var(--header-h) + 10px);right:1rem;width:min(370px,calc(100vw - 2rem));
@@ -1017,21 +1024,25 @@ body.card-interaction-suppressed .card:active{
 .generation-divider span{opacity:.82;font-variant-numeric:tabular-nums}
 .scroll-end{height:1px}
 .card{
-  --card-accent: rgba(255,255,255,.45);
+  --card-accent: rgba(204,255,234,.56);
+  --card-glow-rgb: var(--region-rgb,125,211,252);
   clip-path: polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px);
   background:
-    linear-gradient(165deg,#35353f 0%,#272730 48%,#1c1c23 100%) padding-box,
-    linear-gradient(165deg,rgba(255,255,255,.62),rgba(255,255,255,.2) 45%,rgba(255,255,255,.18) 100%) border-box;
+    radial-gradient(circle at 50% 8%,rgba(var(--card-glow-rgb),.14),transparent 46%) padding-box,
+    linear-gradient(165deg,#111f20 0%,#0b1517 52%,#070d10 100%) padding-box,
+    linear-gradient(165deg,rgba(218,255,239,.6),rgba(var(--card-glow-rgb),.34) 44%,rgba(255,255,255,.14) 100%) border-box;
   border:1px solid transparent;
   padding:13px 8px 9px;min-height:172px;
   text-align:center;cursor:pointer;position:relative;overflow:hidden;
   display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:5px;
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.13),
-    inset 0 -14px 18px rgba(0,0,0,.18),
-    0 0 0 1px rgba(0,0,0,.55),
-    0 6px 10px rgba(0,0,0,.4),
-    0 18px 30px rgba(0,0,0,.5);
+    inset 0 1px 0 rgba(255,255,255,.16),
+    inset 0 -18px 24px rgba(0,0,0,.42),
+    inset 0 0 28px rgba(var(--card-glow-rgb),.055),
+    0 0 0 1px rgba(1,10,10,.78),
+    0 8px 18px rgba(0,0,0,.56),
+    0 22px 38px rgba(0,0,0,.66),
+    0 0 20px rgba(var(--card-glow-rgb),.2);
   transition:transform .18s ease,box-shadow .18s ease,filter .2s ease;
 }
 .card::before{
@@ -1042,7 +1053,7 @@ body.card-interaction-suppressed .card:active{
 .card::after{
   content:'';position:absolute;inset:0;pointer-events:none;z-index:0;
   background:
-    linear-gradient(135deg,rgba(255,255,255,.13),transparent 26%,transparent 72%,rgba(255,255,255,.055)),
+    linear-gradient(135deg,rgba(255,255,255,.1),transparent 26%,transparent 72%,rgba(255,255,255,.045)),
     radial-gradient(circle 1.6px at right 6px top 6px,var(--card-accent),transparent 75%),
     radial-gradient(circle 1.6px at left 6px bottom 6px,var(--card-accent),transparent 75%),
     linear-gradient(var(--card-accent),var(--card-accent)) no-repeat right 6px top 6px/14px 2px,
@@ -1054,11 +1065,13 @@ body.card-interaction-suppressed .card:active{
 .card:hover{
   transform:translateY(-3px) scale(1.014);
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.15),
-    inset 0 -14px 18px rgba(0,0,0,.18),
-    0 0 0 1px rgba(0,0,0,.6),
-    0 8px 14px rgba(0,0,0,.44),
-    0 24px 38px rgba(0,0,0,.55);
+    inset 0 1px 0 rgba(255,255,255,.18),
+    inset 0 -18px 24px rgba(0,0,0,.42),
+    inset 0 0 30px rgba(var(--card-glow-rgb),.08),
+    0 0 0 1px rgba(1,10,10,.84),
+    0 12px 22px rgba(0,0,0,.6),
+    0 30px 48px rgba(0,0,0,.72),
+    0 0 28px rgba(var(--card-glow-rgb),.28);
 }
 .card > *{position:relative;z-index:1}
 .card .num{
@@ -1085,6 +1098,7 @@ body.card-interaction-suppressed .card:active{
 .card.caught,.card.perfect,.card.hunting{border-color:transparent}
 .card.caught{
   --card-accent:#c084fc;
+  --card-glow-rgb:192,132,252;
   background:
     linear-gradient(165deg,#33263f 0%,#251c30 48%,#1b1424 100%) padding-box,
     linear-gradient(165deg,#f7ecff,#c084fc 32%,#6b3d98 100%) border-box;
@@ -1094,6 +1108,7 @@ body.card-interaction-suppressed .card:active{
 .card.caught .pname{color:#c084fc;text-shadow:0 0 10px rgba(192,132,252,.7)}
 .card.perfect{
   --card-accent:#d4af37;
+  --card-glow-rgb:212,175,55;
   background:
     linear-gradient(165deg,#392c14 0%,#2b2114 48%,#1e1810 100%) padding-box,
     linear-gradient(165deg,#fffaea,#d4af37 32%,#8a6a18 100%) border-box;
@@ -1103,6 +1118,7 @@ body.card-interaction-suppressed .card:active{
 .card.perfect .pname{color:#d4af37;text-shadow:0 0 10px rgba(212,175,55,.75)}
 .card.hunting{
   --card-accent:#7dd3fc;
+  --card-glow-rgb:125,211,252;
   background:
     linear-gradient(165deg,#193640 0%,#142a31 48%,#102025 100%) padding-box,
     linear-gradient(165deg,#edfbff,#7dd3fc 32%,#226a87 100%) border-box;

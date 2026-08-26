@@ -7,7 +7,10 @@
 body{
     font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     min-height:100vh;
-    background:url('./fond.png') center / cover fixed no-repeat #111827;
+    background:
+        radial-gradient(circle at 50% 26%,rgba(42,210,145,.24),rgba(5,18,17,.58) 36%,rgba(2,8,10,.86) 74%),
+        linear-gradient(180deg,rgba(0,7,8,.74),rgba(0,9,8,.54) 42%,rgba(0,3,5,.84)),
+        url('./fond.png') center / cover fixed no-repeat #071012;
     color:white;
 }
 
@@ -65,12 +68,12 @@ main{
 }
 
 section{
-    background:rgba(255,255,255,0.03);
-    border:1px solid rgba(255,255,255,0.08);
+    background:linear-gradient(160deg,rgba(17,31,32,.92),rgba(7,13,16,.94));
+    border:1px solid rgba(204,255,234,0.16);
     border-radius:20px;
     padding:25px;
     backdrop-filter:blur(10px);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    box-shadow: 0 18px 42px rgba(0,0,0,0.62), 0 0 24px rgba(42,210,145,0.16);
 }
 
 .progress-bar{
