@@ -60,16 +60,13 @@
 *{box-sizing:border-box;margin:0;padding:0}
 html{height:100%;overflow:hidden}
 body{
-  background:
-    linear-gradient(180deg,rgba(15,15,19,.74),rgba(15,15,19,.9)),
-    url('./fond.png') center / cover fixed no-repeat,
-    var(--bg);
+  background:url('./fond.png') center / cover fixed no-repeat var(--bg);
   color:var(--text);font-family:var(--font);height:100%;overflow:hidden
 }
 button,.btn,.card,.gen-btn{-webkit-tap-highlight-color:transparent}
 
 /* scanlines */
-body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.06) 2px,rgba(0,0,0,.06) 4px);pointer-events:none;z-index:9999}
+body::after{display:none}
 
 /* ── TOPBAR ── */
 .topbar{
