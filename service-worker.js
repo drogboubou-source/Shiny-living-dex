@@ -1,11 +1,12 @@
-const CACHE_NAME = 'shiny-living-dex-v276';
-const RUNTIME_CACHE = 'shiny-living-dex-runtime-v276';
+const CACHE_NAME = 'shiny-living-dex-v277';
+const RUNTIME_CACHE = 'shiny-living-dex-runtime-v277';
 const OFFLINE_URL = './index.html';
 const APP_SHELL = [
   './',
   './index.html',
   './pokedex.html',
   './manifest.json',
+  './fond.png',
   './Assets/icon-192.png',
   './Assets/icon-512.png',
   './Assets/icon-maskable-192.png',
