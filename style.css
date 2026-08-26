@@ -7,7 +7,10 @@
 body{
     font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     min-height:100vh;
-    background: linear-gradient(135deg, #0f172a, #1e293b, #111827);
+    background:
+        linear-gradient(180deg, rgba(15,15,19,0.18), rgba(15,15,19,0.58)),
+        url('./fond.png?v=277') center/cover no-repeat fixed,
+        #0f0f13;
     color:white;
 }
 
