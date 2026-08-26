@@ -19,7 +19,7 @@ statsTab.addEventListener("click", () => {
 
 if ("serviceWorker" in navigator) {
     navigator.serviceWorker
-        .register("service-worker.js")
+        .register("service-worker.js?v=278")
         .then(() => console.log("Service Worker enregistré avec succès !"))
         .catch(err => console.error("Échec de l'enregistrement du Service Worker :", err));
 }
