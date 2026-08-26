@@ -43,16 +43,12 @@
   font-display:block;
 }
 :root {
-  --bg:       #100c18;
-  --surface:  #1c1626;
-  --surface2: #2a2038;
-  --border:   rgba(192,132,252,0.14);
-  --text:     #f0e9fb;
-  --muted:    #9184ad;
-  --accent:   #c084fc;
-  --accent2:  #7dd3fc;
-  --accent3:  #d4af37;
-  --accent4:  #ff8fc9;
+  --bg:       #0f0f13;
+  --surface:  #18181f;
+  --surface2: #222230;
+  --border:   rgba(255,255,255,0.07);
+  --text:     #e8e8f0;
+  --muted:    #777788;
   --font-logo:'Logo Retro Pixel v70', 'Pokemon Classic', monospace;
   --font-region:'Region GameBoy v70', 'Pokemon Classic', monospace;
   --font:     'Pokemon 3DS', sans-serif;
@@ -63,15 +59,7 @@
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{height:100%;overflow:hidden}
-body{
-  background:
-    radial-gradient(circle at 12% -10%,rgba(212,175,55,.14),transparent 32%),
-    radial-gradient(circle at 50% -18%,rgba(192,132,252,.22),transparent 38%),
-    radial-gradient(circle at 94% 8%,rgba(125,211,252,.15),transparent 32%),
-    radial-gradient(circle at 80% 92%,rgba(255,143,201,.10),transparent 34%),
-    linear-gradient(180deg,#170f24 0%,var(--bg) 42%,#0c0815 100%);
-  color:var(--text);font-family:var(--font);height:100%;overflow:hidden;
-}
+body{background:var(--bg);color:var(--text);font-family:var(--font);height:100%;overflow:hidden}
 button,.btn,.card,.gen-btn{-webkit-tap-highlight-color:transparent}
 
 /* scanlines */
@@ -80,10 +68,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 /* ── TOPBAR ── */
 .topbar{
   position:fixed;top:0;left:0;right:0;height:var(--header-h);
-  background:
-    radial-gradient(circle at 10% 0%,rgba(192,132,252,.1),transparent 60%),
-    var(--surface);
-  border-bottom:1px solid var(--border);
+  background:var(--surface);border-bottom:1px solid var(--border);
   display:grid;grid-template-columns:auto auto minmax(0,1fr);align-items:center;
   gap:1rem;padding:0 1.25rem;z-index:100;
 }
@@ -364,8 +349,8 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .scroll-end{height:1px}
 .card{
   background:
-    radial-gradient(circle at 50% 34%,rgba(192,132,252,.09),transparent 42%),
-    linear-gradient(165deg,rgba(192,132,252,.1),rgba(125,211,252,.04)),
+    radial-gradient(circle at 50% 34%,rgba(255,255,255,.055),transparent 42%),
+    linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.012)),
     var(--surface);
   border:1px solid var(--border);
   border-radius:var(--r);padding:9px 7px 8px;min-height:148px;
@@ -457,12 +442,11 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   font-family:var(--font);font-size:13px;font-weight:500;
   padding:6px 13px;border-radius:var(--r);
   border:1px solid var(--border);cursor:pointer;
-  background:linear-gradient(165deg,rgba(192,132,252,.14),rgba(125,211,252,.05)),var(--surface2);
-  color:var(--text);
+  background:var(--surface2);color:var(--text);
   display:inline-flex;align-items:center;gap:6px;white-space:nowrap;
-  transition:background .12s,border-color .12s,box-shadow .12s;
+  transition:background .12s,border-color .12s;
 }
-.btn:hover{background:linear-gradient(165deg,rgba(192,132,252,.24),rgba(125,211,252,.09)),#332748;border-color:rgba(192,132,252,.32);box-shadow:0 4px 14px rgba(192,132,252,.16)}
+.btn:hover{background:#2a2a3a;border-color:rgba(255,255,255,.15)}
 .btn svg{width:14px;height:14px;flex-shrink:0}
 
 /* ── MODAL ── */
