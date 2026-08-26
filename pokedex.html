@@ -59,7 +59,7 @@
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{height:100%;overflow:hidden}
-body{background:var(--bg) url('./fond2.png?v=278') center/contain no-repeat fixed;color:var(--text);font-family:var(--font);height:100%;overflow:hidden}
+body{background:var(--bg);color:var(--text);font-family:var(--font);height:100%;overflow:hidden}
 button,.btn,.card,.gen-btn{-webkit-tap-highlight-color:transparent}
 
 /* scanlines */
@@ -1964,7 +1964,7 @@ initStatsButtonSwipe();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=278', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=276', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
