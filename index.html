@@ -92,7 +92,7 @@ body::before{
 button,.btn,.card,.gen-btn{-webkit-tap-highlight-color:transparent}
 
 /* scanlines */
-body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.06) 2px,rgba(0,0,0,.06) 4px);pointer-events:none;z-index:9999}
+body::after{content:'';display:none;position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.06) 2px,rgba(0,0,0,.06) 4px);pointer-events:none;z-index:9999}
 body.readonly-share .edit-only{display:none!important}
 body.readonly-share .readonly-disabled{opacity:.62;pointer-events:none}
 body.readonly-share .modal-form-fields input,
@@ -666,7 +666,7 @@ body.card-interaction-suppressed .card:active{
   .generation-divider{min-height:26px;margin:4px 0 -2px;font-size:9px;gap:7px;padding:3px 7px 3px 8px;top:0}
   .generation-divider strong{font-size:8px}
   .card{min-height:152px;padding:9px 6px 8px}
-  .card-sprite{width:56px;height:56px}
+  .card-sprite{width:74px;height:56px;padding:5px 8px}
   .card .pname{font-size:12px;min-height:auto;padding:0}
   .card .num{font-size:8px;padding:3px 6px 2px;margin-left:2px}
   .card .status{font-size:7px;padding:3px 6px}
@@ -1076,7 +1076,7 @@ body.card-interaction-suppressed .card:active{
   text-align:center;width:100%;max-width:100%;overflow-wrap:anywhere;
 }
 .card-sprite{
-  width:92px;height:78px;order:2;margin:2px 0 4px;display:block;
+  width:100px;height:78px;order:2;margin:2px 0 4px;display:block;
   object-fit:contain;padding:8px 12px;border-radius:16px;
   background:
     radial-gradient(120% 90% at 50% 12%, rgba(255,255,255,.12), rgba(255,255,255,0) 60%),
@@ -2074,7 +2074,7 @@ button.capture-control{width:100%;text-align:left;font:inherit;color:inherit;cur
   .generation-divider{min-height:26px;margin:4px 0 -2px;font-size:9px;gap:7px;padding:3px 7px 3px 8px;top:6px}
   .generation-divider strong{font-size:8px}
   .card{min-height:152px;padding:9px 6px 8px}
-  .card-sprite{width:56px;height:56px}
+  .card-sprite{width:74px;height:56px;padding:5px 8px}
   .card .pname{font-size:12px;min-height:auto;padding:0}
   .card .num{font-size:8px;padding:3px 6px 2px;margin-left:2px}
   .card .status{font-size:7px;padding:3px 6px}
