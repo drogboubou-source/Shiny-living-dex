@@ -1021,17 +1021,11 @@ body.card-interaction-suppressed .card:active{
 .card{
   --type-c1: #7d7d8a;
   --type-c2: var(--type-c1);
-  --card-accent: color-mix(in srgb, var(--type-c1) 72%, white);
+  --card-accent: rgba(255,255,255,.45);
   clip-path: polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px);
   background:
-    linear-gradient(165deg,
-      color-mix(in srgb, var(--type-c1) 46%, #1c1c23) 0%,
-      color-mix(in srgb, var(--type-c2) 34%, #1c1c23) 52%,
-      #17171e 100%) padding-box,
-    linear-gradient(165deg,
-      color-mix(in srgb, var(--type-c1) 55%, white),
-      color-mix(in srgb, var(--type-c2) 40%, rgba(255,255,255,.2)) 45%,
-      rgba(255,255,255,.18) 100%) border-box;
+    linear-gradient(90deg, var(--type-c1) 50%, var(--type-c2) 50%) padding-box,
+    linear-gradient(165deg,rgba(255,255,255,.62),rgba(255,255,255,.2) 45%,rgba(255,255,255,.18) 100%) border-box;
   border:1px solid transparent;
   padding:13px 8px 9px;min-height:172px;
   text-align:center;cursor:pointer;position:relative;overflow:hidden;
