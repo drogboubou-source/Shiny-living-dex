@@ -243,14 +243,19 @@ body::after{display:none}
   .filters select,.sort-control{width:100%;min-width:0}
   .sort-control select{width:100%}
   .grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
-  .card{min-height:132px;padding:8px 4px 7px}
-  .card-sprite{width:56px;height:56px}
-  .card .pname{font-size:11px;min-height:27px;padding:0}
-  .card .status{font-size:9px;padding:3px 6px}
+  .card{min-height:198px;padding:7px 6px 8px}
+  .card-head{padding:4px 6px}
+  .card .num{font-size:9px}
+  .card .pname{font-size:10px;min-height:0}
+  .stage-badge{font-size:7.5px;padding:2px 5px}
+  .card-sprite{width:42px;height:42px}
+  .card-sprite.pixel{width:36px;height:36px}
+  .sprite-pair{gap:5px}
+  .sprite-tag{font-size:7px;padding:1px 5px}
+  .card .status{font-size:9px;padding:4px}
   .card .status-pair{gap:4px}
-  .type-row{gap:3px;margin:1px 0 3px;padding:0}
-  .type-pill{width:40px;height:10px}
-  .type-pill img{width:40px;height:auto;max-height:10px}
+  .type-row{gap:3px}
+  .type-pill img{height:13px}
   .two-col{grid-template-columns:1fr}
   .iv-grid{grid-template-columns:1fr 1fr}
   .modal{padding:1.35rem;max-height:92vh}
@@ -346,51 +351,52 @@ body::after{display:none}
 /* ── GRID ── */
 .grid{
   display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(112px,1fr));
-  gap:10px;
+  grid-template-columns:repeat(3,1fr);
+  gap:16px;
 }
 .scroll-end{height:1px}
 .card{
-  background:
-    radial-gradient(circle at 50% 34%,rgba(255,255,255,.055),transparent 42%),
-    linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.012)),
-    var(--surface);
-  border:1px solid var(--border);
-  border-radius:var(--r);padding:9px 7px 8px;min-height:148px;
-  text-align:center;cursor:pointer;position:relative;overflow:hidden;
-  display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:4px;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 8px 18px rgba(0,0,0,.24);
-  transition:transform .16s ease,border-color .16s ease,box-shadow .16s ease;
+  border-radius:16px;padding:10px 10px 12px;min-height:230px;
+  cursor:pointer;position:relative;overflow:hidden;
+  display:flex;flex-direction:column;gap:8px;
+  color:#20301c;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 8px 18px rgba(0,0,0,.28);
+  transition:transform .16s ease,box-shadow .16s ease;
 }
-.card::after{content:'';position:absolute;inset:5px;border:1px solid rgba(255,255,255,.08);border-radius:calc(var(--r) - 3px);pointer-events:none;z-index:1;box-shadow:inset 0 0 14px rgba(255,255,255,.025)}
-.card:hover{transform:translateY(-2px);box-shadow:inset 0 1px 0 rgba(255,255,255,.1),0 10px 22px rgba(0,0,0,.3)}
-.card.caught{border-color:#c084fc;box-shadow:0 0 0 1px rgba(192,132,252,.5),0 0 16px rgba(192,132,252,.22),inset 0 1px 0 rgba(255,255,255,.1)}
-.card.caught::after{border-color:rgba(192,132,252,.36);box-shadow:inset 0 0 18px rgba(192,132,252,.08)}
-.card.perfect{border-color:#d4af37;box-shadow:0 0 0 1px rgba(212,175,55,.58),0 0 17px rgba(212,175,55,.28),inset 0 1px 0 rgba(255,255,255,.1)}
-.card.perfect::after{border-color:rgba(212,175,55,.42);box-shadow:inset 0 0 18px rgba(212,175,55,.09)}
-.card-sprite{
-  width:64px;height:64px;image-rendering:pixelated;display:block;order:2;margin:1px 0 0;
-  box-sizing:border-box;padding:4px;border-radius:14px;
-  background:radial-gradient(circle at 50% 40%,rgba(255,255,255,.07),rgba(255,255,255,.02) 60%,rgba(0,0,0,.12));
-  border:1px solid rgba(255,255,255,.1);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 3px 8px rgba(0,0,0,.28);
-  transition:border-color .16s ease,box-shadow .16s ease;
+.card::after{content:'';position:absolute;inset:5px;border:1px solid rgba(255,255,255,.35);border-radius:11px;pointer-events:none;z-index:1}
+.card:hover{transform:translateY(-2px);box-shadow:inset 0 1px 0 rgba(255,255,255,.6),0 10px 22px rgba(0,0,0,.34)}
+.card.caught{box-shadow:0 0 0 2px #c084fc,0 0 16px rgba(192,132,252,.35),inset 0 1px 0 rgba(255,255,255,.5)}
+.card.perfect{box-shadow:0 0 0 2px #d4af37,0 0 17px rgba(212,175,55,.4),inset 0 1px 0 rgba(255,255,255,.5)}
+.card-head{
+  display:flex;align-items:center;gap:6px;background:#fff;border-radius:10px;
+  padding:5px 8px;box-shadow:0 1px 3px rgba(0,0,0,.18);position:relative;z-index:2;
 }
-.card:hover .card-sprite{border-color:rgba(255,255,255,.22)}
-.card.caught .card-sprite{border-color:rgba(192,132,252,.3);box-shadow:inset 0 1px 0 rgba(255,255,255,.1),0 3px 8px rgba(0,0,0,.28),0 0 10px rgba(192,132,252,.14)}
-.card.perfect .card-sprite{border-color:rgba(212,175,55,.35);box-shadow:inset 0 1px 0 rgba(255,232,171,.12),0 3px 8px rgba(0,0,0,.28),0 0 10px rgba(212,175,55,.16)}
-.card .num{font-family:var(--font);font-size:10px;color:var(--muted);margin-bottom:0;order:0}
-.card .pname{font-size:12px;font-weight:700;line-height:1.2;color:var(--text);word-break:break-word;padding:0 2px;min-height:29px;display:flex;align-items:center;justify-content:center;order:1}
-.card.caught .pname{color:#c084fc}
-.card.perfect .pname{color:#d4af37}
+.card .num{font-family:var(--font);font-size:10px;color:#6b7a63;font-weight:700}
+.card .pname{flex:1;font-size:12px;font-weight:700;line-height:1.1;color:#1d2a19;word-break:break-word;text-align:left}
+.card.caught .pname{color:#8b2fc9}
+.card.perfect .pname{color:#a3801a}
+.stage-badge{
+  font-size:9px;font-weight:800;letter-spacing:.2px;color:#fff;
+  background:#57794a;border-radius:20px;padding:2px 7px;white-space:nowrap;flex-shrink:0;
+}
+.art{
+  border-radius:12px;padding:8px 4px;background:linear-gradient(180deg,#fafaf5,#eef0e6);
+  display:flex;align-items:center;justify-content:center;position:relative;z-index:2;
+  box-shadow:inset 0 0 0 1px rgba(0,0,0,.06);
+}
+.sprite-pair{display:flex;gap:8px;align-items:flex-end;justify-content:center}
+.sprite-box{display:flex;flex-direction:column;align-items:center;gap:2px}
+.card-sprite{width:56px;height:56px;object-fit:contain;display:block;filter:drop-shadow(0 4px 6px rgba(0,0,0,.22))}
+.card-sprite.pixel{image-rendering:pixelated;width:48px;height:48px}
+.sprite-tag{font-size:8px;font-weight:800;letter-spacing:.4px;color:#fff;background:rgba(0,0,0,.42);border-radius:20px;padding:1px 6px}
+.card .type-row{position:relative;z-index:2}
 .card .status{
-  margin-top:auto;font-size:10px;padding:3px 7px;border-radius:20px;
-  font-weight:700;letter-spacing:.3px;order:4;line-height:1;
+  position:relative;z-index:2;background:rgba(255,255,255,.55);border-radius:10px;
+  text-align:center;padding:5px;font-size:10px;font-weight:700;color:#4a5744;
 }
-.card.caught .status{background:rgba(0,0,0,.34);color:#fff7d6;border:1px solid rgba(192,132,252,.35)}
-.card:not(.caught) .status{background:var(--surface2);color:var(--muted)}
-.card .status-shiny{color:#c084fc}
-.card .status-perfect{color:#d4af37}
+.card.caught .status{background:rgba(255,255,255,.7);color:#8b2fc9}
+.card .status-shiny{color:#8b2fc9}
+.card .status-perfect{color:#a3801a}
 .card .status-pair{display:inline-flex;align-items:center;justify-content:center;gap:5px}
 
 /* ══════════════════════════════════════
@@ -435,9 +441,9 @@ body::after{display:none}
   .card.caught .holo::before,.card.perfect .holo::before{animation:none;opacity:0}
 }
 
-.type-row{width:100%;min-height:19px;margin:2px 0 4px;display:flex;justify-content:center;gap:3px;flex-wrap:wrap;padding:0 2px;order:3}
-.type-pill{display:inline-grid;place-items:center;width:46px;height:12px;filter:drop-shadow(0 2px 5px rgba(0,0,0,.25))}
-.type-pill img{width:46px;height:auto;max-height:12px;display:block;image-rendering:auto}
+.type-row{width:100%;min-height:18px;display:flex;justify-content:center;gap:5px;flex-wrap:nowrap}
+.type-pill{flex:0 1 auto;max-width:calc(50% - 3px);filter:drop-shadow(0 2px 4px rgba(0,0,0,.25))}
+.type-pill img{height:17px;width:auto;max-width:100%;display:block;border-radius:4px;image-rendering:auto}
 .empty{color:var(--muted);font-size:14px;padding:4rem 0;text-align:center;grid-column:1/-1}
 
 /* ── BUTTONS ── */
@@ -577,7 +583,7 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
 .ball-choice input{position:absolute;opacity:0;pointer-events:none}
 .ball-choice img{width:24px;height:24px;object-fit:contain;image-rendering:auto;flex-shrink:0}
 .ball-choice span{font-size:11px;font-weight:700;line-height:1.15;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.card .card-ball{position:absolute;right:6px;top:6px;width:22px;height:22px;object-fit:contain;filter:drop-shadow(0 2px 5px rgba(0,0,0,.45));z-index:3;margin:0;order:initial}
+.card .card-ball{position:absolute;right:8px;bottom:38px;width:20px;height:20px;object-fit:contain;filter:drop-shadow(0 2px 5px rgba(0,0,0,.45));z-index:3;margin:0;order:initial}
 .modal-ball-preview{display:flex;align-items:center;gap:8px;margin-top:6px;color:var(--muted);font-size:11px}
 .modal-ball-preview img{width:26px;height:26px;object-fit:contain}
 .two-col{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px;min-width:0}
@@ -614,14 +620,19 @@ hr.div{border:none;border-top:1px solid var(--border);margin:1.1rem 0}
   .filters select,.sort-control,.perfect-summary{width:100%;min-width:0}
   .sort-control select{width:100%}
   .grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
-  .card{min-height:132px;padding:8px 4px 7px}
-  .card-sprite{width:56px;height:56px}
-  .card .pname{font-size:11px;min-height:27px;padding:0}
-  .card .status{font-size:9px;padding:3px 6px}
+  .card{min-height:198px;padding:7px 6px 8px}
+  .card-head{padding:4px 6px}
+  .card .num{font-size:9px}
+  .card .pname{font-size:10px;min-height:0}
+  .stage-badge{font-size:7.5px;padding:2px 5px}
+  .card-sprite{width:42px;height:42px}
+  .card-sprite.pixel{width:36px;height:36px}
+  .sprite-pair{gap:5px}
+  .sprite-tag{font-size:7px;padding:1px 5px}
+  .card .status{font-size:9px;padding:4px}
   .card .status-pair{gap:4px}
-  .type-row{gap:3px;margin:1px 0 3px;padding:0}
-  .type-pill{width:40px;height:10px}
-  .type-pill img{width:40px;height:auto;max-height:10px}
+  .type-row{gap:3px}
+  .type-pill img{height:13px}
   .modal-hero{display:grid;grid-template-columns:1fr;justify-items:center;text-align:center;gap:.85rem}
   .modal-hero .sprite-pair{justify-content:center}
 }
@@ -863,6 +874,48 @@ const TYPE_ICON_SRC = {
 Object.entries(TYPE_ICON_SRC).forEach(([type, src]) => {
   if (TYPE_META[type]) TYPE_META[type].src = src;
 });
+
+// Couleurs de fond de carte par type (dégradé haut → bas), bien saturées.
+const TYPE_CARD_BG = {
+  normal:   ['#c9c9a3', '#a8a878'],
+  fire:     ['#ff7f4d', '#e8461a'],
+  water:    ['#4fb8f0', '#1e7fce'],
+  electric: ['#ffe459', '#f5c400'],
+  grass:    ['#8fdb6a', '#3fa833'],
+  ice:      ['#a6e8e2', '#5cc9c2'],
+  fighting: ['#e07a5f', '#b8442e'],
+  poison:   ['#d478e0', '#9b3aab'],
+  ground:   ['#e8c165', '#c69436'],
+  flying:   ['#b9a8ff', '#8b73f0'],
+  psychic:  ['#ff8fc0', '#f74b95'],
+  bug:      ['#c3d95f', '#94b028'],
+  rock:     ['#d4c07a', '#a68e3f'],
+  ghost:    ['#a688d6', '#6f4bab'],
+  dragon:   ['#8f95f7', '#4a4fe0'],
+  dark:     ['#8f8687', '#5c5457'],
+  steel:    ['#c6cfe0', '#8f9bb8'],
+  fairy:    ['#ffb3d1', '#f582ac'],
+};
+
+function cardTypeGradient(id) {
+  const types = POKEMON_TYPES[id] || ['normal'];
+  const [c1, c2] = TYPE_CARD_BG[types[0]] || TYPE_CARD_BG.normal;
+  return `linear-gradient(180deg, ${c1}, ${c2})`;
+}
+
+// Stade d'évolution approximatif à partir de la famille d'évolution :
+// on trie les IDs de la famille par ordre croissant (heuristique proche
+// de l'ordre d'évolution réel dans la grande majorité des cas) et on
+// situe le Pokémon dans cette progression : Base / Niveau 1 / Niveau 2+.
+function getEvolutionStage(id) {
+  const family = FAMILY_BY_POKEMON[id];
+  if (!family || family.length <= 1) return 'Base';
+  const sorted = [...family].sort((a, b) => a - b);
+  const idx = sorted.indexOf(id);
+  if (idx <= 0) return 'Base';
+  if (idx === 1) return 'Niveau 1';
+  return 'Niveau 2';
+}
 
 function renderTypeBadges(id) {
   return (POKEMON_TYPES[id] || []).map(type => {
@@ -1241,22 +1294,23 @@ function getPokemonSpriteUrl(id, shiny = false, mode = spriteMode) {
   return `${base}/${shiny ? 'shiny/' : ''}${id}.png`;
 }
 
-function handleSpriteError(img, id, shiny = false) {
+function handleSpriteError(img, id, shiny = false, mode = null) {
   // Une 1re erreur peut être un simple 429 (rate-limit GitHub) plutôt qu'un sprite
   // manquant : on retente une fois la même URL après un court délai avant
   // de basculer définitivement sur une image de secours.
+  const effectiveMode = mode || (isHomeSpriteMode() ? 'home' : 'pixel');
   if (!img.dataset.retried) {
     img.dataset.retried = '1';
     const originalSrc = img.src;
     const delay = 800 + Math.random() * 1200;
     setTimeout(() => {
-      img.onerror = () => handleSpriteError(img, id, shiny);
+      img.onerror = () => handleSpriteError(img, id, shiny, effectiveMode);
       img.src = originalSrc.includes('?') ? `${originalSrc}&retry=1` : `${originalSrc}?retry=1`;
     }, delay);
     return;
   }
 
-  const fallback = isHomeSpriteMode()
+  const fallback = effectiveMode === 'home'
     ? (shiny ? getPokemonSpriteUrl(id, false, 'home') : getPokemonSpriteUrl(id, false, 'pixel'))
     : (shiny ? getPokemonSpriteUrl(id, false, 'pixel') : SPRITE_FALLBACK);
   img.onerror = () => { img.onerror = null; img.src = SPRITE_FALLBACK; };
@@ -1544,20 +1598,38 @@ function renderGrid() {
     };
 
     const useShinySprite = !!p.caught;
-    const spriteUrl = getPokemonSpriteUrl(id, useShinySprite);
+    const sprite2d = getPokemonSpriteUrl(id, useShinySprite, 'pixel');
+    const sprite3d = getPokemonSpriteUrl(id, useShinySprite, 'home');
     const typeBadges = renderTypeBadges(id);
     const ballHtml = p.caught ? renderCardBall(p.ball) : '';
     const statusHtml = p.caught && p.perfect
       ? '<span class="status-pair"><span class="status-shiny">Shiny</span><span class="status-perfect">Parfait</span></span>'
       : (p.caught ? '<span class="status-shiny">Shiny</span>' : 'Manquant');
     const sparkHtml = '';
+    const stage = getEvolutionStage(id);
 
+    card.style.background = cardTypeGradient(id);
     card.innerHTML = `
-      <div class="num">#${String(id).padStart(4,'0')}</div>
-      <div class="pname">${name}</div>
+      <div class="card-head">
+        <span class="num">#${String(id).padStart(4,'0')}</span>
+        <span class="pname">${name}</span>
+        <span class="stage-badge">${stage}</span>
+      </div>
+      <div class="art">
+        <div class="sprite-pair">
+          <div class="sprite-box">
+            <img class="card-sprite pixel" src="${sprite2d}" alt="${name} 2D"
+                 loading="lazy" width="48" height="48" onerror="handleSpriteError(this, ${id}, ${useShinySprite}, 'pixel')">
+            <span class="sprite-tag">2D</span>
+          </div>
+          <div class="sprite-box">
+            <img class="card-sprite" src="${sprite3d}" alt="${name} 3D"
+                 loading="lazy" width="56" height="56" onerror="handleSpriteError(this, ${id}, ${useShinySprite}, 'home')">
+            <span class="sprite-tag">3D</span>
+          </div>
+        </div>
+      </div>
       <div class="type-row">${typeBadges}</div>
-      <img class="card-sprite" src="${spriteUrl}"
-             alt="${name}" loading="lazy" width="64" height="64" onerror="handleSpriteError(this, ${id}, ${useShinySprite})">
       ${ballHtml}
       <div class="status">${statusHtml}</div>
       <div class="holo" aria-hidden="true">${sparkHtml}</div>`;
@@ -1795,8 +1867,8 @@ function openModal(id) {
 
   const normalSprite = document.getElementById('mSprite');
   const shinySprite = document.getElementById('mSpriteShiny');
-  normalSprite.onerror = () => handleSpriteError(normalSprite, id, false);
-  shinySprite.onerror = () => handleSpriteError(shinySprite, id, true);
+  normalSprite.onerror = () => handleSpriteError(normalSprite, id, false, spriteMode);
+  shinySprite.onerror = () => handleSpriteError(shinySprite, id, true, spriteMode);
   normalSprite.src = getPokemonSpriteUrl(id, false);
   shinySprite.src = getPokemonSpriteUrl(id, true);
   document.getElementById('mNum').textContent = `#${String(id).padStart(4,'0')}`;
