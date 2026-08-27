@@ -982,7 +982,7 @@ body.card-interaction-suppressed .card:active{
 .grid{
   position:relative;
   display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(150px,1fr));
+  grid-template-columns:repeat(3,minmax(0,1fr));
   gap:10px;
   padding:12px 2px;
   overflow:visible;
@@ -1020,11 +1020,13 @@ body.card-interaction-suppressed .card:active{
 .scroll-end{height:1px}
 .card{
   --card-accent: rgba(255,255,255,.45);
+  --type-color-a: #58606b;
+  --type-color-b: #242a32;
   clip-path: polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px);
   background:
-    linear-gradient(165deg,#35353f 0%,#272730 48%,#1c1c23 100%) padding-box,
-    linear-gradient(165deg,rgba(255,255,255,.62),rgba(255,255,255,.2) 45%,rgba(255,255,255,.18) 100%) border-box;
-  border:1px solid transparent;
+    linear-gradient(165deg,var(--type-color-a) 0%,var(--type-color-b) 72%,#171b21 100%) padding-box,
+    linear-gradient(165deg,#c8cdd3 0%,#747b84 42%,#4a5058 100%) border-box;
+  border:2px solid transparent;
   padding:13px 8px 9px;min-height:172px;
   text-align:center;cursor:pointer;position:relative;overflow:hidden;
   display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:5px;
@@ -1044,14 +1046,10 @@ body.card-interaction-suppressed .card:active{
 .card::after{
   content:'';position:absolute;inset:0;pointer-events:none;z-index:0;
   background:
-    linear-gradient(135deg,rgba(255,255,255,.13),transparent 26%,transparent 72%,rgba(255,255,255,.055)),
-    radial-gradient(circle 1.6px at right 6px top 6px,var(--card-accent),transparent 75%),
-    radial-gradient(circle 1.6px at left 6px bottom 6px,var(--card-accent),transparent 75%),
-    linear-gradient(var(--card-accent),var(--card-accent)) no-repeat right 6px top 6px/14px 2px,
-    linear-gradient(var(--card-accent),var(--card-accent)) no-repeat right 6px top 6px/2px 14px,
-    linear-gradient(var(--card-accent),var(--card-accent)) no-repeat left 6px bottom 6px/14px 2px,
-    linear-gradient(var(--card-accent),var(--card-accent)) no-repeat left 6px bottom 6px/2px 14px;
-  opacity:.9;
+    linear-gradient(135deg,rgba(255,255,255,.20),transparent 28%,transparent 68%,rgba(255,255,255,.05)),
+    radial-gradient(circle at 50% 0%,rgba(255,255,255,.16),transparent 48%),
+    linear-gradient(180deg,rgba(255,255,255,.03),transparent 42%,rgba(0,0,0,.18));
+  opacity:1;
 }
 .card:hover{
   transform:translateY(-3px) scale(1.014);
@@ -4630,6 +4628,15 @@ function getHoloSparkHtml(show) {
   return '';
 }
 
+function setCardTypeVisuals(card, types) {
+  const list = Array.isArray(types) ? types.filter(Boolean) : [];
+  const a = TYPE_COLORS[list[0]] || '#58606b';
+  const b = TYPE_COLORS[list[1]] || a;
+  card.style.setProperty('--type-color-a', a);
+  card.style.setProperty('--type-color-b', b);
+  card.dataset.cardType = list.join('-');
+}
+
 function createRegionalOriginalCard(id) {
   const name = NAMES[id] || `#${id}`;
   const p = progress[id] || {};
@@ -4638,6 +4645,7 @@ function createRegionalOriginalCard(id) {
   const card = document.createElement('div');
   card.className = 'card form-original' + (p.caught ? ' caught' : '') + (p.perfect ? ' perfect' : '') + (isHuntingCard ? ' hunting' : '') + getTargetCardClasses(p, isHuntingCard);
   setRegionVisualVars(card, getRegionByPokemonId(id));
+  setCardTypeVisuals(card, POKEMON_TYPES[String(id)] || POKEMON_TYPES[id] || []);
   card.setAttribute('role', 'button');
   card.setAttribute('tabindex', '0');
   card.setAttribute('aria-label', `${name}, forme originale`);
@@ -4669,6 +4677,7 @@ function createRegionalFormCard(form) {
   const card = document.createElement('div');
   card.className = 'card form-card' + (p.caught && !unavailable ? ' caught' : '') + (p.perfect && !unavailable ? ' perfect' : '') + (isHuntingCard && !unavailable ? ' hunting' : '') + getTargetCardClasses(p, isHuntingCard, unavailable) + (unavailable ? ' unavailable' : '');
   setRegionVisualVars(card, REGIONS.find(region => region.name === form.region) || getRegionByPokemonId(form.baseId));
+  setCardTypeVisuals(card, form.types || []);
   card.setAttribute('role', 'button');
   card.setAttribute('tabindex', '0');
   card.setAttribute('aria-label', `${form.label}, forme de ${form.region}`);
