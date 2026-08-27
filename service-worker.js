@@ -1,12 +1,11 @@
-const CACHE_NAME = 'shiny-living-dex-v282';
-const RUNTIME_CACHE = 'shiny-living-dex-runtime-v282';
+const CACHE_NAME = 'shiny-living-dex-v276';
+const RUNTIME_CACHE = 'shiny-living-dex-runtime-v276';
 const OFFLINE_URL = './index.html';
 const APP_SHELL = [
   './',
   './index.html',
   './pokedex.html',
   './manifest.json',
-  './fond.png',
   './Assets/icon-192.png',
   './Assets/icon-512.png',
   './Assets/icon-maskable-192.png',
@@ -109,7 +108,7 @@ self.addEventListener('fetch', event => {
 
   if (event.request.mode === 'navigate') {
     event.respondWith(
-      fetch(event.request, { cache: 'no-store' })
+      fetch(event.request)
         .then(response => {
           const copy = response.clone();
           caches.open(CACHE_NAME).then(cache => cache.put(OFFLINE_URL, copy));
