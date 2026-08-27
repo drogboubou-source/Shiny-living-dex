@@ -11,6 +11,11 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="LivingDex">
+<script>
+window.handlePokemonSpriteError = window.handlePokemonSpriteError || function(img) {
+  if (img) img.onerror = null;
+};
+</script>
 <style>
 @font-face{
   font-family:'Pokemon GB Local';
@@ -670,8 +675,14 @@ body.card-interaction-suppressed .card:active{
   .grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;padding:6px;border-radius:14px}
   .generation-divider{min-height:26px;margin:4px 0 -2px;font-size:9px;gap:7px;padding:3px 7px 3px 8px;top:0}
   .generation-divider strong{font-size:8px}
-  .card{min-height:152px;padding:9px 6px 8px}
-  .card-sprite{width:56px;height:56px}
+  .card{min-height:198px;padding:7px 6px 8px}
+  .card-head{padding:5px 6px}
+  .card .pname{font-size:11px}
+  .stage-badge{font-size:8px;padding:2px 6px}
+  .art{padding:7px 3px}
+  .sprite-pair{gap:6px}
+  .card-sprite{width:42px;height:42px}
+  .card-sprite.pixel{width:36px;height:36px}
   .card .pname{font-size:12px;min-height:auto;padding:0}
   .card .num{font-size:8px;padding:3px 6px 2px;margin-left:2px}
   .card .status{font-size:7px;padding:3px 6px}
@@ -987,8 +998,8 @@ body.card-interaction-suppressed .card:active{
 .grid{
   position:relative;
   display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(150px,1fr));
-  gap:10px;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:16px;
   padding:12px 2px;
   overflow:visible;
   isolation:isolate;
@@ -1024,152 +1035,93 @@ body.card-interaction-suppressed .card:active{
 .generation-divider span{opacity:.82;font-variant-numeric:tabular-nums}
 .scroll-end{height:1px}
 .card{
-  --card-accent: rgba(204,255,234,.56);
-  --card-glow-rgb: var(--region-rgb,125,211,252);
-  clip-path: polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px);
-  background:
-    radial-gradient(circle at 50% 8%,rgba(var(--card-glow-rgb),.14),transparent 46%) padding-box,
-    linear-gradient(165deg,#111f20 0%,#0b1517 52%,#070d10 100%) padding-box,
-    linear-gradient(165deg,rgba(218,255,239,.6),rgba(var(--card-glow-rgb),.34) 44%,rgba(255,255,255,.14) 100%) border-box;
-  border:1px solid transparent;
-  padding:13px 8px 9px;min-height:172px;
+  --card-accent:rgba(255,255,255,.7);
+  border-radius:16px;padding:10px 10px 12px;min-height:230px;
   text-align:center;cursor:pointer;position:relative;overflow:hidden;
-  display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:5px;
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.16),
-    inset 0 -18px 24px rgba(0,0,0,.42),
-    inset 0 0 28px rgba(var(--card-glow-rgb),.055),
-    0 0 0 1px rgba(1,10,10,.78),
-    0 8px 18px rgba(0,0,0,.56),
-    0 22px 38px rgba(0,0,0,.66),
-    0 0 20px rgba(var(--card-glow-rgb),.2);
-  transition:transform .18s ease,box-shadow .18s ease,filter .2s ease;
-}
-.card::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:3px;z-index:2;
-  background:linear-gradient(90deg,transparent,var(--card-accent) 18%,var(--card-accent) 82%,transparent);
-  pointer-events:none;
+  display:flex;flex-direction:column;gap:8px;
+  color:#20301c;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 8px 18px rgba(0,0,0,.28);
+  transition:transform .16s ease,box-shadow .16s ease,filter .2s ease;
 }
 .card::after{
-  content:'';position:absolute;inset:0;pointer-events:none;z-index:0;
-  background:
-    linear-gradient(135deg,rgba(255,255,255,.1),transparent 26%,transparent 72%,rgba(255,255,255,.045)),
-    radial-gradient(circle 1.6px at right 6px top 6px,var(--card-accent),transparent 75%),
-    radial-gradient(circle 1.6px at left 6px bottom 6px,var(--card-accent),transparent 75%),
-    linear-gradient(var(--card-accent),var(--card-accent)) no-repeat right 6px top 6px/14px 2px,
-    linear-gradient(var(--card-accent),var(--card-accent)) no-repeat right 6px top 6px/2px 14px,
-    linear-gradient(var(--card-accent),var(--card-accent)) no-repeat left 6px bottom 6px/14px 2px,
-    linear-gradient(var(--card-accent),var(--card-accent)) no-repeat left 6px bottom 6px/2px 14px;
-  opacity:.9;
+  content:'';position:absolute;inset:5px;border:1px solid rgba(255,255,255,.35);
+  border-radius:11px;pointer-events:none;z-index:1;
 }
 .card:hover{
-  transform:translateY(-3px) scale(1.014);
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.18),
-    inset 0 -18px 24px rgba(0,0,0,.42),
-    inset 0 0 30px rgba(var(--card-glow-rgb),.08),
-    0 0 0 1px rgba(1,10,10,.84),
-    0 12px 22px rgba(0,0,0,.6),
-    0 30px 48px rgba(0,0,0,.72),
-    0 0 28px rgba(var(--card-glow-rgb),.28);
+  transform:translateY(-2px);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.6),0 10px 22px rgba(0,0,0,.34);
 }
-.card > *{position:relative;z-index:1}
-.card .num{
-  align-self:flex-start;font-size:9px;font-weight:800;color:var(--card-accent);order:0;letter-spacing:.6px;
-  font-variant-numeric:tabular-nums;border-bottom:1px solid var(--card-accent);padding-bottom:3px;
+.card > *{position:relative;z-index:2}
+.card.caught{box-shadow:0 0 0 2px #c084fc,0 0 16px rgba(192,132,252,.35),inset 0 1px 0 rgba(255,255,255,.5)}
+.card.perfect{box-shadow:0 0 0 2px #d4af37,0 0 17px rgba(212,175,55,.4),inset 0 1px 0 rgba(255,255,255,.5)}
+.card.hunting{box-shadow:0 0 0 2px #7dd3fc,0 0 16px rgba(125,211,252,.35),inset 0 1px 0 rgba(255,255,255,.5)}
+.card-head{
+  display:flex;align-items:center;gap:6px;background:#fff;border-radius:10px;
+  padding:5px 8px;box-shadow:0 1px 3px rgba(0,0,0,.18);position:relative;z-index:2;
 }
+.card .num{font-family:var(--font);font-size:10px;color:#6b7a63;font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
 .card .pname{
-  font-size:14px;font-weight:800;color:#fff;order:1;
-  min-height:34px;padding:2px 0;display:flex;align-items:center;justify-content:center;
-  text-transform:uppercase;letter-spacing:.2px;line-height:1.18;
-  text-align:center;width:100%;max-width:100%;overflow-wrap:anywhere;
+  flex:1;font-size:12px;font-weight:700;line-height:1.1;color:#1d2a19;
+  word-break:break-word;text-align:left;min-width:0;
 }
+.card.caught .pname{color:#8b2fc9;text-shadow:none}
+.card.perfect .pname{color:#a3801a;text-shadow:none}
+.stage-badge{
+  font-size:9px;font-weight:800;letter-spacing:.2px;color:#fff;
+  background:#57794a;border-radius:20px;padding:2px 7px;white-space:nowrap;flex-shrink:0;
+}
+.art{
+  border-radius:12px;padding:8px 4px;background:linear-gradient(180deg,#fafaf5,#eef0e6);
+  display:flex;align-items:center;justify-content:center;position:relative;z-index:2;
+  box-shadow:inset 0 0 0 1px rgba(0,0,0,.06);
+}
+.sprite-pair{display:flex;gap:8px;align-items:flex-end;justify-content:center}
+.sprite-box{display:flex;flex-direction:column;align-items:center;gap:2px}
 .card-sprite{
-  width:72px;height:72px;order:2;margin:1px 0 2px;display:block;
-  object-fit:contain;padding:4px;border-radius:16px;
-  background:radial-gradient(ellipse at 50% 78%,rgba(0,0,0,.3),transparent 48%);
-  filter:drop-shadow(0 5px 8px rgba(0,0,0,.44));
+  width:56px;height:56px;object-fit:contain;display:block;
+  filter:drop-shadow(0 4px 6px rgba(0,0,0,.22));
   box-sizing:border-box;
 }
-.card.caught .card-sprite{filter:drop-shadow(0 5px 9px rgba(0,0,0,.45)) drop-shadow(0 0 9px rgba(192,132,252,.2))}
-.card.perfect .card-sprite{filter:drop-shadow(0 5px 9px rgba(0,0,0,.45)) drop-shadow(0 0 9px rgba(212,175,55,.2))}
-.card.hunting .card-sprite{filter:drop-shadow(0 5px 9px rgba(0,0,0,.45)) drop-shadow(0 0 9px rgba(125,211,252,.2))}
+.card-sprite.pixel{image-rendering:pixelated;width:48px;height:48px}
+.sprite-tag{font-size:8px;font-weight:800;letter-spacing:.4px;color:#fff;background:rgba(0,0,0,.42);border-radius:20px;padding:1px 6px}
 .card.unavailable .card-sprite{filter:grayscale(1) drop-shadow(0 4px 8px rgba(0,0,0,.4))}
-.card.caught,.card.perfect,.card.hunting{border-color:transparent}
-.card.caught{
-  --card-accent:#c084fc;
-  --card-glow-rgb:192,132,252;
-  background:
-    linear-gradient(165deg,#33263f 0%,#251c30 48%,#1b1424 100%) padding-box,
-    linear-gradient(165deg,#f7ecff,#c084fc 32%,#6b3d98 100%) border-box;
-  border:1px solid transparent;
-  filter:drop-shadow(0 0 13px rgba(192,132,252,.5));
-}
-.card.caught .pname{color:#c084fc;text-shadow:0 0 10px rgba(192,132,252,.7)}
-.card.perfect{
-  --card-accent:#d4af37;
-  --card-glow-rgb:212,175,55;
-  background:
-    linear-gradient(165deg,#392c14 0%,#2b2114 48%,#1e1810 100%) padding-box,
-    linear-gradient(165deg,#fffaea,#d4af37 32%,#8a6a18 100%) border-box;
-  border:1px solid transparent;
-  filter:drop-shadow(0 0 14px rgba(212,175,55,.55));
-}
-.card.perfect .pname{color:#d4af37;text-shadow:0 0 10px rgba(212,175,55,.75)}
-.card.hunting{
-  --card-accent:#7dd3fc;
-  --card-glow-rgb:125,211,252;
-  background:
-    linear-gradient(165deg,#193640 0%,#142a31 48%,#102025 100%) padding-box,
-    linear-gradient(165deg,#edfbff,#7dd3fc 32%,#226a87 100%) border-box;
-  border:1px solid transparent;
-  filter:drop-shadow(0 0 13px rgba(125,211,252,.5));
-}
-.card.hunting .pname{color:#7dd3fc;text-shadow:0 0 10px rgba(125,211,252,.7)}
 .card.target-outline{
-  border-color:#7ed660;
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.15),
-    inset 0 -14px 18px rgba(0,0,0,.18),
     0 0 0 2px rgba(126,214,96,.78),
     0 0 18px rgba(126,214,96,.44),
+    inset 0 1px 0 rgba(255,255,255,.5),
     0 18px 30px rgba(0,0,0,.5);
 }
-.card.target-outline::before{
-  background:linear-gradient(90deg,transparent,#7ed660 18%,#7ed660 82%,transparent);
-}
-.card.target-outline .num{color:#7ed660;border-bottom-color:#7ed660}
 .card .status{
-  margin-top:auto;font-size:9px;padding:4px 9px 4px 8px;font-weight:800;order:4;letter-spacing:.25px;
-  display:inline-flex;align-items:center;gap:5px;white-space:nowrap;max-width:100%;
-  clip-path:polygon(6px 0,100% 0,100% 100%,0 100%,0 6px);
-  background:rgba(255,255,255,.08);color:rgba(255,255,255,.6);
+  margin-top:auto;position:relative;z-index:2;background:rgba(255,255,255,.55);border-radius:10px;
+  text-align:center;padding:5px;font-size:10px;font-weight:700;color:#4a5744;
+  display:flex;align-items:center;justify-content:center;gap:5px;white-space:nowrap;max-width:100%;
 }
-.card .status::before{content:'';width:6px;height:6px;background:rgba(255,255,255,.4);transform:rotate(45deg);flex:0 0 auto}
-.card.caught .status::before{background:#c084fc;box-shadow:0 0 6px rgba(192,132,252,.9)}
-.card.perfect .status::before{background:#d4af37;box-shadow:0 0 6px rgba(212,175,55,.9)}
-.card.hunting .status::before{background:#7dd3fc;box-shadow:0 0 6px rgba(125,211,252,.9)}
-.card.caught .status{background:rgba(192,132,252,.18);color:#fff}
-.card.perfect .status{background:rgba(212,175,55,.2);color:#fff}
-.card.hunting .status{background:rgba(125,211,252,.18);color:#fff}
-.card.target:not(.caught):not(.perfect):not(.hunting) .status{background:rgba(126,214,96,.18);color:#fff;border-color:rgba(126,214,96,.36)}
-.card.target:not(.caught):not(.perfect):not(.hunting) .status::before{background:#7ed660;box-shadow:0 0 6px rgba(126,214,96,.9)}
-.card.form-original{--card-accent:rgba(255,255,255,.4)}
-.card.form-card{--card-accent:#7dd3fc;border-color:#7dd3fc}
-.card.form-card .pname{color:#dff6ff}
-.card.form-card .status{background:rgba(125,211,252,.16);color:#fff}
+.card.caught .status{background:rgba(255,255,255,.7);color:#8b2fc9}
+.card.perfect .status{background:rgba(255,255,255,.72);color:#a3801a}
+.card.hunting .status{background:rgba(255,255,255,.68);color:#12627e}
+.card.target:not(.caught):not(.perfect):not(.hunting) .status{background:rgba(255,255,255,.62);color:#3f6f2a}
+.card.form-card .status{background:rgba(255,255,255,.62);color:#12627e}
 .card.unavailable{filter:grayscale(.85) saturate(.5);opacity:1}
-.form-tag{position:absolute;top:6px;right:6px;font-size:7px;font-weight:800;color:#0d0d12;background:var(--card-accent);padding:3px 5px;z-index:2}
+.form-tag{font-size:9px;font-weight:800;letter-spacing:.2px;color:#fff;background:#57794a;border-radius:20px;padding:2px 7px;white-space:nowrap;flex-shrink:0}
 .card .status-shiny{color:#c084fc}
 .card .status-perfect{color:#d4af37}
+.card .status-pair{display:inline-flex;align-items:center;justify-content:center;gap:5px}
 .card .status-method{
   margin-left:1px;
   padding-left:5px;
-  border-left:1px solid rgba(255,255,255,.22);
-  color:rgba(255,255,255,.72);
+  border-left:1px solid rgba(0,0,0,.16);
+  color:rgba(0,0,0,.55);
   font-size:8px;
   line-height:1;
 }
+.card-ball{
+  width:18px;height:18px;object-fit:contain;align-self:center;margin:-2px 0;
+  filter:drop-shadow(0 2px 3px rgba(0,0,0,.25));
+}
+.type-row{width:100%;min-height:18px;display:flex;justify-content:center;gap:5px;flex-wrap:nowrap}
+.type-pill{flex:0 1 auto;max-width:calc(50% - 3px);filter:drop-shadow(0 2px 4px rgba(0,0,0,.25))}
+.type-pill img{height:17px;width:auto;max-width:100%;display:block;border-radius:4px;image-rendering:auto}
 
 /* ══════════════════════════════════════
    EFFET HOLOGRAPHIQUE — discret et premium, uniquement sur les
@@ -2076,8 +2028,14 @@ button.capture-control{width:100%;text-align:left;font:inherit;color:inherit;cur
   .grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;padding:6px;border-radius:14px}
   .generation-divider{min-height:26px;margin:4px 0 -2px;font-size:9px;gap:7px;padding:3px 7px 3px 8px;top:6px}
   .generation-divider strong{font-size:8px}
-  .card{min-height:152px;padding:9px 6px 8px}
-  .card-sprite{width:56px;height:56px}
+  .card{min-height:198px;padding:7px 6px 8px}
+  .card-head{padding:5px 6px}
+  .card .pname{font-size:11px}
+  .stage-badge{font-size:8px;padding:2px 6px}
+  .art{padding:7px 3px}
+  .sprite-pair{gap:6px}
+  .card-sprite{width:42px;height:42px}
+  .card-sprite.pixel{width:36px;height:36px}
   .card .pname{font-size:12px;min-height:auto;padding:0}
   .card .num{font-size:8px;padding:3px 6px 2px;margin-left:2px}
   .card .status{font-size:7px;padding:3px 6px}
@@ -2667,6 +2625,35 @@ const TYPE_COLORS = {
   steel:'#b8b8d0', fairy:'#ee99ac'
 };
 
+const TYPE_CARD_BG = {
+  normal:['#f4f0d4','#bfc09a'],
+  fire:['#ffd099','#f47b46'],
+  water:['#c5e8ff','#6298ea'],
+  electric:['#fff1a2','#e9be34'],
+  grass:['#d4f2b6','#77c75b'],
+  ice:['#e7ffff','#8fd5dd'],
+  fighting:['#f4a09a','#c34e43'],
+  poison:['#e5b2f0','#9e56ad'],
+  ground:['#f1dea6','#d0ad5a'],
+  flying:['#e6dcff','#a48bea'],
+  psychic:['#ffc1d7','#ef6091'],
+  bug:['#e4ef9b','#9db957'],
+  rock:['#e4d28a','#a9943b'],
+  ghost:['#c9bee5','#74629c'],
+  dragon:['#c4b5ff','#7652e8'],
+  dark:['#cfc4be','#806d66'],
+  steel:['#ececf8','#aaaaca'],
+  fairy:['#ffd5e0','#ee99ac']
+};
+
+function cardTypeGradient(idOrTypes) {
+  const types = Array.isArray(idOrTypes)
+    ? idOrTypes
+    : (POKEMON_TYPES[String(idOrTypes)] || POKEMON_TYPES[idOrTypes] || ['normal']);
+  const [c1, c2] = TYPE_CARD_BG[types[0]] || TYPE_CARD_BG.normal;
+  return `linear-gradient(180deg, ${c1}, ${c2})`;
+}
+
 // Deux compositions d'energie reutilisables, plus travaillees qu'un simple pictogramme :
 // - "bolt" : un eclair ramifie avec de petits eclats de cristal aux embranchements
 // - "wisp" : une gerbe de rubans fluides superposes (flamme/fumee) avec etincelles
@@ -2876,6 +2863,16 @@ function pokemonMatchesSortMode(p, mode) {
 
 function getPokemonFamily(id) {
   return FAMILY_BY_POKEMON[id] || null;
+}
+
+function getEvolutionStage(id) {
+  const family = getPokemonFamily(id);
+  if (!family || family.length <= 1) return 'Base';
+  const sorted = [...family].sort((a, b) => a - b);
+  const idx = sorted.indexOf(Number(id));
+  if (idx <= 0) return 'Base';
+  if (idx === 1) return 'Niveau 1';
+  return 'Niveau 2';
 }
 
 function isFamilyComplete(id) {
@@ -3978,20 +3975,21 @@ function getPokemonSpriteUrl(id, shiny = false, mode = spriteMode) {
   if (file) return `./sprites/3d/${shiny ? 'shiny' : 'normal'}/${file}.png`;
   return `${pixelBase}/other/home/${shiny ? 'shiny/' : ''}${id}.png`;
 }
-function handlePokemonSpriteError(img, id, shiny) {
+function handlePokemonSpriteError(img, id, shiny, mode = spriteMode) {
   if (shiny && !img.dataset.fellBackToNormal) {
     img.dataset.fellBackToNormal = '1';
-    img.src = getPokemonSpriteUrl(id, false);
+    img.src = getPokemonSpriteUrl(id, false, mode);
     return;
   }
   if (!img.dataset.fellBackToOtherMode) {
     img.dataset.fellBackToOtherMode = '1';
-    img.src = getPokemonSpriteUrl(id, shiny, isHomeSpriteMode() ? 'pixel' : 'home');
+    img.src = getPokemonSpriteUrl(id, shiny, mode === 'pixel' ? 'home' : 'pixel');
     return;
   }
   img.onerror = null;
   img.src = SPRITE_FALLBACK;
 }
+window.handlePokemonSpriteError = handlePokemonSpriteError;
 function toggleSpriteMode() {
   spriteMode = isHomeSpriteMode() ? 'pixel' : 'home';
   localStorage.setItem(SPRITE_MODE_KEY, spriteMode);
@@ -4644,6 +4642,24 @@ function getHoloSparkHtml(show) {
   return '';
 }
 
+function getCardSpritePairHtml(id, name, useShinySprite) {
+  const sprite2d = getPokemonSpriteUrl(id, useShinySprite, 'pixel');
+  const sprite3d = getPokemonSpriteUrl(id, useShinySprite, 'home');
+  return `
+    <div class="art">
+      <div class="sprite-pair">
+        <div class="sprite-box">
+          <img class="card-sprite pixel" src="${sprite2d}" alt="${name} 2D" loading="lazy" width="48" height="48" onerror="handlePokemonSpriteError(this, ${id}, ${useShinySprite}, 'pixel')">
+          <span class="sprite-tag">2D</span>
+        </div>
+        <div class="sprite-box">
+          <img class="card-sprite" src="${sprite3d}" alt="${name} 3D" loading="lazy" width="56" height="56" onerror="handlePokemonSpriteError(this, ${id}, ${useShinySprite}, 'home')">
+          <span class="sprite-tag">3D</span>
+        </div>
+      </div>
+    </div>`;
+}
+
 function createRegionalOriginalCard(id) {
   const name = NAMES[id] || `#${id}`;
   const p = progress[id] || {};
@@ -4663,12 +4679,14 @@ function createRegionalOriginalCard(id) {
     }
   };
   const useShinySprite = !!p.caught;
-  const spriteUrl = getPokemonSpriteUrl(id, useShinySprite);
+  card.style.background = cardTypeGradient(id);
   card.innerHTML = `
-    <div class="form-tag">Base</div>
-    <div class="num">#${String(id).padStart(4,'0')}</div>
-    <img class="card-sprite" src="${spriteUrl}" alt="${name}" loading="lazy" onerror="handlePokemonSpriteError(this, ${id}, ${useShinySprite})">
-    <div class="pname">${name}</div>
+    <div class="card-head">
+      <span class="num">#${String(id).padStart(4,'0')}</span>
+      <span class="pname">${name}</span>
+      <span class="form-tag">Base</span>
+    </div>
+    ${getCardSpritePairHtml(id, name, useShinySprite)}
     <div class="type-row">${renderTypeBadges(id)}</div>
     <div class="status">${statusHtml}</div>
     <div class="holo" aria-hidden="true">${getHoloSparkHtml(p.caught || p.perfect)}</div>`;
@@ -4694,12 +4712,14 @@ function createRegionalFormCard(form) {
     }
   };
   const useShinySprite = !!p.caught && !unavailable;
-  const spriteUrl = getPokemonSpriteUrl(form.formId, useShinySprite);
+  card.style.background = cardTypeGradient(form.types);
   card.innerHTML = `
-    <div class="form-tag">${form.region}</div>
-    <div class="num">#${String(form.baseId).padStart(4,'0')}</div>
-    <img class="card-sprite" src="${spriteUrl}" alt="${form.label}" loading="lazy" onerror="handlePokemonSpriteError(this, ${form.formId}, ${useShinySprite})">
-    <div class="pname">${form.label}</div>
+    <div class="card-head">
+      <span class="num">#${String(form.baseId).padStart(4,'0')}</span>
+      <span class="pname">${form.label}</span>
+      <span class="form-tag">${form.region}</span>
+    </div>
+    ${getCardSpritePairHtml(form.formId, form.label, useShinySprite)}
     <div class="type-row">${renderTypeBadgesForTypes(form.types)}</div>
     <div class="status">${statusHtml}</div>
     <div class="holo" aria-hidden="true">${getHoloSparkHtml(!unavailable && (p.caught || p.perfect))}</div>`;
@@ -4767,13 +4787,19 @@ function renderGrid() {
     const typeBadges = renderTypeBadges(id);
     const statusHtml = unavailable ? 'Indisponible' : getCardStatusHtml(p, isHuntingCard);
     const useShinySprite = !!p.caught && !unavailable;
-    const spriteUrl = getPokemonSpriteUrl(id, useShinySprite);
+    const ballHtml = p.caught && !unavailable ? renderCardBall(p.ball) : '';
+    const stage = getEvolutionStage(id);
+    card.style.background = cardTypeGradient(id);
 
     card.innerHTML = `
-      <div class="num">#${String(id).padStart(4,'0')}</div>
-      <img class="card-sprite" src="${spriteUrl}" alt="${name}" loading="lazy" onerror="handlePokemonSpriteError(this, ${id}, ${useShinySprite})">
-      <div class="pname">${name}</div>
+      <div class="card-head">
+        <span class="num">#${String(id).padStart(4,'0')}</span>
+        <span class="pname">${name}</span>
+        <span class="stage-badge">${stage}</span>
+      </div>
+      ${getCardSpritePairHtml(id, name, useShinySprite)}
       <div class="type-row">${typeBadges}</div>
+      ${ballHtml}
       <div class="status">${statusHtml}</div>
       <div class="holo" aria-hidden="true">${getHoloSparkHtml((p.caught && !unavailable) || (p.perfect && !unavailable))}</div>`;
     grid.appendChild(card);
@@ -5815,7 +5841,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  const assetVersion = 'v281';
+  const assetVersion = 'v282';
   const seenAssetVersion = localStorage.getItem('shiny_dex_asset_version');
   if (seenAssetVersion !== assetVersion && 'caches' in window) {
     caches.keys()
@@ -5832,7 +5858,7 @@ if ('serviceWorker' in navigator) {
     refreshingForServiceWorker = true;
     window.location.reload();
   });
-  navigator.serviceWorker.register('./service-worker.js?v=281', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=282', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
