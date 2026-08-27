@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shiny Living Dex — Aperçu cartes par type</title>
+<style>
+  :root { font-family: 'Segoe UI', system-ui, sans-serif; }
+  * { box-sizing: border-box; }
+  body {
+    margin:0; padding:32px 24px 60px;
+    background: radial-gradient(circle at 20% 0%, #1c2b1f, #0e1510 65%);
+    color:#fff;
+  }
+  h1 {
+    text-align:center; font-size:1.6rem; margin:0 0 4px;
+    color:#ffe28a; text-shadow:0 0 12px rgba(255,215,60,.4);
+  }
+  p.sub {
+    text-align:center; color:#b9c4b3; margin:0 0 32px; font-size:.95rem;
+  }
+  .grid {
+    display:grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap:20px;
+    max-width:1100px;
+    margin:0 auto;
+  }
+  @media (max-width: 780px) {
+    .grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 480px) {
+    .grid { grid-template-columns: 1fr; }
+  }
+  .card {
+    border-radius:18px;
+    padding:10px 10px 14px;
+    box-shadow: 0 10px 26px rgba(0,0,0,.35), inset 0 0 0 1px rgba(255,255,255,.5);
+    display:flex; flex-direction:column; gap:8px;
+    color:#20301c;
+  }
+  .card-head {
+    display:flex; align-items:center; gap:6px;
+    background:#fff; border-radius:10px; padding:6px 10px;
+    font-size:.8rem; font-weight:700;
+    box-shadow: 0 1px 3px rgba(0,0,0,.15);
+  }
+  .dex-num { color:#6b7a63; font-weight:700; }
+  .dex-name { flex:1; font-size:.95rem; color:#1d2a19; }
+  .dex-stage {
+    color:#fff; font-size:.68rem; font-weight:800; letter-spacing:.3px;
+    background:#57794a; border-radius:20px; padding:3px 9px; white-space:nowrap;
+  }
+  .art {
+    border-radius:12px;
+    padding:14px 8px;
+    background:linear-gradient(180deg,#fafaf5,#eef0e6);
+    display:flex; align-items:center; justify-content:center;
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,.06);
+  }
+  .sprite-pair { display:flex; gap:14px; align-items:flex-end; }
+  .sprite-box {
+    display:flex; flex-direction:column; align-items:center; gap:4px;
+  }
+  .sprite-box img {
+    width:92px; height:92px; object-fit:contain;
+    filter: drop-shadow(0 6px 8px rgba(0,0,0,.2));
+  }
+  .sprite-box img.pixel { image-rendering: pixelated; width:80px; height:80px; }
+  .sprite-tag {
+    font-size:.62rem; font-weight:800; letter-spacing:.5px;
+    color:#fff; background:rgba(0,0,0,.4); border-radius:20px;
+    padding:1px 8px;
+  }
+  .type-row { display:flex; justify-content:center; gap:6px; flex-wrap:nowrap; }
+  .type-pill { flex:0 1 auto; max-width:calc(50% - 3px); }
+  .type-pill img { height:18px; width:auto; max-width:100%; display:block; border-radius:5px; box-shadow:0 2px 5px rgba(0,0,0,.25); }
+  .status-row {
+    background:rgba(255,255,255,.55); border-radius:10px; text-align:center;
+    padding:6px; font-size:.78rem; font-weight:700; color:#5c6a54;
+    display:flex; align-items:center; justify-content:center; gap:6px;
+  }
+  .status-dot {
+    width:7px; height:7px; border-radius:50%; background:#8a9782; display:inline-block;
+  }
+  footer {
+    text-align:center; color:#7d8a76; font-size:.8rem; margin-top:40px;
+  }
+</style>
+</head>
+<body>
+  <h1>Shiny Living Dex — Aperçu par type</h1>
+  <p class="sub">Un Pokémon représentatif par type, sprites 2D/3D réels, badges de type et stade d'évolution.</p>
+  <div class="grid">
+    
+    <div class="card" style="background:linear-gradient(180deg,#8fdb6a,#3fa833)">
+      <div class="card-head">
+        <span class="dex-num">#0003</span>
+        <span class="dex-name">Florizarre</span>
+        <span class="dex-stage">Niveau 2</span>
+      </div>
+      <div class="art">
+        <div class="sprite-pair">
+          <div class="sprite-box">
+            <img src="./sprites/2d/normal/0003-florizarre.png" alt="Florizarre 2D" class="pixel" loading="lazy">
+            <span class="sprite-tag">2D</span>
+          </div>
+          <div class="sprite-box">
+            <img src="./sprites/3d/normal/0003-florizarre.png" alt="Florizarre 3D" loading="lazy">
+            <span class="sprite-tag">3D</span>
+          </div>
+        </div>
+      </div>
+      <div class="type-row"><span class="type-pill"><img src="./sprites/types/Miniature_Type_Plante_LPZA.png" alt="grass"></span><span class="type-pill"><img src="./sprites/types/Miniature_Type_Poison_LPZA.png" alt="poison"></span></div>
+      <div class="status-row"><span class="status-dot"></span>Manquant</div>
+    </div>
+    <div class="card" style="background:linear-gradient(180deg,#ff7f4d,#e8461a)">
+      <div class="card-head">
+        <span class="dex-num">#0006</span>
+        <span class="dex-name">Dracaufeu</span>
+        <span class="dex-stage">Niveau 2</span>
+      </div>
+      <div class="art">
+        <div class="sprite-pair">
+          <div class="sprite-box">
+            <img src="./sprites/2d/normal/0006-dracaufeu.png" alt="Dracaufeu 2D" class="pixel" loading="lazy">
+            <span class="sprite-tag">2D</span>
+          </div>
+          <div class="sprite-box">
+            <img src="./sprites/3d/normal/0006-dracaufeu.png" alt="Dracaufeu 3D" loading="lazy">
+            <span class="sprite-tag">3D</span>
+          </div>
+        </div>
+      </div>
+      <div class="type-row"><span class="type-pill"><img src="./sprites/types/Miniature_Type_Feu_LPZA.png" alt="fire"></span><span class="type-pill"><img src="./sprites/types/Miniature_Type_Vol_LPZA.png" alt="flying"></span></div>
+      <div class="status-row"><span class="status-dot"></span>Manquant</div>
+    </div>
+    <div class="card" style="background:linear-gradient(180deg,#4fb8f0,#1e7fce)">
+      <div class="card-head">
+        <span class="dex-num">#0131</span>
+        <span class="dex-name">Lokhlass</span>
+        <span class="dex-stage">Base</span>
+      </div>
+      <div class="art">
+        <div class="sprite-pair">
+          <div class="sprite-box">
+            <img src="./sprites/2d/normal/0131-lokhlass.png" alt="Lokhlass 2D" class="pixel" loading="lazy">
+            <span class="sprite-tag">2D</span>
+          </div>
+          <div class="sprite-box">
+            <img src="./sprites/3d/normal/0131-lokhlass.png" alt="Lokhlass 3D" loading="lazy">
+            <span class="sprite-tag">3D</span>
+          </div>
+        </div>
+      </div>
+      <div class="type-row"><span class="type-pill"><img src="./sprites/types/Miniature_Type_Eau_LPZA.png" alt="water"></span><span class="type-pill"><img src="./sprites/types/Miniature_Type_Glace_LPZA.png" alt="ice"></span></div>
+      <div class="status-row"><span class="status-dot"></span>Manquant</div>
+    </div>
+    <div class="card" style="background:linear-gradient(180deg,#ffe459,#f5c400)">
+      <div class="card-head">
+        <span class="dex-num">#0025</span>
+        <span class="dex-name">Pikachu</span>
+        <span class="dex-stage">Base</span>
+      </div>
+      <div class="art">
+        <div class="sprite-pair">
+          <div class="sprite-box">
+            <img src="./sprites/2d/normal/0025-pikachu.png" alt="Pikachu 2D" class="pixel" loading="lazy">
+            <span class="sprite-tag">2D</span>
+          </div>
+          <div class="sprite-box">
+            <img src="./sprites/3d/normal/0025-pikachu.png" alt="Pikachu 3D" loading="lazy">
+            <span class="sprite-tag">3D</span>
+          </div>
+        </div>
+      </div>
+      <div class="type-row"><span class="type-pill"><img src="./sprites/types/Miniature_Type_%C3%89lectrik_LPZA.png" alt="electric"></span></div>
+      <div class="status-row"><span class="status-dot"></span>Manquant</div>
+    </div>
+    <div class="card" style="background:linear-gradient(180deg,#a6e8e2,#5cc9c2)">
+      <div class="card-head">
+        <span class="dex-num">#0615</span>
+        <span class="dex-name">Hexagel</span>
+        <span class="dex-stage">Niveau 2</span>
+      </div>
+      <div class="art">
+        <div class="sprite-pair">
+          <div class="sprite-box">
+            <img src="./sprites/2d/normal/0615-hexagel.png" alt="Hexagel 2D" class="pixel" loading="lazy">
+            <span class="sprite-tag">2D</span>
+          </div>
+          <div class="sprite-box">
+            <img src="./sprites/3d/normal/0615-hexagel.png" alt="Hexagel 3D" loading="lazy">
+            <span class="sprite-tag">3D</span>
+          </div>
+        </div>
+      </div>
+      <div class="type-row"><span class="type-pill"><img src="./sprites/types/Miniature_Type_Glace_LPZA.png" alt="ice"></span></div>
+      <div class="status-row"><span class="status-dot"></span>Manquant</div>
+    </div>
+    <div class="card" style="background:linear-gradient(180deg,#e07a5f,#b8442e)">
+      <div class="card-head">
+        <span class="dex-num">#0056</span>
+        <span class="dex-name">Férosinge</span>
+        <span class="dex-stage">Base</span>
+      </div>
+      <div class="art">
+        <div class="sprite-pair">
+          <div class="sprite-box">
+            <img src="./sprites/2d/normal/0056-ferosinge.png" alt="Férosinge 2D" class="pixel" loading="lazy">
+            <span class="sprite-tag">2D</span>
+          </div>
+          <div class="sprite-box">
+            <img src="./sprites/3d/normal/0056-ferosinge.png" alt="Férosinge 3D" loading="lazy">
+            <span class="sprite-tag">3D</span>
+          </div>
+        </div>
+      </div>
+      <div class="type-row"><span class="type-pill"><img src="./sprites/types/Miniature_Type_Combat_LPZA.png" alt="fighting"></span></div>
+      <div class="status-row"><span class="status-dot"></span>Manquant</div>
+    </div>
+    <div class="card" style="background:linear-gradient(180deg,#d478e0,#9b3aab)">
+      <div class="card-head">
+        <span class="dex-num">#0109</span>
+        <span class="dex-name">Smogo</span>
+        <span class="dex-stage">Base</span>
+      </div>
+      <div class="art">
+        <div class="sprite-pair">
+          <div class="sprite-box">
+            <img src="./sprites/2d/normal/0109-smogo.png" alt="Smogo 2D" class="pixel" loading="lazy">
+            <span class="sprite-tag">2D</span>
+          </div>
+          <div class="sprite-box">
+            <img src="./sprites/3d/normal/0109-smogo.png" alt="Smogo 3D" loading="lazy">
+            <span class="sprite-tag">3D</span>
+          </div>
+        </div>
+      </div>
+      <div class="type-row"><span class="type-pill"><img src="./sprites/types/Miniature_Type_Poison_LPZA.png" alt="poison"></span></div>
+      <div class="status-row"><span class="status-dot"></span>Manquant</div>
+    </div>
+    <div class="card" style="background:linear-gradient(180deg,#e8c165,#c69436)">
+      <div class="card-head">
+        <span class="dex-num">#0050</span>
+        <span class="dex-name">Taupiqueur</span>
+        <span class="dex-stage">Base</span>
+      </div>
+      <div class="art">
+        <div class="sprite-pair">
+          <div class="sprite-box">
+            <img src="./sprites/2d/normal/0050-taupiqueur.png" alt="Taupiqueur 2D" class="pixel" loading="lazy">
+            <span class="sprite-tag">2D</span>
+          </div>
+          <div class="sprite-box">
+            <img src="./sprites/3d/normal/0050-taupiqueur.png" alt="Taupiqueur 3D" loading="lazy">
+            <span class="sprite-tag">3D</span>
+          </div>
+        </div>
+      </div>
+      <div class="type-row"><span class="type-pill"><img src="./sprites/types/Miniature_Type_Sol_LPZA.png" alt="ground"></span></div>
+      <div class="status-row"><span class="status-dot"></span>Manquant</div>
+    </div>
+    <div class="card" style="background:linear-gradient(180deg,#b9a8ff,#8b73f0)">
+      <div class="card-head">
+        <span class="dex-num">#0641</span>
+        <span class="dex-name">Boréas</span>
+        <span class="dex-stage">Base</span>
+      </div>
+      <div class="art">
+        <div class="sprite-pair">
+          <div class="sprite-box">
+            <img src="./sprites/2d/normal/0641-boreas.png" alt="Boréas 2D" class="pixel" loading="lazy">
+            <span class="sprite-tag">2D</span>
+          </div>
+          <div class="sprite-box">
+            <img src="./sprites/3d/normal/0641-boreas.png" alt="Boréas 3D" loading="lazy">
+            <span class="sprite-tag">3D</span>
+          </div>
+        </div>
+      </div>
+      <div class="type-row"><span class="type-pill"><img src="./sprites/types/Miniature_Type_Vol_LPZA.png" alt="flying"></span></div>
+      <div class="status-row"><span class="status-dot"></span>Manquant</div>
+    </div>
+    <div class="card" style="background:linear-gradient(180deg,#ff8fc0,#f74b95)">
+      <div class="card-head">
+        <span class="dex-num">#0063</span>
+        <span class="dex-name">Abra</span>
+        <span class="dex-stage">Base</span>
+      </div>
+      <div class="art">
+        <div class="sprite-pair">
+          <div class="sprite-box">
+            <img src="./sprites/2d/normal/0063-abra.png" alt="Abra 2D" class="pixel" loading="lazy">
+            <span class="sprite-tag">2D</span>
+          </div>
+          <div class="sprite-box">
+            <img src="./sprites/3d/normal/0063-abra.png" alt="Abra 3D" loading="lazy">
+            <span class="sprite-tag">3D</span>
+          </div>
+        </div>
+      </div>
+      <div class="type-row"><span class="type-pill"><img src="./sprites/types/Miniature_Type_Psy_LPZA.png" alt="psychic"></span></div>
+      <div class="status-row"><span class="status-dot"></span>Manquant</div>
+    </div>
+    <div class="card" style="background:linear-gradient(180deg,#c3d95f,#94b028)">
+      <div class="card-head">
+        <span class="dex-num">#0127</span>
+        <span class="dex-name">Scarabrute</span>
+        <span class="dex-stage">Base</span>
+      </div>
+      <div class="art">
+        <div class="sprite-pair">
+          <div class="sprite-box">
+            <img src="./sprites/2d/normal/0127-scarabrute.png" alt="Scarabrute 2D" class="pixel" loading="lazy">
+            <span class="sprite-tag">2D</span>
+          </div>
+          <div class="sprite-box">
+            <img src="./sprites/3d/normal/0127-scarabrute.png" alt="Scarabrute 3D" loading="lazy">
+            <span class="sprite-tag">3D</span>
+          </div>
+        </div>
+      </div>
+      <div class="type-row"><span class="type-pill"><img src="./sprites/types/Miniature_Type_Insecte_LPZA.png" alt="bug"></span></div>
+      <div class="status-row"><span class="status-dot"></span>Manquant</div>
+    </div>
+    <div class="card" style="background:linear-gradient(180deg,#c9c9a3,#a8a878)">
+      <div class="card-head">
+        <span class="dex-num">#0143</span>
+        <span class="dex-name">Ronflex</span>
+        <span class="dex-stage">Base</span>
+      </div>
+      <div class="art">
+        <div class="sprite-pair">
+          <div class="sprite-box">
+            <img src="./sprites/2d/normal/0143-ronflex.png" alt="Ronflex 2D" class="pixel" loading="lazy">
+            <span class="sprite-tag">2D</span>
+          </div>
+          <div class="sprite-box">
+            <img src="./sprites/3d/normal/0143-ronflex.png" alt="Ronflex 3D" loading="lazy">
+            <span class="sprite-tag">3D</span>
+          </div>
+        </div>
+      </div>
+      <div class="type-row"><span class="type-pill"><img src="./sprites/types/Miniature_Type_Normal_LPZA.png" alt="normal"></span></div>
+      <div class="status-row"><span class="status-dot"></span>Manquant</div>
+    </div>
+    <div class="card" style="background:linear-gradient(180deg,#d4c07a,#a68e3f)">
+      <div class="card-head">
+        <span class="dex-num">#0299</span>
+        <span class="dex-name">Tarinor</span>
+        <span class="dex-stage">Base</span>
+      </div>
+      <div class="art">
+        <div class="sprite-pair">
+          <div class="sprite-box">
+            <img src="./sprites/2d/normal/0299-tarinor.png" alt="Tarinor 2D" class="pixel" loading="lazy">
+            <span class="sprite-tag">2D</span>
+          </div>
+          <div class="sprite-box">
+            <img src="./sprites/3d/normal/0299-tarinor.png" alt="Tarinor 3D" loading="lazy">
+            <span class="sprite-tag">3D</span>
+          </div>
+        </div>
+      </div>
+      <div class="type-row"><span class="type-pill"><img src="./sprites/types/Miniature_Type_Roche_LPZA.png" alt="rock"></span></div>
+      <div class="status-row"><span class="status-dot"></span>Manquant</div>
+    </div>
+    <div class="card" style="background:linear-gradient(180deg,#a688d6,#6f4bab)">
+      <div class="card-head">
+        <span class="dex-num">#0562</span>
+        <span class="dex-name">Tutafeh</span>
+        <span class="dex-stage">Base</span>
+      </div>
+      <div class="art">
+        <div class="sprite-pair">
+          <div class="sprite-box">
+            <img src="./sprites/2d/normal/0562-tutafeh.png" alt="Tutafeh 2D" class="pixel" loading="lazy">
+            <span class="sprite-tag">2D</span>
+          </div>
+          <div class="sprite-box">
+            <img src="./sprites/3d/normal/0562-tutafeh.png" alt="Tutafeh 3D" loading="lazy">
+            <span class="sprite-tag">3D</span>
+          </div>
+        </div>
+      </div>
+      <div class="type-row"><span class="type-pill"><img src="./sprites/types/Miniature_Type_Spectre_LPZA.png" alt="ghost"></span></div>
+      <div class="status-row"><span class="status-dot"></span>Manquant</div>
+    </div>
+    <div class="card" style="background:linear-gradient(180deg,#8f95f7,#4a4fe0)">
+      <div class="card-head">
+        <span class="dex-num">#0621</span>
+        <span class="dex-name">Drakkarmin</span>
+        <span class="dex-stage">Base</span>
+      </div>
+      <div class="art">
+        <div class="sprite-pair">
+          <div class="sprite-box">
+            <img src="./sprites/2d/normal/0621-drakkarmin.png" alt="Drakkarmin 2D" class="pixel" loading="lazy">
+            <span class="sprite-tag">2D</span>
+          </div>
+          <div class="sprite-box">
+            <img src="./sprites/3d/normal/0621-drakkarmin.png" alt="Drakkarmin 3D" loading="lazy">
+            <span class="sprite-tag">3D</span>
+          </div>
+        </div>
+      </div>
+      <div class="type-row"><span class="type-pill"><img src="./sprites/types/Miniature_Type_Dragon_LPZA.png" alt="dragon"></span></div>
+      <div class="status-row"><span class="status-dot"></span>Manquant</div>
+    </div>
+    <div class="card" style="background:linear-gradient(180deg,#8f8687,#5c5457)">
+      <div class="card-head">
+        <span class="dex-num">#0509</span>
+        <span class="dex-name">Chacripan</span>
+        <span class="dex-stage">Base</span>
+      </div>
+      <div class="art">
+        <div class="sprite-pair">
+          <div class="sprite-box">
+            <img src="./sprites/2d/normal/0509-chacripan.png" alt="Chacripan 2D" class="pixel" loading="lazy">
+            <span class="sprite-tag">2D</span>
+          </div>
+          <div class="sprite-box">
+            <img src="./sprites/3d/normal/0509-chacripan.png" alt="Chacripan 3D" loading="lazy">
+            <span class="sprite-tag">3D</span>
+          </div>
+        </div>
+      </div>
+      <div class="type-row"><span class="type-pill"><img src="./sprites/types/Miniature_Type_T%C3%A9n%C3%A8bres_LPZA.png" alt="dark"></span></div>
+      <div class="status-row"><span class="status-dot"></span>Manquant</div>
+    </div>
+    <div class="card" style="background:linear-gradient(180deg,#c6cfe0,#8f9bb8)">
+      <div class="card-head">
+        <span class="dex-num">#0379</span>
+        <span class="dex-name">Registeel</span>
+        <span class="dex-stage">Base</span>
+      </div>
+      <div class="art">
+        <div class="sprite-pair">
+          <div class="sprite-box">
+            <img src="./sprites/2d/normal/0379-registeel.png" alt="Registeel 2D" class="pixel" loading="lazy">
+            <span class="sprite-tag">2D</span>
+          </div>
+          <div class="sprite-box">
+            <img src="./sprites/3d/normal/0379-registeel.png" alt="Registeel 3D" loading="lazy">
+            <span class="sprite-tag">3D</span>
+          </div>
+        </div>
+      </div>
+      <div class="type-row"><span class="type-pill"><img src="./sprites/types/Miniature_Type_Acier_LPZA.png" alt="steel"></span></div>
+      <div class="status-row"><span class="status-dot"></span>Manquant</div>
+    </div>
+    <div class="card" style="background:linear-gradient(180deg,#ffb3d1,#f582ac)">
+      <div class="card-head">
+        <span class="dex-num">#0700</span>
+        <span class="dex-name">Nymphali</span>
+        <span class="dex-stage">Niveau 1</span>
+      </div>
+      <div class="art">
+        <div class="sprite-pair">
+          <div class="sprite-box">
+            <img src="./sprites/2d/normal/0700-nymphali.png" alt="Nymphali 2D" class="pixel" loading="lazy">
+            <span class="sprite-tag">2D</span>
+          </div>
+          <div class="sprite-box">
+            <img src="./sprites/3d/normal/0700-nymphali.png" alt="Nymphali 3D" loading="lazy">
+            <span class="sprite-tag">3D</span>
+          </div>
+        </div>
+      </div>
+      <div class="type-row"><span class="type-pill"><img src="./sprites/types/Miniature_Type_F%C3%A9e_LPZA.png" alt="fairy"></span></div>
+      <div class="status-row"><span class="status-dot"></span>Manquant</div>
+    </div>
+  </div>
+  <footer>18 types • Shiny Living Dex</footer>
+</body>
+</html>
