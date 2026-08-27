@@ -1076,13 +1076,17 @@ body.card-interaction-suppressed .card:active{
   text-align:center;width:100%;max-width:100%;overflow-wrap:anywhere;
 }
 .card-sprite{
-  width:80px;height:80px;order:2;margin:2px 0 3px;display:block;
-  object-fit:contain;padding:10px;border-radius:14px;
-  background:linear-gradient(165deg,#f4f6fa 0%,#e2e6ee 100%);
+  width:92px;height:78px;order:2;margin:2px 0 4px;display:block;
+  object-fit:contain;padding:8px 12px;border-radius:16px;
+  background:
+    radial-gradient(120% 90% at 50% 0%, rgba(255,255,255,.6), rgba(255,255,255,0) 62%),
+    linear-gradient(160deg,#ffffff 0%,#eef1f6 48%,#dde2ec 100%);
   box-shadow:
-    0 0 0 1px rgba(255,255,255,.65),
-    inset 0 -1px 3px rgba(0,0,0,.08),
-    0 4px 10px rgba(0,0,0,.25);
+    0 0 0 1px rgba(255,255,255,.95),
+    0 0 0 2.5px rgba(0,0,0,.08),
+    inset 0 1px 2px rgba(255,255,255,.95),
+    inset 0 -9px 13px rgba(0,0,0,.10),
+    0 7px 15px rgba(0,0,0,.3);
   filter:drop-shadow(0 5px 8px rgba(0,0,0,.44));
   box-sizing:border-box;
 }
