@@ -5815,13 +5815,24 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
+  const assetVersion = 'v281';
+  const seenAssetVersion = localStorage.getItem('shiny_dex_asset_version');
+  if (seenAssetVersion !== assetVersion && 'caches' in window) {
+    caches.keys()
+      .then(keys => Promise.all(keys
+        .filter(key => key.startsWith('shiny-living-dex-'))
+        .map(key => caches.delete(key))))
+      .finally(() => localStorage.setItem('shiny_dex_asset_version', assetVersion));
+  } else {
+    localStorage.setItem('shiny_dex_asset_version', assetVersion);
+  }
   let refreshingForServiceWorker = false;
   navigator.serviceWorker.addEventListener('controllerchange', () => {
     if (refreshingForServiceWorker) return;
     refreshingForServiceWorker = true;
     window.location.reload();
   });
-  navigator.serviceWorker.register('./service-worker.js?v=280', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=281', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
