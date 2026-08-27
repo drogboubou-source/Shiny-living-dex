@@ -1024,7 +1024,7 @@ body.card-interaction-suppressed .card:active{
   --card-accent: rgba(255,255,255,.45);
   clip-path: polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px);
   background:
-    linear-gradient(90deg, var(--type-c1) 50%, var(--type-c2) 50%) padding-box,
+    linear-gradient(var(--type-c1), var(--type-c1)) padding-box,
     linear-gradient(165deg,rgba(255,255,255,.62),rgba(255,255,255,.2) 45%,rgba(255,255,255,.18) 100%) border-box;
   border:1px solid transparent;
   padding:13px 8px 9px;min-height:172px;
@@ -2655,14 +2655,16 @@ const TYPE_COLORS = {
   steel:'#b8b8d0', fairy:'#ee99ac'
 };
 
-// Applique la couleur du/des type(s) d'un Pokemon comme fond de carte (voir TYPE_COLORS).
+// Applique la couleur du type principal (premier type) comme fond de carte,
+// avec les memes teintes exactes que les bandeaux de type (TYPE_COLORS = memes hex que TYPE_META).
 function getCardTypeColor(type) {
   return TYPE_COLORS[type] || '#7d7d8a';
 }
 function applyCardTypeColors(card, types) {
   const list = (types && types.length) ? types : ['normal'];
-  card.style.setProperty('--type-c1', getCardTypeColor(list[0]));
-  card.style.setProperty('--type-c2', getCardTypeColor(list[1] || list[0]));
+  const mainColor = getCardTypeColor(list[0]);
+  card.style.setProperty('--type-c1', mainColor);
+  card.style.setProperty('--type-c2', mainColor);
 }
 
 // Deux compositions d'energie reutilisables, plus travaillees qu'un simple pictogramme :
