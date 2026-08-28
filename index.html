@@ -1026,7 +1026,14 @@ body.card-interaction-suppressed .card:active{
 .card{
   --card-accent: #b8b8be;
   --card-border:
-    linear-gradient(150deg,#f2f2f5 0%,#b8b8be 34%,#777780 68%,#d8d8dd 100%);
+    conic-gradient(from 135deg at 50% 50%,
+      color-mix(in srgb, var(--card-accent) 72%, #f6f6ff) 0deg,
+      #f7f3ff 42deg,
+      #9be7ff 92deg,
+      #d7b5ff 148deg,
+      #fff0a8 214deg,
+      #87dfff 282deg,
+      color-mix(in srgb, var(--card-accent) 76%, #ffffff) 360deg);
   --type-color: #7dd3fc;
   position:relative;cursor:pointer;overflow:hidden;
   border-radius:18px;
@@ -1091,15 +1098,21 @@ body.card-interaction-suppressed .card:active{
 }
 .card.caught{
   --card-accent:#c084fc;
-  --card-border: color-mix(in srgb, var(--card-accent) 82%, white);
+  --card-border:
+    conic-gradient(from 135deg at 50% 50%,
+      #f2d8ff 0deg,#ffffff 44deg,#9be7ff 92deg,#c084fc 154deg,#ffeaa3 218deg,#87dfff 284deg,#e7c5ff 360deg);
 }
 .card.perfect{
   --card-accent:#d4af37;
-  --card-border: color-mix(in srgb, var(--card-accent) 82%, white);
+  --card-border:
+    conic-gradient(from 135deg at 50% 50%,
+      #fff1a6 0deg,#ffffff 44deg,#9be7ff 94deg,#d8b6ff 152deg,#d4af37 220deg,#8ce5ff 286deg,#ffe58a 360deg);
 }
 .card.hunting{
   --card-accent:#7dd3fc;
-  --card-border: color-mix(in srgb, var(--card-accent) 82%, white);
+  --card-border:
+    conic-gradient(from 135deg at 50% 50%,
+      #dff6ff 0deg,#ffffff 44deg,#7dd3fc 96deg,#d8b6ff 154deg,#ffeaa3 220deg,#69d4ff 286deg,#c4f1ff 360deg);
 }
 .card.caught .tcg-name{color:#f4e7ff;text-shadow:0 0 9px rgba(192,132,252,.65)}
 .card.perfect .tcg-name{color:#fff3cf;text-shadow:0 0 9px rgba(212,175,55,.7)}
