@@ -1027,39 +1027,35 @@ body.card-interaction-suppressed .card:active{
   --card-accent: rgba(255,255,255,.5);
   --type-color: #7dd3fc;
   position:relative;cursor:pointer;overflow:hidden;
-  border-radius:15px;
-  border:6px solid transparent;
+  border-radius:18px;
+  border:5px solid transparent;
   background:
     linear-gradient(180deg,#232329,#18181c) padding-box,
-    linear-gradient(115deg,
-      color-mix(in srgb, var(--card-accent) 92%, white) 0%,
-      var(--card-accent) 14%,
-      color-mix(in srgb, var(--card-accent) 97%, white) 28%,
-      var(--card-accent) 42%,
-      color-mix(in srgb, var(--card-accent) 97%, white) 56%,
-      var(--card-accent) 70%,
-      color-mix(in srgb, var(--card-accent) 90%, white) 84%,
-      color-mix(in srgb, var(--card-accent) 52%, black) 100%) border-box;
+    linear-gradient(150deg,
+      color-mix(in srgb, var(--card-accent) 96%, white) 0%,
+      color-mix(in srgb, var(--card-accent) 80%, white) 30%,
+      var(--card-accent) 55%,
+      color-mix(in srgb, var(--card-accent) 65%, black) 100%) border-box;
   padding:5px 5px 4px;min-height:198px;
   display:flex;flex-direction:column;gap:0;
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,.1),
     0 0 0 1px rgba(0,0,0,.6),
-    0 0 0 1px color-mix(in srgb, var(--card-accent) 35%, transparent),
-    0 0 20px -3px color-mix(in srgb, var(--card-accent) 60%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--card-accent) 30%, transparent),
+    0 0 16px -4px color-mix(in srgb, var(--card-accent) 50%, transparent),
     0 6px 10px rgba(0,0,0,.4),
     0 16px 26px rgba(0,0,0,.48);
   transition:transform .18s ease,box-shadow .18s ease,filter .2s ease;
 }
 .card::before{
-  content:'';position:absolute;inset:3px;border-radius:10px;
-  border:1px solid color-mix(in srgb, var(--card-accent) 60%, transparent);
+  content:'';position:absolute;inset:2px;border-radius:14px;
+  border:1px solid color-mix(in srgb, var(--card-accent) 40%, transparent);
   box-shadow:
-    inset 0 0 0 1px rgba(0,0,0,.4),
-    inset 0 1px 0 rgba(255,255,255,.06);
+    inset 0 0 0 1px rgba(0,0,0,.35),
+    inset 0 1px 0 rgba(255,255,255,.08);
   background:
-    linear-gradient(125deg, rgba(255,255,255,.18) 0%, transparent 26%, transparent 74%, rgba(255,255,255,.07) 100%);
-  opacity:.96;
+    linear-gradient(150deg, rgba(255,255,255,.22) 0%, transparent 32%, transparent 68%, rgba(255,255,255,.05) 100%);
+  opacity:.9;
   pointer-events:none;z-index:2;
 }
 .card:hover{
@@ -1067,8 +1063,8 @@ body.card-interaction-suppressed .card:active{
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,.14),
     0 0 0 1px rgba(0,0,0,.65),
-    0 0 0 1px color-mix(in srgb, var(--card-accent) 48%, transparent),
-    0 0 30px -2px color-mix(in srgb, var(--card-accent) 72%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--card-accent) 40%, transparent),
+    0 0 22px -3px color-mix(in srgb, var(--card-accent) 60%, transparent),
     0 8px 14px rgba(0,0,0,.46),
     0 22px 36px rgba(0,0,0,.55);
 }
@@ -1158,50 +1154,7 @@ body.card-interaction-suppressed .card:active{
 .card.form-card{--card-accent:#7dd3fc}
 .card.unavailable{filter:grayscale(.85) saturate(.5);opacity:1}
 
-/* ══════════════════════════════════════
-   EFFET HOLOGRAPHIQUE — discret et premium, uniquement sur les
-   cartes Shiny trouvé / Parfait / En cours — jamais sur les
-   cartes manquantes, ni sur .region-header / .gen-btn.
-   De petites étincelles, dans la couleur propre de la carte
-   (--card-accent, via un masque CSS), placées autour du
-   sprite. Chacune a son propre délai : elles apparaissent
-   l'une après l'autre plutôt qu'ensemble, pour un rendu plus
-   naturel, puis s'effacent. Tout est animé via "transform" /
-   "opacity" (GPU, sans repaint) et toutes les étincelles d'un
-   même rang partagent la même animation pour rester
-   parfaitement synchronisées entre toutes les cartes.
-══════════════════════════════════════ */
-.card .holo{
-  position:absolute;inset:0;z-index:2;pointer-events:none;overflow:hidden;
-}
-.card .holo::before{
-  content:'';position:absolute;
-  top:-20%;left:0;width:100%;height:140%;
-  background:linear-gradient(
-    105deg,
-    transparent 20%,
-    var(--card-accent) 40%,
-    rgba(255,255,255,.75) 50%,
-    var(--card-accent) 60%,
-    transparent 80%
-  );
-  mix-blend-mode:screen;
-  opacity:0;
-  will-change:transform,opacity;
-  transform:translateX(-100%);
-}
-.card.caught .holo::before,
-.card.perfect .holo::before{
-  animation:holoFlash 4.5s linear infinite;
-}
-@keyframes holoFlash{
-  0%       {transform:translateX(-100%);opacity:0}
-  2%       {opacity:.55}
-  16%      {transform:translateX(200%);opacity:0}
-  17%,100% {transform:translateX(-100%);opacity:0}
-}
 @media (prefers-reduced-motion:reduce){
-  .card.caught .holo::before,.card.perfect .holo::before{animation:none;opacity:0}
   .modal-hunt-percent.hunt-active{animation:none}
 }
 
