@@ -92,7 +92,7 @@ body::before{
 button,.btn,.card,.gen-btn{-webkit-tap-highlight-color:transparent}
 
 /* scanlines */
-body::after{content:'';display:none;position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.06) 2px,rgba(0,0,0,.06) 4px);pointer-events:none;z-index:9999}
+body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.06) 2px,rgba(0,0,0,.06) 4px);pointer-events:none;z-index:9999}
 body.readonly-share .edit-only{display:none!important}
 body.readonly-share .readonly-disabled{opacity:.62;pointer-events:none}
 body.readonly-share .modal-form-fields input,
@@ -666,7 +666,7 @@ body.card-interaction-suppressed .card:active{
   .generation-divider{min-height:26px;margin:4px 0 -2px;font-size:9px;gap:7px;padding:3px 7px 3px 8px;top:0}
   .generation-divider strong{font-size:8px}
   .card{min-height:152px;padding:9px 6px 8px}
-  .card-sprite{width:74px;height:56px;padding:5px 8px}
+  .card-sprite{width:56px;height:56px}
   .card .pname{font-size:12px;min-height:auto;padding:0}
   .card .num{font-size:8px;padding:3px 6px 2px;margin-left:2px}
   .card .status{font-size:7px;padding:3px 6px}
@@ -1019,12 +1019,10 @@ body.card-interaction-suppressed .card:active{
 .generation-divider span{opacity:.82;font-variant-numeric:tabular-nums}
 .scroll-end{height:1px}
 .card{
-  --type-c1: #7d7d8a;
-  --type-c2: var(--type-c1);
   --card-accent: rgba(255,255,255,.45);
   clip-path: polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px);
   background:
-    linear-gradient(var(--type-c1), var(--type-c1)) padding-box,
+    linear-gradient(165deg,#35353f 0%,#272730 48%,#1c1c23 100%) padding-box,
     linear-gradient(165deg,rgba(255,255,255,.62),rgba(255,255,255,.2) 45%,rgba(255,255,255,.18) 100%) border-box;
   border:1px solid transparent;
   padding:13px 8px 9px;min-height:172px;
@@ -1076,18 +1074,9 @@ body.card-interaction-suppressed .card:active{
   text-align:center;width:100%;max-width:100%;overflow-wrap:anywhere;
 }
 .card-sprite{
-  width:100px;height:78px;order:2;margin:2px 0 4px;display:block;
-  object-fit:contain;padding:8px 12px;border-radius:16px;
-  background:
-    radial-gradient(120% 90% at 50% 12%, rgba(255,255,255,.12), rgba(255,255,255,0) 60%),
-    linear-gradient(165deg,
-      color-mix(in srgb, var(--type-c1) 22%, #16171d) 0%,
-      color-mix(in srgb, var(--type-c1) 10%, #0d0e12) 100%);
-  box-shadow:
-    inset 0 0 0 1px rgba(255,255,255,.16),
-    inset 0 1px 2px rgba(255,255,255,.14),
-    inset 0 -10px 15px rgba(0,0,0,.55),
-    0 6px 14px rgba(0,0,0,.35);
+  width:72px;height:72px;order:2;margin:1px 0 2px;display:block;
+  object-fit:contain;padding:4px;border-radius:16px;
+  background:radial-gradient(ellipse at 50% 78%,rgba(0,0,0,.3),transparent 48%);
   filter:drop-shadow(0 5px 8px rgba(0,0,0,.44));
   box-sizing:border-box;
 }
@@ -2074,7 +2063,7 @@ button.capture-control{width:100%;text-align:left;font:inherit;color:inherit;cur
   .generation-divider{min-height:26px;margin:4px 0 -2px;font-size:9px;gap:7px;padding:3px 7px 3px 8px;top:6px}
   .generation-divider strong{font-size:8px}
   .card{min-height:152px;padding:9px 6px 8px}
-  .card-sprite{width:74px;height:56px;padding:5px 8px}
+  .card-sprite{width:56px;height:56px}
   .card .pname{font-size:12px;min-height:auto;padding:0}
   .card .num{font-size:8px;padding:3px 6px 2px;margin-left:2px}
   .card .status{font-size:7px;padding:3px 6px}
@@ -2657,24 +2646,12 @@ Object.entries(TYPE_ICON_SRC).forEach(([type, src]) => {
 
 // Couleurs officielles par type (memes teintes que les badges ci-dessus).
 const TYPE_COLORS = {
-  normal:'#a8a878', fire:'#e3350d', water:'#6890f0', electric:'#f8d030',
-  grass:'#78c850', ice:'#98d8d8', fighting:'#f89030', poison:'#a040a0',
+  normal:'#a8a878', fire:'#f89030', water:'#6890f0', electric:'#f8d030',
+  grass:'#78c850', ice:'#98d8d8', fighting:'#c03028', poison:'#a040a0',
   ground:'#e0c068', flying:'#a890f0', psychic:'#f85888', bug:'#a0c888',
   rock:'#b8a038', ghost:'#705898', dragon:'#7038f8', dark:'#908888',
   steel:'#b8b8d0', fairy:'#ee99ac'
 };
-
-// Applique la couleur du type principal (premier type) comme fond de carte,
-// avec les memes teintes exactes que les bandeaux de type (TYPE_COLORS = memes hex que TYPE_META).
-function getCardTypeColor(type) {
-  return TYPE_COLORS[type] || '#7d7d8a';
-}
-function applyCardTypeColors(card, types) {
-  const list = (types && types.length) ? types : ['normal'];
-  const mainColor = getCardTypeColor(list[0]);
-  card.style.setProperty('--type-c1', mainColor);
-  card.style.setProperty('--type-c2', mainColor);
-}
 
 // Deux compositions d'energie reutilisables, plus travaillees qu'un simple pictogramme :
 // - "bolt" : un eclair ramifie avec de petits eclats de cristal aux embranchements
@@ -4661,7 +4638,6 @@ function createRegionalOriginalCard(id) {
   const card = document.createElement('div');
   card.className = 'card form-original' + (p.caught ? ' caught' : '') + (p.perfect ? ' perfect' : '') + (isHuntingCard ? ' hunting' : '') + getTargetCardClasses(p, isHuntingCard);
   setRegionVisualVars(card, getRegionByPokemonId(id));
-  applyCardTypeColors(card, getPokemonDisplayTypes(id));
   card.setAttribute('role', 'button');
   card.setAttribute('tabindex', '0');
   card.setAttribute('aria-label', `${name}, forme originale`);
@@ -4693,7 +4669,6 @@ function createRegionalFormCard(form) {
   const card = document.createElement('div');
   card.className = 'card form-card' + (p.caught && !unavailable ? ' caught' : '') + (p.perfect && !unavailable ? ' perfect' : '') + (isHuntingCard && !unavailable ? ' hunting' : '') + getTargetCardClasses(p, isHuntingCard, unavailable) + (unavailable ? ' unavailable' : '');
   setRegionVisualVars(card, REGIONS.find(region => region.name === form.region) || getRegionByPokemonId(form.baseId));
-  applyCardTypeColors(card, form.types);
   card.setAttribute('role', 'button');
   card.setAttribute('tabindex', '0');
   card.setAttribute('aria-label', `${form.label}, forme de ${form.region}`);
@@ -4764,7 +4739,6 @@ function renderGrid() {
     const card = document.createElement('div');
     card.className = 'card' + (p.caught && !unavailable ? ' caught' : '') + (p.perfect && !unavailable ? ' perfect' : '') + (isHuntingCard ? ' hunting' : '') + getTargetCardClasses(p, isHuntingCard, unavailable) + (unavailable ? ' unavailable' : '');
     setRegionVisualVars(card, getRegionByPokemonId(id));
-    applyCardTypeColors(card, getPokemonDisplayTypes(id));
     card.setAttribute('role', 'button');
     card.setAttribute('tabindex', '0');
     card.setAttribute('aria-label', `${name}, #${String(id).padStart(4,'0')}${p.caught ? ', shiny capture' : (isHuntingCard ? ', en cours' : ', manquant')}`);
