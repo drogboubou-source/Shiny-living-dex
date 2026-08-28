@@ -1091,18 +1091,15 @@ body.card-interaction-suppressed .card:active{
 }
 .card.caught{
   --card-accent:#c084fc;
-  --card-border:
-    linear-gradient(150deg,#f1d8ff 0%,#c084fc 34%,#7d4eb2 70%,#dfb8ff 100%);
+  --card-border: color-mix(in srgb, var(--card-accent) 82%, white);
 }
 .card.perfect{
   --card-accent:#d4af37;
-  --card-border:
-    linear-gradient(150deg,#fff3bf 0%,#d4af37 36%,#9d7414 70%,#ffe58a 100%);
+  --card-border: color-mix(in srgb, var(--card-accent) 82%, white);
 }
 .card.hunting{
   --card-accent:#7dd3fc;
-  --card-border:
-    linear-gradient(150deg,#dff6ff 0%,#7dd3fc 34%,#367ca8 70%,#b7ecff 100%);
+  --card-border: color-mix(in srgb, var(--card-accent) 82%, white);
 }
 .card.caught .tcg-name{color:#f4e7ff;text-shadow:0 0 9px rgba(192,132,252,.65)}
 .card.perfect .tcg-name{color:#fff3cf;text-shadow:0 0 9px rgba(212,175,55,.7)}
