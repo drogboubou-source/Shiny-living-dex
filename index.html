@@ -1036,18 +1036,17 @@ body.card-interaction-suppressed .card:active{
       color-mix(in srgb, var(--card-accent) 80%, white) 30%,
       var(--card-accent) 55%,
       color-mix(in srgb, var(--card-accent) 65%, black) 100%) border-box;
-  padding:5px 5px 4px;min-height:198px;
+  padding:2px 2px 2px;min-height:198px;
   display:flex;flex-direction:column;gap:0;
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,.1),
-    0 0 0 1px rgba(0,0,0,.55),
     0 0 14px 0 color-mix(in srgb, var(--card-accent) 45%, transparent),
     0 6px 10px rgba(0,0,0,.4),
     0 16px 26px rgba(0,0,0,.48);
   transition:transform .18s ease,box-shadow .18s ease,filter .2s ease;
 }
 .card::before{
-  content:'';position:absolute;inset:5px;border-radius:13px;
+  content:'';position:absolute;inset:2px;border-radius:15px;
   background:
     linear-gradient(150deg, rgba(255,255,255,.22) 0%, transparent 32%, transparent 68%, rgba(255,255,255,.05) 100%);
   opacity:.9;
@@ -1057,7 +1056,6 @@ body.card-interaction-suppressed .card:active{
   transform:translateY(-3px) scale(1.014);
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,.14),
-    0 0 0 1px rgba(0,0,0,.6),
     0 0 20px 1px color-mix(in srgb, var(--card-accent) 55%, transparent),
     0 8px 14px rgba(0,0,0,.46),
     0 22px 36px rgba(0,0,0,.55);
