@@ -665,14 +665,15 @@ body.card-interaction-suppressed .card:active{
   .grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;padding:6px;border-radius:14px}
   .generation-divider{min-height:26px;margin:4px 0 -2px;font-size:9px;gap:7px;padding:3px 7px 3px 8px;top:0}
   .generation-divider strong{font-size:8px}
-  .card{min-height:152px;padding:9px 6px 8px}
-  .card-sprite{width:56px;height:56px}
-  .card .pname{font-size:12px;min-height:auto;padding:0}
-  .card .num{font-size:8px;padding:3px 6px 2px;margin-left:2px}
-  .card .status{font-size:7px;padding:3px 6px}
-  .type-row{gap:3px;margin:1px 0 3px;padding:0}
-  .type-pill{width:40px;height:10px}
-  .type-pill img{width:40px;height:auto;max-height:10px}
+  .card{min-height:172px;padding:5px 5px 4px}
+  .card-sprite{width:50px;height:50px}
+  .tcg-name{font-size:10.5px;margin:2px 0 3px}
+  .tcg-stage{font-size:6px;padding:1.5px 4px}
+  .tcg-hp{font-size:8px}
+  .tcg-move-label{font-size:7.6px}
+  .tcg-footer{font-size:6.2px}
+  .type-pill{width:26px;height:9px}
+  .type-pill img{width:26px;height:auto;max-height:9px}
   .two-col{grid-template-columns:1fr}
   .form-grid-2{grid-template-columns:1fr}
   .iv-grid{grid-template-columns:1fr 1fr}
@@ -1018,144 +1019,147 @@ body.card-interaction-suppressed .card:active{
 }
 .generation-divider span{opacity:.82;font-variant-numeric:tabular-nums}
 .scroll-end{height:1px}
+/* ══════════════════════════════════════
+   CARTE — inspirée d'une vraie carte à collectionner Pokémon :
+   liseré coloré (cache-couleur du statut), plaque de nom, fenêtre
+   d'illustration teintée par le type, ligne d'attaque (icônes de
+   type + statut) et bandeau inférieur (région / méthode), à la
+   manière du bloc faiblesse-retraite d'une carte du JCC.
+══════════════════════════════════════ */
 .card{
-  --card-accent: rgba(255,255,255,.45);
-  clip-path: polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px);
+  --card-accent: rgba(255,255,255,.5);
+  --type-color: #7dd3fc;
+  position:relative;cursor:pointer;overflow:hidden;
+  border-radius:15px;
+  border:5px solid transparent;
   background:
-    linear-gradient(165deg,#35353f 0%,#272730 48%,#1c1c23 100%) padding-box,
-    linear-gradient(165deg,rgba(255,255,255,.62),rgba(255,255,255,.2) 45%,rgba(255,255,255,.18) 100%) border-box;
-  border:1px solid transparent;
-  padding:13px 8px 9px;min-height:172px;
-  text-align:center;cursor:pointer;position:relative;overflow:hidden;
-  display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:5px;
+    linear-gradient(180deg,#232329,#18181c) padding-box,
+    linear-gradient(155deg,
+      color-mix(in srgb, var(--card-accent) 78%, white),
+      var(--card-accent) 48%,
+      color-mix(in srgb, var(--card-accent) 60%, black) 100%) border-box;
+  padding:6px 6px 5px;min-height:198px;
+  display:flex;flex-direction:column;gap:0;
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.13),
-    inset 0 -14px 18px rgba(0,0,0,.18),
-    0 0 0 1px rgba(0,0,0,.55),
+    inset 0 1px 0 rgba(255,255,255,.1),
+    0 0 0 1px rgba(0,0,0,.6),
     0 6px 10px rgba(0,0,0,.4),
-    0 18px 30px rgba(0,0,0,.5);
+    0 16px 26px rgba(0,0,0,.48);
   transition:transform .18s ease,box-shadow .18s ease,filter .2s ease;
 }
 .card::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:3px;z-index:2;
-  background:linear-gradient(90deg,transparent,var(--card-accent) 18%,var(--card-accent) 82%,transparent);
-  pointer-events:none;
-}
-.card::after{
-  content:'';position:absolute;inset:0;pointer-events:none;z-index:0;
-  background:
-    linear-gradient(135deg,rgba(255,255,255,.13),transparent 26%,transparent 72%,rgba(255,255,255,.055)),
-    radial-gradient(circle 1.6px at right 6px top 6px,var(--card-accent),transparent 75%),
-    radial-gradient(circle 1.6px at left 6px bottom 6px,var(--card-accent),transparent 75%),
-    linear-gradient(var(--card-accent),var(--card-accent)) no-repeat right 6px top 6px/14px 2px,
-    linear-gradient(var(--card-accent),var(--card-accent)) no-repeat right 6px top 6px/2px 14px,
-    linear-gradient(var(--card-accent),var(--card-accent)) no-repeat left 6px bottom 6px/14px 2px,
-    linear-gradient(var(--card-accent),var(--card-accent)) no-repeat left 6px bottom 6px/2px 14px;
-  opacity:.9;
+  content:'';position:absolute;inset:2px;border-radius:10px;
+  border:1px solid rgba(255,255,255,.14);
+  pointer-events:none;z-index:2;
 }
 .card:hover{
   transform:translateY(-3px) scale(1.014);
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.15),
-    inset 0 -14px 18px rgba(0,0,0,.18),
-    0 0 0 1px rgba(0,0,0,.6),
-    0 8px 14px rgba(0,0,0,.44),
-    0 24px 38px rgba(0,0,0,.55);
+    inset 0 1px 0 rgba(255,255,255,.14),
+    0 0 0 1px rgba(0,0,0,.65),
+    0 8px 14px rgba(0,0,0,.46),
+    0 22px 36px rgba(0,0,0,.55);
 }
 .card > *{position:relative;z-index:1}
-.card .num{
-  align-self:flex-start;font-size:9px;font-weight:800;color:var(--card-accent);order:0;letter-spacing:.6px;
-  font-variant-numeric:tabular-nums;border-bottom:1px solid var(--card-accent);padding-bottom:3px;
+
+.tcg-top{
+  display:flex;align-items:center;justify-content:space-between;gap:4px;
+  padding:1px 2px 0;min-height:12px;
 }
-.card .pname{
-  font-size:14px;font-weight:800;color:#fff;order:1;
-  min-height:34px;padding:2px 0;display:flex;align-items:center;justify-content:center;
-  text-transform:uppercase;letter-spacing:.2px;line-height:1.18;
-  text-align:center;width:100%;max-width:100%;overflow-wrap:anywhere;
+.tcg-stage{
+  font-size:6.6px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;
+  color:#0d0d12;background:var(--card-accent);padding:2px 5px 1.5px;border-radius:5px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:52%;
+}
+.tcg-hp{
+  font-size:9.5px;font-weight:800;color:var(--card-accent);letter-spacing:.3px;
+  font-variant-numeric:tabular-nums;white-space:nowrap;
+}
+
+.tcg-name{
+  font-size:12.5px;font-weight:800;color:#fff;text-align:center;
+  text-transform:uppercase;letter-spacing:.2px;line-height:1.16;
+  margin:3px 1px 4px;overflow-wrap:anywhere;
+}
+.card.caught .tcg-name{color:#f4e7ff;text-shadow:0 0 9px rgba(192,132,252,.65)}
+.card.perfect .tcg-name{color:#fff3cf;text-shadow:0 0 9px rgba(212,175,55,.7)}
+.card.hunting .tcg-name{color:#e6f7ff;text-shadow:0 0 9px rgba(125,211,252,.6)}
+
+.tcg-art{
+  position:relative;border-radius:10px;margin:0 1px 5px;
+  min-height:76px;padding:8px 4px;
+  display:flex;align-items:center;justify-content:center;
+  background:
+    radial-gradient(circle at 50% 32%, color-mix(in srgb, var(--type-color) 42%, transparent), transparent 70%),
+    linear-gradient(165deg, color-mix(in srgb, var(--type-color) 24%, #14141a), #101013 85%);
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.16),
+    inset 0 10px 16px rgba(0,0,0,.4),
+    inset 0 -6px 10px rgba(0,0,0,.3);
+  overflow:hidden;
+}
+.tcg-art::before{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background:
+    radial-gradient(circle 1.5px at right 7px top 7px,var(--card-accent),transparent 75%),
+    radial-gradient(circle 1.5px at left 7px bottom 7px,var(--card-accent),transparent 75%);
+  opacity:.9;
 }
 .card-sprite{
-  width:72px;height:72px;order:2;margin:1px 0 2px;display:block;
-  object-fit:contain;padding:4px;border-radius:16px;
-  background:radial-gradient(ellipse at 50% 78%,rgba(0,0,0,.3),transparent 48%);
-  filter:drop-shadow(0 5px 8px rgba(0,0,0,.44));
-  box-sizing:border-box;
+  width:64px;height:64px;display:block;object-fit:contain;position:relative;z-index:1;
+  filter:drop-shadow(0 5px 8px rgba(0,0,0,.5));
 }
-.card.caught .card-sprite{filter:drop-shadow(0 5px 9px rgba(0,0,0,.45)) drop-shadow(0 0 9px rgba(192,132,252,.2))}
-.card.perfect .card-sprite{filter:drop-shadow(0 5px 9px rgba(0,0,0,.45)) drop-shadow(0 0 9px rgba(212,175,55,.2))}
-.card.hunting .card-sprite{filter:drop-shadow(0 5px 9px rgba(0,0,0,.45)) drop-shadow(0 0 9px rgba(125,211,252,.2))}
+.card.caught .card-sprite{filter:drop-shadow(0 5px 8px rgba(0,0,0,.5)) drop-shadow(0 0 9px rgba(192,132,252,.35))}
+.card.perfect .card-sprite{filter:drop-shadow(0 5px 8px rgba(0,0,0,.5)) drop-shadow(0 0 9px rgba(212,175,55,.35))}
+.card.hunting .card-sprite{filter:drop-shadow(0 5px 8px rgba(0,0,0,.5)) drop-shadow(0 0 9px rgba(125,211,252,.35))}
 .card.unavailable .card-sprite{filter:grayscale(1) drop-shadow(0 4px 8px rgba(0,0,0,.4))}
-.card.caught,.card.perfect,.card.hunting{border-color:transparent}
-.card.caught{
-  --card-accent:#c084fc;
-  background:
-    linear-gradient(165deg,#33263f 0%,#251c30 48%,#1b1424 100%) padding-box,
-    linear-gradient(165deg,#f7ecff,#c084fc 32%,#6b3d98 100%) border-box;
-  border:1px solid transparent;
-  filter:drop-shadow(0 0 13px rgba(192,132,252,.5));
+
+.tcg-move{
+  display:flex;align-items:center;justify-content:space-between;gap:5px;
+  margin:0 1px;padding:4px 2px;
+  border-top:1px solid rgba(255,255,255,.14);
+  border-bottom:1px solid rgba(255,255,255,.1);
 }
-.card.caught .pname{color:#c084fc;text-shadow:0 0 10px rgba(192,132,252,.7)}
-.card.perfect{
-  --card-accent:#d4af37;
-  background:
-    linear-gradient(165deg,#392c14 0%,#2b2114 48%,#1e1810 100%) padding-box,
-    linear-gradient(165deg,#fffaea,#d4af37 32%,#8a6a18 100%) border-box;
-  border:1px solid transparent;
-  filter:drop-shadow(0 0 14px rgba(212,175,55,.55));
+.tcg-move-cost{display:flex;align-items:center;gap:2px;flex-wrap:wrap;flex:0 0 auto}
+.tcg-move-label{
+  font-size:8.6px;font-weight:800;color:rgba(255,255,255,.86);
+  letter-spacing:.2px;white-space:nowrap;text-align:right;
+  min-width:0;overflow:hidden;text-overflow:ellipsis;
 }
-.card.perfect .pname{color:#d4af37;text-shadow:0 0 10px rgba(212,175,55,.75)}
-.card.hunting{
-  --card-accent:#7dd3fc;
-  background:
-    linear-gradient(165deg,#193640 0%,#142a31 48%,#102025 100%) padding-box,
-    linear-gradient(165deg,#edfbff,#7dd3fc 32%,#226a87 100%) border-box;
-  border:1px solid transparent;
-  filter:drop-shadow(0 0 13px rgba(125,211,252,.5));
-}
-.card.hunting .pname{color:#7dd3fc;text-shadow:0 0 10px rgba(125,211,252,.7)}
-.card.target-outline{
-  border-color:#7ed660;
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.15),
-    inset 0 -14px 18px rgba(0,0,0,.18),
-    0 0 0 2px rgba(126,214,96,.78),
-    0 0 18px rgba(126,214,96,.44),
-    0 18px 30px rgba(0,0,0,.5);
-}
-.card.target-outline::before{
-  background:linear-gradient(90deg,transparent,#7ed660 18%,#7ed660 82%,transparent);
-}
-.card.target-outline .num{color:#7ed660;border-bottom-color:#7ed660}
-.card .status{
-  margin-top:auto;font-size:9px;padding:4px 9px 4px 8px;font-weight:800;order:4;letter-spacing:.25px;
-  display:inline-flex;align-items:center;gap:5px;white-space:nowrap;max-width:100%;
-  clip-path:polygon(6px 0,100% 0,100% 100%,0 100%,0 6px);
-  background:rgba(255,255,255,.08);color:rgba(255,255,255,.6);
-}
-.card .status::before{content:'';width:6px;height:6px;background:rgba(255,255,255,.4);transform:rotate(45deg);flex:0 0 auto}
-.card.caught .status::before{background:#c084fc;box-shadow:0 0 6px rgba(192,132,252,.9)}
-.card.perfect .status::before{background:#d4af37;box-shadow:0 0 6px rgba(212,175,55,.9)}
-.card.hunting .status::before{background:#7dd3fc;box-shadow:0 0 6px rgba(125,211,252,.9)}
-.card.caught .status{background:rgba(192,132,252,.18);color:#fff}
-.card.perfect .status{background:rgba(212,175,55,.2);color:#fff}
-.card.hunting .status{background:rgba(125,211,252,.18);color:#fff}
-.card.target:not(.caught):not(.perfect):not(.hunting) .status{background:rgba(126,214,96,.18);color:#fff;border-color:rgba(126,214,96,.36)}
-.card.target:not(.caught):not(.perfect):not(.hunting) .status::before{background:#7ed660;box-shadow:0 0 6px rgba(126,214,96,.9)}
-.card.form-original{--card-accent:rgba(255,255,255,.4)}
-.card.form-card{--card-accent:#7dd3fc;border-color:#7dd3fc}
-.card.form-card .pname{color:#dff6ff}
-.card.form-card .status{background:rgba(125,211,252,.16);color:#fff}
-.card.unavailable{filter:grayscale(.85) saturate(.5);opacity:1}
-.form-tag{position:absolute;top:6px;right:6px;font-size:7px;font-weight:800;color:#0d0d12;background:var(--card-accent);padding:3px 5px;z-index:2}
 .card .status-shiny{color:#c084fc}
 .card .status-perfect{color:#d4af37}
 .card .status-method{
-  margin-left:1px;
-  padding-left:5px;
-  border-left:1px solid rgba(255,255,255,.22);
-  color:rgba(255,255,255,.72);
-  font-size:8px;
-  line-height:1;
+  margin-left:1px;padding-left:5px;border-left:1px solid rgba(255,255,255,.22);
+  color:rgba(255,255,255,.68);font-size:7.6px;line-height:1;
 }
+
+.tcg-footer{
+  display:flex;align-items:center;justify-content:space-between;gap:4px;
+  margin-top:auto;padding:4px 2px 0;
+  font-size:7px;font-weight:700;letter-spacing:.15px;color:rgba(255,255,255,.55);
+}
+.tcg-foot-left{
+  display:inline-flex;align-items:center;gap:3px;min-width:0;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.tcg-foot-dot{
+  width:5px;height:5px;border-radius:50%;flex:0 0 auto;
+  background:var(--region-color,var(--card-accent));
+  box-shadow:0 0 4px var(--region-color,transparent);
+}
+.tcg-foot-right{flex:0 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;color:var(--card-accent);font-weight:800;white-space:nowrap}
+
+.card.target-outline{
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.14),
+    0 0 0 2px rgba(126,214,96,.8),
+    0 0 18px rgba(126,214,96,.46),
+    0 16px 26px rgba(0,0,0,.48);
+}
+.card.target-outline .tcg-hp{color:#7ed660}
+.card.form-original{--card-accent:rgba(255,255,255,.45)}
+.card.form-card{--card-accent:#7dd3fc}
+.card.unavailable{filter:grayscale(.85) saturate(.5);opacity:1}
 
 /* ══════════════════════════════════════
    EFFET HOLOGRAPHIQUE — discret et premium, uniquement sur les
@@ -1214,9 +1218,8 @@ body.card-interaction-suppressed .card:active{
 
 
 
-.type-row{width:100%;min-height:19px;margin:2px 0 5px;display:flex;justify-content:center;gap:3px;flex-wrap:wrap;padding:0 2px;order:3}
-.type-pill{display:inline-grid;place-items:center;width:46px;height:12px;filter:drop-shadow(0 2px 5px rgba(0,0,0,.32))}
-.type-pill img{width:46px;height:auto;max-height:12px;display:block;image-rendering:auto}
+.type-pill{display:inline-grid;place-items:center;width:34px;height:11px;filter:drop-shadow(0 2px 4px rgba(0,0,0,.32))}
+.type-pill img{width:34px;height:auto;max-height:11px;display:block;image-rendering:auto}
 .empty{color:var(--muted);font-size:14px;padding:4rem 0;text-align:center;grid-column:1/-1}
 
 /* ── BUTTONS ── */
@@ -2062,14 +2065,15 @@ button.capture-control{width:100%;text-align:left;font:inherit;color:inherit;cur
   .grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;padding:6px;border-radius:14px}
   .generation-divider{min-height:26px;margin:4px 0 -2px;font-size:9px;gap:7px;padding:3px 7px 3px 8px;top:6px}
   .generation-divider strong{font-size:8px}
-  .card{min-height:152px;padding:9px 6px 8px}
-  .card-sprite{width:56px;height:56px}
-  .card .pname{font-size:12px;min-height:auto;padding:0}
-  .card .num{font-size:8px;padding:3px 6px 2px;margin-left:2px}
-  .card .status{font-size:7px;padding:3px 6px}
-  .type-row{gap:3px;margin:1px 0 3px;padding:0}
-  .type-pill{width:40px;height:10px}
-  .type-pill img{width:40px;height:auto;max-height:10px}
+  .card{min-height:172px;padding:5px 5px 4px}
+  .card-sprite{width:50px;height:50px}
+  .tcg-name{font-size:10.5px;margin:2px 0 3px}
+  .tcg-stage{font-size:6px;padding:1.5px 4px}
+  .tcg-hp{font-size:8px}
+  .tcg-move-label{font-size:7.6px}
+  .tcg-footer{font-size:6.2px}
+  .type-pill{width:26px;height:9px}
+  .type-pill img{width:26px;height:auto;max-height:9px}
   .modal-hero{display:block;padding:18px 44px 16px}
   .modal-details,.modal-num,.modal-name,.modal-region{text-align:center}
   .modal-sprite{width:54px;height:54px}
@@ -4452,6 +4456,27 @@ function setRegionVisualVars(element, region, prefix = 'region') {
   element.style.setProperty(`--${prefix}-rgb`, hexToRgbString(region.color));
 }
 
+function getPrimaryTypeColor(types) {
+  const list = types || [];
+  for (const t of list) { if (TYPE_COLORS[t]) return TYPE_COLORS[t]; }
+  return '#7dd3fc';
+}
+function setTypeVisualVars(element, types) {
+  if (!element) return;
+  const color = getPrimaryTypeColor(types);
+  element.style.setProperty('--type-color', color);
+  element.style.setProperty('--type-rgb', hexToRgbString(color));
+}
+function getFooterRetreatLabel(p, isHuntingCard, unavailable) {
+  if (unavailable) return 'Indispo.';
+  if (isHuntingCard) return 'Recherche';
+  if (p.caught) {
+    const method = ALL_HUNT_METHODS[normalizeHuntMethod(p.huntMethod)];
+    return method ? method.shortLabel : 'Shiny';
+  }
+  return 'Manquant';
+}
+
 function setGridVisualVars(grid, region) {
   if (!grid) return;
   const activeRegion = currentRegion === 'all' ? REGIONS[0] : region;
@@ -4611,12 +4636,8 @@ function getVisiblePokemonIds() {
 
 function getCardStatusHtml(p, isHuntingCard = false) {
   if (isHuntingCard) return '<span>En cours</span>';
-  const method = p.caught ? ALL_HUNT_METHODS[normalizeHuntMethod(p.huntMethod)] : null;
-  const methodHtml = method ? `<span class="status-method">${method.shortLabel}</span>` : '';
-  if (p.caught && p.perfect) {
-    return `<span class="status-perfect">Parfait</span>${methodHtml}`;
-  }
-  if (p.caught) return `<span class="status-shiny">Shiny</span>${methodHtml}`;
+  if (p.caught && p.perfect) return '<span class="status-perfect">Parfait</span>';
+  if (p.caught) return '<span class="status-shiny">Shiny</span>';
   return 'Manquant';
 }
 
@@ -4637,7 +4658,9 @@ function createRegionalOriginalCard(id) {
   const statusHtml = getCardStatusHtml(p, isHuntingCard);
   const card = document.createElement('div');
   card.className = 'card form-original' + (p.caught ? ' caught' : '') + (p.perfect ? ' perfect' : '') + (isHuntingCard ? ' hunting' : '') + getTargetCardClasses(p, isHuntingCard);
-  setRegionVisualVars(card, getRegionByPokemonId(id));
+  const region = getRegionByPokemonId(id);
+  setRegionVisualVars(card, region);
+  setTypeVisualVars(card, POKEMON_TYPES[id] || POKEMON_TYPES[String(id)]);
   card.setAttribute('role', 'button');
   card.setAttribute('tabindex', '0');
   card.setAttribute('aria-label', `${name}, forme originale`);
@@ -4650,14 +4673,23 @@ function createRegionalOriginalCard(id) {
   };
   const useShinySprite = !!p.caught;
   const spriteUrl = getPokemonSpriteUrl(id, useShinySprite);
+  const footer = { left: region ? region.name : '—', right: getFooterRetreatLabel(p, isHuntingCard, false) };
   card.innerHTML = `
-    <div class="form-tag">Base</div>
-    <div class="num">#${String(id).padStart(4,'0')}</div>
-    <img class="card-sprite" src="${spriteUrl}" alt="${name}" loading="lazy" onerror="handlePokemonSpriteError(this, ${id}, ${useShinySprite})">
-    <div class="pname">${name}</div>
-    <div class="type-row">${renderTypeBadges(id)}</div>
-    <div class="status">${statusHtml}</div>
-    <div class="holo" aria-hidden="true">${getHoloSparkHtml(p.caught || p.perfect)}</div>`;
+    <div class="tcg-top">
+      <span class="tcg-stage">${region ? `Gén. ${region.gen}` : 'Base'}</span>
+      <span class="tcg-hp">N°${String(id).padStart(4,'0')}</span>
+    </div>
+    <div class="tcg-name">${name}</div>
+    <div class="tcg-art"><img class="card-sprite" src="${spriteUrl}" alt="${name}" loading="lazy" onerror="handlePokemonSpriteError(this, ${id}, ${useShinySprite})"></div>
+    <div class="tcg-move">
+      <span class="tcg-move-cost">${renderTypeBadges(id)}</span>
+      <span class="tcg-move-label">${statusHtml}</span>
+    </div>
+    <div class="tcg-footer">
+      <span class="tcg-foot-left"><i class="tcg-foot-dot"></i>${footer.left}</span>
+      <span class="tcg-foot-right">${footer.right}</span>
+    </div>
+    <div class="holo" aria-hidden="true"></div>`;
   return card;
 }
 
@@ -4669,6 +4701,7 @@ function createRegionalFormCard(form) {
   const card = document.createElement('div');
   card.className = 'card form-card' + (p.caught && !unavailable ? ' caught' : '') + (p.perfect && !unavailable ? ' perfect' : '') + (isHuntingCard && !unavailable ? ' hunting' : '') + getTargetCardClasses(p, isHuntingCard, unavailable) + (unavailable ? ' unavailable' : '');
   setRegionVisualVars(card, REGIONS.find(region => region.name === form.region) || getRegionByPokemonId(form.baseId));
+  setTypeVisualVars(card, form.types);
   card.setAttribute('role', 'button');
   card.setAttribute('tabindex', '0');
   card.setAttribute('aria-label', `${form.label}, forme de ${form.region}`);
@@ -4681,14 +4714,24 @@ function createRegionalFormCard(form) {
   };
   const useShinySprite = !!p.caught && !unavailable;
   const spriteUrl = getPokemonSpriteUrl(form.formId, useShinySprite);
+  const baseRegion = getRegionByPokemonId(form.baseId);
+  const footer = { left: baseRegion ? baseRegion.name : form.region, right: getFooterRetreatLabel(p, isHuntingCard, unavailable) };
   card.innerHTML = `
-    <div class="form-tag">${form.region}</div>
-    <div class="num">#${String(form.baseId).padStart(4,'0')}</div>
-    <img class="card-sprite" src="${spriteUrl}" alt="${form.label}" loading="lazy" onerror="handlePokemonSpriteError(this, ${form.formId}, ${useShinySprite})">
-    <div class="pname">${form.label}</div>
-    <div class="type-row">${renderTypeBadgesForTypes(form.types)}</div>
-    <div class="status">${statusHtml}</div>
-    <div class="holo" aria-hidden="true">${getHoloSparkHtml(!unavailable && (p.caught || p.perfect))}</div>`;
+    <div class="tcg-top">
+      <span class="tcg-stage">${form.region}</span>
+      <span class="tcg-hp">N°${String(form.baseId).padStart(4,'0')}</span>
+    </div>
+    <div class="tcg-name">${form.label}</div>
+    <div class="tcg-art"><img class="card-sprite" src="${spriteUrl}" alt="${form.label}" loading="lazy" onerror="handlePokemonSpriteError(this, ${form.formId}, ${useShinySprite})"></div>
+    <div class="tcg-move">
+      <span class="tcg-move-cost">${renderTypeBadgesForTypes(form.types)}</span>
+      <span class="tcg-move-label">${statusHtml}</span>
+    </div>
+    <div class="tcg-footer">
+      <span class="tcg-foot-left"><i class="tcg-foot-dot"></i>${footer.left}</span>
+      <span class="tcg-foot-right">${footer.right}</span>
+    </div>
+    <div class="holo" aria-hidden="true"></div>`;
   return card;
 }
 
@@ -4738,7 +4781,9 @@ function renderGrid() {
     }
     const card = document.createElement('div');
     card.className = 'card' + (p.caught && !unavailable ? ' caught' : '') + (p.perfect && !unavailable ? ' perfect' : '') + (isHuntingCard ? ' hunting' : '') + getTargetCardClasses(p, isHuntingCard, unavailable) + (unavailable ? ' unavailable' : '');
-    setRegionVisualVars(card, getRegionByPokemonId(id));
+    const cardOwnRegion = cardRegion || getRegionByPokemonId(id);
+    setRegionVisualVars(card, cardOwnRegion);
+    setTypeVisualVars(card, POKEMON_TYPES[id] || POKEMON_TYPES[String(id)]);
     card.setAttribute('role', 'button');
     card.setAttribute('tabindex', '0');
     card.setAttribute('aria-label', `${name}, #${String(id).padStart(4,'0')}${p.caught ? ', shiny capture' : (isHuntingCard ? ', en cours' : ', manquant')}`);
@@ -4754,14 +4799,24 @@ function renderGrid() {
     const statusHtml = unavailable ? 'Indisponible' : getCardStatusHtml(p, isHuntingCard);
     const useShinySprite = !!p.caught && !unavailable;
     const spriteUrl = getPokemonSpriteUrl(id, useShinySprite);
+    const footer = { left: cardOwnRegion ? cardOwnRegion.name : '—', right: getFooterRetreatLabel(p, isHuntingCard, unavailable) };
 
     card.innerHTML = `
-      <div class="num">#${String(id).padStart(4,'0')}</div>
-      <img class="card-sprite" src="${spriteUrl}" alt="${name}" loading="lazy" onerror="handlePokemonSpriteError(this, ${id}, ${useShinySprite})">
-      <div class="pname">${name}</div>
-      <div class="type-row">${typeBadges}</div>
-      <div class="status">${statusHtml}</div>
-      <div class="holo" aria-hidden="true">${getHoloSparkHtml((p.caught && !unavailable) || (p.perfect && !unavailable))}</div>`;
+      <div class="tcg-top">
+        <span class="tcg-stage">${cardOwnRegion ? `Gén. ${cardOwnRegion.gen}` : ''}</span>
+        <span class="tcg-hp">N°${String(id).padStart(4,'0')}</span>
+      </div>
+      <div class="tcg-name">${name}</div>
+      <div class="tcg-art"><img class="card-sprite" src="${spriteUrl}" alt="${name}" loading="lazy" onerror="handlePokemonSpriteError(this, ${id}, ${useShinySprite})"></div>
+      <div class="tcg-move">
+        <span class="tcg-move-cost">${typeBadges}</span>
+        <span class="tcg-move-label">${statusHtml}</span>
+      </div>
+      <div class="tcg-footer">
+        <span class="tcg-foot-left"><i class="tcg-foot-dot"></i>${footer.left}</span>
+        <span class="tcg-foot-right">${footer.right}</span>
+      </div>
+      <div class="holo" aria-hidden="true"></div>`;
     grid.appendChild(card);
   });
 
