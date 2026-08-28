@@ -91,8 +91,6 @@ body::before{
 }
 button,.btn,.card,.gen-btn{-webkit-tap-highlight-color:transparent}
 
-/* scanlines */
-body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.06) 2px,rgba(0,0,0,.06) 4px);pointer-events:none;z-index:9999}
 body.readonly-share .edit-only{display:none!important}
 body.readonly-share .readonly-disabled{opacity:.62;pointer-events:none}
 body.readonly-share .modal-form-fields input,
@@ -1042,8 +1040,6 @@ body.card-interaction-suppressed .card:active{
       var(--card-accent) 70%,
       color-mix(in srgb, var(--card-accent) 90%, white) 84%,
       color-mix(in srgb, var(--card-accent) 52%, black) 100%) border-box;
-  background-size:100% 100%, 260% 260%;
-  background-position:0 0, 0% 50%;
   padding:5px 5px 4px;min-height:198px;
   display:flex;flex-direction:column;gap:0;
   box-shadow:
@@ -1054,14 +1050,6 @@ body.card-interaction-suppressed .card:active{
     0 6px 10px rgba(0,0,0,.4),
     0 16px 26px rgba(0,0,0,.48);
   transition:transform .18s ease,box-shadow .18s ease,filter .2s ease;
-  animation:cardBorderSheen 7s ease-in-out infinite;
-}
-@keyframes cardBorderSheen{
-  0%,100%{background-position:0 0, 8% 30%;}
-  50%{background-position:0 0, 92% 70%;}
-}
-@media (prefers-reduced-motion:reduce){
-  .card{animation:none}
 }
 .card::before{
   content:'';position:absolute;inset:3px;border-radius:10px;
