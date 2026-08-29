@@ -1106,6 +1106,47 @@ body.card-interaction-suppressed .card:active{
   --card-border:
     linear-gradient(color-mix(in srgb, var(--card-accent) 82%, white),color-mix(in srgb, var(--card-accent) 82%, white));
 }
+.card[class*="type-primary-"]{
+  --type-ink:#101018;
+}
+.card[class*="type-primary-"] .tcg-name,
+.card[class*="type-primary-"] .tcg-hp{
+  color:var(--type-ink);
+  text-shadow:0 1px 0 rgba(255,255,255,.26);
+}
+.card[class*="type-primary-"] .tcg-art{
+  background:
+    radial-gradient(circle at 50% 32%,rgba(255,255,255,.14),transparent 68%) padding-box,
+    linear-gradient(165deg,#343845,#15171d 85%) padding-box,
+    linear-gradient(150deg,
+      color-mix(in srgb, var(--card-accent) 72%, white) 0%,
+      color-mix(in srgb, var(--card-accent) 46%, #252530) 48%,
+      color-mix(in srgb, var(--card-accent) 62%, black) 100%) border-box;
+}
+.card.type-primary-normal{
+  --card-fill:
+    radial-gradient(circle at 18% 20%,rgba(248,244,205,.3),transparent 24%),
+    radial-gradient(circle at 74% 74%,rgba(114,106,74,.2),transparent 32%),
+    linear-gradient(180deg,#ddd5a4 0%,#bfb682 42%,#9b925f 100%);
+}
+.card.type-primary-fire{
+  --card-fill:
+    radial-gradient(circle at 18% 18%,rgba(255,220,128,.36),transparent 25%),
+    radial-gradient(circle at 76% 72%,rgba(158,45,30,.24),transparent 34%),
+    linear-gradient(180deg,#ff8a45 0%,#ee5d34 45%,#c83e2f 100%);
+}
+.card.type-primary-water{
+  --card-fill:
+    radial-gradient(circle at 20% 20%,rgba(180,239,255,.36),transparent 25%),
+    radial-gradient(circle at 76% 72%,rgba(37,108,163,.22),transparent 34%),
+    linear-gradient(180deg,#72cdf2 0%,#45aee0 46%,#2f89c6 100%);
+}
+.card.type-primary-electric{
+  --card-fill:
+    radial-gradient(circle at 18% 18%,rgba(255,255,190,.42),transparent 25%),
+    radial-gradient(circle at 72% 76%,rgba(198,146,20,.22),transparent 34%),
+    linear-gradient(180deg,#ffe65b 0%,#f5c93f 46%,#d7a92f 100%);
+}
 .card.type-primary-grass{
   --card-fill:
     radial-gradient(circle at 18% 20%,rgba(238,255,156,.32),transparent 24%),
@@ -1114,19 +1155,89 @@ body.card-interaction-suppressed .card:active{
     radial-gradient(circle at 74% 72%,rgba(174,215,74,.18),transparent 34%),
     linear-gradient(180deg,#c8e76d 0%,#a8d756 24%,#8fc349 55%,#74a83d 100%);
 }
-.card.type-primary-grass .tcg-name,
-.card.type-primary-grass .tcg-hp{
-  color:#11170b;
-  text-shadow:0 1px 0 rgba(255,255,255,.28);
+.card.type-primary-ice{
+  --card-fill:
+    radial-gradient(circle at 20% 20%,rgba(240,255,255,.42),transparent 25%),
+    radial-gradient(circle at 76% 72%,rgba(83,160,180,.18),transparent 34%),
+    linear-gradient(180deg,#cff8f8 0%,#99dfe4 48%,#72c1ce 100%);
 }
-.card.type-primary-grass .tcg-art{
-  background:
-    radial-gradient(circle at 50% 32%,rgba(255,255,255,.14),transparent 68%) padding-box,
-    linear-gradient(165deg,#343845,#15171d 85%) padding-box,
-    linear-gradient(150deg,
-      color-mix(in srgb, var(--card-accent) 72%, white) 0%,
-      color-mix(in srgb, var(--card-accent) 46%, #252530) 48%,
-      color-mix(in srgb, var(--card-accent) 62%, black) 100%) border-box;
+.card.type-primary-fighting{
+  --card-fill:
+    radial-gradient(circle at 18% 18%,rgba(255,180,130,.28),transparent 25%),
+    radial-gradient(circle at 76% 72%,rgba(95,18,20,.24),transparent 34%),
+    linear-gradient(180deg,#dd5d45 0%,#b83a31 48%,#882925 100%);
+  --type-ink:#fff1e8;
+}
+.card.type-primary-poison{
+  --card-fill:
+    radial-gradient(circle at 18% 18%,rgba(236,172,246,.3),transparent 25%),
+    radial-gradient(circle at 76% 72%,rgba(76,35,95,.26),transparent 34%),
+    linear-gradient(180deg,#c770ca 0%,#a64dad 46%,#793584 100%);
+  --type-ink:#fff0ff;
+}
+.card.type-primary-ground{
+  --card-fill:
+    radial-gradient(circle at 18% 18%,rgba(255,233,154,.3),transparent 25%),
+    radial-gradient(circle at 76% 72%,rgba(129,92,37,.24),transparent 34%),
+    linear-gradient(180deg,#e6c76f 0%,#c9a456 48%,#9f7b43 100%);
+}
+.card.type-primary-flying{
+  --card-fill:
+    radial-gradient(circle at 18% 18%,rgba(238,232,255,.36),transparent 25%),
+    radial-gradient(circle at 76% 72%,rgba(100,122,186,.2),transparent 34%),
+    linear-gradient(180deg,#c9c3ff 0%,#a9b4f0 48%,#7f94d9 100%);
+}
+.card.type-primary-psychic{
+  --card-fill:
+    radial-gradient(circle at 18% 18%,rgba(255,206,235,.3),transparent 25%),
+    radial-gradient(circle at 76% 72%,rgba(130,50,136,.26),transparent 34%),
+    linear-gradient(180deg,#e88ad0 0%,#c65ab2 48%,#8e3d9b 100%);
+  --type-ink:#fff0fb;
+}
+.card.type-primary-bug{
+  --card-fill:
+    radial-gradient(circle at 18% 18%,rgba(235,255,162,.28),transparent 25%),
+    radial-gradient(circle at 76% 72%,rgba(82,112,44,.23),transparent 34%),
+    linear-gradient(180deg,#cadb63 0%,#9fbf4d 48%,#789444 100%);
+}
+.card.type-primary-rock{
+  --card-fill:
+    radial-gradient(circle at 18% 18%,rgba(242,223,157,.3),transparent 25%),
+    radial-gradient(circle at 76% 72%,rgba(91,74,43,.24),transparent 34%),
+    linear-gradient(180deg,#d2b95d 0%,#a99045 48%,#7c6936 100%);
+}
+.card.type-primary-ghost{
+  --card-fill:
+    radial-gradient(circle at 18% 18%,rgba(191,169,225,.28),transparent 25%),
+    radial-gradient(circle at 76% 72%,rgba(47,40,76,.3),transparent 34%),
+    linear-gradient(180deg,#8d76b1 0%,#654f8f 48%,#443761 100%);
+  --type-ink:#f6efff;
+}
+.card.type-primary-dragon{
+  --card-fill:
+    radial-gradient(circle at 18% 18%,rgba(200,180,255,.32),transparent 25%),
+    radial-gradient(circle at 76% 72%,rgba(36,48,153,.3),transparent 34%),
+    linear-gradient(180deg,#8c75ff 0%,#674ce0 48%,#3f35a9 100%);
+  --type-ink:#f4f0ff;
+}
+.card.type-primary-dark{
+  --card-fill:
+    radial-gradient(circle at 18% 18%,rgba(194,184,176,.2),transparent 25%),
+    radial-gradient(circle at 76% 72%,rgba(18,18,22,.35),transparent 34%),
+    linear-gradient(180deg,#7d7470 0%,#5c5555 48%,#37343a 100%);
+  --type-ink:#f3f0ee;
+}
+.card.type-primary-steel{
+  --card-fill:
+    radial-gradient(circle at 18% 18%,rgba(255,255,255,.36),transparent 25%),
+    radial-gradient(circle at 76% 72%,rgba(104,111,136,.2),transparent 34%),
+    linear-gradient(180deg,#d9d9ed 0%,#b8bad1 48%,#8f94ae 100%);
+}
+.card.type-primary-fairy{
+  --card-fill:
+    radial-gradient(circle at 18% 18%,rgba(255,239,248,.36),transparent 25%),
+    radial-gradient(circle at 76% 72%,rgba(192,103,132,.18),transparent 34%),
+    linear-gradient(180deg,#ffc0d2 0%,#ee99ac 48%,#d97692 100%);
 }
 .card.caught .tcg-name{color:#f4e7ff;text-shadow:0 0 9px rgba(192,132,252,.65)}
 .card.perfect .tcg-name{color:#fff3cf;text-shadow:0 0 9px rgba(212,175,55,.7)}
