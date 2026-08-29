@@ -1325,6 +1325,17 @@ body.card-interaction-suppressed .card:active{
 }
 .tcg-status-badge.missing{background:#4a4a58;border-color:#8a8a9a;color:#d6d6e0}
 
+.tcg-bottom{
+  display:flex;flex-direction:column;flex:1;
+  margin:0 -3px -3px;padding:0 3px 3px;
+  border-radius:0 0 8px 8px;
+}
+.card.caught .tcg-bottom,
+.card.perfect .tcg-bottom,
+.card.hunting .tcg-bottom{
+  background:color-mix(in srgb, var(--card-accent) 45%, #17171c 55%);
+}
+
 .tcg-footer{
   display:flex;align-items:center;justify-content:space-between;gap:4px;
   margin-top:auto;padding:4px 2px 0;
@@ -4839,9 +4850,11 @@ function createRegionalOriginalCard(id) {
     <div class="tcg-move">
       <span class="tcg-move-cost">${renderTypeBadges(id)}</span>
     </div>
-    ${statusBadge}
-    <div class="tcg-footer">
-      <span class="tcg-foot-left"><i class="tcg-foot-dot"></i>${footer.left}</span>
+    <div class="tcg-bottom">
+      ${statusBadge}
+      <div class="tcg-footer">
+        <span class="tcg-foot-left"><i class="tcg-foot-dot"></i>${footer.left}</span>
+      </div>
     </div>
     <div class="holo" aria-hidden="true"></div>`;
   return card;
@@ -4880,9 +4893,11 @@ function createRegionalFormCard(form) {
     <div class="tcg-move">
       <span class="tcg-move-cost">${renderTypeBadgesForTypes(form.types)}</span>
     </div>
-    ${statusBadge}
-    <div class="tcg-footer">
-      <span class="tcg-foot-left"><i class="tcg-foot-dot"></i>${footer.left}</span>
+    <div class="tcg-bottom">
+      ${statusBadge}
+      <div class="tcg-footer">
+        <span class="tcg-foot-left"><i class="tcg-foot-dot"></i>${footer.left}</span>
+      </div>
     </div>
     <div class="holo" aria-hidden="true"></div>`;
   return card;
@@ -4964,9 +4979,11 @@ function renderGrid() {
       <div class="tcg-move">
         <span class="tcg-move-cost">${typeBadges}</span>
       </div>
-      ${statusBadge}
-      <div class="tcg-footer">
-        <span class="tcg-foot-left"><i class="tcg-foot-dot"></i>${footer.left}</span>
+      <div class="tcg-bottom">
+        ${statusBadge}
+        <div class="tcg-footer">
+          <span class="tcg-foot-left"><i class="tcg-foot-dot"></i>${footer.left}</span>
+        </div>
       </div>
       <div class="holo" aria-hidden="true"></div>`;
     grid.appendChild(card);
