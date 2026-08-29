@@ -1026,20 +1026,15 @@ body.card-interaction-suppressed .card:active{
 .card{
   --card-accent: #b8b8be;
   --card-border:
-    conic-gradient(from 135deg at 50% 50%,
-      color-mix(in srgb, var(--card-accent) 72%, #f6f6ff) 0deg,
-      #f7f3ff 42deg,
-      #9be7ff 92deg,
-      #d7b5ff 148deg,
-      #fff0a8 214deg,
-      #87dfff 282deg,
-      color-mix(in srgb, var(--card-accent) 76%, #ffffff) 360deg);
+    linear-gradient(150deg,#f2f2f5 0%,#b8b8be 34%,#777780 68%,#d8d8dd 100%);
+  --card-fill:
+    linear-gradient(180deg,#232329,#18181c);
   --type-color: #7dd3fc;
   position:relative;cursor:pointer;overflow:hidden;
   border-radius:12px;
   border:3px solid transparent;
   background:
-    linear-gradient(180deg,#232329,#18181c) padding-box,
+    var(--card-fill) padding-box,
     var(--card-border) border-box;
   box-shadow:
     inset 0 0 0 1px color-mix(in srgb, var(--card-accent) 52%, transparent),
@@ -1099,20 +1094,31 @@ body.card-interaction-suppressed .card:active{
 .card.caught{
   --card-accent:#c084fc;
   --card-border:
-    conic-gradient(from 135deg at 50% 50%,
-      #f2d8ff 0deg,#ffffff 44deg,#9be7ff 92deg,#c084fc 154deg,#ffeaa3 218deg,#87dfff 284deg,#e7c5ff 360deg);
+    linear-gradient(color-mix(in srgb, var(--card-accent) 82%, white),color-mix(in srgb, var(--card-accent) 82%, white));
 }
 .card.perfect{
   --card-accent:#d4af37;
   --card-border:
-    conic-gradient(from 135deg at 50% 50%,
-      #fff1a6 0deg,#ffffff 44deg,#9be7ff 94deg,#d8b6ff 152deg,#d4af37 220deg,#8ce5ff 286deg,#ffe58a 360deg);
+    linear-gradient(color-mix(in srgb, var(--card-accent) 82%, white),color-mix(in srgb, var(--card-accent) 82%, white));
 }
 .card.hunting{
   --card-accent:#7dd3fc;
   --card-border:
-    conic-gradient(from 135deg at 50% 50%,
-      #dff6ff 0deg,#ffffff 44deg,#7dd3fc 96deg,#d8b6ff 154deg,#ffeaa3 220deg,#69d4ff 286deg,#c4f1ff 360deg);
+    linear-gradient(color-mix(in srgb, var(--card-accent) 82%, white),color-mix(in srgb, var(--card-accent) 82%, white));
+}
+.card.type-primary-grass{
+  --card-fill:
+    radial-gradient(circle at 24% 18%,rgba(255,255,255,.18),transparent 28%),
+    linear-gradient(180deg,#b8df68 0%,#96ca4c 44%,#79ad3f 100%);
+}
+.card.type-primary-grass .tcg-art{
+  background:
+    radial-gradient(circle at 50% 32%,rgba(255,255,255,.14),transparent 68%) padding-box,
+    linear-gradient(165deg,#343845,#15171d 85%) padding-box,
+    linear-gradient(150deg,
+      color-mix(in srgb, var(--card-accent) 72%, white) 0%,
+      color-mix(in srgb, var(--card-accent) 46%, #252530) 48%,
+      color-mix(in srgb, var(--card-accent) 62%, black) 100%) border-box;
 }
 .card.caught .tcg-name{color:#f4e7ff;text-shadow:0 0 9px rgba(192,132,252,.65)}
 .card.perfect .tcg-name{color:#fff3cf;text-shadow:0 0 9px rgba(212,175,55,.7)}
@@ -4458,7 +4464,10 @@ function getPrimaryTypeColor(types) {
 }
 function setTypeVisualVars(element, types) {
   if (!element) return;
-  const color = getPrimaryTypeColor(types);
+  const primaryType = (types || []).find(t => TYPE_COLORS[t]) || 'normal';
+  const color = TYPE_COLORS[primaryType] || '#7dd3fc';
+  Object.keys(TYPE_COLORS).forEach(type => element.classList.remove('type-primary-' + type));
+  element.classList.add('type-primary-' + primaryType);
   element.style.setProperty('--type-color', color);
   element.style.setProperty('--type-rgb', hexToRgbString(color));
 }
