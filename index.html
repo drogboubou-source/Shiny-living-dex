@@ -1113,6 +1113,29 @@ body.card-interaction-suppressed .card:active{
 .card.perfect.hunting{
   --card-accent:#eab308;
 }
+.card.caught,
+.card.perfect,
+.card.hunting{
+  --card-border:linear-gradient(var(--card-accent),var(--card-accent));
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--card-accent) 38%, transparent),
+    inset 0 3px 4px rgba(255,255,255,.11),
+    inset 0 -7px 12px rgba(0,0,0,.28),
+    inset 0 0 14px rgba(0,0,0,.2),
+    0 6px 10px rgba(0,0,0,.4),
+    0 16px 26px rgba(0,0,0,.48);
+}
+.card.caught:hover,
+.card.perfect:hover,
+.card.hunting:hover{
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--card-accent) 38%, transparent),
+    inset 0 3px 4px rgba(255,255,255,.13),
+    inset 0 -7px 12px rgba(0,0,0,.25),
+    inset 0 0 14px rgba(0,0,0,.18),
+    0 8px 14px rgba(0,0,0,.46),
+    0 22px 36px rgba(0,0,0,.55);
+}
 .card[class*="type-primary-"]{
   --type-ink:#101018;
 }
