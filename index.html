@@ -1322,6 +1322,7 @@ body.card-interaction-suppressed .card:active{
   background:var(--region-color,var(--card-accent));
   box-shadow:0 0 4px var(--region-color,transparent);
 }
+.tcg-foot-right{flex:0 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;color:var(--muted);font-weight:800;white-space:nowrap}
 
 .card.target-outline{
   box-shadow:
@@ -4613,9 +4614,9 @@ function setTypeVisualVars(element, types) {
 }
 function getFooterStatusLabel(p, isHuntingCard, unavailable) {
   if (unavailable) return 'Indispo.';
-  if (isHuntingCard) return 'En cours';
-  if (p.caught && p.perfect) return 'Parfait';
-  if (p.caught) return 'Shiny';
+  if (isHuntingCard) return '';
+  if (p.caught && p.perfect) return '';
+  if (p.caught) return '';
   return 'Manquant';
 }
 function renderCardStatusBadge(p, isHuntingCard, unavailable) {
@@ -4829,6 +4830,7 @@ function createRegionalOriginalCard(id) {
     ${statusBadge}
     <div class="tcg-footer">
       <span class="tcg-foot-left"><i class="tcg-foot-dot"></i>${footer.left}</span>
+      <span class="tcg-foot-right">${footer.right}</span>
     </div>
     <div class="holo" aria-hidden="true"></div>`;
   return card;
@@ -4870,6 +4872,7 @@ function createRegionalFormCard(form) {
     ${statusBadge}
     <div class="tcg-footer">
       <span class="tcg-foot-left"><i class="tcg-foot-dot"></i>${footer.left}</span>
+      <span class="tcg-foot-right">${footer.right}</span>
     </div>
     <div class="holo" aria-hidden="true"></div>`;
   return card;
@@ -4954,6 +4957,7 @@ function renderGrid() {
       ${statusBadge}
       <div class="tcg-footer">
         <span class="tcg-foot-left"><i class="tcg-foot-dot"></i>${footer.left}</span>
+        <span class="tcg-foot-right">${footer.right}</span>
       </div>
       <div class="holo" aria-hidden="true"></div>`;
     grid.appendChild(card);
