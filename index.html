@@ -1289,11 +1289,16 @@ body.card-interaction-suppressed .card:active{
 .card.hunting .card-sprite{filter:drop-shadow(0 5px 8px rgba(0,0,0,.5)) drop-shadow(0 0 9px rgba(125,211,252,.35))}
 .card.unavailable .card-sprite{filter:grayscale(1) drop-shadow(0 4px 8px rgba(0,0,0,.4))}
 
+.tcg-lower{
+  display:flex;flex-direction:column;flex:1;
+  margin:0 -3px -3px;padding:0 3px 3px;
+  border-radius:0 0 8px 8px;
+  background:color-mix(in srgb, var(--card-accent) 24%, #17171c 76%);
+  box-shadow:inset 0 1px 0 color-mix(in srgb, var(--card-accent) 45%, transparent);
+}
 .tcg-move{
   display:flex;align-items:center;justify-content:center;gap:5px;
   margin:0 1px;padding:4px 2px;
-  border-top:1px solid rgba(255,255,255,.14);
-  border-bottom:1px solid rgba(255,255,255,.1);
 }
 .tcg-move-cost{display:flex;align-items:center;gap:4px;flex-wrap:wrap;justify-content:center}
 .tcg-status-row{
@@ -4824,12 +4829,14 @@ function createRegionalOriginalCard(id) {
     </div>
     <div class="tcg-name">${name}</div>
     <div class="tcg-art"><img class="card-sprite" src="${spriteUrl}" alt="${name}" loading="lazy" onerror="handlePokemonSpriteError(this, ${id}, ${useShinySprite})"></div>
-    <div class="tcg-move">
-      <span class="tcg-move-cost">${renderTypeBadges(id)}</span>
-    </div>
-    ${statusBadge}
-    <div class="tcg-footer">
-      <span class="tcg-foot-left"><i class="tcg-foot-dot"></i>${footer.left}</span>
+    <div class="tcg-lower">
+      <div class="tcg-move">
+        <span class="tcg-move-cost">${renderTypeBadges(id)}</span>
+      </div>
+      ${statusBadge}
+      <div class="tcg-footer">
+        <span class="tcg-foot-left"><i class="tcg-foot-dot"></i>${footer.left}</span>
+      </div>
     </div>
     <div class="holo" aria-hidden="true"></div>`;
   return card;
@@ -4865,12 +4872,14 @@ function createRegionalFormCard(form) {
     </div>
     <div class="tcg-name">${form.label}</div>
     <div class="tcg-art"><img class="card-sprite" src="${spriteUrl}" alt="${form.label}" loading="lazy" onerror="handlePokemonSpriteError(this, ${form.formId}, ${useShinySprite})"></div>
-    <div class="tcg-move">
-      <span class="tcg-move-cost">${renderTypeBadgesForTypes(form.types)}</span>
-    </div>
-    ${statusBadge}
-    <div class="tcg-footer">
-      <span class="tcg-foot-left"><i class="tcg-foot-dot"></i>${footer.left}</span>
+    <div class="tcg-lower">
+      <div class="tcg-move">
+        <span class="tcg-move-cost">${renderTypeBadgesForTypes(form.types)}</span>
+      </div>
+      ${statusBadge}
+      <div class="tcg-footer">
+        <span class="tcg-foot-left"><i class="tcg-foot-dot"></i>${footer.left}</span>
+      </div>
     </div>
     <div class="holo" aria-hidden="true"></div>`;
   return card;
@@ -4949,12 +4958,14 @@ function renderGrid() {
       </div>
       <div class="tcg-name">${name}</div>
       <div class="tcg-art"><img class="card-sprite" src="${spriteUrl}" alt="${name}" loading="lazy" onerror="handlePokemonSpriteError(this, ${id}, ${useShinySprite})"></div>
-      <div class="tcg-move">
-        <span class="tcg-move-cost">${typeBadges}</span>
-      </div>
-      ${statusBadge}
-      <div class="tcg-footer">
-        <span class="tcg-foot-left"><i class="tcg-foot-dot"></i>${footer.left}</span>
+      <div class="tcg-lower">
+        <div class="tcg-move">
+          <span class="tcg-move-cost">${typeBadges}</span>
+        </div>
+        ${statusBadge}
+        <div class="tcg-footer">
+          <span class="tcg-foot-left"><i class="tcg-foot-dot"></i>${footer.left}</span>
+        </div>
       </div>
       <div class="holo" aria-hidden="true"></div>`;
     grid.appendChild(card);
