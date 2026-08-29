@@ -671,8 +671,8 @@ body.card-interaction-suppressed .card:active{
   .tcg-footer{font-size:6.2px}
   .type-pill{width:35px;height:12px}
   .type-pill img{width:35px;height:auto;max-height:12px}
-  .tcg-status-row{min-height:14px;margin-top:2px}
-  .tcg-status-badge{min-width:54px;height:14px;padding:1px 8px 0;font-size:7px;border-radius:4px}
+  .tcg-status-row{min-height:17px;margin-top:3px}
+  .tcg-status-badge{min-width:60px;height:16px;padding:2px 9px 0;font-size:7.5px;border-radius:5px}
   .two-col{grid-template-columns:1fr}
   .form-grid-2{grid-template-columns:1fr}
   .iv-grid{grid-template-columns:1fr 1fr}
@@ -1309,15 +1309,15 @@ body.card-interaction-suppressed .card:active{
 }
 .tcg-move-cost{display:flex;align-items:center;gap:4px;flex-wrap:wrap;justify-content:center}
 .tcg-status-row{
-  min-height:16px;margin:3px 1px 0;
+  min-height:20px;margin:4px 1px 0;
   display:flex;align-items:center;justify-content:center;
 }
 .tcg-status-badge{
   display:inline-flex;align-items:center;justify-content:center;
-  min-width:62px;height:17px;padding:2px 10px 0;
-  border-radius:5px;border:1px solid rgba(255,255,255,.72);
-  color:#fff;font-size:8px;font-weight:900;line-height:1;
-  text-transform:uppercase;letter-spacing:.45px;
+  min-width:72px;height:20px;padding:3px 12px 0;
+  border-radius:6px;border:1px solid rgba(255,255,255,.78);
+  color:#fff;font-size:9px;font-weight:900;line-height:1;
+  text-transform:uppercase;letter-spacing:.5px;
   text-shadow:0 1px 1px rgba(0,0,0,.5);
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,.48),
@@ -1331,8 +1331,8 @@ body.card-interaction-suppressed .card:active{
 .tcg-status-badge.missing{background:#4a4a58;border-color:#8a8a9a;color:#d6d6e0}
 
 .tcg-footer{
-  display:flex;align-items:center;justify-content:space-between;gap:4px;
-  margin-top:auto;padding:4px 2px 0;
+  display:flex;align-items:center;justify-content:center;gap:4px;
+  margin-top:auto;padding:5px 2px 0;
   font-size:7px;font-weight:700;letter-spacing:.15px;color:rgba(255,255,255,.55);
 }
 .tcg-foot-left{
@@ -2226,8 +2226,8 @@ button.capture-control{width:100%;text-align:left;font:inherit;color:inherit;cur
   .tcg-footer{font-size:6.2px}
   .type-pill{width:35px;height:12px}
   .type-pill img{width:35px;height:auto;max-height:12px}
-  .tcg-status-row{min-height:14px;margin-top:2px}
-  .tcg-status-badge{min-width:54px;height:14px;padding:1px 8px 0;font-size:7px;border-radius:4px}
+  .tcg-status-row{min-height:17px;margin-top:3px}
+  .tcg-status-badge{min-width:60px;height:16px;padding:2px 9px 0;font-size:7.5px;border-radius:5px}
   .modal-hero{display:block;padding:18px 44px 16px}
   .modal-details,.modal-num,.modal-name,.modal-region{text-align:center}
   .modal-sprite{width:54px;height:54px}
@@ -4832,7 +4832,6 @@ function createRegionalOriginalCard(id) {
   };
   const useShinySprite = !!p.caught;
   const spriteUrl = getPokemonSpriteUrl(id, useShinySprite);
-  const footer = { left: region ? region.name : '—', right: getFooterStatusLabel(p, isHuntingCard, false) };
   const statusBadge = renderCardStatusBadge(p, isHuntingCard, false);
   card.innerHTML = `
     <div class="tcg-top">
@@ -4845,9 +4844,7 @@ function createRegionalOriginalCard(id) {
       <span class="tcg-move-cost">${renderTypeBadges(id)}</span>
     </div>
     ${statusBadge}
-    <div class="tcg-footer">
-      <span class="tcg-foot-left"><i class="tcg-foot-dot"></i>${footer.left}</span>
-    </div>
+    <div class="tcg-footer" aria-hidden="true"></div>
     <div class="holo" aria-hidden="true"></div>`;
   return card;
 }
@@ -4873,7 +4870,6 @@ function createRegionalFormCard(form) {
   const useShinySprite = !!p.caught && !unavailable;
   const spriteUrl = getPokemonSpriteUrl(form.formId, useShinySprite);
   const baseRegion = getRegionByPokemonId(form.baseId);
-  const footer = { left: baseRegion ? baseRegion.name : form.region, right: getFooterStatusLabel(p, isHuntingCard, unavailable) };
   const statusBadge = renderCardStatusBadge(p, isHuntingCard, unavailable);
   card.innerHTML = `
     <div class="tcg-top">
@@ -4886,9 +4882,7 @@ function createRegionalFormCard(form) {
       <span class="tcg-move-cost">${renderTypeBadgesForTypes(form.types)}</span>
     </div>
     ${statusBadge}
-    <div class="tcg-footer">
-      <span class="tcg-foot-left"><i class="tcg-foot-dot"></i>${footer.left}</span>
-    </div>
+    <div class="tcg-footer" aria-hidden="true"></div>
     <div class="holo" aria-hidden="true"></div>`;
   return card;
 }
@@ -4956,7 +4950,6 @@ function renderGrid() {
     const typeBadges = renderTypeBadges(id);
     const useShinySprite = !!p.caught && !unavailable;
     const spriteUrl = getPokemonSpriteUrl(id, useShinySprite);
-    const footer = { left: cardOwnRegion ? cardOwnRegion.name : '—', right: getFooterStatusLabel(p, isHuntingCard, unavailable) };
     const statusBadge = renderCardStatusBadge(p, isHuntingCard, unavailable);
 
     card.innerHTML = `
@@ -4970,9 +4963,7 @@ function renderGrid() {
         <span class="tcg-move-cost">${typeBadges}</span>
       </div>
       ${statusBadge}
-      <div class="tcg-footer">
-        <span class="tcg-foot-left"><i class="tcg-foot-dot"></i>${footer.left}</span>
-      </div>
+      <div class="tcg-footer" aria-hidden="true"></div>
       <div class="holo" aria-hidden="true"></div>`;
     grid.appendChild(card);
   });
