@@ -1307,6 +1307,7 @@ body.card-interaction-suppressed .card:active{
 .tcg-status-badge.shiny{background:#9f4fd8;border-color:#ead0ff;color:#fff7ff}
 .tcg-status-badge.perfect{background:#f2c200;border-color:#fff0a6;color:#171106}
 .tcg-status-badge.hunting{background:#249fd6;border-color:#bcefff;color:#f4fcff}
+.tcg-status-badge.missing{background:#4a4a58;border-color:#8a8a9a;color:#d6d6e0}
 
 .tcg-footer{
   display:flex;align-items:center;justify-content:space-between;gap:4px;
@@ -1322,7 +1323,6 @@ body.card-interaction-suppressed .card:active{
   background:var(--region-color,var(--card-accent));
   box-shadow:0 0 4px var(--region-color,transparent);
 }
-.tcg-foot-right{flex:0 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;color:var(--muted);font-weight:800;white-space:nowrap}
 
 .card.target-outline{
   box-shadow:
@@ -4613,18 +4613,14 @@ function setTypeVisualVars(element, types) {
   element.style.setProperty('--type-rgb', hexToRgbString(color));
 }
 function getFooterStatusLabel(p, isHuntingCard, unavailable) {
-  if (unavailable) return 'Indispo.';
-  if (isHuntingCard) return '';
-  if (p.caught && p.perfect) return '';
-  if (p.caught) return '';
-  return 'Manquant';
+  return '';
 }
 function renderCardStatusBadge(p, isHuntingCard, unavailable) {
   if (unavailable) return '';
   if (p.caught && p.perfect) return '<div class="tcg-status-row"><span class="tcg-status-badge perfect">Parfait</span></div>';
   if (isHuntingCard) return '<div class="tcg-status-row"><span class="tcg-status-badge hunting">En cours</span></div>';
   if (p.caught) return '<div class="tcg-status-row"><span class="tcg-status-badge shiny">Shiny</span></div>';
-  return '';
+  return '<div class="tcg-status-row"><span class="tcg-status-badge missing">Manquant</span></div>';
 }
 
 function setGridVisualVars(grid, region) {
@@ -4830,7 +4826,6 @@ function createRegionalOriginalCard(id) {
     ${statusBadge}
     <div class="tcg-footer">
       <span class="tcg-foot-left"><i class="tcg-foot-dot"></i>${footer.left}</span>
-      <span class="tcg-foot-right">${footer.right}</span>
     </div>
     <div class="holo" aria-hidden="true"></div>`;
   return card;
@@ -4872,7 +4867,6 @@ function createRegionalFormCard(form) {
     ${statusBadge}
     <div class="tcg-footer">
       <span class="tcg-foot-left"><i class="tcg-foot-dot"></i>${footer.left}</span>
-      <span class="tcg-foot-right">${footer.right}</span>
     </div>
     <div class="holo" aria-hidden="true"></div>`;
   return card;
@@ -4957,7 +4951,6 @@ function renderGrid() {
       ${statusBadge}
       <div class="tcg-footer">
         <span class="tcg-foot-left"><i class="tcg-foot-dot"></i>${footer.left}</span>
-        <span class="tcg-foot-right">${footer.right}</span>
       </div>
       <div class="holo" aria-hidden="true"></div>`;
     grid.appendChild(card);
