@@ -1172,9 +1172,15 @@ body.card-interaction-suppressed .card:active{
   min-height:0;
   padding:0;
   border:0;
+  box-shadow:none;
   background:
-    url('./typeeau.png') center/100% 100% no-repeat,
-    linear-gradient(180deg,#7ed7ff,#088be8);
+    url('./typeeau.png') center/100% 100% no-repeat;
+}
+.card.type-has-water:hover,
+.card.type-has-water.caught:hover,
+.card.type-has-water.perfect:hover,
+.card.type-has-water.hunting:hover{
+  box-shadow:none;
 }
 .card.type-has-water::before{
   display:none;
