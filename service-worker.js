@@ -1,5 +1,5 @@
-const CACHE_NAME = 'shiny-living-dex-v287';
-const RUNTIME_CACHE = 'shiny-living-dex-runtime-v287';
+const CACHE_NAME = 'shiny-living-dex-v288';
+const RUNTIME_CACHE = 'shiny-living-dex-runtime-v288';
 const OFFLINE_URL = './index.html';
 const APP_SHELL = [
   './',
@@ -83,7 +83,11 @@ const APP_SHELL = [
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME)
-      .then(cache => Promise.allSettled(APP_SHELL.map(url => cache.add(url))))
+      .then(cache => Promise.allSettled(APP_SHELL.map(url =>
+        fetch(url, { cache: 'reload' }).then(response => {
+          if (response.ok) return cache.put(url, response);
+        })
+      )))
       .then(() => self.skipWaiting())
   );
 });
