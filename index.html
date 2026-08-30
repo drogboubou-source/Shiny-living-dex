@@ -1169,7 +1169,8 @@ body.card-interaction-suppressed .card:active{
 }
 .card.type-has-water,
 .card.type-has-grass,
-.card.type-has-fire{
+.card.type-has-fire,
+.card.type-has-electric{
   aspect-ratio:1024 / 1536;
   min-height:0;
   padding:0;
@@ -1188,6 +1189,10 @@ body.card-interaction-suppressed .card:active{
   background:
     url('./type-feu.png?v295') center/100% 100% no-repeat;
 }
+.card.type-has-electric{
+  background:
+    url('./type-electrik.png?v296') center/100% 100% no-repeat;
+}
 .card.type-has-water:hover,
 .card.type-has-water.caught:hover,
 .card.type-has-water.perfect:hover,
@@ -1199,22 +1204,29 @@ body.card-interaction-suppressed .card:active{
 .card.type-has-fire:hover,
 .card.type-has-fire.caught:hover,
 .card.type-has-fire.perfect:hover,
-.card.type-has-fire.hunting:hover{
+.card.type-has-fire.hunting:hover,
+.card.type-has-electric:hover,
+.card.type-has-electric.caught:hover,
+.card.type-has-electric.perfect:hover,
+.card.type-has-electric.hunting:hover{
   box-shadow:none;
 }
 .card.type-has-water::before,
 .card.type-has-grass::before,
-.card.type-has-fire::before{
+.card.type-has-fire::before,
+.card.type-has-electric::before{
   display:none;
 }
 .card.type-has-water > *,
 .card.type-has-grass > *,
-.card.type-has-fire > *{
+.card.type-has-fire > *,
+.card.type-has-electric > *{
   position:absolute;
 }
 .card.type-has-water .tcg-top,
 .card.type-has-grass .tcg-top,
-.card.type-has-fire .tcg-top{
+.card.type-has-fire .tcg-top,
+.card.type-has-electric .tcg-top{
   left:7.2%;
   right:14.8%;
   top:5.45%;
@@ -1227,7 +1239,8 @@ body.card-interaction-suppressed .card:active{
 }
 .card.type-has-water .tcg-stage,
 .card.type-has-grass .tcg-stage,
-.card.type-has-fire .tcg-stage{
+.card.type-has-fire .tcg-stage,
+.card.type-has-electric .tcg-stage{
   max-width:60%;
   font-size:5px;
   padding:1.6px 4px 1px;
@@ -1242,9 +1255,14 @@ body.card-interaction-suppressed .card:active{
   color:#4a160d;
   background:#ffe0c2;
 }
+.card.type-has-electric .tcg-stage{
+  color:#302600;
+  background:#fff2a7;
+}
 .card.type-has-water .tcg-hp,
 .card.type-has-grass .tcg-hp,
-.card.type-has-fire .tcg-hp{
+.card.type-has-fire .tcg-hp,
+.card.type-has-electric .tcg-hp{
   margin-left:auto;
   color:#070707;
   min-width:0;
@@ -1257,7 +1275,8 @@ body.card-interaction-suppressed .card:active{
 }
 .card.type-has-water .tcg-name,
 .card.type-has-grass .tcg-name,
-.card.type-has-fire .tcg-name{
+.card.type-has-fire .tcg-name,
+.card.type-has-electric .tcg-name{
   left:12%;
   right:12%;
   top:14.5%;
@@ -1275,7 +1294,8 @@ body.card-interaction-suppressed .card:active{
 }
 .card.type-has-water .tcg-art,
 .card.type-has-grass .tcg-art,
-.card.type-has-fire .tcg-art{
+.card.type-has-fire .tcg-art,
+.card.type-has-electric .tcg-art{
   left:9%;
   right:9%;
   top:24.5%;
@@ -1292,12 +1312,14 @@ body.card-interaction-suppressed .card:active{
 }
 .card.type-has-water .tcg-art::before,
 .card.type-has-grass .tcg-art::before,
-.card.type-has-fire .tcg-art::before{
+.card.type-has-fire .tcg-art::before,
+.card.type-has-electric .tcg-art::before{
   display:none;
 }
 .card.type-has-water .tcg-art::after,
 .card.type-has-grass .tcg-art::after,
-.card.type-has-fire .tcg-art::after{
+.card.type-has-fire .tcg-art::after,
+.card.type-has-electric .tcg-art::after{
   left:22%;
   right:22%;
   bottom:6%;
@@ -1305,12 +1327,14 @@ body.card-interaction-suppressed .card:active{
 }
 .card.type-has-water .tcg-move,
 .card.type-has-grass .tcg-move,
-.card.type-has-fire .tcg-move{
+.card.type-has-fire .tcg-move,
+.card.type-has-electric .tcg-move{
   display:none;
 }
 .card.type-has-water .tcg-status-row,
 .card.type-has-grass .tcg-status-row,
-.card.type-has-fire .tcg-status-row{
+.card.type-has-fire .tcg-status-row,
+.card.type-has-electric .tcg-status-row{
   left:9%;
   right:9%;
   top:77.5%;
@@ -1324,12 +1348,14 @@ body.card-interaction-suppressed .card:active{
 }
 .card.type-has-water .tcg-footer,
 .card.type-has-grass .tcg-footer,
-.card.type-has-fire .tcg-footer{
+.card.type-has-fire .tcg-footer,
+.card.type-has-electric .tcg-footer{
   display:none;
 }
 .card.type-has-water .holo,
 .card.type-has-grass .holo,
-.card.type-has-fire .holo{
+.card.type-has-fire .holo,
+.card.type-has-electric .holo{
   inset:4%;
   border-radius:8px;
   pointer-events:none;
@@ -4799,10 +4825,12 @@ function setTypeVisualVars(element, types) {
   element.classList.remove('type-has-water');
   element.classList.remove('type-has-grass');
   element.classList.remove('type-has-fire');
+  element.classList.remove('type-has-electric');
   element.classList.add('type-primary-' + primaryType);
   if ((types || []).includes('water')) element.classList.add('type-has-water');
   if ((types || []).includes('grass')) element.classList.add('type-has-grass');
   if ((types || []).includes('fire')) element.classList.add('type-has-fire');
+  if ((types || []).includes('electric')) element.classList.add('type-has-electric');
   element.style.setProperty('--type-color', color);
   element.style.setProperty('--type-rgb', hexToRgbString(color));
 }
