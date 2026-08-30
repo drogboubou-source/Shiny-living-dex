@@ -1,5 +1,5 @@
-const CACHE_NAME = 'shiny-living-dex-v292';
-const RUNTIME_CACHE = 'shiny-living-dex-runtime-v292';
+const CACHE_NAME = 'shiny-living-dex-v293';
+const RUNTIME_CACHE = 'shiny-living-dex-runtime-v293';
 const OFFLINE_URL = './index.html';
 const APP_SHELL = [
   './',
@@ -11,7 +11,7 @@ const APP_SHELL = [
   './Assets/icon-maskable-192.png',
   './Assets/icon-maskable-512.png',
   './Assets/targets-header.png',
-  './type-eau.png?v291',
+  './type-eau.png?v293',
   './sprites/acier.png',
   './sprites/combat.png',
   './sprites/dragon.png',
