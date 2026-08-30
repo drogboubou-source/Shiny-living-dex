@@ -1167,6 +1167,12 @@ body.card-interaction-suppressed .card:active{
     radial-gradient(circle at 76% 72%,rgba(37,108,163,.22),transparent 34%),
     linear-gradient(180deg,#72cdf2 0%,#45aee0 46%,#2f89c6 100%);
 }
+.card.type-has-water{
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.2), rgba(7,23,43,.2)) padding-box,
+    url('./typeeau.png') center/cover padding-box,
+    var(--card-border) border-box;
+}
 .card.type-primary-electric{
   --card-fill:
     radial-gradient(circle at 18% 18%,rgba(255,255,190,.42),transparent 25%),
@@ -4629,7 +4635,9 @@ function setTypeVisualVars(element, types) {
   const primaryType = (types || []).find(t => TYPE_COLORS[t]) || 'normal';
   const color = TYPE_COLORS[primaryType] || '#7dd3fc';
   Object.keys(TYPE_COLORS).forEach(type => element.classList.remove('type-primary-' + type));
+  element.classList.remove('type-has-water');
   element.classList.add('type-primary-' + primaryType);
+  if ((types || []).includes('water')) element.classList.add('type-has-water');
   element.style.setProperty('--type-color', color);
   element.style.setProperty('--type-rgb', hexToRgbString(color));
 }
