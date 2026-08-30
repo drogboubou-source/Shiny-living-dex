@@ -1167,28 +1167,42 @@ body.card-interaction-suppressed .card:active{
     radial-gradient(circle at 76% 72%,rgba(37,108,163,.22),transparent 34%),
     linear-gradient(180deg,#72cdf2 0%,#45aee0 46%,#2f89c6 100%);
 }
-.card.type-has-water{
+.card.type-has-water,
+.card.type-has-grass{
   aspect-ratio:1024 / 1536;
   min-height:0;
   padding:0;
   border:0;
   box-shadow:none;
+}
+.card.type-has-water{
   background:
     url('./type-eau.png?v293') center/100% 100% no-repeat;
+}
+.card.type-has-grass{
+  background:
+    url('./type-plante.png?v294') center/100% 100% no-repeat;
 }
 .card.type-has-water:hover,
 .card.type-has-water.caught:hover,
 .card.type-has-water.perfect:hover,
-.card.type-has-water.hunting:hover{
+.card.type-has-water.hunting:hover,
+.card.type-has-grass:hover,
+.card.type-has-grass.caught:hover,
+.card.type-has-grass.perfect:hover,
+.card.type-has-grass.hunting:hover{
   box-shadow:none;
 }
-.card.type-has-water::before{
+.card.type-has-water::before,
+.card.type-has-grass::before{
   display:none;
 }
-.card.type-has-water > *{
+.card.type-has-water > *,
+.card.type-has-grass > *{
   position:absolute;
 }
-.card.type-has-water .tcg-top{
+.card.type-has-water .tcg-top,
+.card.type-has-grass .tcg-top{
   left:7.2%;
   right:14.8%;
   top:5.45%;
@@ -1199,14 +1213,20 @@ body.card-interaction-suppressed .card:active{
   justify-content:flex-start;
   z-index:3;
 }
-.card.type-has-water .tcg-stage{
+.card.type-has-water .tcg-stage,
+.card.type-has-grass .tcg-stage{
   max-width:60%;
   font-size:5px;
   padding:1.6px 4px 1px;
   color:#22354c;
   background:#d7e9f4;
 }
-.card.type-has-water .tcg-hp{
+.card.type-has-grass .tcg-stage{
+  color:#20340d;
+  background:#e3f1c6;
+}
+.card.type-has-water .tcg-hp,
+.card.type-has-grass .tcg-hp{
   margin-left:auto;
   color:#070707;
   min-width:0;
@@ -1217,7 +1237,8 @@ body.card-interaction-suppressed .card:active{
   text-align:right;
   text-shadow:0 1px 0 rgba(255,255,255,.34);
 }
-.card.type-has-water .tcg-name{
+.card.type-has-water .tcg-name,
+.card.type-has-grass .tcg-name{
   left:12%;
   right:12%;
   top:14.5%;
@@ -1233,7 +1254,8 @@ body.card-interaction-suppressed .card:active{
   text-shadow:0 1px 0 rgba(255,255,255,.32);
   z-index:3;
 }
-.card.type-has-water .tcg-art{
+.card.type-has-water .tcg-art,
+.card.type-has-grass .tcg-art{
   left:9%;
   right:9%;
   top:24.5%;
@@ -1248,19 +1270,23 @@ body.card-interaction-suppressed .card:active{
   justify-content:center;
   overflow:visible;
 }
-.card.type-has-water .tcg-art::before{
+.card.type-has-water .tcg-art::before,
+.card.type-has-grass .tcg-art::before{
   display:none;
 }
-.card.type-has-water .tcg-art::after{
+.card.type-has-water .tcg-art::after,
+.card.type-has-grass .tcg-art::after{
   left:22%;
   right:22%;
   bottom:6%;
   height:8%;
 }
-.card.type-has-water .tcg-move{
+.card.type-has-water .tcg-move,
+.card.type-has-grass .tcg-move{
   display:none;
 }
-.card.type-has-water .tcg-status-row{
+.card.type-has-water .tcg-status-row,
+.card.type-has-grass .tcg-status-row{
   left:9%;
   right:9%;
   top:77.5%;
@@ -1272,10 +1298,12 @@ body.card-interaction-suppressed .card:active{
   align-items:center;
   justify-content:center;
 }
-.card.type-has-water .tcg-footer{
+.card.type-has-water .tcg-footer,
+.card.type-has-grass .tcg-footer{
   display:none;
 }
-.card.type-has-water .holo{
+.card.type-has-water .holo,
+.card.type-has-grass .holo{
   inset:4%;
   border-radius:8px;
   pointer-events:none;
@@ -4743,8 +4771,10 @@ function setTypeVisualVars(element, types) {
   const color = TYPE_COLORS[primaryType] || '#7dd3fc';
   Object.keys(TYPE_COLORS).forEach(type => element.classList.remove('type-primary-' + type));
   element.classList.remove('type-has-water');
+  element.classList.remove('type-has-grass');
   element.classList.add('type-primary-' + primaryType);
   if ((types || []).includes('water')) element.classList.add('type-has-water');
+  if ((types || []).includes('grass')) element.classList.add('type-has-grass');
   element.style.setProperty('--type-color', color);
   element.style.setProperty('--type-rgb', hexToRgbString(color));
 }
