@@ -5557,12 +5557,39 @@ function createRegionalFormCard(form) {
   return card;
 }
 
+function fitLongCardNames(container) {
+  const els = (container || document).querySelectorAll('.tcg-name');
+  els.forEach(el => {
+    el.style.whiteSpace = 'nowrap';
+    el.style.fontSize = '';
+    const available = el.clientWidth;
+    if (!available) return;
+    const needed = el.scrollWidth;
+    if (needed > available) {
+      const baseSize = parseFloat(getComputedStyle(el).fontSize) || 12.5;
+      const scale = available / needed;
+      const newSize = Math.max(baseSize * scale * 0.94, baseSize * 0.62, 7);
+      el.style.fontSize = newSize.toFixed(2) + 'px';
+    }
+  });
+}
+
+let fitLongCardNamesResizeTimer = null;
+window.addEventListener('resize', () => {
+  clearTimeout(fitLongCardNamesResizeTimer);
+  fitLongCardNamesResizeTimer = setTimeout(() => {
+    const grid = document.getElementById('grid');
+    if (grid) fitLongCardNames(grid);
+  }, 150);
+});
+
 function renderRegionalFormsGrid(range, search, grid) {
   const forms = getRegionalFormsForScope(range, search);
   forms.forEach(form => grid.appendChild(createRegionalFormCard(form)));
   if (!forms.length) {
     grid.innerHTML = '<div class="empty">Aucune forme régionale trouvée.</div>';
   }
+  fitLongCardNames(grid);
 }
 
 function renderGrid() {
@@ -5644,6 +5671,7 @@ function renderGrid() {
   if (ids.length === 0) {
     grid.innerHTML = `<div class="empty">${currentRegion === TARGET_REGION_ID ? 'Aucune cible ajoutée.' : `Aucun Pokémon trouvé${activeGame ? ' pour ce jeu' : ''}.`}</div>`;
   }
+  fitLongCardNames(grid);
   renderStatusFilterChip();
 }
 
