@@ -5475,7 +5475,7 @@ function getHoloSparkHtml(show) {
 
 function bindMissingCardReveal(card) {
   if (!card?.classList?.contains('missing-card')) return;
-  const longPressDelay = 550;
+  const longPressDelay = 400;
   const activateOnTap = card.onclick;
   let revealTimer = null;
   let suppressNextClick = false;
