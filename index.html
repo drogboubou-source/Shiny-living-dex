@@ -1228,7 +1228,7 @@ body.card-interaction-suppressed .card:active{
 .card.type-has-fire .tcg-top,
 .card.type-has-electric .tcg-top{
   left:7.2%;
-  right:14.8%;
+  right:21.5%;
   top:5.45%;
   height:4.25%;
   min-height:0;
@@ -1405,7 +1405,7 @@ body.card-interaction-suppressed .card:active{
 }
 .card:is(.type-has-normal,.type-has-dragon,.type-has-steel,.type-has-dark,.type-has-fighting,.type-has-psychic) .tcg-top{
   left:7.2%;
-  right:14.8%;
+  right:21.5%;
   top:5.45%;
   height:4.25%;
   min-height:0;
@@ -1576,7 +1576,7 @@ body.card-interaction-suppressed .card:active{
 }
 .card:is(.type-has-fairy,.type-has-ground,.type-has-poison,.type-has-ghost,.type-has-rock,.type-has-flying,.type-has-ice,.type-has-bug) .tcg-top{
   left:7.2%;
-  right:14.8%;
+  right:21.5%;
   top:5.45%;
   height:4.25%;
   min-height:0;
@@ -5187,24 +5187,27 @@ function setTypeVisualVars(element, types) {
   element.classList.remove('type-has-ice');
   element.classList.remove('type-has-bug');
   element.classList.add('type-primary-' + primaryType);
-  if ((types || []).includes('water')) element.classList.add('type-has-water');
-  if ((types || []).includes('grass')) element.classList.add('type-has-grass');
-  if ((types || []).includes('fire')) element.classList.add('type-has-fire');
-  if ((types || []).includes('electric')) element.classList.add('type-has-electric');
-  if ((types || []).includes('normal')) element.classList.add('type-has-normal');
-  if ((types || []).includes('dragon')) element.classList.add('type-has-dragon');
-  if ((types || []).includes('steel')) element.classList.add('type-has-steel');
-  if ((types || []).includes('dark')) element.classList.add('type-has-dark');
-  if ((types || []).includes('fighting')) element.classList.add('type-has-fighting');
-  if ((types || []).includes('psychic')) element.classList.add('type-has-psychic');
-  if ((types || []).includes('fairy')) element.classList.add('type-has-fairy');
-  if ((types || []).includes('ground')) element.classList.add('type-has-ground');
-  if ((types || []).includes('poison')) element.classList.add('type-has-poison');
-  if ((types || []).includes('ghost')) element.classList.add('type-has-ghost');
-  if ((types || []).includes('rock')) element.classList.add('type-has-rock');
-  if ((types || []).includes('flying')) element.classList.add('type-has-flying');
-  if ((types || []).includes('ice')) element.classList.add('type-has-ice');
-  if ((types || []).includes('bug')) element.classList.add('type-has-bug');
+  const typeCardClass = {
+    water: 'type-has-water',
+    grass: 'type-has-grass',
+    fire: 'type-has-fire',
+    electric: 'type-has-electric',
+    normal: 'type-has-normal',
+    dragon: 'type-has-dragon',
+    steel: 'type-has-steel',
+    dark: 'type-has-dark',
+    fighting: 'type-has-fighting',
+    psychic: 'type-has-psychic',
+    fairy: 'type-has-fairy',
+    ground: 'type-has-ground',
+    poison: 'type-has-poison',
+    ghost: 'type-has-ghost',
+    rock: 'type-has-rock',
+    flying: 'type-has-flying',
+    ice: 'type-has-ice',
+    bug: 'type-has-bug'
+  }[primaryType];
+  if (typeCardClass) element.classList.add(typeCardClass);
   element.style.setProperty('--type-color', color);
   element.style.setProperty('--type-rgb', hexToRgbString(color));
 }
