@@ -1853,14 +1853,11 @@ body.card-interaction-suppressed .card:active{
   opacity:0;
 }
 
-.card.missing-card .tcg-top{
+.card.missing-card .tcg-top,
+.card.missing-card .tcg-name{
   opacity:1;
   position:relative;
   z-index:6;
-}
-.card.missing-card .tcg-stage,
-.card.missing-card .tcg-type-logo{
-  visibility:hidden;
 }
 .card.missing-card .tcg-hp{
   color:#f5f5f7;
@@ -1868,6 +1865,12 @@ body.card-interaction-suppressed .card:active{
   padding:2.5px 7px 1.5px;
   border-radius:6px;
   box-shadow:0 1px 3px rgba(0,0,0,.35);
+}
+.card.missing-card.type-has-dark .tcg-name,
+.card.missing-card.type-has-poison .tcg-name,
+.card.missing-card.type-has-ghost .tcg-name{
+  color:#000;
+  text-shadow:none;
 }
 
 .tcg-art{
