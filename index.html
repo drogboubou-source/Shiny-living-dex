@@ -1091,6 +1091,18 @@ body.card-interaction-suppressed .card:active{
   font-size:9.5px;font-weight:800;color:var(--card-accent);letter-spacing:.3px;
   font-variant-numeric:tabular-nums;white-space:nowrap;
 }
+.tcg-type-logo{
+  display:none;
+  width:12px;
+  height:12px;
+  object-fit:contain;
+  flex:0 0 auto;
+  margin-left:2px;
+  filter:drop-shadow(0 1px 1px rgba(0,0,0,.35));
+}
+.card[class*="type-has-"] .tcg-type-logo{
+  display:block;
+}
 
 .tcg-name{
   font-size:12.5px;font-weight:800;color:#000;text-align:center;
@@ -1228,7 +1240,7 @@ body.card-interaction-suppressed .card:active{
 .card.type-has-fire .tcg-top,
 .card.type-has-electric .tcg-top{
   left:7.2%;
-  right:21.5%;
+  right:7.2%;
   top:5.45%;
   height:4.25%;
   min-height:0;
@@ -1405,7 +1417,7 @@ body.card-interaction-suppressed .card:active{
 }
 .card:is(.type-has-normal,.type-has-dragon,.type-has-steel,.type-has-dark,.type-has-fighting,.type-has-psychic) .tcg-top{
   left:7.2%;
-  right:21.5%;
+  right:7.2%;
   top:5.45%;
   height:4.25%;
   min-height:0;
@@ -1576,7 +1588,7 @@ body.card-interaction-suppressed .card:active{
 }
 .card:is(.type-has-fairy,.type-has-ground,.type-has-poison,.type-has-ghost,.type-has-rock,.type-has-flying,.type-has-ice,.type-has-bug) .tcg-top{
   left:7.2%;
-  right:21.5%;
+  right:7.2%;
   top:5.45%;
   height:4.25%;
   min-height:0;
@@ -3490,6 +3502,16 @@ function getTypeIconSrc(type) {
 
 function getModalTypeIconSrc(type) {
   return MODAL_TYPE_ICON_SRC[type] || MODAL_TYPE_ICON_SRC.normal;
+}
+
+function renderPrimaryTypeLogoForTypes(types) {
+  const primaryType = (types || []).find(type => MODAL_TYPE_ICON_SRC[type]) || 'normal';
+  const label = typeLabel(primaryType);
+  return '<img class="tcg-type-logo" src="' + getModalTypeIconSrc(primaryType) + '" alt="Type ' + label + '" title="Type ' + label + '" loading="lazy">';
+}
+
+function renderPrimaryTypeLogo(id) {
+  return renderPrimaryTypeLogoForTypes(POKEMON_TYPES[id] || POKEMON_TYPES[String(id)] || []);
 }
 
 function renderTypeBadgesForTypes(types) {
@@ -5415,6 +5437,7 @@ function createRegionalOriginalCard(id) {
     <div class="tcg-top">
       <span class="tcg-stage">${getEvolutionStageLabel(id)}</span>
       <span class="tcg-hp">N°${String(id).padStart(4,'0')}</span>
+      ${renderPrimaryTypeLogo(id)}
     </div>
     <div class="tcg-name">${name}</div>
     <div class="tcg-art"><img class="card-sprite" src="${spriteUrl}" alt="${name}" loading="lazy" onerror="handlePokemonSpriteError(this, ${id}, ${useShinySprite})"></div>
@@ -5453,6 +5476,7 @@ function createRegionalFormCard(form) {
     <div class="tcg-top">
       <span class="tcg-stage">${form.region}</span>
       <span class="tcg-hp">N°${String(form.baseId).padStart(4,'0')}</span>
+      ${renderPrimaryTypeLogoForTypes(form.types)}
     </div>
     <div class="tcg-name">${form.label}</div>
     <div class="tcg-art"><img class="card-sprite" src="${spriteUrl}" alt="${form.label}" loading="lazy" onerror="handlePokemonSpriteError(this, ${form.formId}, ${useShinySprite})"></div>
@@ -5534,6 +5558,7 @@ function renderGrid() {
       <div class="tcg-top">
         <span class="tcg-stage">${getEvolutionStageLabel(id)}</span>
         <span class="tcg-hp">N°${String(id).padStart(4,'0')}</span>
+        ${renderPrimaryTypeLogo(id)}
       </div>
       <div class="tcg-name">${name}</div>
       <div class="tcg-art"><img class="card-sprite" src="${spriteUrl}" alt="${name}" loading="lazy" onerror="handlePokemonSpriteError(this, ${id}, ${useShinySprite})"></div>
