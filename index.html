@@ -1819,6 +1819,39 @@ body.card-interaction-suppressed .card:active{
 .card.caught .tcg-name{color:#000}
 .card.perfect .tcg-name{color:#000}
 .card.hunting .tcg-name{color:#000}
+.card.type-has-dark .tcg-name{
+  color:#f7fbff;
+  text-shadow:0 1px 2px rgba(0,0,0,.72);
+}
+
+.card.missing-card{
+  -webkit-touch-callout:none;
+  user-select:none;
+}
+.card.missing-card > *{
+  opacity:0;
+  transition:opacity .12s ease;
+}
+.card.missing-card::after{
+  content:'';
+  position:absolute;
+  inset:0;
+  z-index:5;
+  pointer-events:none;
+  background:url('./manquant.png?v302') center/100% 100% no-repeat;
+  opacity:1;
+  transition:opacity .12s ease;
+}
+.card.missing-card:active > *,
+.card.missing-card:focus-visible > *,
+.card.missing-card.reveal-missing-card > *{
+  opacity:1;
+}
+.card.missing-card:active::after,
+.card.missing-card:focus-visible::after,
+.card.missing-card.reveal-missing-card::after{
+  opacity:0;
+}
 
 .tcg-art{
   position:relative;border-radius:5px;margin:0 1px 5px;
@@ -5411,12 +5444,24 @@ function getHoloSparkHtml(show) {
   return '';
 }
 
+function bindMissingCardReveal(card) {
+  if (!card?.classList?.contains('missing-card')) return;
+  const reveal = () => card.classList.add('reveal-missing-card');
+  const conceal = () => card.classList.remove('reveal-missing-card');
+  card.addEventListener('pointerdown', reveal);
+  card.addEventListener('pointerup', conceal);
+  card.addEventListener('pointercancel', conceal);
+  card.addEventListener('pointerleave', conceal);
+  card.addEventListener('contextmenu', event => event.preventDefault());
+}
+
 function createRegionalOriginalCard(id) {
   const name = NAMES[id] || `#${id}`;
   const p = progress[id] || {};
   const isHuntingCard = !p.caught && (p.hunting || p.huntCount);
+  const isMissingCard = !p.caught && !p.perfect && !isHuntingCard;
   const card = document.createElement('div');
-  card.className = 'card form-original' + (p.caught ? ' caught' : '') + (p.perfect ? ' perfect' : '') + (isHuntingCard ? ' hunting' : '') + getTargetCardClasses(p, isHuntingCard);
+  card.className = 'card form-original' + (p.caught ? ' caught' : '') + (p.perfect ? ' perfect' : '') + (isHuntingCard ? ' hunting' : '') + (isMissingCard ? ' missing-card' : '') + getTargetCardClasses(p, isHuntingCard);
   const region = getRegionByPokemonId(id);
   setRegionVisualVars(card, region);
   setTypeVisualVars(card, POKEMON_TYPES[id] || POKEMON_TYPES[String(id)]);
@@ -5447,6 +5492,7 @@ function createRegionalOriginalCard(id) {
     ${statusBadge}
     <div class="tcg-footer" aria-hidden="true"></div>
     <div class="holo" aria-hidden="true"></div>`;
+  bindMissingCardReveal(card);
   return card;
 }
 
@@ -5454,8 +5500,9 @@ function createRegionalFormCard(form) {
   const p = progress[form.formId] || {};
   const isHuntingCard = !p.caught && (p.hunting || p.huntCount);
   const unavailable = isUnavailablePokemon(form.formId);
+  const isMissingCard = !unavailable && !p.caught && !p.perfect && !isHuntingCard;
   const card = document.createElement('div');
-  card.className = 'card form-card' + (p.caught && !unavailable ? ' caught' : '') + (p.perfect && !unavailable ? ' perfect' : '') + (isHuntingCard && !unavailable ? ' hunting' : '') + getTargetCardClasses(p, isHuntingCard, unavailable) + (unavailable ? ' unavailable' : '');
+  card.className = 'card form-card' + (p.caught && !unavailable ? ' caught' : '') + (p.perfect && !unavailable ? ' perfect' : '') + (isHuntingCard && !unavailable ? ' hunting' : '') + (isMissingCard ? ' missing-card' : '') + getTargetCardClasses(p, isHuntingCard, unavailable) + (unavailable ? ' unavailable' : '');
   setRegionVisualVars(card, REGIONS.find(region => region.name === form.region) || getRegionByPokemonId(form.baseId));
   setTypeVisualVars(card, form.types);
   card.setAttribute('role', 'button');
@@ -5486,6 +5533,7 @@ function createRegionalFormCard(form) {
     ${statusBadge}
     <div class="tcg-footer" aria-hidden="true"></div>
     <div class="holo" aria-hidden="true"></div>`;
+  bindMissingCardReveal(card);
   return card;
 }
 
@@ -5524,6 +5572,7 @@ function renderGrid() {
     const p    = progress[id] || {};
     const unavailable = isUnavailablePokemon(id);
     const isHuntingCard = !unavailable && !p.caught && (counterMode || p.hunting || p.huntCount);
+    const isMissingCard = !unavailable && !p.caught && !p.perfect && !isHuntingCard;
     const cardRegion = showGenerationDividers ? getRegionByPokemonId(id) : null;
     if (showGenerationDividers) {
       const region = cardRegion;
@@ -5534,7 +5583,7 @@ function renderGrid() {
       }
     }
     const card = document.createElement('div');
-    card.className = 'card' + (p.caught && !unavailable ? ' caught' : '') + (p.perfect && !unavailable ? ' perfect' : '') + (isHuntingCard ? ' hunting' : '') + getTargetCardClasses(p, isHuntingCard, unavailable) + (unavailable ? ' unavailable' : '');
+    card.className = 'card' + (p.caught && !unavailable ? ' caught' : '') + (p.perfect && !unavailable ? ' perfect' : '') + (isHuntingCard ? ' hunting' : '') + (isMissingCard ? ' missing-card' : '') + getTargetCardClasses(p, isHuntingCard, unavailable) + (unavailable ? ' unavailable' : '');
     const cardOwnRegion = cardRegion || getRegionByPokemonId(id);
     setRegionVisualVars(card, cardOwnRegion);
     setTypeVisualVars(card, POKEMON_TYPES[id] || POKEMON_TYPES[String(id)]);
@@ -5568,6 +5617,7 @@ function renderGrid() {
       ${statusBadge}
       <div class="tcg-footer" aria-hidden="true"></div>
       <div class="holo" aria-hidden="true"></div>`;
+    bindMissingCardReveal(card);
     grid.appendChild(card);
   });
 
