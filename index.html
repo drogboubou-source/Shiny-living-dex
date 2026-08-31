@@ -1075,6 +1075,9 @@ body.card-interaction-suppressed .card:active{
     0 8px 14px rgba(0,0,0,.46),
     0 22px 36px rgba(0,0,0,.55);
 }
+.card.long-press-settled{
+  transform:translateY(-2px) scale(1.035);
+}
 .card > *{position:relative;z-index:1}
 
 .tcg-top{
@@ -1857,18 +1860,15 @@ body.card-interaction-suppressed .card:active{
   filter:brightness(0) drop-shadow(0 4px 6px rgba(0,0,0,.3));
   opacity:.82;
 }
-.card.missing-card:active > *,
 .card.missing-card:focus-visible > *,
 .card.missing-card.reveal-missing-card > *{
   opacity:1;
 }
-.card.missing-card:active .card-sprite,
 .card.missing-card:focus-visible .card-sprite,
 .card.missing-card.reveal-missing-card .card-sprite{
   filter:drop-shadow(0 5px 8px rgba(0,0,0,.5)) drop-shadow(0 0 3px rgba(0,0,0,.55)) drop-shadow(0 0 5px rgba(0,0,0,.35));
   opacity:1;
 }
-.card.missing-card:active::after,
 .card.missing-card:focus-visible::after,
 .card.missing-card.reveal-missing-card::after{
   opacity:0;
@@ -5467,10 +5467,45 @@ function getHoloSparkHtml(show) {
 
 function bindMissingCardReveal(card) {
   if (!card?.classList?.contains('missing-card')) return;
+  const longPressDelay = 750;
+  let revealTimer = null;
+  let revealedByHold = false;
+
+  const clearRevealTimer = () => {
+    if (!revealTimer) return;
+    clearTimeout(revealTimer);
+    revealTimer = null;
+  };
+
   const reveal = () => card.classList.add('reveal-missing-card');
-  const conceal = () => card.classList.remove('reveal-missing-card');
-  card.addEventListener('pointerdown', reveal);
-  card.addEventListener('pointerup', conceal);
+  const conceal = () => {
+    clearRevealTimer();
+    card.classList.remove('reveal-missing-card');
+  };
+  const settleCard = () => {
+    if (!revealedByHold) return;
+    document.querySelectorAll('.card.long-press-settled').forEach(other => {
+      if (other !== card) other.classList.remove('long-press-settled');
+    });
+    card.classList.add('long-press-settled');
+    revealedByHold = false;
+  };
+
+  card.addEventListener('pointerdown', event => {
+    if (event.button !== undefined && event.button !== 0) return;
+    clearRevealTimer();
+    revealedByHold = false;
+    card.classList.remove('long-press-settled');
+    revealTimer = setTimeout(() => {
+      revealTimer = null;
+      revealedByHold = true;
+      reveal();
+    }, longPressDelay);
+  });
+  card.addEventListener('pointerup', () => {
+    settleCard();
+    conceal();
+  });
   card.addEventListener('pointercancel', conceal);
   card.addEventListener('pointerleave', conceal);
   card.addEventListener('contextmenu', event => event.preventDefault());
