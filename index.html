@@ -1523,6 +1523,189 @@ body.card-interaction-suppressed .card:active{
   border-radius:8px;
   pointer-events:none;
 }
+.card:is(.type-has-fairy,.type-has-ground,.type-has-poison,.type-has-ghost,.type-has-rock,.type-has-flying,.type-has-ice,.type-has-bug){
+  aspect-ratio:1024 / 1536;
+  min-height:0;
+  padding:0;
+  border:0;
+  box-shadow:none;
+}
+.card.type-has-fairy{
+  background:
+    url('./type-f%C3%A9e.png?v298') center/100% 100% no-repeat;
+}
+.card.type-has-ground{
+  background:
+    url('./type-sol.png?v298') center/100% 100% no-repeat;
+}
+.card.type-has-poison{
+  background:
+    url('./type-poison.png?v298') center/100% 100% no-repeat;
+}
+.card.type-has-ghost{
+  background:
+    url('./type-spectre.png?v298') center/100% 100% no-repeat;
+}
+.card.type-has-rock{
+  background:
+    url('./type-roche.png?v298') center/100% 100% no-repeat;
+}
+.card.type-has-flying{
+  background:
+    url('./type-vol.png?v298') center/100% 100% no-repeat;
+}
+.card.type-has-ice{
+  background:
+    url('./type-glace.png?v298') center/100% 100% no-repeat;
+}
+.card.type-has-bug{
+  background:
+    url('./type-insecte.png?v298') center/100% 100% no-repeat;
+}
+.card:is(.type-has-fairy,.type-has-ground,.type-has-poison,.type-has-ghost,.type-has-rock,.type-has-flying,.type-has-ice,.type-has-bug):hover,
+.card:is(.type-has-fairy,.type-has-ground,.type-has-poison,.type-has-ghost,.type-has-rock,.type-has-flying,.type-has-ice,.type-has-bug).caught:hover,
+.card:is(.type-has-fairy,.type-has-ground,.type-has-poison,.type-has-ghost,.type-has-rock,.type-has-flying,.type-has-ice,.type-has-bug).perfect:hover,
+.card:is(.type-has-fairy,.type-has-ground,.type-has-poison,.type-has-ghost,.type-has-rock,.type-has-flying,.type-has-ice,.type-has-bug).hunting:hover{
+  box-shadow:none;
+}
+.card:is(.type-has-fairy,.type-has-ground,.type-has-poison,.type-has-ghost,.type-has-rock,.type-has-flying,.type-has-ice,.type-has-bug)::before{
+  display:none;
+}
+.card:is(.type-has-fairy,.type-has-ground,.type-has-poison,.type-has-ghost,.type-has-rock,.type-has-flying,.type-has-ice,.type-has-bug) > *{
+  position:absolute;
+}
+.card:is(.type-has-fairy,.type-has-ground,.type-has-poison,.type-has-ghost,.type-has-rock,.type-has-flying,.type-has-ice,.type-has-bug) .tcg-top{
+  left:7.2%;
+  right:14.8%;
+  top:5.45%;
+  height:4.25%;
+  min-height:0;
+  padding:0;
+  align-items:center;
+  justify-content:flex-start;
+  z-index:3;
+}
+.card:is(.type-has-fairy,.type-has-ground,.type-has-poison,.type-has-ghost,.type-has-rock,.type-has-flying,.type-has-ice,.type-has-bug) .tcg-stage{
+  max-width:60%;
+  font-size:5px;
+  padding:1.6px 4px 1px;
+  color:#252525;
+  background:#eeeeee;
+}
+.card.type-has-fairy .tcg-stage{
+  color:#4a1030;
+  background:#ffe0f0;
+}
+.card.type-has-ground .tcg-stage{
+  color:#4a2d12;
+  background:#f2dfbd;
+}
+.card.type-has-poison .tcg-stage{
+  color:#f8f0ff;
+  background:#6b3a86;
+}
+.card.type-has-ghost .tcg-stage{
+  color:#f4f0ff;
+  background:#3c335f;
+}
+.card.type-has-rock .tcg-stage{
+  color:#352512;
+  background:#e8d4ad;
+}
+.card.type-has-flying .tcg-stage{
+  color:#1e3b52;
+  background:#d7efff;
+}
+.card.type-has-ice .tcg-stage{
+  color:#123447;
+  background:#d9f6ff;
+}
+.card.type-has-bug .tcg-stage{
+  color:#263b0c;
+  background:#e4f4c3;
+}
+.card:is(.type-has-fairy,.type-has-ground,.type-has-poison,.type-has-ghost,.type-has-rock,.type-has-flying,.type-has-ice,.type-has-bug) .tcg-hp{
+  margin-left:auto;
+  color:#070707;
+  min-width:0;
+  padding:0;
+  background:transparent;
+  font-size:6.6px;
+  letter-spacing:0;
+  text-align:right;
+  text-shadow:0 1px 0 rgba(255,255,255,.34);
+}
+.card:is(.type-has-poison,.type-has-ghost) .tcg-hp{
+  color:#f7fbff;
+  text-shadow:0 1px 2px rgba(0,0,0,.75);
+}
+.card:is(.type-has-fairy,.type-has-ground,.type-has-poison,.type-has-ghost,.type-has-rock,.type-has-flying,.type-has-ice,.type-has-bug) .tcg-name{
+  left:12%;
+  right:12%;
+  top:14.5%;
+  margin:0;
+  min-height:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:transparent;
+  color:#050505;
+  font-size:10.8px;
+  line-height:1;
+  text-shadow:0 1px 0 rgba(255,255,255,.32);
+  z-index:3;
+}
+.card:is(.type-has-poison,.type-has-ghost) .tcg-name{
+  color:#f7fbff;
+  text-shadow:0 1px 2px rgba(0,0,0,.72);
+}
+.card:is(.type-has-fairy,.type-has-ground,.type-has-poison,.type-has-ghost,.type-has-rock,.type-has-flying,.type-has-ice,.type-has-bug) .tcg-art{
+  left:9%;
+  right:9%;
+  top:24.5%;
+  bottom:29.7%;
+  min-height:0;
+  margin:0;
+  padding:0;
+  border:0;
+  z-index:2;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:visible;
+}
+.card:is(.type-has-fairy,.type-has-ground,.type-has-poison,.type-has-ghost,.type-has-rock,.type-has-flying,.type-has-ice,.type-has-bug) .tcg-art::before{
+  display:none;
+}
+.card:is(.type-has-fairy,.type-has-ground,.type-has-poison,.type-has-ghost,.type-has-rock,.type-has-flying,.type-has-ice,.type-has-bug) .tcg-art::after{
+  left:22%;
+  right:22%;
+  bottom:6%;
+  height:8%;
+}
+.card:is(.type-has-fairy,.type-has-ground,.type-has-poison,.type-has-ghost,.type-has-rock,.type-has-flying,.type-has-ice,.type-has-bug) .tcg-move{
+  display:none;
+}
+.card:is(.type-has-fairy,.type-has-ground,.type-has-poison,.type-has-ghost,.type-has-rock,.type-has-flying,.type-has-ice,.type-has-bug) .tcg-status-row{
+  left:9%;
+  right:9%;
+  top:77.5%;
+  bottom:8.8%;
+  min-height:0;
+  margin:0;
+  z-index:3;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.card:is(.type-has-fairy,.type-has-ground,.type-has-poison,.type-has-ghost,.type-has-rock,.type-has-flying,.type-has-ice,.type-has-bug) .tcg-footer{
+  display:none;
+}
+.card:is(.type-has-fairy,.type-has-ground,.type-has-poison,.type-has-ghost,.type-has-rock,.type-has-flying,.type-has-ice,.type-has-bug) .holo{
+  inset:4%;
+  border-radius:8px;
+  pointer-events:none;
+}
 .card.type-primary-electric{
   --card-fill:
     radial-gradient(circle at 18% 18%,rgba(255,255,190,.42),transparent 25%),
@@ -4995,6 +5178,14 @@ function setTypeVisualVars(element, types) {
   element.classList.remove('type-has-dark');
   element.classList.remove('type-has-fighting');
   element.classList.remove('type-has-psychic');
+  element.classList.remove('type-has-fairy');
+  element.classList.remove('type-has-ground');
+  element.classList.remove('type-has-poison');
+  element.classList.remove('type-has-ghost');
+  element.classList.remove('type-has-rock');
+  element.classList.remove('type-has-flying');
+  element.classList.remove('type-has-ice');
+  element.classList.remove('type-has-bug');
   element.classList.add('type-primary-' + primaryType);
   if ((types || []).includes('water')) element.classList.add('type-has-water');
   if ((types || []).includes('grass')) element.classList.add('type-has-grass');
@@ -5006,6 +5197,14 @@ function setTypeVisualVars(element, types) {
   if ((types || []).includes('dark')) element.classList.add('type-has-dark');
   if ((types || []).includes('fighting')) element.classList.add('type-has-fighting');
   if ((types || []).includes('psychic')) element.classList.add('type-has-psychic');
+  if ((types || []).includes('fairy')) element.classList.add('type-has-fairy');
+  if ((types || []).includes('ground')) element.classList.add('type-has-ground');
+  if ((types || []).includes('poison')) element.classList.add('type-has-poison');
+  if ((types || []).includes('ghost')) element.classList.add('type-has-ghost');
+  if ((types || []).includes('rock')) element.classList.add('type-has-rock');
+  if ((types || []).includes('flying')) element.classList.add('type-has-flying');
+  if ((types || []).includes('ice')) element.classList.add('type-has-ice');
+  if ((types || []).includes('bug')) element.classList.add('type-has-bug');
   element.style.setProperty('--type-color', color);
   element.style.setProperty('--type-rgb', hexToRgbString(color));
 }
