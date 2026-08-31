@@ -1842,6 +1842,15 @@ body.card-interaction-suppressed .card:active{
   opacity:1;
   transition:opacity .12s ease;
 }
+.card.missing-card > .tcg-top,
+.card.missing-card > .tcg-name{
+  opacity:1;
+  z-index:6;
+}
+.card.missing-card:not(.type-has-water):not(.type-has-grass):not(.type-has-fire):not(.type-has-electric) > .tcg-top,
+.card.missing-card:not(.type-has-water):not(.type-has-grass):not(.type-has-fire):not(.type-has-electric) > .tcg-name{
+  position:relative;
+}
 .card.missing-card:active > *,
 .card.missing-card:focus-visible > *,
 .card.missing-card.reveal-missing-card > *{
