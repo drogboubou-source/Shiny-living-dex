@@ -1853,6 +1853,23 @@ body.card-interaction-suppressed .card:active{
   opacity:0;
 }
 
+.card.missing-card .tcg-top{
+  opacity:1;
+  position:relative;
+  z-index:6;
+}
+.card.missing-card .tcg-stage,
+.card.missing-card .tcg-type-logo{
+  visibility:hidden;
+}
+.card.missing-card .tcg-hp{
+  color:#f5f5f7;
+  background:rgba(20,20,28,.82);
+  padding:2.5px 7px 1.5px;
+  border-radius:6px;
+  box-shadow:0 1px 3px rgba(0,0,0,.35);
+}
+
 .tcg-art{
   position:relative;border-radius:5px;margin:0 1px 5px;
   border:1px solid transparent;
