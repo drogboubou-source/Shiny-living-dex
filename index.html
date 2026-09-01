@@ -4742,6 +4742,7 @@ function getPokeballSpriteUrl(ballId) {
 }
 
 const SPRITE_FALLBACK = './Assets/icon-192.png';
+const EMPTY_CARD_SPRITE = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==';
 function isHomeSpriteMode() {
   return spriteMode !== 'pixel';
 }
@@ -4767,6 +4768,16 @@ function handlePokemonSpriteError(img, id, shiny) {
   }
   img.onerror = null;
   img.src = SPRITE_FALLBACK;
+}
+function getCardSpriteAttrs(spriteUrl, isDeferred = false) {
+  if (!isDeferred) return `src="${spriteUrl}"`;
+  return `src="${EMPTY_CARD_SPRITE}" data-src="${spriteUrl}"`;
+}
+function loadDeferredMissingCardSprite(card) {
+  const img = card?.querySelector?.('.card-sprite[data-src]');
+  if (!img) return;
+  img.src = img.dataset.src;
+  delete img.dataset.src;
 }
 function toggleSpriteMode() {
   spriteMode = isHomeSpriteMode() ? 'pixel' : 'home';
@@ -5492,6 +5503,9 @@ function bindMissingCardReveal(card) {
 
   const toggleReveal = () => {
     card.classList.toggle('reveal-missing-card');
+    if (card.classList.contains('reveal-missing-card')) {
+      loadDeferredMissingCardSprite(card);
+    }
   };
 
   card.addEventListener('pointerdown', event => {
@@ -5549,6 +5563,7 @@ function createRegionalOriginalCard(id) {
   };
   const useShinySprite = !!p.caught;
   const spriteUrl = getPokemonSpriteUrl(id, useShinySprite);
+  const spriteAttrs = getCardSpriteAttrs(spriteUrl, isMissingCard);
   const statusBadge = renderCardStatusBadge(p, isHuntingCard, false);
   card.innerHTML = `
     <div class="tcg-top">
@@ -5557,7 +5572,7 @@ function createRegionalOriginalCard(id) {
       ${renderPrimaryTypeLogo(id)}
     </div>
     <div class="tcg-name">${name}</div>
-    <div class="tcg-art"><img class="card-sprite" src="${spriteUrl}" alt="${name}" loading="lazy" onerror="handlePokemonSpriteError(this, ${id}, ${useShinySprite})"></div>
+    <div class="tcg-art"><img class="card-sprite" ${spriteAttrs} alt="${name}" loading="lazy" onerror="handlePokemonSpriteError(this, ${id}, ${useShinySprite})"></div>
     <div class="tcg-move">
       <span class="tcg-move-cost">${renderTypeBadges(id)}</span>
     </div>
@@ -5589,6 +5604,7 @@ function createRegionalFormCard(form) {
   };
   const useShinySprite = !!p.caught && !unavailable;
   const spriteUrl = getPokemonSpriteUrl(form.formId, useShinySprite);
+  const spriteAttrs = getCardSpriteAttrs(spriteUrl, isMissingCard);
   const baseRegion = getRegionByPokemonId(form.baseId);
   const statusBadge = renderCardStatusBadge(p, isHuntingCard, unavailable);
   card.innerHTML = `
@@ -5598,7 +5614,7 @@ function createRegionalFormCard(form) {
       ${renderPrimaryTypeLogoForTypes(form.types)}
     </div>
     <div class="tcg-name">${form.label}</div>
-    <div class="tcg-art"><img class="card-sprite" src="${spriteUrl}" alt="${form.label}" loading="lazy" onerror="handlePokemonSpriteError(this, ${form.formId}, ${useShinySprite})"></div>
+    <div class="tcg-art"><img class="card-sprite" ${spriteAttrs} alt="${form.label}" loading="lazy" onerror="handlePokemonSpriteError(this, ${form.formId}, ${useShinySprite})"></div>
     <div class="tcg-move">
       <span class="tcg-move-cost">${renderTypeBadgesForTypes(form.types)}</span>
     </div>
@@ -5700,6 +5716,7 @@ function renderGrid() {
     const typeBadges = renderTypeBadges(id);
     const useShinySprite = !!p.caught && !unavailable;
     const spriteUrl = getPokemonSpriteUrl(id, useShinySprite);
+    const spriteAttrs = getCardSpriteAttrs(spriteUrl, isMissingCard);
     const statusBadge = renderCardStatusBadge(p, isHuntingCard, unavailable);
 
     card.innerHTML = `
@@ -5709,7 +5726,7 @@ function renderGrid() {
         ${renderPrimaryTypeLogo(id)}
       </div>
       <div class="tcg-name">${name}</div>
-      <div class="tcg-art"><img class="card-sprite" src="${spriteUrl}" alt="${name}" loading="lazy" onerror="handlePokemonSpriteError(this, ${id}, ${useShinySprite})"></div>
+      <div class="tcg-art"><img class="card-sprite" ${spriteAttrs} alt="${name}" loading="lazy" onerror="handlePokemonSpriteError(this, ${id}, ${useShinySprite})"></div>
       <div class="tcg-move">
         <span class="tcg-move-cost">${typeBadges}</span>
       </div>
