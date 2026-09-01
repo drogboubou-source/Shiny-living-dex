@@ -1828,51 +1828,9 @@ body.card-interaction-suppressed .card:active{
   -webkit-touch-callout:none;
   user-select:none;
 }
-.card.missing-card > *{
-  opacity:0;
-  transition:opacity .12s ease;
-}
-.card.missing-card::after{
-  content:'';
-  position:absolute;
-  inset:0;
-  z-index:5;
-  pointer-events:none;
-  background:url('./manquante.png?v307') center/100% 100% no-repeat;
-  opacity:1;
-  transition:opacity .12s ease;
-}
-.card.missing-card > .tcg-top,
-.card.missing-card > .tcg-name,
-.card.missing-card > .tcg-art,
-.card.missing-card > .tcg-status-row{
-  opacity:1;
-  z-index:6;
-}
-.card.missing-card > .tcg-name{
-  color:#000;
-  text-shadow:none;
-}
-.card.missing-card .tcg-hp{
-  color:#000;
-  text-shadow:none;
-}
 .card.missing-card .card-sprite{
   filter:brightness(0) drop-shadow(0 4px 6px rgba(0,0,0,.3));
   opacity:.82;
-}
-.card.missing-card:focus-visible > *,
-.card.missing-card.reveal-missing-card > *{
-  opacity:1;
-}
-.card.missing-card:focus-visible .card-sprite,
-.card.missing-card.reveal-missing-card .card-sprite{
-  filter:drop-shadow(0 5px 8px rgba(0,0,0,.5)) drop-shadow(0 0 3px rgba(0,0,0,.55)) drop-shadow(0 0 5px rgba(0,0,0,.35));
-  opacity:1;
-}
-.card.missing-card:focus-visible::after,
-.card.missing-card.reveal-missing-card::after{
-  opacity:0;
 }
 
 .tcg-art{
