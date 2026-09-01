@@ -3007,11 +3007,11 @@ button.capture-control{width:100%;text-align:left;font:inherit;color:inherit;cur
           <option value="legendary">Légendaires</option>
           <option value="missing">Manquants</option>
           <option value="number">Numéro</option>
-          <option value="method-masuda">Shinys Masuda</option>
-          <option value="perfect">Shinys parfaits</option>
-          <option value="method-random">Shinys Random</option>
-          <option value="method-resets">Shinys Resets</option>
-          <option value="caught">Shinys trouvés</option>
+          <option value="method-masuda">Méthode Masuda</option>
+          <option value="perfect">Parfaits / optimisés</option>
+          <option value="method-random">Méthode Random</option>
+          <option value="method-resets">Méthode Resets</option>
+          <option value="caught">Trouvés / capturés</option>
           <option value="type">Types</option>
         </select>
       </label>
@@ -3233,6 +3233,16 @@ button.capture-control{width:100%;text-align:left;font:inherit;color:inherit;cur
             <span class="capture-kicker">Nature</span>
             <select id="fNature"></select>
           </span>
+        </div>
+      </div>
+      <div class="form-grid-2">
+        <div class="form-row">
+          <label>Niveau</label>
+          <input type="number" id="fLevel" min="1" max="100" inputmode="numeric" placeholder="100">
+        </div>
+        <div class="form-row">
+          <label>Talent</label>
+          <input type="text" id="fAbility" placeholder="Talent voulu">
         </div>
       </div>
       <div class="capture-details single capture-final">
@@ -4052,12 +4062,67 @@ function hasUserData(p) {
     p.pokeball ||
     p.pokeballShiny ||
     p.nature ||
+    p.level ||
+    p.ability ||
     p.gender ||
     p.genderShiny ||
     p.game ||
     p.location ||
     ivs.hp || ivs.atk || ivs.def || ivs.spa || ivs.spd || ivs.spe
   );
+}
+
+function hasPerfectIvs(p) {
+  const ivs = p?.ivs || {};
+  return !!(ivs.hp && ivs.atk && ivs.def && ivs.spa && ivs.spd && ivs.spe);
+}
+
+function isBattleReady(p) {
+  if (!p?.caught) return false;
+  return (parseInt(p.level) || 0) >= 100
+    && !!p.nature
+    && !!String(p.ability || '').trim()
+    && hasPerfectIvs(p);
+}
+
+function isTargetsScopeActive() {
+  return currentRegion === TARGET_REGION_ID;
+}
+
+function perfectCountForCurrentScope(entries) {
+  return entries.filter(p => isTargetsScopeActive() ? (p.caught && p.perfect) : isBattleReady(p)).length;
+}
+
+function currentScopeCopy() {
+  return isTargetsScopeActive()
+    ? {
+        caughtPlural: 'Shinys',
+        caughtHighlight: 'Shinys captur&eacute;s',
+        missingHighlight: 'Shinys manquants',
+        caughtFilter: 'Shinys capturés',
+        perfectFilter: 'Shinys parfaits',
+        perfectSingular: 'Parfait',
+        perfectPlural: 'Parfaits',
+        cardCaught: 'Shiny',
+        cardPerfect: 'Parfait',
+        methodCountLabel: 'Shinys',
+        missing: 'Manquant',
+        completion: 'Complété'
+      }
+    : {
+        caughtPlural: 'Capturés',
+        caughtHighlight: 'Pok&eacute;mon captur&eacute;s',
+        missingHighlight: 'Pok&eacute;mon &agrave; capturer',
+        caughtFilter: 'Pokémon capturés',
+        perfectFilter: 'Pokémon optimisés',
+        perfectSingular: 'Optimisé',
+        perfectPlural: 'Optimisés',
+        cardCaught: 'Capturé',
+        cardPerfect: 'Optimisé',
+        methodCountLabel: 'Captures',
+        missing: 'À capturer',
+        completion: 'Complété'
+      };
 }
 
 function sanitizeProgress(data, options = {}) {
@@ -4072,6 +4137,8 @@ function sanitizeProgress(data, options = {}) {
     entry.pokeball = entry.pokeball || '';
     entry.pokeballShiny = entry.pokeballShiny || '';
     entry.nature = entry.nature || '';
+    entry.level = parseInt(entry.level) || '';
+    entry.ability = entry.ability || '';
     entry.gender = GENDER_CYCLE.includes(entry.gender) ? entry.gender : '';
     entry.genderShiny = GENDER_CYCLE.includes(entry.genderShiny) ? entry.genderShiny : '';
     // Ancienne logique: pokemon.json pouvait mettre caught=true juste parce que le nom etait rempli.
@@ -4100,6 +4167,9 @@ function rowMeansCaught(p) {
     p['Pokéball'] ||
     p['Pokéball Shiny'] ||
     p['Nature'] ||
+    p['Niveau'] ||
+    p['Talent'] ||
+    p['Bon talent'] ||
     p['IV parfaits'] ||
     p['Parfait']
   );
@@ -4178,6 +4248,8 @@ function mergePokedexIntoProgress() {
     if (!existing.pokeball   && p['Pokéball'])            existing.pokeball   = p['Pokéball'];
     if (!existing.pokeballShiny && p['Pokéball Shiny'])    existing.pokeballShiny = p['Pokéball Shiny'];
     if (!existing.nature     && p['Nature'])              existing.nature     = p['Nature'];
+    if (!existing.level      && p['Niveau'])              existing.level      = parseInt(p['Niveau']) || '';
+    if (!existing.ability    && (p['Talent'] || p['Bon talent'])) existing.ability = p['Talent'] || p['Bon talent'];
     if (!existing.gender     && p['Genre'])                existing.gender     = rowGender(p['Genre']);
     if (!existing.genderShiny && p['Genre Shiny'])          existing.genderShiny = rowGender(p['Genre Shiny']);
     // Statuts: le nom seul ne signifie pas que le shiny est capturé.
@@ -4552,6 +4624,7 @@ function blockClickAfterHuntTrayClose(e) {
 
 function renderStats() {
   const stats = getCurrentStats();
+  const copy = currentScopeCopy();
   const masudaStats = stats.methodStats.masuda;
   const resetStats = stats.methodStats.resets;
   const randomStats = stats.methodStats.random;
@@ -4565,7 +4638,7 @@ function renderStats() {
     scopeLabel.style.color = scope.color;
   }
   document.getElementById('statsBar').innerHTML = `
-    <div class="tstat clickable-stat" role="button" tabindex="0" onclick="applyStatusFilter('caught')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();applyStatusFilter('caught')}"><strong style="color:#7ed660">${stats.caught}/${stats.total}</strong> Shinys</div>
+    <div class="tstat clickable-stat" role="button" tabindex="0" onclick="applyStatusFilter('caught')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();applyStatusFilter('caught')}"><strong style="color:#7ed660">${stats.caught}/${stats.total}</strong> ${copy.caughtPlural}</div>
     <div class="tstat clickable-stat" role="button" tabindex="0" onclick="applyStatusFilter('perfect')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();applyStatusFilter('perfect')}"><strong style="color:#eab308">${stats.perfect}</strong> ${perfectLabel(stats.perfect)}</div>
     <div class="tstat"><strong>${stats.totalEncountersText}</strong> Méthodes</div>
     <div class="tstat"><strong>${stats.avgEncountersText}</strong> Moy. méthodes</div>
@@ -4576,8 +4649,8 @@ function renderStats() {
       <div class="stats-section-title">Progression</div>
       <div class="stats-highlight-grid">
         <div class="stats-highlight shiny"><span>Compl&eacute;tion</span><strong>${stats.caughtPercentText}</strong></div>
-        <div class="stats-highlight caught clickable-stat" role="button" tabindex="0" onclick="applyStatusFilter('caught')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();applyStatusFilter('caught')}"><span>Shinys captur&eacute;s</span><strong>${stats.caught}<small>/ ${stats.total}</small></strong></div>
-        <div class="stats-highlight missing clickable-stat" role="button" tabindex="0" onclick="applyStatusFilter('missing')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();applyStatusFilter('missing')}"><span>Shinys manquants</span><strong>${stats.missing}</strong></div>
+        <div class="stats-highlight caught clickable-stat" role="button" tabindex="0" onclick="applyStatusFilter('caught')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();applyStatusFilter('caught')}"><span>${copy.caughtHighlight}</span><strong>${stats.caught}<small>/ ${stats.total}</small></strong></div>
+        <div class="stats-highlight missing clickable-stat" role="button" tabindex="0" onclick="applyStatusFilter('missing')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();applyStatusFilter('missing')}"><span>${copy.missingHighlight}</span><strong>${stats.missing}</strong></div>
         <div class="stats-highlight perfect clickable-stat" role="button" tabindex="0" onclick="applyStatusFilter('perfect')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();applyStatusFilter('perfect')}"><span>${perfectLabel(stats.perfect)}</span><strong>${stats.perfect}</strong></div>
       </div>
     </div>
@@ -4593,25 +4666,25 @@ function renderStats() {
       <div class="stats-method-grid">
         <div class="stats-method clickable-stat" role="button" tabindex="0" style="--method-accent:#00ff9c" onclick="applyStatusFilter('method-masuda')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();applyStatusFilter('method-masuda')}">
           <div class="stats-method-name">Masuda</div>
-          <div class="stats-method-metric"><strong>${masudaStats.caught}</strong><span>Shinys</span></div>
+          <div class="stats-method-metric"><strong>${masudaStats.caught}</strong><span>${copy.methodCountLabel}</span></div>
           <div class="stats-method-metric"><strong>${masudaStats.totalEncountersText}</strong><span>Total</span></div>
           <div class="stats-method-metric"><strong>${masudaStats.avgEncountersText}</strong><span>Moyenne</span></div>
         </div>
         <div class="stats-method clickable-stat" role="button" tabindex="0" style="--method-accent:#ff00c8" onclick="applyStatusFilter('method-resets')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();applyStatusFilter('method-resets')}">
           <div class="stats-method-name">Resets</div>
-          <div class="stats-method-metric"><strong>${resetStats.caught}</strong><span>Shinys</span></div>
+          <div class="stats-method-metric"><strong>${resetStats.caught}</strong><span>${copy.methodCountLabel}</span></div>
           <div class="stats-method-metric"><strong>${resetStats.totalEncountersText}</strong><span>Total</span></div>
           <div class="stats-method-metric"><strong>${resetStats.avgEncountersText}</strong><span>Moyenne</span></div>
         </div>
         <div class="stats-method clickable-stat" role="button" tabindex="0" style="--method-accent:#d6ff00" onclick="applyStatusFilter('method-random')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();applyStatusFilter('method-random')}">
           <div class="stats-method-name">Random Encounters</div>
-          <div class="stats-method-metric"><strong>${randomStats.caught}</strong><span>Shinys</span></div>
+          <div class="stats-method-metric"><strong>${randomStats.caught}</strong><span>${copy.methodCountLabel}</span></div>
           <div class="stats-method-metric"><strong>${randomStats.totalEncountersText}</strong><span>Total</span></div>
           <div class="stats-method-metric"><strong>${randomStats.avgEncountersText}</strong><span>Moyenne</span></div>
         </div>
         <div class="stats-method count-only clickable-stat" role="button" tabindex="0" style="--method-accent:#6366f1" onclick="applyStatusFilter('method-dynamax')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();applyStatusFilter('method-dynamax')}">
           <div class="stats-method-name">Exp&eacute;ditions Dynamax</div>
-          <div class="stats-method-count-pill"><strong>${dynamaxStats.caught}</strong><span>Shinys</span></div>
+          <div class="stats-method-count-pill"><strong>${dynamaxStats.caught}</strong><span>${copy.methodCountLabel}</span></div>
         </div>
       </div>
     </div>
@@ -4620,6 +4693,7 @@ function renderStats() {
 }
 
 function renderRegionStatsPanel(stats, color) {
+  const copy = currentScopeCopy();
   const pct = Math.max(0, Math.min(100, stats.caughtPercent || 0));
   const masudaStats = stats.methodStats.masuda;
   const resetStats = stats.methodStats.resets;
@@ -4629,9 +4703,9 @@ function renderRegionStatsPanel(stats, color) {
     <div class="region-stat-row primary">
       <div class="region-stat-main">
         <div class="region-stat clickable-stat" role="button" tabindex="0" onclick="applyStatusFilter('caught')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();applyStatusFilter('caught')}"><strong>${stats.caught}<small>/ ${stats.total}</small></strong><span>Capturés</span></div>
-        <div class="region-stat missing clickable-stat" role="button" tabindex="0" onclick="applyStatusFilter('missing')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();applyStatusFilter('missing')}"><strong>${stats.missing}</strong><span>Manquants</span></div>
+        <div class="region-stat missing clickable-stat" role="button" tabindex="0" onclick="applyStatusFilter('missing')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();applyStatusFilter('missing')}"><strong>${stats.missing}</strong><span>${copy.missing}</span></div>
         <div class="region-stat perfect clickable-stat" role="button" tabindex="0" onclick="applyStatusFilter('perfect')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();applyStatusFilter('perfect')}"><strong>${stats.perfect}</strong><span>${perfectLabel(stats.perfect)}</span></div>
-        <div class="region-stat completion"><strong>${stats.caughtPercentText}</strong><span>Complété</span></div>
+        <div class="region-stat completion"><strong>${stats.caughtPercentText}</strong><span>${copy.completion}</span></div>
       </div>
       <div class="progress-wrap">
         <div class="progress-track">
@@ -4673,7 +4747,8 @@ function getCurrentRegionPerfectCount() {
   const r = getCurrentRegionScope();
   let perfect = 0;
   for (const id of getAvailableIdsInRange(r)) {
-    if (progress[id]?.caught && progress[id]?.perfect) perfect++;
+    const p = progress[id];
+    if (isTargetsScopeActive() ? (p?.caught && p?.perfect) : isBattleReady(p)) perfect++;
   }
   return perfect;
 }
@@ -4686,7 +4761,8 @@ function createEmptyMethodStats() {
 }
 
 function formatMethodStatLine(stat) {
-  return `${stat.caught} shiny${stat.caught > 1 ? 's' : ''} · moy. ${stat.avgEncountersText}`;
+  const label = isTargetsScopeActive() ? `shiny${stat.caught > 1 ? 's' : ''}` : `capture${stat.caught > 1 ? 's' : ''}`;
+  return `${stat.caught} ${label} · moy. ${stat.avgEncountersText}`;
 }
 
 function getCurrentStats() {
@@ -4699,7 +4775,7 @@ function getCurrentStats() {
   }
   const caught = entries.filter(p => p.caught).length;
   const missing = Math.max(0, total - caught);
-  const perfect = entries.filter(p => p.caught && p.perfect).length;
+  const perfect = perfectCountForCurrentScope(entries);
   const caughtEntries = entries.filter(p => p.caught);
   const trackedEntries = caughtEntries.filter(p => TRACKED_ENCOUNTER_METHOD_IDS.includes(normalizeHuntMethod(p.huntMethod)));
   const totalEncounters = trackedEntries.reduce((a,p) => a + (parseInt(p.encounters) || 0), 0);
@@ -4957,8 +5033,9 @@ function formatPercent(value) {
   }) + '%';
 }
 
-function perfectLabel(count) {
-  return Number(count) > 1 ? 'Parfaits' : 'Parfait';
+function perfectLabel(count, targetsScope = isTargetsScopeActive()) {
+  if (targetsScope) return Number(count) > 1 ? 'Parfaits' : 'Parfait';
+  return Number(count) > 1 ? 'Optimisés' : 'Optimisé';
 }
 
 let suppressStatsButtonClick = false;
@@ -5060,7 +5137,7 @@ function countCaught(r) {
 function countPerfect(r) {
   if (Array.isArray(r?.ids)) return r.ids.filter(id => progress[id]?.caught && progress[id]?.perfect).length;
   let c = 0;
-  for (let i = r.start; i <= r.end; i++) if (!isUnavailablePokemon(i) && progress[i]?.perfect) c++;
+  for (let i = r.start; i <= r.end; i++) if (!isUnavailablePokemon(i) && isBattleReady(progress[i])) c++;
   return c;
 }
 
@@ -5074,7 +5151,7 @@ function getAllRegionStats() {
     if (isUnavailablePokemon(i)) continue;
     total++;
     if (progress[i]?.caught) caught++;
-    if (progress[i]?.perfect) perfect++;
+    if (isBattleReady(progress[i])) perfect++;
   }
   return {
     name: 'Toutes',
@@ -5113,7 +5190,7 @@ function renderSidebar() {
         <div class="gen-bar-fill" style="width:${allPct}%;background:${all.color}"></div>
       </div>
       <div class="gen-perfect-row">
-        ${all.perfect} ${perfectLabel(all.perfect).toLowerCase()}
+        ${all.perfect} ${perfectLabel(all.perfect, false).toLowerCase()}
       </div>
     </div>`;
   const targetsButton = `
@@ -5133,7 +5210,7 @@ function renderSidebar() {
         <div class="gen-bar-fill" style="width:${targetsPct}%;background:${targets.color}"></div>
       </div>
       <div class="gen-perfect-row">
-        ${targets.perfect} ${perfectLabel(targets.perfect).toLowerCase()}
+        ${targets.perfect} ${perfectLabel(targets.perfect, true).toLowerCase()}
       </div>
     </div>`;
 
@@ -5161,7 +5238,7 @@ function renderSidebar() {
         <div class="gen-bar-fill" style="width:${pct}%;background:${r.color}"></div>
       </div>
       <div class="gen-perfect-row">
-        ${perfect} ${perfectLabel(perfect).toLowerCase()}
+        ${perfect} ${perfectLabel(perfect, false).toLowerCase()}
       </div>
       </div>`;
   }).join('');
@@ -5300,10 +5377,12 @@ function getFooterStatusLabel(p, isHuntingCard, unavailable) {
 }
 function renderCardStatusBadge(p, isHuntingCard, unavailable) {
   if (unavailable) return '';
-  if (p.caught && p.perfect) return '<div class="tcg-status-row"><span class="tcg-status-badge perfect">Parfait</span></div>';
+  const copy = currentScopeCopy();
+  const isPerfect = isTargetsScopeActive() ? (p.caught && p.perfect) : isBattleReady(p);
+  if (isPerfect) return `<div class="tcg-status-row"><span class="tcg-status-badge perfect">${copy.cardPerfect}</span></div>`;
   if (isHuntingCard) return '<div class="tcg-status-row"><span class="tcg-status-badge hunting">En cours</span></div>';
-  if (p.caught) return '<div class="tcg-status-row"><span class="tcg-status-badge shiny">Shiny</span></div>';
-  return '<div class="tcg-status-row"><span class="tcg-status-badge missing">Manquant</span></div>';
+  if (p.caught) return `<div class="tcg-status-row"><span class="tcg-status-badge shiny">${copy.cardCaught}</span></div>`;
+  return `<div class="tcg-status-row"><span class="tcg-status-badge missing">${copy.missing}</span></div>`;
 }
 
 function setGridVisualVars(grid, region) {
@@ -5358,8 +5437,6 @@ function initGameFilterSelect() {
 }
 
 const STATUS_FILTER_LABELS = {
-  caught: 'Shinys capturés',
-  perfect: 'Shinys parfaits',
   'method-masuda': 'Méthode Masuda',
   'method-resets': 'Méthode Resets',
   'method-random': 'Méthode Random',
@@ -5397,7 +5474,12 @@ function renderStatusFilterChip() {
   const label = document.getElementById('statusFilterChipLabel');
   if (!chip || !label) return;
   if (currentStatusFilter && currentStatusFilter !== 'all') {
-    label.textContent = STATUS_FILTER_LABELS[currentStatusFilter] || currentStatusFilter;
+    const copy = currentScopeCopy();
+    label.textContent = currentStatusFilter === 'caught'
+      ? copy.caughtFilter
+      : currentStatusFilter === 'perfect'
+      ? copy.perfectFilter
+      : STATUS_FILTER_LABELS[currentStatusFilter] || currentStatusFilter;
     chip.style.display = '';
   } else {
     chip.style.display = 'none';
@@ -5442,7 +5524,7 @@ function getVisiblePokemonIds() {
     if (!pokemonMatchesSortMode(p, sort)) continue;
     if (filter === 'caught' && !p.caught) continue;
     if (filter === 'missing' && p.caught) continue;
-    if (filter === 'perfect' && (!p.caught || !p.perfect)) continue;
+    if (filter === 'perfect' && (isTargetsScopeActive() ? (!p.caught || !p.perfect) : !isBattleReady(p))) continue;
     if (filter.startsWith('method-') && (!p.caught || normalizeHuntMethod(p.huntMethod) !== filter.slice(7))) continue;
     ids.push(id);
   }
@@ -5547,7 +5629,7 @@ function createRegionalOriginalCard(id) {
       activatePokemonCard(card, id);
     }
   };
-  const useShinySprite = !!p.caught;
+  const useShinySprite = isTargetsScopeActive() && !!p.caught;
   const spriteUrl = getPokemonSpriteUrl(id, useShinySprite);
   const statusBadge = renderCardStatusBadge(p, isHuntingCard, false);
   card.innerHTML = `
@@ -5587,7 +5669,7 @@ function createRegionalFormCard(form) {
       if (!unavailable) activatePokemonCard(card, form.formId);
     }
   };
-  const useShinySprite = !!p.caught && !unavailable;
+  const useShinySprite = isTargetsScopeActive() && !!p.caught && !unavailable;
   const spriteUrl = getPokemonSpriteUrl(form.formId, useShinySprite);
   const baseRegion = getRegionByPokemonId(form.baseId);
   const statusBadge = renderCardStatusBadge(p, isHuntingCard, unavailable);
@@ -5688,7 +5770,9 @@ function renderGrid() {
     setTypeVisualVars(card, POKEMON_TYPES[id] || POKEMON_TYPES[String(id)]);
     card.setAttribute('role', 'button');
     card.setAttribute('tabindex', '0');
-    card.setAttribute('aria-label', `${name}, #${String(id).padStart(4,'0')}${p.caught ? ', shiny capture' : (isHuntingCard ? ', en cours' : ', manquant')}`);
+    const cardCaughtLabel = isTargetsScopeActive() ? 'shiny capturé' : 'capturé';
+    const cardMissingLabel = isTargetsScopeActive() ? 'manquant' : 'à capturer';
+    card.setAttribute('aria-label', `${name}, #${String(id).padStart(4,'0')}${p.caught ? `, ${cardCaughtLabel}` : (isHuntingCard ? ', en cours' : `, ${cardMissingLabel}`)}`);
     card.onclick = () => activatePokemonCard(card, id);
     card.onkeydown = e => {
       if (e.key === 'Enter' || e.key === ' ') {
@@ -5698,7 +5782,7 @@ function renderGrid() {
     };
 
     const typeBadges = renderTypeBadges(id);
-    const useShinySprite = !!p.caught && !unavailable;
+    const useShinySprite = isTargetsScopeActive() && !!p.caught && !unavailable;
     const spriteUrl = getPokemonSpriteUrl(id, useShinySprite);
     const statusBadge = renderCardStatusBadge(p, isHuntingCard, unavailable);
 
@@ -6112,7 +6196,7 @@ function saveProgressEntry(id, entry) {
   if (isReadOnlyShare()) return;
   const hasIvs = entry.ivs && Object.values(entry.ivs).some(Boolean);
   const hasCustomHuntMethod = entry.huntMethod && entry.huntMethod !== 'masuda';
-  const isEmpty = !entry.caught && !entry.perfect && !entry.target && !entry.hunting && !entry.huntCount && !hasCustomHuntMethod && !entry.nickname && !entry.encounters && !entry.eggs && !entry.date && !entry.context && !entry.youtube && !entry.pokeball && !entry.pokeballShiny && !entry.nature && !entry.gender && !entry.genderShiny && !entry.game && !entry.location && !hasIvs;
+  const isEmpty = !entry.caught && !entry.perfect && !entry.target && !entry.hunting && !entry.huntCount && !hasCustomHuntMethod && !entry.nickname && !entry.encounters && !entry.eggs && !entry.date && !entry.context && !entry.youtube && !entry.pokeball && !entry.pokeballShiny && !entry.nature && !entry.level && !entry.ability && !entry.gender && !entry.genderShiny && !entry.game && !entry.location && !hasIvs;
   if (isEmpty) delete progress[id];
   else progress[id] = entry;
   localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
@@ -6520,6 +6604,8 @@ function openModal(id, options = {}) {
   document.getElementById('fPokeball').value = p.pokeball || '';
   document.getElementById('fPokeballShiny').value = p.pokeballShiny || '';
   document.getElementById('fNature').value = p.nature || '';
+  document.getElementById('fLevel').value = p.level || '';
+  document.getElementById('fAbility').value = p.ability || '';
   document.getElementById('fHuntMethod').value = normalizeHuntMethod(p.huntMethod);
   updatePokeballPreview();
   updatePokeballShinyPreview();
@@ -6605,6 +6691,8 @@ function saveModal() {
     pokeball:  document.getElementById('fPokeball').value,
     pokeballShiny: document.getElementById('fPokeballShiny').value,
     nature:    document.getElementById('fNature').value,
+    level:     parseInt(document.getElementById('fLevel').value) || '',
+    ability:   document.getElementById('fAbility').value.trim(),
     gender:    document.getElementById('fGenderNormal').value,
     genderShiny: document.getElementById('fGenderShiny').value,
     ivs: {
@@ -6648,7 +6736,7 @@ function exportJSON() {
 
     // N'inclut que les entrées non vides
     const hasCustomHuntMethod = p.huntMethod && p.huntMethod !== 'masuda';
-    if (!p.caught && !p.perfect && !p.target && !p.hunting && !p.huntCount && !hasCustomHuntMethod && !p.nickname && !p.encounters && !p.eggs && !p.date && !p.context && !p.youtube && !p.pokeball && !p.pokeballShiny && !p.nature && !p.gender && !p.genderShiny && !ivStr) continue;
+    if (!p.caught && !p.perfect && !p.target && !p.hunting && !p.huntCount && !hasCustomHuntMethod && !p.nickname && !p.encounters && !p.eggs && !p.date && !p.context && !p.youtube && !p.pokeball && !p.pokeballShiny && !p.nature && !p.level && !p.ability && !p.gender && !p.genderShiny && !ivStr) continue;
 
     out.push({
       'N° pokédex':          id,
@@ -6669,6 +6757,8 @@ function exportJSON() {
       'Pokéball':            p.pokeball    || '',
       'Pokéball Shiny':      p.pokeballShiny || '',
       'Nature':              p.nature      || '',
+      'Niveau':              p.level       || '',
+      'Talent':              p.ability     || '',
       'Genre':               GENDER_LABELS[p.gender] && p.gender ? GENDER_LABELS[p.gender] : '',
       'Genre Shiny':         GENDER_LABELS[p.genderShiny] && p.genderShiny ? GENDER_LABELS[p.genderShiny] : '',
       'IV parfaits':         ivStr,
