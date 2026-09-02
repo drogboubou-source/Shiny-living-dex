@@ -11,7 +11,7 @@ const APP_SHELL = [
   './Assets/icon-maskable-192.png',
   './Assets/icon-maskable-512.png',
   './Assets/targets-header.png',
-  './eau.png?v300',
+  './eau.png?v301',
   './plante.png?v300',
   './feu.png?v300',
   './%C3%A9lectrik.png?v300',
