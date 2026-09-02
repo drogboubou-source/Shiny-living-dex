@@ -1118,9 +1118,6 @@ body.card-interaction-suppressed .card:active{
 .card.hunting{
   --card-accent:#7dd3fc;
 }
-.card.lvl100{
-  --card-accent:#7ed660;
-}
 .card.caught.hunting{
   --card-accent:#7dd3fc;
 }
@@ -1130,8 +1127,7 @@ body.card-interaction-suppressed .card:active{
 }
 .card.caught,
 .card.perfect,
-.card.hunting,
-.card.lvl100{
+.card.hunting{
   --card-border:linear-gradient(var(--card-accent),var(--card-accent));
   box-shadow:
     inset 0 0 0 1px color-mix(in srgb, var(--card-accent) 38%, transparent),
@@ -1143,8 +1139,7 @@ body.card-interaction-suppressed .card:active{
 }
 .card.caught:hover,
 .card.perfect:hover,
-.card.hunting:hover,
-.card.lvl100:hover{
+.card.hunting:hover{
   box-shadow:
     inset 0 0 0 1px color-mix(in srgb, var(--card-accent) 38%, transparent),
     inset 0 3px 4px rgba(255,255,255,.13),
@@ -1938,7 +1933,6 @@ body.card-interaction-suppressed .card:active{
 }
 .tcg-status-badge.shiny{background:#b84dff;border-color:#f2d8ff;color:#fff}
 .tcg-status-badge.perfect{background:#ffd429;border-color:#fff4aa;color:#171106;text-shadow:0 1px 0 rgba(255,255,255,.42)}
-.tcg-status-badge.lvl100{background:#7ed660;border-color:#d9ffc9;color:#10220b;text-shadow:0 1px 0 rgba(255,255,255,.42)}
 .tcg-status-badge.hunting{background:#18aeea;border-color:#cbf3ff;color:#fff}
 .tcg-status-badge.missing{background:#4a4a58;border-color:#8a8a9a;color:#d6d6e0}
 
@@ -3017,7 +3011,7 @@ button.capture-control{width:100%;text-align:left;font:inherit;color:inherit;cur
           <option value="perfect">Shinys parfaits</option>
           <option value="method-random">Shinys Random</option>
           <option value="method-resets">Shinys Resets</option>
-          <option value="caught">Révélés</option>
+          <option value="caught">Shinys trouvés</option>
           <option value="type">Types</option>
         </select>
       </label>
@@ -3221,16 +3215,6 @@ button.capture-control{width:100%;text-align:left;font:inherit;color:inherit;cur
 
     <div class="form-section" style="--section-glow:rgba(126,214,96,.16);--section-line:rgba(126,214,96,.24);--section-dot:#7ed660">
       <div class="form-section-title">Génétique &amp; apparence</div>
-      <div class="form-grid-2">
-        <div class="form-row">
-          <label>Niveau</label>
-          <input type="text" id="fLevel" inputmode="numeric" placeholder="ex: 100">
-        </div>
-        <div class="form-row">
-          <label>Talent</label>
-          <input type="text" id="fAbility" placeholder="Talent souhaité">
-        </div>
-      </div>
       <div class="form-row">
         <label>IVs parfaits</label>
         <div class="iv-grid">
@@ -3625,9 +3609,7 @@ function comparePokemonBySort(a, b, mode) {
   }
 
   if (mode === 'caught') {
-    const ca = isTargetsView() ? !!pa.caught : hasLevel100Build(pa);
-    const cb = isTargetsView() ? !!pb.caught : hasLevel100Build(pb);
-    if (ca !== cb) return ca ? -1 : 1;
+    if (!!pa.caught !== !!pb.caught) return pa.caught ? -1 : 1;
     return a - b;
   }
 
@@ -3657,11 +3639,11 @@ function comparePokemonBySort(a, b, mode) {
 }
 
 function pokemonMatchesSortMode(p, mode) {
-  if (mode === 'caught') return isTargetsView() ? !!p.caught : hasLevel100Build(p);
+  if (mode === 'caught') return !!p.caught;
   if (mode === 'method-masuda') return !!p.caught && normalizeHuntMethod(p.huntMethod) === 'masuda';
   if (mode === 'method-resets') return !!p.caught && normalizeHuntMethod(p.huntMethod) === 'resets';
   if (mode === 'method-random') return !!p.caught && normalizeHuntMethod(p.huntMethod) === 'random';
-  if (mode === 'missing') return isTargetsView() ? !p.caught : !hasLevel100Build(p);
+  if (mode === 'missing') return !p.caught;
   if (mode === 'perfect') return !!p.caught && !!p.perfect;
   if (mode === 'target') return !!p.target;
   if (mode === 'date-desc' || mode === 'date-asc') return !!p.caught && !!p.date;
@@ -4069,8 +4051,6 @@ function hasUserData(p) {
     p.youtube ||
     p.pokeball ||
     p.pokeballShiny ||
-    p.level ||
-    p.ability ||
     p.nature ||
     p.gender ||
     p.genderShiny ||
@@ -4091,8 +4071,6 @@ function sanitizeProgress(data, options = {}) {
     entry.hunting = !!entry.hunting || entry.huntCount > 0;
     entry.pokeball = entry.pokeball || '';
     entry.pokeballShiny = entry.pokeballShiny || '';
-    entry.level = parseInt(entry.level) || 0;
-    entry.ability = entry.ability || '';
     entry.nature = entry.nature || '';
     entry.gender = GENDER_CYCLE.includes(entry.gender) ? entry.gender : '';
     entry.genderShiny = GENDER_CYCLE.includes(entry.genderShiny) ? entry.genderShiny : '';
@@ -4121,10 +4099,6 @@ function rowMeansCaught(p) {
     p['Contexte de capture'] ||
     p['Pokéball'] ||
     p['Pokéball Shiny'] ||
-    p['Niveau'] ||
-    p['Level'] ||
-    p['Talent'] ||
-    p['Ability'] ||
     p['Nature'] ||
     p['IV parfaits'] ||
     p['Parfait']
@@ -4203,8 +4177,6 @@ function mergePokedexIntoProgress() {
     if (!existing.youtube    && p['Lien YouTube'])        existing.youtube    = p['Lien YouTube'];
     if (!existing.pokeball   && p['Pokéball'])            existing.pokeball   = p['Pokéball'];
     if (!existing.pokeballShiny && p['Pokéball Shiny'])    existing.pokeballShiny = p['Pokéball Shiny'];
-    if (!existing.level      && (p['Niveau'] || p['Level'])) existing.level      = parseInt(p['Niveau'] || p['Level']) || 0;
-    if (!existing.ability    && (p['Talent'] || p['Ability'])) existing.ability    = p['Talent'] || p['Ability'];
     if (!existing.nature     && p['Nature'])              existing.nature     = p['Nature'];
     if (!existing.gender     && p['Genre'])                existing.gender     = rowGender(p['Genre']);
     if (!existing.genderShiny && p['Genre Shiny'])          existing.genderShiny = rowGender(p['Genre Shiny']);
@@ -4593,7 +4565,7 @@ function renderStats() {
     scopeLabel.style.color = scope.color;
   }
   document.getElementById('statsBar').innerHTML = `
-    <div class="tstat clickable-stat" role="button" tabindex="0" onclick="applyStatusFilter('caught')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();applyStatusFilter('caught')}"><strong style="color:#7ed660">${stats.caught}/${stats.total}</strong> ${stats.goalPluralLabel}</div>
+    <div class="tstat clickable-stat" role="button" tabindex="0" onclick="applyStatusFilter('caught')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();applyStatusFilter('caught')}"><strong style="color:#7ed660">${stats.caught}/${stats.total}</strong> Shinys</div>
     <div class="tstat clickable-stat" role="button" tabindex="0" onclick="applyStatusFilter('perfect')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();applyStatusFilter('perfect')}"><strong style="color:#eab308">${stats.perfect}</strong> ${perfectLabel(stats.perfect)}</div>
     <div class="tstat"><strong>${stats.totalEncountersText}</strong> Méthodes</div>
     <div class="tstat"><strong>${stats.avgEncountersText}</strong> Moy. méthodes</div>
@@ -4604,8 +4576,8 @@ function renderStats() {
       <div class="stats-section-title">Progression</div>
       <div class="stats-highlight-grid">
         <div class="stats-highlight shiny"><span>Compl&eacute;tion</span><strong>${stats.caughtPercentText}</strong></div>
-        <div class="stats-highlight caught clickable-stat" role="button" tabindex="0" onclick="applyStatusFilter('caught')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();applyStatusFilter('caught')}"><span>${stats.goalDoneLabel}</span><strong>${stats.caught}<small>/ ${stats.total}</small></strong></div>
-        <div class="stats-highlight missing clickable-stat" role="button" tabindex="0" onclick="applyStatusFilter('missing')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();applyStatusFilter('missing')}"><span>${stats.goalMissingLabel}</span><strong>${stats.missing}</strong></div>
+        <div class="stats-highlight caught clickable-stat" role="button" tabindex="0" onclick="applyStatusFilter('caught')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();applyStatusFilter('caught')}"><span>Shinys captur&eacute;s</span><strong>${stats.caught}<small>/ ${stats.total}</small></strong></div>
+        <div class="stats-highlight missing clickable-stat" role="button" tabindex="0" onclick="applyStatusFilter('missing')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();applyStatusFilter('missing')}"><span>Shinys manquants</span><strong>${stats.missing}</strong></div>
         <div class="stats-highlight perfect clickable-stat" role="button" tabindex="0" onclick="applyStatusFilter('perfect')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();applyStatusFilter('perfect')}"><span>${perfectLabel(stats.perfect)}</span><strong>${stats.perfect}</strong></div>
       </div>
     </div>
@@ -4656,8 +4628,8 @@ function renderRegionStatsPanel(stats, color) {
   return `
     <div class="region-stat-row primary">
       <div class="region-stat-main">
-        <div class="region-stat clickable-stat" role="button" tabindex="0" onclick="applyStatusFilter('caught')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();applyStatusFilter('caught')}"><strong>${stats.caught}<small>/ ${stats.total}</small></strong><span>${stats.goalShortDoneLabel}</span></div>
-        <div class="region-stat missing clickable-stat" role="button" tabindex="0" onclick="applyStatusFilter('missing')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();applyStatusFilter('missing')}"><strong>${stats.missing}</strong><span>${stats.goalShortMissingLabel}</span></div>
+        <div class="region-stat clickable-stat" role="button" tabindex="0" onclick="applyStatusFilter('caught')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();applyStatusFilter('caught')}"><strong>${stats.caught}<small>/ ${stats.total}</small></strong><span>Capturés</span></div>
+        <div class="region-stat missing clickable-stat" role="button" tabindex="0" onclick="applyStatusFilter('missing')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();applyStatusFilter('missing')}"><strong>${stats.missing}</strong><span>Manquants</span></div>
         <div class="region-stat perfect clickable-stat" role="button" tabindex="0" onclick="applyStatusFilter('perfect')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();applyStatusFilter('perfect')}"><strong>${stats.perfect}</strong><span>${perfectLabel(stats.perfect)}</span></div>
         <div class="region-stat completion"><strong>${stats.caughtPercentText}</strong><span>Complété</span></div>
       </div>
@@ -4725,10 +4697,7 @@ function getCurrentStats() {
   for (const id of availableIds) {
     if (progress[id]) entries.push(progress[id]);
   }
-  const shinyScope = isTargetsView();
-  const caught = shinyScope
-    ? entries.filter(p => p.caught).length
-    : availableIds.filter(id => hasLevel100Build(progress[id])).length;
+  const caught = entries.filter(p => p.caught).length;
   const missing = Math.max(0, total - caught);
   const perfect = entries.filter(p => p.caught && p.perfect).length;
   const caughtEntries = entries.filter(p => p.caught);
@@ -4764,11 +4733,6 @@ function getCurrentStats() {
     methodStats,
     caughtPercent,
     caughtPercentText: formatPercent(caughtPercent),
-    goalPluralLabel: shinyScope ? 'Shinys' : 'LVL 100',
-    goalDoneLabel: shinyScope ? 'Shinys captur&eacute;s' : 'Pok&eacute;mon LVL 100',
-    goalMissingLabel: shinyScope ? 'Shinys manquants' : 'Pok&eacute;mon &agrave; monter',
-    goalShortDoneLabel: shinyScope ? 'Captur&eacute;s' : 'LVL 100',
-    goalShortMissingLabel: shinyScope ? 'Manquants' : '&Agrave; monter',
   };
 }
 
@@ -5089,7 +5053,7 @@ function closeStatsOnOutsideClick(e) {
 function countCaught(r) {
   if (Array.isArray(r?.ids)) return r.ids.filter(id => progress[id]?.caught).length;
   let c = 0;
-  for (let i = r.start; i <= r.end; i++) if (!isUnavailablePokemon(i) && hasLevel100Build(progress[i])) c++;
+  for (let i = r.start; i <= r.end; i++) if (!isUnavailablePokemon(i) && progress[i]?.caught) c++;
   return c;
 }
 
@@ -5109,7 +5073,7 @@ function getAllRegionStats() {
   for (let i = start; i <= end; i++) {
     if (isUnavailablePokemon(i)) continue;
     total++;
-    if (hasLevel100Build(progress[i])) caught++;
+    if (progress[i]?.caught) caught++;
     if (progress[i]?.perfect) perfect++;
   }
   return {
@@ -5334,39 +5298,12 @@ function setTypeVisualVars(element, types) {
 function getFooterStatusLabel(p, isHuntingCard, unavailable) {
   return '';
 }
-function hasAllPerfectIvs(p) {
-  const ivs = p?.ivs || {};
-  return !!(ivs.hp && ivs.atk && ivs.def && ivs.spa && ivs.spd && ivs.spe);
-}
-function hasLevel100Build(p) {
-  return !!(
-    p &&
-    (parseInt(p.level) || 0) >= 100 &&
-    String(p.nature || '').trim() &&
-    String(p.ability || '').trim() &&
-    hasAllPerfectIvs(p)
-  );
-}
-function isTargetsView() {
-  return currentRegion === TARGET_REGION_ID;
-}
-function shouldRevealCard(p, unavailable = false) {
-  if (unavailable) return false;
-  return isTargetsView() ? !!p?.caught : hasLevel100Build(p);
-}
-function shouldUseShinySpriteForCard(p, unavailable = false) {
-  return !unavailable && isTargetsView() && !!p?.caught;
-}
 function renderCardStatusBadge(p, isHuntingCard, unavailable) {
   if (unavailable) return '';
-  if (isTargetsView()) {
-    if (p.caught && p.perfect) return '<div class="tcg-status-row"><span class="tcg-status-badge perfect">Parfait</span></div>';
-    if (p.caught) return '<div class="tcg-status-row"><span class="tcg-status-badge shiny">Shiny</span></div>';
-    if (isHuntingCard) return '<div class="tcg-status-row"><span class="tcg-status-badge hunting">En cours</span></div>';
-    return '<div class="tcg-status-row"><span class="tcg-status-badge missing">Manquant</span></div>';
-  }
-  if (hasLevel100Build(p)) return '<div class="tcg-status-row"><span class="tcg-status-badge lvl100">LVL 100</span></div>';
-  return '<div class="tcg-status-row"><span class="tcg-status-badge missing">À monter</span></div>';
+  if (p.caught && p.perfect) return '<div class="tcg-status-row"><span class="tcg-status-badge perfect">Parfait</span></div>';
+  if (isHuntingCard) return '<div class="tcg-status-row"><span class="tcg-status-badge hunting">En cours</span></div>';
+  if (p.caught) return '<div class="tcg-status-row"><span class="tcg-status-badge shiny">Shiny</span></div>';
+  return '<div class="tcg-status-row"><span class="tcg-status-badge missing">Manquant</span></div>';
 }
 
 function setGridVisualVars(grid, region) {
@@ -5421,7 +5358,7 @@ function initGameFilterSelect() {
 }
 
 const STATUS_FILTER_LABELS = {
-  caught: 'Cartes révélées',
+  caught: 'Shinys capturés',
   perfect: 'Shinys parfaits',
   'method-masuda': 'Méthode Masuda',
   'method-resets': 'Méthode Resets',
@@ -5503,8 +5440,8 @@ function getVisiblePokemonIds() {
     if (sort === 'legendary' && !LEGENDARY_ODDS_BASE_IDS.has(id)) continue;
     if (unavailable && counterMode) continue;
     if (!pokemonMatchesSortMode(p, sort)) continue;
-    if (filter === 'caught' && !shouldRevealCard(p, unavailable)) continue;
-    if (filter === 'missing' && shouldRevealCard(p, unavailable)) continue;
+    if (filter === 'caught' && !p.caught) continue;
+    if (filter === 'missing' && p.caught) continue;
     if (filter === 'perfect' && (!p.caught || !p.perfect)) continue;
     if (filter.startsWith('method-') && (!p.caught || normalizeHuntMethod(p.huntMethod) !== filter.slice(7))) continue;
     ids.push(id);
@@ -5538,7 +5475,6 @@ function getHoloSparkHtml(show) {
 
 function bindMissingCardReveal(card) {
   if (!card?.classList?.contains('missing-card')) return;
-  if (card.classList.contains('target-shiny-locked')) return;
   const longPressDelay = 400;
   const activateOnTap = card.onclick;
   let revealTimer = null;
@@ -5594,11 +5530,10 @@ function bindMissingCardReveal(card) {
 function createRegionalOriginalCard(id) {
   const name = NAMES[id] || `#${id}`;
   const p = progress[id] || {};
-  const revealed = shouldRevealCard(p, false);
-  const isHuntingCard = isTargetsView() && !p.caught && (p.hunting || p.huntCount);
-  const isMissingCard = !revealed;
+  const isHuntingCard = !p.caught && (p.hunting || p.huntCount);
+  const isMissingCard = !p.caught && !p.perfect && !isHuntingCard;
   const card = document.createElement('div');
-  card.className = 'card form-original' + (isTargetsView() && p.caught ? ' caught' : '') + (isTargetsView() && p.caught && p.perfect ? ' perfect' : '') + (!isTargetsView() && revealed ? ' lvl100' : '') + (isHuntingCard ? ' hunting' : '') + (isMissingCard ? ' missing-card' : '') + (isTargetsView() && !p.caught ? ' target-shiny-locked' : '') + getTargetCardClasses(p, isHuntingCard);
+  card.className = 'card form-original' + (p.caught ? ' caught' : '') + (p.perfect ? ' perfect' : '') + (isHuntingCard ? ' hunting' : '') + (isMissingCard ? ' missing-card' : '') + getTargetCardClasses(p, isHuntingCard);
   const region = getRegionByPokemonId(id);
   setRegionVisualVars(card, region);
   setTypeVisualVars(card, POKEMON_TYPES[id] || POKEMON_TYPES[String(id)]);
@@ -5612,7 +5547,7 @@ function createRegionalOriginalCard(id) {
       activatePokemonCard(card, id);
     }
   };
-  const useShinySprite = shouldUseShinySpriteForCard(p, false);
+  const useShinySprite = !!p.caught;
   const spriteUrl = getPokemonSpriteUrl(id, useShinySprite);
   const statusBadge = renderCardStatusBadge(p, isHuntingCard, false);
   card.innerHTML = `
@@ -5635,12 +5570,11 @@ function createRegionalOriginalCard(id) {
 
 function createRegionalFormCard(form) {
   const p = progress[form.formId] || {};
+  const isHuntingCard = !p.caught && (p.hunting || p.huntCount);
   const unavailable = isUnavailablePokemon(form.formId);
-  const revealed = shouldRevealCard(p, unavailable);
-  const isHuntingCard = isTargetsView() && !p.caught && (p.hunting || p.huntCount);
-  const isMissingCard = !unavailable && !revealed;
+  const isMissingCard = !unavailable && !p.caught && !p.perfect && !isHuntingCard;
   const card = document.createElement('div');
-  card.className = 'card form-card' + (isTargetsView() && p.caught && !unavailable ? ' caught' : '') + (isTargetsView() && p.caught && p.perfect && !unavailable ? ' perfect' : '') + (!isTargetsView() && revealed ? ' lvl100' : '') + (isHuntingCard && !unavailable ? ' hunting' : '') + (isMissingCard ? ' missing-card' : '') + (isTargetsView() && !p.caught && !unavailable ? ' target-shiny-locked' : '') + getTargetCardClasses(p, isHuntingCard, unavailable) + (unavailable ? ' unavailable' : '');
+  card.className = 'card form-card' + (p.caught && !unavailable ? ' caught' : '') + (p.perfect && !unavailable ? ' perfect' : '') + (isHuntingCard && !unavailable ? ' hunting' : '') + (isMissingCard ? ' missing-card' : '') + getTargetCardClasses(p, isHuntingCard, unavailable) + (unavailable ? ' unavailable' : '');
   setRegionVisualVars(card, REGIONS.find(region => region.name === form.region) || getRegionByPokemonId(form.baseId));
   setTypeVisualVars(card, form.types);
   card.setAttribute('role', 'button');
@@ -5653,7 +5587,7 @@ function createRegionalFormCard(form) {
       if (!unavailable) activatePokemonCard(card, form.formId);
     }
   };
-  const useShinySprite = shouldUseShinySpriteForCard(p, unavailable);
+  const useShinySprite = !!p.caught && !unavailable;
   const spriteUrl = getPokemonSpriteUrl(form.formId, useShinySprite);
   const baseRegion = getRegionByPokemonId(form.baseId);
   const statusBadge = renderCardStatusBadge(p, isHuntingCard, unavailable);
@@ -5736,9 +5670,8 @@ function renderGrid() {
     const name = NAMES[id] || `#${id}`;
     const p    = progress[id] || {};
     const unavailable = isUnavailablePokemon(id);
-    const revealed = shouldRevealCard(p, unavailable);
-    const isHuntingCard = !unavailable && (isTargetsView() || counterMode) && !p.caught && (counterMode || p.hunting || p.huntCount);
-    const isMissingCard = !unavailable && !revealed;
+    const isHuntingCard = !unavailable && !p.caught && (counterMode || p.hunting || p.huntCount);
+    const isMissingCard = !unavailable && !p.caught && !p.perfect && !isHuntingCard;
     const cardRegion = showGenerationDividers ? getRegionByPokemonId(id) : null;
     if (showGenerationDividers) {
       const region = cardRegion;
@@ -5749,7 +5682,7 @@ function renderGrid() {
       }
     }
     const card = document.createElement('div');
-    card.className = 'card' + (isTargetsView() && p.caught && !unavailable ? ' caught' : '') + (isTargetsView() && p.caught && p.perfect && !unavailable ? ' perfect' : '') + (!isTargetsView() && revealed ? ' lvl100' : '') + (isHuntingCard ? ' hunting' : '') + (isMissingCard ? ' missing-card' : '') + (isTargetsView() && !p.caught && !unavailable ? ' target-shiny-locked' : '') + getTargetCardClasses(p, isHuntingCard, unavailable) + (unavailable ? ' unavailable' : '');
+    card.className = 'card' + (p.caught && !unavailable ? ' caught' : '') + (p.perfect && !unavailable ? ' perfect' : '') + (isHuntingCard ? ' hunting' : '') + (isMissingCard ? ' missing-card' : '') + getTargetCardClasses(p, isHuntingCard, unavailable) + (unavailable ? ' unavailable' : '');
     const cardOwnRegion = cardRegion || getRegionByPokemonId(id);
     setRegionVisualVars(card, cardOwnRegion);
     setTypeVisualVars(card, POKEMON_TYPES[id] || POKEMON_TYPES[String(id)]);
@@ -5765,7 +5698,7 @@ function renderGrid() {
     };
 
     const typeBadges = renderTypeBadges(id);
-    const useShinySprite = shouldUseShinySpriteForCard(p, unavailable);
+    const useShinySprite = !!p.caught && !unavailable;
     const spriteUrl = getPokemonSpriteUrl(id, useShinySprite);
     const statusBadge = renderCardStatusBadge(p, isHuntingCard, unavailable);
 
@@ -6179,7 +6112,7 @@ function saveProgressEntry(id, entry) {
   if (isReadOnlyShare()) return;
   const hasIvs = entry.ivs && Object.values(entry.ivs).some(Boolean);
   const hasCustomHuntMethod = entry.huntMethod && entry.huntMethod !== 'masuda';
-  const isEmpty = !entry.caught && !entry.perfect && !entry.target && !entry.hunting && !entry.huntCount && !hasCustomHuntMethod && !entry.nickname && !entry.encounters && !entry.eggs && !entry.date && !entry.context && !entry.youtube && !entry.pokeball && !entry.pokeballShiny && !entry.level && !entry.ability && !entry.nature && !entry.gender && !entry.genderShiny && !entry.game && !entry.location && !hasIvs;
+  const isEmpty = !entry.caught && !entry.perfect && !entry.target && !entry.hunting && !entry.huntCount && !hasCustomHuntMethod && !entry.nickname && !entry.encounters && !entry.eggs && !entry.date && !entry.context && !entry.youtube && !entry.pokeball && !entry.pokeballShiny && !entry.nature && !entry.gender && !entry.genderShiny && !entry.game && !entry.location && !hasIvs;
   if (isEmpty) delete progress[id];
   else progress[id] = entry;
   localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
@@ -6603,8 +6536,6 @@ function openModal(id, options = {}) {
   document.getElementById('fContext').value    = p.context    || '';
   document.getElementById('fYoutube').value    = p.youtube    || '';
   document.getElementById('fGame').value       = p.game       || '';
-  document.getElementById('fLevel').value      = p.level      || '';
-  document.getElementById('fAbility').value    = p.ability    || '';
   updateLocationField(p.location || '');
 
   const ivs = p.ivs || {};
@@ -6673,8 +6604,6 @@ function saveModal() {
                  : document.getElementById('fLocationText').value.trim()),
     pokeball:  document.getElementById('fPokeball').value,
     pokeballShiny: document.getElementById('fPokeballShiny').value,
-    level:     parseInt(document.getElementById('fLevel').value) || 0,
-    ability:   document.getElementById('fAbility').value.trim(),
     nature:    document.getElementById('fNature').value,
     gender:    document.getElementById('fGenderNormal').value,
     genderShiny: document.getElementById('fGenderShiny').value,
@@ -6719,7 +6648,7 @@ function exportJSON() {
 
     // N'inclut que les entrées non vides
     const hasCustomHuntMethod = p.huntMethod && p.huntMethod !== 'masuda';
-    if (!p.caught && !p.perfect && !p.target && !p.hunting && !p.huntCount && !hasCustomHuntMethod && !p.nickname && !p.encounters && !p.eggs && !p.date && !p.context && !p.youtube && !p.pokeball && !p.pokeballShiny && !p.level && !p.ability && !p.nature && !p.gender && !p.genderShiny && !ivStr) continue;
+    if (!p.caught && !p.perfect && !p.target && !p.hunting && !p.huntCount && !hasCustomHuntMethod && !p.nickname && !p.encounters && !p.eggs && !p.date && !p.context && !p.youtube && !p.pokeball && !p.pokeballShiny && !p.nature && !p.gender && !p.genderShiny && !ivStr) continue;
 
     out.push({
       'N° pokédex':          id,
@@ -6739,8 +6668,6 @@ function exportJSON() {
       'Contexte de capture': p.context     || '',
       'Pokéball':            p.pokeball    || '',
       'Pokéball Shiny':      p.pokeballShiny || '',
-      'Niveau':              p.level       || '',
-      'Talent':              p.ability     || '',
       'Nature':              p.nature      || '',
       'Genre':               GENDER_LABELS[p.gender] && p.gender ? GENDER_LABELS[p.gender] : '',
       'Genre Shiny':         GENDER_LABELS[p.genderShiny] && p.genderShiny ? GENDER_LABELS[p.genderShiny] : '',
@@ -6830,7 +6757,7 @@ initAppHistory();
 lockPortraitOrientation();
 document.addEventListener('click', closeStatsOnOutsideClick, true);
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=314', { scope: './' }).then(registration => {
+  navigator.serviceWorker.register('./service-worker.js?v=313', { scope: './' }).then(registration => {
     registration.update();
     if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   }).catch(() => {});
